@@ -319,7 +319,7 @@ const AiUsageDashboard = () => {
         <div className="flex-1 overflow-y-auto p-6">
           {activeTab === 'overview' ? (
             <div className="space-y-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <MetricCard
                   title={SHARED_QUOTAS.free.title}
                   iconBg="bg-[#B37FEB]"
@@ -362,28 +362,40 @@ const AiUsageDashboard = () => {
                         </div>
                       </div>
 
-                      <div className="bg-[#F8F9FA] rounded-lg p-4 min-h-[110px] flex items-center justify-between border border-[#F2F3F5]">
-                        <div className="flex flex-col gap-2">
-                          <div className="text-[11px] text-[#646A73] font-bold">
-                            本月已用
+                      <div className="bg-[#F8F9FA] rounded-lg p-4 min-h-[110px] border border-[#F2F3F5]">
+                        <div className="flex items-center justify-between">
+                          <div className="flex flex-col gap-2">
+                            <div className="text-[11px] text-[#646A73] font-bold">
+                              本月已用
+                            </div>
+                            <div className="text-[18px] font-extrabold font-mono">
+                              {formatNumber(product.monthUsed)}{' '}
+                              <span className="text-[11px] text-[#8F959E] font-medium">
+                                {product.unit}
+                              </span>
+                            </div>
                           </div>
-                          <div className="text-[18px] font-extrabold font-mono">
-                            {formatNumber(product.monthUsed)}{' '}
-                            <span className="text-[11px] text-[#8F959E] font-medium">
-                              {product.unit}
-                            </span>
+                          <div className="w-px h-12 bg-[#DEE0E3]" />
+                          <div className="flex flex-col gap-2">
+                            <div className="text-[11px] text-[#646A73] font-bold">
+                              累计已用
+                            </div>
+                            <div className="text-[18px] font-extrabold font-mono">
+                              {formatNumber(product.totalUsed)}{' '}
+                              <span className="text-[11px] text-[#8F959E] font-medium">
+                                {product.unit}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <div className="w-px h-12 bg-[#DEE0E3]" />
-                        <div className="flex flex-col gap-2">
-                          <div className="text-[11px] text-[#646A73] font-bold">
-                            累计已用
+                        <div className="flex items-center gap-4 mt-3 text-[11px] text-[#8F959E] font-medium">
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-[#00B42A]" />
+                            免费额度
                           </div>
-                          <div className="text-[18px] font-extrabold font-mono">
-                            {formatNumber(product.totalUsed)}{' '}
-                            <span className="text-[11px] text-[#8F959E] font-medium">
-                              {product.unit}
-                            </span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-2 h-2 rounded-full bg-[#3370FF]" />
+                            付费额度
                           </div>
                         </div>
                       </div>
