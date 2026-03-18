@@ -4,24 +4,18 @@ import {
   ChevronDown,
   Globe,
   Zap,
-  Layers,
   CheckCircle2,
-  AlertTriangle,
   Info,
   Package,
   Send,
-  HelpCircle,
   Clock,
   BarChart3
 } from 'lucide-react'
 
 const BillingManagement = () => {
   const [designVersion, setDesignVersion] = useState('v2')
-  const [activeMode, setActiveMode] = useState('edition')
   const [flexMode, setFlexMode] = useState('A')
   const [sourceMode, setSourceMode] = useState('A')
-  const [tabPosition, setTabPosition] = useState('header')
-  const [showSwitchWarning, setShowSwitchWarning] = useState(false)
   const [aiRatio, setAiRatio] = useState('10')
   const [trialConfig, setTrialConfig] = useState({
     enabled: true,
@@ -105,18 +99,48 @@ const BillingManagement = () => {
     }
   ]
 
+  const mixedPlans = useMemo(
+    () => [
+      ...editionPlans.map((p) => ({
+        id: p.id,
+        name: p.name,
+        idStr: p.idStr,
+        type: '版本方案',
+        status: p.status,
+        mode: p.mode,
+        limit: p.quota,
+        trial: '7 天',
+        price: `¥ ${p.price}/年`,
+        visibility: '可见'
+      })),
+      ...addonPlans.map((p) => ({
+        id: p.id,
+        name: p.name,
+        idStr: p.idStr,
+        type: '增值包',
+        status: p.status,
+        mode: p.mode,
+        limit: '-',
+        trial: '不提供',
+        price: `¥ ${p.price}`,
+        visibility: p.visibility
+      }))
+    ],
+    [editionPlans, addonPlans]
+  )
+
   const externalEntitlements = [
     {
-      id: 'ext_basic',
-      name: '外部权益包 · 基础',
+      id: 'ext_ai_basic',
+      name: '外部 AI 用量包 · 基础',
       source: '伙伴平台',
       quota: '未知',
       expiry: '未知',
       note: '价格/sku 不可见'
     },
     {
-      id: 'ext_enterprise',
-      name: '外部权益包 · 企业',
+      id: 'ext_ai_enterprise',
+      name: '外部 AI 用量包 · 企业',
       source: '企业合同',
       quota: '未知',
       expiry: '未知',
@@ -124,13 +148,10 @@ const BillingManagement = () => {
     }
   ]
 
-  const currentPlans = useMemo(
-    () => (activeMode === 'edition' ? editionPlans : aiPlans),
-    [activeMode]
-  )
   const isSchemeFlexible = designVersion === 'v1'
   const isSchemeTabs = designVersion === 'v2'
   const isSchemeAddon = designVersion === 'v3'
+  const editionTitle = isSchemeTabs ? '版本限额方案' : '自营 A · 版本限额方案'
   const showSelf =
     (isSchemeFlexible && flexMode !== 'B') ||
     (isSchemeTabs && sourceMode === 'A') ||
@@ -143,7 +164,7 @@ const BillingManagement = () => {
       return ['edition', 'addon']
     }
     if (isSchemeTabs) {
-      return sourceMode === 'B' ? ['external'] : ['edition', 'ai']
+      return sourceMode === 'B' ? ['external'] : ['edition']
     }
     if (isSchemeFlexible) {
       if (flexMode === 'A') return ['edition', 'ai']
@@ -156,7 +177,7 @@ const BillingManagement = () => {
   const trialTypeLabels = {
     edition: '版本限额体验',
     ai: 'AI 用量包体验',
-    external: '外部权益体验',
+    external: '外部AI用量包体验',
     addon: '增值包体验'
   }
 
@@ -179,34 +200,6 @@ const BillingManagement = () => {
     }
   }, [trialTypeOptions, trialConfig.type, aiPlans, addonPlans, editionPlans, externalEntitlements])
 
-  const handleModeSwitch = (mode) => {
-    if (mode === activeMode) return
-    if (currentPlans.length > 0) {
-      setShowSwitchWarning(mode)
-    } else {
-      performSwitch(mode)
-    }
-  }
-
-  const performSwitch = (mode) => {
-    setActiveMode(mode)
-    if (mode === 'ai') {
-      setTrialConfig((prev) => ({
-        ...prev,
-        type: 'ai',
-        targetId: 'a_standard',
-        name: '免费体验 AI 用量'
-      }))
-    } else {
-      setTrialConfig((prev) => ({
-        ...prev,
-        type: 'edition',
-        targetId: 'p_ultimate',
-        name: '免费体验额度'
-      }))
-    }
-    setShowSwitchWarning(false)
-  }
 
   return (
     <div className="min-h-screen bg-[#f5f6f7] flex flex-col text-[#1F2329] font-sans">
@@ -293,7 +286,7 @@ const BillingManagement = () => {
                   : 'text-[#8f959e] hover:bg-gray-50'
               }`}
             >
-              方案二 · A 或 B（Tab 位置）
+              方案二 · A 或 B（顶部切换）
             </button>
             <button
               onClick={() => setDesignVersion('v3')}
@@ -329,30 +322,6 @@ const BillingManagement = () => {
                     </div>
                     付费方案
                   </div>
-                  {isSchemeTabs && sourceMode === 'A' && tabPosition === 'header' && (
-                    <div className="flex bg-[#f2f3f5] p-0.5 rounded ml-2 border border-[#dee0e3]/50">
-                      <button
-                        onClick={() => handleModeSwitch('edition')}
-                        className={`px-4 py-1 text-[11px] rounded transition-all ${
-                          activeMode === 'edition'
-                            ? 'bg-white shadow-sm font-bold text-[#3370ff]'
-                            : 'text-[#8f959e]'
-                        }`}
-                      >
-                        版本限额
-                      </button>
-                      <button
-                        onClick={() => handleModeSwitch('ai')}
-                        className={`px-4 py-1 text-[11px] rounded transition-all ${
-                          activeMode === 'ai'
-                            ? 'bg-white shadow-sm font-bold text-[#3370ff]'
-                            : 'text-[#8f959e]'
-                        }`}
-                      >
-                        AI用量包
-                      </button>
-                    </div>
-                  )}
                   {isSchemeFlexible && (
                     <div className="flex bg-[#f2f3f5] p-0.5 rounded ml-2 border border-[#dee0e3]/50">
                       <button
@@ -397,7 +366,7 @@ const BillingManagement = () => {
                             : 'text-[#8f959e]'
                         }`}
                       >
-                        自营 A
+                        版本限额 A
                       </button>
                       <button
                         onClick={() => setSourceMode('B')}
@@ -407,7 +376,7 @@ const BillingManagement = () => {
                             : 'text-[#8f959e]'
                         }`}
                       >
-                        外部 B
+                        外部AI包 B
                       </button>
                     </div>
                   )}
@@ -416,38 +385,16 @@ const BillingManagement = () => {
                       A 为自营售卖，B 为外部权益消费
                     </div>
                   )}
+                  {isSchemeTabs && (
+                    <div className="text-[11px] text-[#8f959e] font-medium">
+                      A 为自营版本限额，B 为外部 AI 用量包（价格/SKU 不可见）
+                    </div>
+                  )}
                 </div>
-                {isSchemeTabs && sourceMode === 'A' && activeMode === 'edition' && (
+                {isSchemeTabs && sourceMode === 'A' && (
                   <button className="text-[#3370ff] border border-[#3370ff]/30 px-4 py-1.5 rounded text-xs flex items-center gap-1.5 hover:bg-blue-50 font-bold transition-all active:scale-95 shadow-sm">
                     <Plus size={15} /> 添加付费方案
                   </button>
-                )}
-                {isSchemeTabs && (
-                  <div className="flex items-center gap-2 text-[11px] text-[#8f959e]">
-                    <span>Tab 位置</span>
-                    <div className="flex bg-[#f2f3f5] p-0.5 rounded border border-[#dee0e3]/50">
-                      <button
-                        onClick={() => setTabPosition('header')}
-                        className={`px-3 py-1 rounded transition-all ${
-                          tabPosition === 'header'
-                            ? 'bg-white shadow-sm font-bold text-[#3370ff]'
-                            : 'text-[#8f959e]'
-                        }`}
-                      >
-                        顶部
-                      </button>
-                      <button
-                        onClick={() => setTabPosition('card')}
-                        className={`px-3 py-1 rounded transition-all ${
-                          tabPosition === 'card'
-                            ? 'bg-white shadow-sm font-bold text-[#3370ff]'
-                            : 'text-[#8f959e]'
-                        }`}
-                      >
-                        卡片内
-                      </button>
-                    </div>
-                  </div>
                 )}
                 {isSchemeFlexible && (
                   <div className="flex gap-2">
@@ -471,135 +418,15 @@ const BillingManagement = () => {
                 )}
               </div>
 
-              {isSchemeTabs && tabPosition === 'card' && (
-                <div className="px-6 py-5 bg-[#fafbfc] border-b border-[#f2f3f5] flex flex-col gap-4">
-                  <div className="flex gap-4 p-1 bg-[#f2f3f5] w-fit rounded-lg border border-[#dee0e3]/30">
-                    <button
-                      onClick={() => setSourceMode('A')}
-                      className={`px-6 py-2 text-[12px] rounded-md transition-all flex items-center gap-2 ${
-                        sourceMode === 'A'
-                          ? 'bg-white shadow-md text-[#3370ff] font-bold'
-                          : 'text-[#646a73] hover:bg-white/50'
-                      }`}
-                    >
-                      <Layers size={14} /> 自营 A
-                    </button>
-                    <button
-                      onClick={() => setSourceMode('B')}
-                      className={`px-6 py-2 text-[12px] rounded-md transition-all flex items-center gap-2 ${
-                        sourceMode === 'B'
-                          ? 'bg-white shadow-md text-[#3370ff] font-bold'
-                          : 'text-[#646a73] hover:bg-white/50'
-                      }`}
-                    >
-                      <Zap size={14} /> 外部 B
-                    </button>
-                  </div>
-                  <div className="flex items-start gap-2 text-[#646a73] text-[11px] bg-white p-3 rounded border border-[#f2f3f5] shadow-inner">
-                    <HelpCircle size={14} className="mt-0.5 text-[#3370ff]" />
-                    <span>
-                      {sourceMode === 'A'
-                        ? '支持从你处购买自营方案（可按版本封装，也可用量包/增值包扩容）。'
-                        : '支持消费外部购买的权益，但无法获取外部价格/SKU 等信息。'}
-                    </span>
-                  </div>
-                </div>
-              )}
 
               <div className="space-y-6">
                 {showSelf ? (
                   <div className="space-y-6">
-                    <div className="border-b border-[#f2f3f5]">
-                      <div className="px-6 py-4 flex items-center justify-between bg-[#fafbfc]">
-                        <div className="text-[13px] font-bold text-[#1f2329]">
-                          自营 A · 版本限额方案
-                        </div>
-                      </div>
-                      <div className="overflow-x-auto">
-                        <table className="w-full text-left text-[13px]">
-                          <thead>
-                            <tr className="text-[#8f959e] border-b border-[#f2f3f5]">
-                              <th className="pl-6 py-4 font-medium uppercase tracking-tight">
-                                方案名称
-                              </th>
-                              <th className="py-4 font-medium uppercase tracking-tight">
-                                方案 ID
-                              </th>
-                              <th className="py-4 font-medium uppercase tracking-tight">
-                                计费模式
-                              </th>
-                              <th className="py-4 font-medium uppercase tracking-tight">
-                                方案状态
-                              </th>
-                              <th className="py-4 font-medium uppercase tracking-tight">
-                                数量
-                              </th>
-                              <th className="py-4 font-medium uppercase tracking-tight">
-                                价格
-                              </th>
-                              <th className="pr-6 py-4 text-right">操作</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-[#f2f3f5]">
-                            {editionPlans.map((p) => (
-                              <tr
-                                key={p.id}
-                                className="group hover:bg-[#f9fafb] transition-colors"
-                              >
-                                <td className="pl-6 py-5 font-bold text-[#1F2329]">
-                                  {p.name}
-                                </td>
-                                <td className="py-5 text-[#8f959e] font-mono text-[11px] tracking-tighter">
-                                  {p.idStr}
-                                </td>
-                                <td className="py-5">
-                                  <span className="bg-[#f2f3f5] px-2 py-0.5 rounded text-[11px] font-medium text-[#5e646e] border border-[#dee0e3]/40">
-                                    {p.mode}
-                                  </span>
-                                  <span className="ml-2 text-[10px] text-[#8f959e]">
-                                    仅可通过升级扩容
-                                  </span>
-                                </td>
-                                <td className="py-5">
-                                  <span
-                                    className={`px-2 py-0.5 rounded text-[11px] font-medium border ${
-                                      p.status === '已发布'
-                                        ? 'bg-[#ebf7ff] text-[#3370ff] border-[#c9e2ff]'
-                                        : 'bg-[#fff7e6] text-[#ad6800] border-[#ffe7ba]'
-                                    }`}
-                                  >
-                                    {p.status}
-                                  </span>
-                                </td>
-                                <td className="py-5 font-semibold text-[#1f2329]">
-                                  {p.quota}
-                                </td>
-                                <td className="py-5 font-bold text-[#1f2329]">
-                                  ¥ {p.price}{' '}
-                                  <span className="text-[#8f959e] font-normal text-[11px]">
-                                    / 年
-                                  </span>
-                                </td>
-                                <td className="pr-6 py-5 text-right space-x-4 text-[#3370ff]">
-                                  <button className="hover:underline font-bold text-[12px]">
-                                    编辑规格
-                                  </button>
-                                  <button className="text-[#f54a45] hover:underline font-bold text-[12px] opacity-0 group-hover:opacity-100 transition-opacity">
-                                    下架
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-
                     {isSchemeAddon ? (
                       <div>
                         <div className="px-6 py-4 flex items-center justify-between bg-[#fafbfc]">
                           <div className="text-[13px] font-bold text-[#1f2329]">
-                            自营 A · 增值包
+                            自营 A · 版本封装 + 增值包
                           </div>
                         </div>
                         <div className="overflow-x-auto">
@@ -622,6 +449,12 @@ const BillingManagement = () => {
                                   付费模式
                                 </th>
                                 <th className="py-4 font-medium uppercase tracking-tight">
+                                  使用人数限制
+                                </th>
+                                <th className="py-4 font-medium uppercase tracking-tight">
+                                  试用周期
+                                </th>
+                                <th className="py-4 font-medium uppercase tracking-tight">
                                   价格
                                 </th>
                                 <th className="py-4 font-medium uppercase tracking-tight">
@@ -631,7 +464,7 @@ const BillingManagement = () => {
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-[#f2f3f5]">
-                              {addonPlans.map((p) => (
+                              {mixedPlans.map((p) => (
                                 <tr
                                   key={p.id}
                                   className="group hover:bg-[#f9fafb] transition-colors"
@@ -660,12 +493,15 @@ const BillingManagement = () => {
                                   </td>
                                   <td className="py-5 text-[#1f2329] font-medium">
                                     {p.mode}
-                                    <span className="ml-2 text-[10px] text-[#8f959e]">
-                                      可叠加购买扩容
-                                    </span>
+                                  </td>
+                                  <td className="py-5 text-[#1f2329] font-medium">
+                                    {p.limit}
+                                  </td>
+                                  <td className="py-5 text-[#8f959e] text-[12px]">
+                                    {p.trial}
                                   </td>
                                   <td className="py-5 font-bold text-[#1f2329]">
-                                    ¥ {p.price}
+                                    {p.price}
                                   </td>
                                   <td className="py-5 text-[#8f959e] text-[12px]">
                                     {p.visibility}
@@ -685,75 +521,165 @@ const BillingManagement = () => {
                         </div>
                       </div>
                     ) : (
-                      <div>
-                        <div className="px-6 py-4 flex items-center justify-between bg-[#fafbfc]">
-                          <div className="text-[13px] font-bold text-[#1f2329]">
-                            自营 A · AI 用量包
+                      <>
+                        <div className="border-b border-[#f2f3f5]">
+                          <div className="px-6 py-4 flex items-center justify-between bg-[#fafbfc]">
+                            <div className="text-[13px] font-bold text-[#1f2329]">
+                              {editionTitle}
+                            </div>
+                          </div>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-left text-[13px]">
+                              <thead>
+                                <tr className="text-[#8f959e] border-b border-[#f2f3f5]">
+                                  <th className="pl-6 py-4 font-medium uppercase tracking-tight">
+                                    方案名称
+                                  </th>
+                                  <th className="py-4 font-medium uppercase tracking-tight">
+                                    方案 ID
+                                  </th>
+                                  <th className="py-4 font-medium uppercase tracking-tight">
+                                    计费模式
+                                  </th>
+                                  <th className="py-4 font-medium uppercase tracking-tight">
+                                    方案状态
+                                  </th>
+                                  <th className="py-4 font-medium uppercase tracking-tight">
+                                    数量
+                                  </th>
+                                  <th className="py-4 font-medium uppercase tracking-tight">
+                                    价格
+                                  </th>
+                                  <th className="pr-6 py-4 text-right">操作</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-[#f2f3f5]">
+                                {editionPlans.map((p) => (
+                                  <tr
+                                    key={p.id}
+                                    className="group hover:bg-[#f9fafb] transition-colors"
+                                  >
+                                    <td className="pl-6 py-5 font-bold text-[#1F2329]">
+                                      {p.name}
+                                    </td>
+                                    <td className="py-5 text-[#8f959e] font-mono text-[11px] tracking-tighter">
+                                      {p.idStr}
+                                    </td>
+                                    <td className="py-5">
+                                      <span className="bg-[#f2f3f5] px-2 py-0.5 rounded text-[11px] font-medium text-[#5e646e] border border-[#dee0e3]/40">
+                                        {p.mode}
+                                      </span>
+                                      <span className="ml-2 text-[10px] text-[#8f959e]">
+                                        仅可通过升级扩容
+                                      </span>
+                                    </td>
+                                    <td className="py-5">
+                                      <span
+                                        className={`px-2 py-0.5 rounded text-[11px] font-medium border ${
+                                          p.status === '已发布'
+                                            ? 'bg-[#ebf7ff] text-[#3370ff] border-[#c9e2ff]'
+                                            : 'bg-[#fff7e6] text-[#ad6800] border-[#ffe7ba]'
+                                        }`}
+                                      >
+                                        {p.status}
+                                      </span>
+                                    </td>
+                                    <td className="py-5 font-semibold text-[#1f2329]">
+                                      {p.quota}
+                                    </td>
+                                    <td className="py-5 font-bold text-[#1f2329]">
+                                      ¥ {p.price}{' '}
+                                      <span className="text-[#8f959e] font-normal text-[11px]">
+                                        / 年
+                                      </span>
+                                    </td>
+                                    <td className="pr-6 py-5 text-right space-x-4 text-[#3370ff]">
+                                      <button className="hover:underline font-bold text-[12px]">
+                                        编辑规格
+                                      </button>
+                                      <button className="text-[#f54a45] hover:underline font-bold text-[12px] opacity-0 group-hover:opacity-100 transition-opacity">
+                                        下架
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
                         </div>
-                        <div className="overflow-x-auto">
-                          <table className="w-full text-left text-[13px]">
-                            <thead>
-                              <tr className="text-[#8f959e] border-b border-[#f2f3f5]">
-                                <th className="pl-6 py-4 font-medium uppercase tracking-tight">
-                                  方案名称
-                                </th>
-                                <th className="py-4 font-medium uppercase tracking-tight">
-                                  方案 ID
-                                </th>
-                                <th className="py-4 font-medium uppercase tracking-tight">
-                                  计费模式
-                                </th>
-                                <th className="pr-6 py-4 font-medium uppercase tracking-tight">
-                                  资源换算关系
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody className="divide-y divide-[#f2f3f5]">
-                              {aiPlans.map((p) => (
-                                <tr
-                                  key={p.id}
-                                  className="group hover:bg-[#f9fafb] transition-colors"
-                                >
-                                  <td className="pl-6 py-5 font-bold text-[#1F2329]">
-                                    {p.name}
-                                  </td>
-                                  <td className="py-5 text-[#8f959e] font-mono text-[11px] tracking-tighter">
-                                    {p.idStr}
-                                  </td>
-                                  <td className="py-5">
-                                    <span className="bg-[#f2f3f5] px-2 py-0.5 rounded text-[11px] font-medium text-[#5e646e] border border-[#dee0e3]/40">
-                                      {p.mode}
-                                    </span>
-                                    <span className="ml-2 text-[10px] text-[#8f959e]">
-                                      可叠加购买扩容
-                                    </span>
-                                  </td>
-                                  <td className="pr-6 py-5">
-                                    <div className="inline-flex items-center gap-2 bg-white border border-[#dee0e3] rounded-lg px-3 py-2">
-                                      <span className="text-[12px] text-[#1f2329]">
-                                        1 次调用
-                                      </span>
-                                      <span className="text-[11px] text-[#8f959e]">
-                                        等同于
-                                      </span>
-                                      <input
-                                        type="number"
-                                        value={aiRatio}
-                                        onChange={(e) => setAiRatio(e.target.value)}
-                                        className="w-16 border border-[#dee0e3] rounded px-2 py-1 text-[12px] focus:border-[#3370ff] outline-none font-bold text-[#3370ff]"
-                                      />
-                                      <span className="text-[12px] text-[#1f2329]">
-                                        点数
-                                      </span>
-                                    </div>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
+
+                        {!isSchemeTabs ? (
+                          <div>
+                            <div className="px-6 py-4 flex items-center justify-between bg-[#fafbfc]">
+                              <div className="text-[13px] font-bold text-[#1f2329]">
+                                自营 A · AI 用量包
+                              </div>
+                            </div>
+                            <div className="overflow-x-auto">
+                              <table className="w-full text-left text-[13px]">
+                                <thead>
+                                  <tr className="text-[#8f959e] border-b border-[#f2f3f5]">
+                                    <th className="pl-6 py-4 font-medium uppercase tracking-tight">
+                                      方案名称
+                                    </th>
+                                    <th className="py-4 font-medium uppercase tracking-tight">
+                                      方案 ID
+                                    </th>
+                                    <th className="py-4 font-medium uppercase tracking-tight">
+                                      计费模式
+                                    </th>
+                                    <th className="pr-6 py-4 font-medium uppercase tracking-tight">
+                                      资源换算关系
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody className="divide-y divide-[#f2f3f5]">
+                                  {aiPlans.map((p) => (
+                                    <tr
+                                      key={p.id}
+                                      className="group hover:bg-[#f9fafb] transition-colors"
+                                    >
+                                      <td className="pl-6 py-5 font-bold text-[#1F2329]">
+                                        {p.name}
+                                      </td>
+                                      <td className="py-5 text-[#8f959e] font-mono text-[11px] tracking-tighter">
+                                        {p.idStr}
+                                      </td>
+                                      <td className="py-5">
+                                        <span className="bg-[#f2f3f5] px-2 py-0.5 rounded text-[11px] font-medium text-[#5e646e] border border-[#dee0e3]/40">
+                                          {p.mode}
+                                        </span>
+                                        <span className="ml-2 text-[10px] text-[#8f959e]">
+                                          可叠加购买扩容
+                                        </span>
+                                      </td>
+                                      <td className="pr-6 py-5">
+                                        <div className="inline-flex items-center gap-2 bg-white border border-[#dee0e3] rounded-lg px-3 py-2">
+                                          <span className="text-[12px] text-[#1f2329]">
+                                            1 次调用
+                                          </span>
+                                          <span className="text-[11px] text-[#8f959e]">
+                                            等同于
+                                          </span>
+                                          <input
+                                            type="number"
+                                            value={aiRatio}
+                                            onChange={(e) => setAiRatio(e.target.value)}
+                                            className="w-16 border border-[#dee0e3] rounded px-2 py-1 text-[12px] focus:border-[#3370ff] outline-none font-bold text-[#3370ff]"
+                                          />
+                                          <span className="text-[12px] text-[#1f2329]">
+                                            点数
+                                          </span>
+                                        </div>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        ) : null}
+                      </>
                     )}
                   </div>
                 ) : null}
@@ -762,7 +688,7 @@ const BillingManagement = () => {
                   <div>
                     <div className="px-6 py-4 flex items-center justify-between bg-[#fafbfc]">
                       <div className="text-[13px] font-bold text-[#1f2329]">
-                        外部 B · 可消费权益
+                        外部 B · AI 用量包
                       </div>
                       <div className="text-[11px] text-[#8f959e] font-medium">
                         价格/SKU 不可见
@@ -1027,37 +953,6 @@ const BillingManagement = () => {
         </button>
       </div>
 
-      {showSwitchWarning && (
-        <div className="fixed inset-0 bg-[#1f2329]/60 flex items-center justify-center z-[100] backdrop-blur-[4px] transition-all">
-          <div className="bg-white rounded-xl p-8 max-w-sm w-full shadow-2xl border border-[#dee0e3] animate-in fade-in zoom-in duration-200">
-            <div className="flex flex-col items-center text-center">
-              <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center text-[#f54a45] mb-5">
-                <AlertTriangle size={28} />
-              </div>
-              <h3 className="font-bold text-[17px] text-[#1f2329]">
-                确认切换计费逻辑？
-              </h3>
-              <p className="text-[13px] text-[#646a73] mt-2 mb-8 leading-relaxed">
-                切换计费逻辑将清空当前已配置的所有规格数据，试用关联也将失效。此操作不可撤销，请确认。
-              </p>
-            </div>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setShowSwitchWarning(false)}
-                className="flex-1 py-2.5 text-[13px] font-bold text-[#646a73] border border-[#dee0e3] rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                取消
-              </button>
-              <button
-                onClick={() => performSwitch(showSwitchWarning)}
-                className="flex-1 py-2.5 bg-[#f54a45] text-white rounded-lg font-bold shadow-lg shadow-red-100 hover:bg-[#d83935] transition-all active:scale-95"
-              >
-                确认切换
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
