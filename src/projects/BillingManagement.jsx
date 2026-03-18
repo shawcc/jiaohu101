@@ -12,8 +12,7 @@ import {
   Send,
   HelpCircle,
   Clock,
-  BarChart3,
-  ArrowRightLeft
+  BarChart3
 } from 'lucide-react'
 
 const BillingManagement = () => {
@@ -26,6 +25,12 @@ const BillingManagement = () => {
     name: '7天免费试用旗舰版',
     targetId: 'p_ultimate',
     duration: '7',
+    usage: '1000'
+  })
+  const [aiTrialConfig, setAiTrialConfig] = useState({
+    enabled: true,
+    name: '免费试用 AI 包',
+    targetId: 'a_standard',
     usage: '1000'
   })
   const [priceDescription, setPriceDescription] = useState('')
@@ -56,6 +61,7 @@ const BillingManagement = () => {
     () => (activeMode === 'edition' ? editionPlans : aiPlans),
     [activeMode]
   )
+  const isMixed = designVersion === 'v3'
 
   const handleModeSwitch = (mode) => {
     if (mode === activeMode) return
@@ -205,7 +211,7 @@ const BillingManagement = () => {
                     </div>
                     付费方案
                   </div>
-                  {(designVersion === 'v2' || designVersion === 'v3') && (
+                  {designVersion === 'v2' && (
                     <div className="flex bg-[#f2f3f5] p-0.5 rounded ml-2 border border-[#dee0e3]/50">
                       <button
                         onClick={() => handleModeSwitch('edition')}
@@ -229,15 +235,20 @@ const BillingManagement = () => {
                       </button>
                     </div>
                   )}
+                  {isMixed && (
+                    <div className="text-[11px] text-[#8f959e] font-medium">
+                      版本限额与 AI 用量包可同时配置
+                    </div>
+                  )}
                 </div>
-                {activeMode === 'edition' && (
+                {activeMode === 'edition' && !isMixed && (
                   <button className="text-[#3370ff] border border-[#3370ff]/30 px-4 py-1.5 rounded text-xs flex items-center gap-1.5 hover:bg-blue-50 font-bold transition-all active:scale-95 shadow-sm">
                     <Plus size={15} /> 添加付费方案
                   </button>
                 )}
               </div>
 
-              {(designVersion === 'v1' || designVersion === 'v3') && (
+              {designVersion === 'v1' && (
                 <div className="px-6 py-5 bg-[#fafbfc] border-b border-[#f2f3f5] flex flex-col gap-4">
                   <div className="flex gap-4 p-1 bg-[#f2f3f5] w-fit rounded-lg border border-[#dee0e3]/30">
                     <button
@@ -272,234 +283,589 @@ const BillingManagement = () => {
                 </div>
               )}
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-[13px]">
-                  <thead>
-                    <tr className="text-[#8f959e] border-b border-[#f2f3f5] bg-[#fafbfc]">
-                      <th className="pl-6 py-4 font-medium uppercase tracking-tight">
-                        方案名称
-                      </th>
-                      <th className="py-4 font-medium uppercase tracking-tight">
-                        方案 ID
-                      </th>
-                      <th className="py-4 font-medium uppercase tracking-tight">
-                        计费模式
-                      </th>
-                      {activeMode === 'edition' && (
-                        <>
-                          <th className="py-4 font-medium uppercase tracking-tight">
-                            数量
-                          </th>
-                          <th className="py-4 font-medium uppercase tracking-tight">
-                            价格
-                          </th>
-                          <th className="pr-6 py-4 text-right">操作</th>
-                        </>
-                      )}
-                      {activeMode === 'ai' && (
-                        <th className="pr-6 py-4 font-medium uppercase tracking-tight">
-                          资源换算关系
+              {isMixed ? (
+                <div className="space-y-6">
+                  <div className="border-b border-[#f2f3f5]">
+                    <div className="px-6 py-4 flex items-center justify-between bg-[#fafbfc]">
+                      <div className="text-[13px] font-bold text-[#1f2329]">
+                        版本限额方案
+                      </div>
+                      <button className="text-[#3370ff] border border-[#3370ff]/30 px-3 py-1.5 rounded text-xs flex items-center gap-1.5 hover:bg-blue-50 font-bold transition-all active:scale-95 shadow-sm">
+                        <Plus size={14} /> 添加版本方案
+                      </button>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-[13px]">
+                        <thead>
+                          <tr className="text-[#8f959e] border-b border-[#f2f3f5]">
+                            <th className="pl-6 py-4 font-medium uppercase tracking-tight">
+                              方案名称
+                            </th>
+                            <th className="py-4 font-medium uppercase tracking-tight">
+                              方案 ID
+                            </th>
+                            <th className="py-4 font-medium uppercase tracking-tight">
+                              计费模式
+                            </th>
+                            <th className="py-4 font-medium uppercase tracking-tight">
+                              数量
+                            </th>
+                            <th className="py-4 font-medium uppercase tracking-tight">
+                              价格
+                            </th>
+                            <th className="pr-6 py-4 text-right">操作</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#f2f3f5]">
+                          {editionPlans.map((p) => (
+                            <tr
+                              key={p.id}
+                              className="group hover:bg-[#f9fafb] transition-colors"
+                            >
+                              <td className="pl-6 py-5 font-bold text-[#1F2329]">
+                                {p.name}
+                              </td>
+                              <td className="py-5 text-[#8f959e] font-mono text-[11px] tracking-tighter">
+                                {p.idStr}
+                              </td>
+                              <td className="py-5">
+                                <span className="bg-[#f2f3f5] px-2 py-0.5 rounded text-[11px] font-medium text-[#5e646e] border border-[#dee0e3]/40">
+                                  {p.mode}
+                                </span>
+                              </td>
+                              <td className="py-5 font-semibold text-[#1f2329]">
+                                {p.quota}
+                              </td>
+                              <td className="py-5 font-bold text-[#1f2329]">
+                                ¥ {p.price}{' '}
+                                <span className="text-[#8f959e] font-normal text-[11px]">
+                                  / 年
+                                </span>
+                              </td>
+                              <td className="pr-6 py-5 text-right space-x-4 text-[#3370ff]">
+                                <button className="hover:underline font-bold text-[12px]">
+                                  编辑规格
+                                </button>
+                                <button className="text-[#f54a45] hover:underline font-bold text-[12px] opacity-0 group-hover:opacity-100 transition-opacity">
+                                  下架
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="px-6 py-4 flex items-center justify-between bg-[#fafbfc]">
+                      <div className="text-[13px] font-bold text-[#1f2329]">
+                        AI 用量包方案
+                      </div>
+                      <button className="text-[#3370ff] border border-[#3370ff]/30 px-3 py-1.5 rounded text-xs flex items-center gap-1.5 hover:bg-blue-50 font-bold transition-all active:scale-95 shadow-sm">
+                        <Plus size={14} /> 添加 AI 用量包
+                      </button>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-[13px]">
+                        <thead>
+                          <tr className="text-[#8f959e] border-b border-[#f2f3f5]">
+                            <th className="pl-6 py-4 font-medium uppercase tracking-tight">
+                              方案名称
+                            </th>
+                            <th className="py-4 font-medium uppercase tracking-tight">
+                              方案 ID
+                            </th>
+                            <th className="py-4 font-medium uppercase tracking-tight">
+                              计费模式
+                            </th>
+                            <th className="pr-6 py-4 font-medium uppercase tracking-tight">
+                              资源换算关系
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#f2f3f5]">
+                          {aiPlans.map((p) => (
+                            <tr
+                              key={p.id}
+                              className="group hover:bg-[#f9fafb] transition-colors"
+                            >
+                              <td className="pl-6 py-5 font-bold text-[#1F2329]">
+                                {p.name}
+                              </td>
+                              <td className="py-5 text-[#8f959e] font-mono text-[11px] tracking-tighter">
+                                {p.idStr}
+                              </td>
+                              <td className="py-5">
+                                <span className="bg-[#f2f3f5] px-2 py-0.5 rounded text-[11px] font-medium text-[#5e646e] border border-[#dee0e3]/40">
+                                  {p.mode}
+                                </span>
+                                <span className="ml-2 text-[10px] text-[#8f959e]">
+                                  可叠加购买扩容
+                                </span>
+                              </td>
+                              <td className="pr-6 py-5">
+                                <div className="inline-flex items-center gap-2 bg-white border border-[#dee0e3] rounded-lg px-3 py-2">
+                                  <span className="text-[12px] text-[#1f2329]">
+                                    1 次调用
+                                  </span>
+                                  <span className="text-[11px] text-[#8f959e]">
+                                    等同于
+                                  </span>
+                                  <input
+                                    type="number"
+                                    value={aiRatio}
+                                    onChange={(e) => setAiRatio(e.target.value)}
+                                    className="w-16 border border-[#dee0e3] rounded px-2 py-1 text-[12px] focus:border-[#3370ff] outline-none font-bold text-[#3370ff]"
+                                  />
+                                  <span className="text-[12px] text-[#1f2329]">点数</span>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-[13px]">
+                    <thead>
+                      <tr className="text-[#8f959e] border-b border-[#f2f3f5] bg-[#fafbfc]">
+                        <th className="pl-6 py-4 font-medium uppercase tracking-tight">
+                          方案名称
                         </th>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#f2f3f5]">
-                    {currentPlans.map((p) => (
-                      <tr
-                        key={p.id}
-                        className="group hover:bg-[#f9fafb] transition-colors"
-                      >
-                        <td className="pl-6 py-5 font-bold text-[#1F2329]">
-                          {p.name}
-                        </td>
-                        <td className="py-5 text-[#8f959e] font-mono text-[11px] tracking-tighter">
-                          {p.idStr}
-                        </td>
-                        <td className="py-5">
-                          <span className="bg-[#f2f3f5] px-2 py-0.5 rounded text-[11px] font-medium text-[#5e646e] border border-[#dee0e3]/40">
-                            {p.mode}
-                          </span>
-                        </td>
+                        <th className="py-4 font-medium uppercase tracking-tight">
+                          方案 ID
+                        </th>
+                        <th className="py-4 font-medium uppercase tracking-tight">
+                          计费模式
+                        </th>
                         {activeMode === 'edition' && (
                           <>
-                            <td className="py-5 font-semibold text-[#1f2329]">
-                              {p.quota}
-                            </td>
-                            <td className="py-5 font-bold text-[#1f2329]">
-                              ¥ {p.price}{' '}
-                              <span className="text-[#8f959e] font-normal text-[11px]">
-                                / 年
-                              </span>
-                            </td>
-                            <td className="pr-6 py-5 text-right space-x-4 text-[#3370ff]">
-                              <button className="hover:underline font-bold text-[12px]">
-                                编辑规格
-                              </button>
-                              <button className="text-[#f54a45] hover:underline font-bold text-[12px] opacity-0 group-hover:opacity-100 transition-opacity">
-                                下架
-                              </button>
-                            </td>
+                            <th className="py-4 font-medium uppercase tracking-tight">
+                              数量
+                            </th>
+                            <th className="py-4 font-medium uppercase tracking-tight">
+                              价格
+                            </th>
+                            <th className="pr-6 py-4 text-right">操作</th>
                           </>
                         )}
                         {activeMode === 'ai' && (
-                          <td className="pr-6 py-5">
-                            <div className="inline-flex items-center gap-2 bg-white border border-[#dee0e3] rounded-lg px-3 py-2">
-                              <span className="text-[12px] text-[#1f2329]">1 次调用</span>
-                              <span className="text-[11px] text-[#8f959e]">等同于</span>
-                              <input
-                                type="number"
-                                value={aiRatio}
-                                onChange={(e) => setAiRatio(e.target.value)}
-                                className="w-16 border border-[#dee0e3] rounded px-2 py-1 text-[12px] focus:border-[#3370ff] outline-none font-bold text-[#3370ff]"
-                              />
-                              <span className="text-[12px] text-[#1f2329]">点数</span>
-                            </div>
-                          </td>
+                          <th className="pr-6 py-4 font-medium uppercase tracking-tight">
+                            资源换算关系
+                          </th>
                         )}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="divide-y divide-[#f2f3f5]">
+                      {currentPlans.map((p) => (
+                        <tr
+                          key={p.id}
+                          className="group hover:bg-[#f9fafb] transition-colors"
+                        >
+                          <td className="pl-6 py-5 font-bold text-[#1F2329]">
+                            {p.name}
+                          </td>
+                          <td className="py-5 text-[#8f959e] font-mono text-[11px] tracking-tighter">
+                            {p.idStr}
+                          </td>
+                          <td className="py-5">
+                            <span className="bg-[#f2f3f5] px-2 py-0.5 rounded text-[11px] font-medium text-[#5e646e] border border-[#dee0e3]/40">
+                              {p.mode}
+                            </span>
+                          </td>
+                          {activeMode === 'edition' && (
+                            <>
+                              <td className="py-5 font-semibold text-[#1f2329]">
+                                {p.quota}
+                              </td>
+                              <td className="py-5 font-bold text-[#1f2329]">
+                                ¥ {p.price}{' '}
+                                <span className="text-[#8f959e] font-normal text-[11px]">
+                                  / 年
+                                </span>
+                              </td>
+                              <td className="pr-6 py-5 text-right space-x-4 text-[#3370ff]">
+                                <button className="hover:underline font-bold text-[12px]">
+                                  编辑规格
+                                </button>
+                                <button className="text-[#f54a45] hover:underline font-bold text-[12px] opacity-0 group-hover:opacity-100 transition-opacity">
+                                  下架
+                                </button>
+                              </td>
+                            </>
+                          )}
+                          {activeMode === 'ai' && (
+                            <td className="pr-6 py-5">
+                              <div className="inline-flex items-center gap-2 bg-white border border-[#dee0e3] rounded-lg px-3 py-2">
+                                <span className="text-[12px] text-[#1f2329]">
+                                  1 次调用
+                                </span>
+                                <span className="text-[11px] text-[#8f959e]">等同于</span>
+                                <input
+                                  type="number"
+                                  value={aiRatio}
+                                  onChange={(e) => setAiRatio(e.target.value)}
+                                  className="w-16 border border-[#dee0e3] rounded px-2 py-1 text-[12px] focus:border-[#3370ff] outline-none font-bold text-[#3370ff]"
+                                />
+                                <span className="text-[12px] text-[#1f2329]">点数</span>
+                              </div>
+                            </td>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
 
               <div className="bg-[#f9fafb] border-t border-[#f2f3f5] p-8">
                 <div className="ml-4 border-l-2 border-[#dee0e3] pl-8 space-y-7">
-                  <div className="flex items-center gap-10">
-                    <span className="text-[13px] font-bold text-[#1f2329] w-28">
-                      支持试用
-                    </span>
-                    <div
-                      className={`w-10 h-5 rounded-full relative cursor-pointer transition-all ${
-                        trialConfig.enabled ? 'bg-[#34a853]' : 'bg-[#dee0e3]'
-                      }`}
-                      onClick={() =>
-                        setTrialConfig({
-                          ...trialConfig,
-                          enabled: !trialConfig.enabled
-                        })
-                      }
-                    >
-                      <div
-                        className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${
-                          trialConfig.enabled ? 'left-[22px]' : 'left-0.5'
-                        }`}
-                      ></div>
-                    </div>
-                  </div>
+                  {isMixed ? (
+                    <div className="space-y-10">
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-10">
+                          <span className="text-[13px] font-bold text-[#1f2329] w-28">
+                            版本限额试用
+                          </span>
+                          <div
+                            className={`w-10 h-5 rounded-full relative cursor-pointer transition-all ${
+                              trialConfig.enabled ? 'bg-[#34a853]' : 'bg-[#dee0e3]'
+                            }`}
+                            onClick={() =>
+                              setTrialConfig({
+                                ...trialConfig,
+                                enabled: !trialConfig.enabled
+                              })
+                            }
+                          >
+                            <div
+                              className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${
+                                trialConfig.enabled ? 'left-[22px]' : 'left-0.5'
+                              }`}
+                            ></div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-16 gap-y-7">
+                          <div className="space-y-2">
+                            <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                              试用方案名称{' '}
+                              <span className="text-[#f54a45]">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={trialConfig.name}
+                              onChange={(e) =>
+                                setTrialConfig({
+                                  ...trialConfig,
+                                  name: e.target.value
+                                })
+                              }
+                              className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none transition-all shadow-sm"
+                              placeholder="请输入试用方案名称"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                              对应规格 <span className="text-[#f54a45]">*</span>
+                            </label>
+                            <div className="relative">
+                              <select
+                                value={trialConfig.targetId}
+                                onChange={(e) =>
+                                  setTrialConfig({
+                                    ...trialConfig,
+                                    targetId: e.target.value
+                                  })
+                                }
+                                className="w-full border border-[#dee0e3] rounded px-3 py-2 text-[13px] appearance-none focus:border-[#3370ff] outline-none bg-white cursor-pointer transition-all shadow-sm focus:ring-1 focus:ring-[#3370ff]/10"
+                              >
+                                <option value="">请选择规格</option>
+                                {editionPlans.map((p) => (
+                                  <option key={p.id} value={p.id}>
+                                    {p.name}
+                                  </option>
+                                ))}
+                              </select>
+                              <ChevronDown
+                                className="absolute right-2 top-2.5 text-[#8f959e] pointer-events-none"
+                                size={16}
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                              试用时长 (天){' '}
+                              <span className="text-[#f54a45]">*</span>
+                            </label>
+                            <div className="relative">
+                              <input
+                                type="number"
+                                value={trialConfig.duration}
+                                onChange={(e) =>
+                                  setTrialConfig({
+                                    ...trialConfig,
+                                    duration: e.target.value
+                                  })
+                                }
+                                className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none pr-12 transition-all shadow-sm"
+                              />
+                              <Clock
+                                className="absolute right-3 top-2.5 text-[#8f959e]"
+                                size={14}
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                              试用用量限制 <span className="text-[#f54a45]">*</span>
+                            </label>
+                            <div className="relative">
+                              <input
+                                type="text"
+                                value={trialConfig.usage}
+                                onChange={(e) =>
+                                  setTrialConfig({
+                                    ...trialConfig,
+                                    usage: e.target.value
+                                  })
+                                }
+                                className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none pr-12 transition-all shadow-sm"
+                                placeholder="席位限制"
+                              />
+                              <BarChart3
+                                className="absolute right-3 top-2.5 text-[#8f959e]"
+                                size={14}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                  <div className="grid grid-cols-2 gap-x-16 gap-y-7">
-                    <div className="space-y-2">
-                      <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
-                        试用方案名称{' '}
-                        <span className="text-[#f54a45]">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={trialConfig.name}
-                        onChange={(e) =>
-                          setTrialConfig({
-                            ...trialConfig,
-                            name: e.target.value
-                          })
-                        }
-                        className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none transition-all shadow-sm"
-                        placeholder="请输入试用方案名称"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
-                        对应规格 <span className="text-[#f54a45]">*</span>
-                      </label>
-                      <div className="relative">
-                        <select
-                          disabled={activeMode === 'ai'}
-                          value={
-                            activeMode === 'ai' ? 'a_standard' : trialConfig.targetId
-                          }
-                          onChange={(e) =>
-                            setTrialConfig({
-                              ...trialConfig,
-                              targetId: e.target.value
-                            })
-                          }
-                          className={`w-full border border-[#dee0e3] rounded px-3 py-2 text-[13px] appearance-none focus:border-[#3370ff] outline-none ${
-                            activeMode === 'ai'
-                              ? 'bg-[#f2f3f5] cursor-not-allowed text-[#8f959e]'
-                              : 'bg-white cursor-pointer transition-all shadow-sm focus:ring-1 focus:ring-[#3370ff]/10'
-                          }`}
-                        >
-                          {activeMode === 'ai' ? (
-                            <option value="a_standard">飞书AI包</option>
-                          ) : (
-                            <>
-                              <option value="">请选择规格</option>
-                              {editionPlans.map((p) => (
-                                <option key={p.id} value={p.id}>
-                                  {p.name}
-                                </option>
-                              ))}
-                            </>
-                          )}
-                        </select>
-                        {activeMode !== 'ai' && (
-                          <ChevronDown
-                            className="absolute right-2 top-2.5 text-[#8f959e] pointer-events-none"
-                            size={16}
-                          />
-                        )}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-10">
+                          <span className="text-[13px] font-bold text-[#1f2329] w-28">
+                            AI 用量包试用
+                          </span>
+                          <div
+                            className={`w-10 h-5 rounded-full relative cursor-pointer transition-all ${
+                              aiTrialConfig.enabled ? 'bg-[#34a853]' : 'bg-[#dee0e3]'
+                            }`}
+                            onClick={() =>
+                              setAiTrialConfig({
+                                ...aiTrialConfig,
+                                enabled: !aiTrialConfig.enabled
+                              })
+                            }
+                          >
+                            <div
+                              className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${
+                                aiTrialConfig.enabled ? 'left-[22px]' : 'left-0.5'
+                              }`}
+                            ></div>
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-2 gap-x-16 gap-y-7">
+                          <div className="space-y-2">
+                            <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                              试用方案名称{' '}
+                              <span className="text-[#f54a45]">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              value={aiTrialConfig.name}
+                              onChange={(e) =>
+                                setAiTrialConfig({
+                                  ...aiTrialConfig,
+                                  name: e.target.value
+                                })
+                              }
+                              className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none transition-all shadow-sm"
+                              placeholder="请输入试用方案名称"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                              对应规格 <span className="text-[#f54a45]">*</span>
+                            </label>
+                            <div className="relative">
+                              <select
+                                value="a_standard"
+                                disabled
+                                className="w-full border border-[#dee0e3] rounded px-3 py-2 text-[13px] appearance-none bg-[#f2f3f5] cursor-not-allowed text-[#8f959e]"
+                              >
+                                <option value="a_standard">飞书AI包</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                              试用用量限制 <span className="text-[#f54a45]">*</span>
+                            </label>
+                            <div className="relative">
+                              <input
+                                type="text"
+                                value={aiTrialConfig.usage}
+                                onChange={(e) =>
+                                  setAiTrialConfig({
+                                    ...aiTrialConfig,
+                                    usage: e.target.value
+                                  })
+                                }
+                                className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none pr-12 transition-all shadow-sm"
+                                placeholder="用量限制"
+                              />
+                              <BarChart3
+                                className="absolute right-3 top-2.5 text-[#8f959e]"
+                                size={14}
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-10">
+                        <span className="text-[13px] font-bold text-[#1f2329] w-28">
+                          支持试用
+                        </span>
+                        <div
+                          className={`w-10 h-5 rounded-full relative cursor-pointer transition-all ${
+                            trialConfig.enabled ? 'bg-[#34a853]' : 'bg-[#dee0e3]'
+                          }`}
+                          onClick={() =>
+                            setTrialConfig({
+                              ...trialConfig,
+                              enabled: !trialConfig.enabled
+                            })
+                          }
+                        >
+                          <div
+                            className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform ${
+                              trialConfig.enabled ? 'left-[22px]' : 'left-0.5'
+                            }`}
+                          ></div>
+                        </div>
+                      </div>
 
-                    {activeMode === 'edition' && (
-                      <div className="space-y-2">
-                        <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
-                          试用时长 (天){' '}
-                          <span className="text-[#f54a45]">*</span>
-                        </label>
-                        <div className="relative">
+                      <div className="grid grid-cols-2 gap-x-16 gap-y-7">
+                        <div className="space-y-2">
+                          <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                            试用方案名称 <span className="text-[#f54a45]">*</span>
+                          </label>
                           <input
-                            type="number"
-                            value={trialConfig.duration}
+                            type="text"
+                            value={trialConfig.name}
                             onChange={(e) =>
                               setTrialConfig({
                                 ...trialConfig,
-                                duration: e.target.value
+                                name: e.target.value
                               })
                             }
-                            className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none pr-12 transition-all shadow-sm"
-                          />
-                          <Clock
-                            className="absolute right-3 top-2.5 text-[#8f959e]"
-                            size={14}
+                            className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none transition-all shadow-sm"
+                            placeholder="请输入试用方案名称"
                           />
                         </div>
-                      </div>
-                    )}
+                        <div className="space-y-2">
+                          <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                            对应规格 <span className="text-[#f54a45]">*</span>
+                          </label>
+                          <div className="relative">
+                            <select
+                              disabled={activeMode === 'ai'}
+                              value={
+                                activeMode === 'ai' ? 'a_standard' : trialConfig.targetId
+                              }
+                              onChange={(e) =>
+                                setTrialConfig({
+                                  ...trialConfig,
+                                  targetId: e.target.value
+                                })
+                              }
+                              className={`w-full border border-[#dee0e3] rounded px-3 py-2 text-[13px] appearance-none focus:border-[#3370ff] outline-none ${
+                                activeMode === 'ai'
+                                  ? 'bg-[#f2f3f5] cursor-not-allowed text-[#8f959e]'
+                                  : 'bg-white cursor-pointer transition-all shadow-sm focus:ring-1 focus:ring-[#3370ff]/10'
+                              }`}
+                            >
+                              {activeMode === 'ai' ? (
+                                <option value="a_standard">飞书AI包</option>
+                              ) : (
+                                <>
+                                  <option value="">请选择规格</option>
+                                  {editionPlans.map((p) => (
+                                    <option key={p.id} value={p.id}>
+                                      {p.name}
+                                    </option>
+                                  ))}
+                                </>
+                              )}
+                            </select>
+                            {activeMode !== 'ai' && (
+                              <ChevronDown
+                                className="absolute right-2 top-2.5 text-[#8f959e] pointer-events-none"
+                                size={16}
+                              />
+                            )}
+                          </div>
+                        </div>
 
-                    <div className="space-y-2">
-                      <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
-                        试用用量限制 <span className="text-[#f54a45]">*</span>
-                      </label>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          value={trialConfig.usage}
-                          onChange={(e) =>
-                            setTrialConfig({
-                              ...trialConfig,
-                              usage: e.target.value
-                            })
-                          }
-                          className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none pr-12 transition-all shadow-sm"
-                          placeholder={activeMode === 'edition' ? '席位限制' : '用量限制'}
-                        />
-                        <BarChart3
-                          className="absolute right-3 top-2.5 text-[#8f959e]"
-                          size={14}
-                        />
+                        {activeMode === 'edition' && (
+                          <div className="space-y-2">
+                            <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                              试用时长 (天){' '}
+                              <span className="text-[#f54a45]">*</span>
+                            </label>
+                            <div className="relative">
+                              <input
+                                type="number"
+                                value={trialConfig.duration}
+                                onChange={(e) =>
+                                  setTrialConfig({
+                                    ...trialConfig,
+                                    duration: e.target.value
+                                  })
+                                }
+                                className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none pr-12 transition-all shadow-sm"
+                              />
+                              <Clock
+                                className="absolute right-3 top-2.5 text-[#8f959e]"
+                                size={14}
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="space-y-2">
+                          <label className="text-[12px] text-[#8f959e] flex items-center gap-1 font-bold">
+                            试用用量限制 <span className="text-[#f54a45]">*</span>
+                          </label>
+                          <div className="relative">
+                            <input
+                              type="text"
+                              value={trialConfig.usage}
+                              onChange={(e) =>
+                                setTrialConfig({
+                                  ...trialConfig,
+                                  usage: e.target.value
+                                })
+                              }
+                              className="w-full bg-white border border-[#dee0e3] rounded px-3 py-2 text-[13px] focus:border-[#3370ff] outline-none pr-12 transition-all shadow-sm"
+                              placeholder={activeMode === 'edition' ? '席位限制' : '用量限制'}
+                            />
+                            <BarChart3
+                              className="absolute right-3 top-2.5 text-[#8f959e]"
+                              size={14}
+                            />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
                 </div>
               </div>
             </section>
