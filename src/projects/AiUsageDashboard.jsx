@@ -294,26 +294,66 @@ const AiUsageDashboard = () => {
         <div className="flex-1 overflow-y-auto p-6">
           {activeTab === 'overview' ? (
             <div className="space-y-8">
-              {[
-                {
-                  title: '官方能力',
-                  desc: 'AI 周报 / AI 人力分析 / AI 字段',
-                  items: OFFICIAL_PRODUCTS
-                },
-                { title: 'AI 节点 · 官方', desc: '官方开发的节点能力', items: NODE_PRODUCTS_OFFICIAL },
-                { title: 'AI 节点 · ISV', desc: '合作伙伴开发的节点能力', items: NODE_PRODUCTS_ISV }
-              ].map((group) => (
-                <div key={group.title} className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-[15px] font-bold text-[#1F2329]">
-                        {group.title}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                {OFFICIAL_PRODUCTS.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-white border border-[#DEE0E3] rounded-xl overflow-hidden flex flex-col hover:shadow-md transition-all"
+                  >
+                    <div className="p-5 pb-4">
+                      <div className="flex items-center justify-between mb-5">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-10 h-10 ${product.iconBg} rounded-lg flex items-center justify-center`}
+                          >
+                            {product.icon}
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
+                              <h4 className="font-bold text-sm">{product.name}</h4>
+                              {product.sourceType && (
+                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#F2F3F5] text-[#646A73] font-bold">
+                                  {product.sourceType}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="text-[12px] text-[#8F959E] mt-1">{group.desc}</div>
+
+                      <div className="bg-[#F8F9FA] rounded-lg p-3.5 space-y-1 min-h-[110px] flex flex-col justify-center border border-[#F2F3F5]">
+                        {product.usageGroups.map((group, idx) => (
+                          <ProgressBar key={idx} {...group} />
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="px-5 py-3 bg-white border-t border-[#F2F3F5] mt-auto flex justify-between items-center text-[11px] text-[#8F959E]">
+                      <span className="flex items-center gap-1 font-medium">
+                        <Clock size={12} /> 到期日: {product.expiry}
+                      </span>
+                      <button
+                        onClick={() => setActiveTab('logs')}
+                        className="text-[#3370FF] font-bold flex items-center gap-0.5 hover:underline"
+                      >
+                        消耗详情 <ChevronRight size={12} />
+                      </button>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {group.items.map((product) => (
+                ))}
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-[15px] font-bold text-[#1F2329]">AI 节点</div>
+                    <div className="text-[12px] text-[#8F959E] mt-1">
+                      包含官方与 ISV 开发的节点能力
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {[...NODE_PRODUCTS_OFFICIAL, ...NODE_PRODUCTS_ISV].map((product) => (
                       <div
                         key={product.id}
                         className="bg-white border border-[#DEE0E3] rounded-xl overflow-hidden flex flex-col hover:shadow-md transition-all"
@@ -364,9 +404,8 @@ const AiUsageDashboard = () => {
                         </div>
                       </div>
                     ))}
-                  </div>
                 </div>
-              ))}
+              </div>
             </div>
           ) : (
             <div className="bg-white border border-[#DEE0E3] rounded-lg shadow-sm overflow-hidden">
