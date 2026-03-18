@@ -17,15 +17,64 @@ import {
   Calendar
 } from 'lucide-react'
 
-const AI_PRODUCTS = [
+const OFFICIAL_PRODUCTS = [
   {
-    id: 'p1',
+    id: 'o_report',
+    name: 'AI 周报',
+    status: '正式',
+    expiry: '2026-09-09',
+    icon: <FileText className="text-white" size={20} />,
+    iconBg: 'bg-blue-500',
+    sourceType: '官方能力',
+    usageGroups: [
+      { label: '免费额度', used: 120, total: 500, unit: '次', type: 'free' },
+      {
+        label: '付费额度',
+        used: 600,
+        total: 2000,
+        unit: '次',
+        type: 'paid',
+        annotation: '基础版'
+      }
+    ]
+  },
+  {
+    id: 'o_hr',
+    name: 'AI 人力分析',
+    status: '正式',
+    expiry: '2026-09-09',
+    icon: <Users className="text-white" size={20} />,
+    iconBg: 'bg-indigo-500',
+    sourceType: '官方能力',
+    usageGroups: [
+      { label: '免费额度', used: 2000, total: 5000, unit: '次', type: 'free' },
+      { label: '付费额度', used: 800, total: 3000, unit: '次', type: 'paid' }
+    ]
+  },
+  {
+    id: 'o_field',
+    name: 'AI 字段',
+    status: '正式',
+    expiry: '2026-09-09',
+    icon: <Sparkles className="text-white" size={20} />,
+    iconBg: 'bg-emerald-500',
+    sourceType: '官方能力',
+    usageGroups: [
+      { label: '免费额度', used: 5000, total: 5000, unit: '点', type: 'free' },
+      { label: '付费额度', used: 1200, total: 10000, unit: '点', type: 'paid' }
+    ]
+  }
+]
+
+const NODE_PRODUCTS_OFFICIAL = [
+  {
+    id: 'n_prd',
     name: 'AI PRD',
     status: '正式',
     expiry: '2026-09-09',
     icon: <Box className="text-white" size={20} />,
-    iconBg: 'bg-blue-500',
-    isLarkAI: false,
+    iconBg: 'bg-sky-500',
+    sourceType: '官方',
     usageGroups: [
       { label: '免费配额', used: 120, total: 500, unit: '次', type: 'free' },
       {
@@ -37,28 +86,33 @@ const AI_PRODUCTS = [
         annotation: '基础版'
       }
     ]
-  },
+  }
+]
+
+const NODE_PRODUCTS_ISV = [
   {
-    id: 'p2',
+    id: 'n_case',
     name: 'AI 用例',
     status: '正式',
     expiry: '2026-09-09',
     icon: <Cpu className="text-white" size={20} />,
-    iconBg: 'bg-indigo-500',
-    isLarkAI: true,
+    iconBg: 'bg-purple-500',
+    sourceType: 'ISV',
+    isvName: '飞书伙伴·霓虹AI',
     usageGroups: [
       { label: '免费额度', used: 20000, total: 20000, unit: '点', type: 'free' },
       { label: '付费额度', used: 4500, total: 50000, unit: '点', type: 'paid' }
     ]
   },
   {
-    id: 'p3',
+    id: 'n_release',
     name: 'AI ReleaseNote',
     status: '正式',
     expiry: '2026-09-09',
     icon: <FileText className="text-white" size={20} />,
-    iconBg: 'bg-emerald-500',
-    isLarkAI: false,
+    iconBg: 'bg-amber-500',
+    sourceType: 'ISV',
+    isvName: '灵感工坊',
     usageGroups: [
       { label: '免费配额', used: 5, total: 10, unit: '次', type: 'free' },
       {
@@ -239,51 +293,77 @@ const AiUsageDashboard = () => {
 
         <div className="flex-1 overflow-y-auto p-6">
           {activeTab === 'overview' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {AI_PRODUCTS.map((product) => (
-                <div
-                  key={product.id}
-                  className="bg-white border border-[#DEE0E3] rounded-xl overflow-hidden flex flex-col hover:shadow-md transition-all"
-                >
-                  <div className="p-5 pb-4">
-                    <div className="flex items-center justify-between mb-5">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-10 h-10 ${product.iconBg} rounded-lg flex items-center justify-center`}
-                        >
-                          {product.icon}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-bold text-sm">{product.name}</h4>
-                          {product.isLarkAI && (
-                            <div className="flex items-center gap-0.5 px-1.5 py-0.5 bg-[#F0FBFF] border border-[#0095FF20] rounded text-[#0095FF] scale-90 origin-left">
-                              <Sparkles size={10} fill="currentColor" />
-                              <span className="text-[9px] font-bold tracking-tight">
-                                飞书AI
-                              </span>
-                            </div>
-                          )}
-                        </div>
+            <div className="space-y-8">
+              {[
+                {
+                  title: '官方能力',
+                  desc: 'AI 周报 / AI 人力分析 / AI 字段',
+                  items: OFFICIAL_PRODUCTS
+                },
+                { title: 'AI 节点 · 官方', desc: '官方开发的节点能力', items: NODE_PRODUCTS_OFFICIAL },
+                { title: 'AI 节点 · ISV', desc: '合作伙伴开发的节点能力', items: NODE_PRODUCTS_ISV }
+              ].map((group) => (
+                <div key={group.title} className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="text-[15px] font-bold text-[#1F2329]">
+                        {group.title}
                       </div>
-                    </div>
-
-                    <div className="bg-[#F8F9FA] rounded-lg p-3.5 space-y-1 min-h-[110px] flex flex-col justify-center border border-[#F2F3F5]">
-                      {product.usageGroups.map((group, idx) => (
-                        <ProgressBar key={idx} {...group} />
-                      ))}
+                      <div className="text-[12px] text-[#8F959E] mt-1">{group.desc}</div>
                     </div>
                   </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {group.items.map((product) => (
+                      <div
+                        key={product.id}
+                        className="bg-white border border-[#DEE0E3] rounded-xl overflow-hidden flex flex-col hover:shadow-md transition-all"
+                      >
+                        <div className="p-5 pb-4">
+                          <div className="flex items-center justify-between mb-5">
+                            <div className="flex items-center gap-3">
+                              <div
+                                className={`w-10 h-10 ${product.iconBg} rounded-lg flex items-center justify-center`}
+                              >
+                                {product.icon}
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                  <h4 className="font-bold text-sm">{product.name}</h4>
+                                  {product.sourceType && (
+                                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#F2F3F5] text-[#646A73] font-bold">
+                                      {product.sourceType}
+                                    </span>
+                                  )}
+                                </div>
+                                {product.isvName && (
+                                  <span className="text-[10px] text-[#8F959E]">
+                                    {product.isvName}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
 
-                  <div className="px-5 py-3 bg-white border-t border-[#F2F3F5] mt-auto flex justify-between items-center text-[11px] text-[#8F959E]">
-                    <span className="flex items-center gap-1 font-medium">
-                      <Clock size={12} /> 到期日: {product.expiry}
-                    </span>
-                    <button
-                      onClick={() => setActiveTab('logs')}
-                      className="text-[#3370FF] font-bold flex items-center gap-0.5 hover:underline"
-                    >
-                      消耗详情 <ChevronRight size={12} />
-                    </button>
+                          <div className="bg-[#F8F9FA] rounded-lg p-3.5 space-y-1 min-h-[110px] flex flex-col justify-center border border-[#F2F3F5]">
+                            {product.usageGroups.map((group, idx) => (
+                              <ProgressBar key={idx} {...group} />
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="px-5 py-3 bg-white border-t border-[#F2F3F5] mt-auto flex justify-between items-center text-[11px] text-[#8F959E]">
+                          <span className="flex items-center gap-1 font-medium">
+                            <Clock size={12} /> 到期日: {product.expiry}
+                          </span>
+                          <button
+                            onClick={() => setActiveTab('logs')}
+                            className="text-[#3370FF] font-bold flex items-center gap-0.5 hover:underline"
+                          >
+                            消耗详情 <ChevronRight size={12} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               ))}
