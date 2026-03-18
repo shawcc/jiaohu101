@@ -25,10 +25,9 @@ const OFFICIAL_PRODUCTS = [
     expiry: '2026-09-09',
     icon: <FileText className="text-white" size={20} />,
     iconBg: 'bg-blue-500',
-    usageGroups: [
-      { label: '免费额度', used: 3200, unit: '点', type: 'free' },
-      { label: '付费额度', used: 0, unit: '点', type: 'paid' }
-    ]
+    unit: '点',
+    freeUsed: 3200,
+    paidUsed: 0
   },
   {
     id: 'o_hr',
@@ -37,10 +36,9 @@ const OFFICIAL_PRODUCTS = [
     expiry: '2026-09-09',
     icon: <Users className="text-white" size={20} />,
     iconBg: 'bg-indigo-500',
-    usageGroups: [
-      { label: '免费额度', used: 1800, unit: '点', type: 'free' },
-      { label: '付费额度', used: 0, unit: '点', type: 'paid' }
-    ]
+    unit: '点',
+    freeUsed: 1800,
+    paidUsed: 0
   },
   {
     id: 'o_field',
@@ -49,10 +47,9 @@ const OFFICIAL_PRODUCTS = [
     expiry: '2026-09-09',
     icon: <Sparkles className="text-white" size={20} />,
     iconBg: 'bg-emerald-500',
-    usageGroups: [
-      { label: '免费额度', used: 3600, unit: '点', type: 'free' },
-      { label: '付费额度', used: 0, unit: '点', type: 'paid' }
-    ]
+    unit: '点',
+    freeUsed: 3600,
+    paidUsed: 0
   }
 ]
 
@@ -317,10 +314,32 @@ const AiUsageDashboard = () => {
                         </div>
                       </div>
 
-                      <div className="bg-[#F8F9FA] rounded-lg p-3.5 space-y-1 min-h-[110px] flex flex-col justify-center border border-[#F2F3F5]">
-                        {product.usageGroups.map((group, idx) => (
-                          <ProgressBar key={idx} {...group} />
-                        ))}
+                      <div className="bg-[#F8F9FA] rounded-lg p-4 min-h-[110px] border border-[#F2F3F5] flex items-center justify-between">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center gap-2 text-[11px] text-[#646A73] font-bold">
+                            <span className="w-2 h-2 rounded-full bg-[#00B42A]" />
+                            免费用量
+                          </div>
+                          <div className="text-[18px] font-extrabold font-mono text-[#1F2329]">
+                            {product.freeUsed.toLocaleString()}{' '}
+                            <span className="text-[11px] text-[#8F959E] font-medium">
+                              {product.unit}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="w-px h-12 bg-[#DEE0E3]" />
+                        <div className="flex flex-col gap-2">
+                          <div className="flex items-center gap-2 text-[11px] text-[#646A73] font-bold">
+                            <span className="w-2 h-2 rounded-full bg-[#3370FF]" />
+                            付费用量
+                          </div>
+                          <div className="text-[18px] font-extrabold font-mono text-[#1F2329]">
+                            {product.paidUsed.toLocaleString()}{' '}
+                            <span className="text-[11px] text-[#8F959E] font-medium">
+                              {product.unit}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
