@@ -11,7 +11,6 @@ import {
   Cpu,
   Zap,
   HelpCircle,
-  Clock,
   FileText,
   Sparkles,
   Calendar
@@ -19,37 +18,28 @@ import {
 
 const OFFICIAL_PRODUCTS = [
   {
-    id: 'o_report',
-    name: 'AI 周报',
-    status: '正式',
-    expiry: '2026-09-09',
-    icon: <FileText className="text-white" size={20} />,
-    iconBg: 'bg-blue-500',
-    unit: '点',
-    freeUsed: 3200,
-    paidUsed: 0
-  },
-  {
     id: 'o_hr',
     name: 'AI 人力分析',
     status: '正式',
-    expiry: '2026-09-09',
     icon: <Users className="text-white" size={20} />,
     iconBg: 'bg-indigo-500',
-    unit: '点',
-    freeUsed: 1800,
-    paidUsed: 0
+    aiPackageTag: '飞书AI包',
+    usageGroups: [
+      { label: '免费额度', used: 1800, unit: '点', type: 'free' },
+      { label: '付费额度', used: 0, unit: '点', type: 'paid' }
+    ]
   },
   {
     id: 'o_field',
     name: 'AI 字段',
     status: '正式',
-    expiry: '2026-09-09',
     icon: <Sparkles className="text-white" size={20} />,
     iconBg: 'bg-emerald-500',
-    unit: '点',
-    freeUsed: 3600,
-    paidUsed: 0
+    aiPackageTag: '飞书AI包',
+    usageGroups: [
+      { label: '免费额度', used: 3600, unit: '点', type: 'free' },
+      { label: '付费额度', used: 0, unit: '点', type: 'paid' }
+    ]
   }
 ]
 
@@ -58,19 +48,26 @@ const NODE_PRODUCTS_OFFICIAL = [
     id: 'n_prd',
     name: 'AI PRD',
     status: '正式',
-    expiry: '2026-09-09',
     icon: <Box className="text-white" size={20} />,
     iconBg: 'bg-sky-500',
     developerName: '飞书项目',
     usageGroups: [
-      { label: '免费配额', used: 120, total: 500, unit: '次', type: 'free' },
+      {
+        label: '免费配额',
+        used: 120,
+        total: 500,
+        unit: '次',
+        type: 'free',
+        expiry: '2026-03-31'
+      },
       {
         label: '付费配额',
         used: 600,
         total: 2000,
         unit: '次',
         type: 'paid',
-        annotation: '基础版'
+        annotation: '基础版',
+        expiry: '2026-12-31'
       }
     ]
   }
@@ -81,7 +78,6 @@ const NODE_PRODUCTS_ISV = [
     id: 'n_case',
     name: 'AI 用例',
     status: '正式',
-    expiry: '2026-09-09',
     icon: <Cpu className="text-white" size={20} />,
     iconBg: 'bg-purple-500',
     developerName: '飞书伙伴·霓虹AI',
@@ -95,12 +91,18 @@ const NODE_PRODUCTS_ISV = [
     id: 'n_release',
     name: 'AI ReleaseNote',
     status: '正式',
-    expiry: '2026-09-09',
     icon: <FileText className="text-white" size={20} />,
     iconBg: 'bg-amber-500',
     developerName: '灵感工坊',
     usageGroups: [
-      { label: '免费配额', used: 5, total: 10, unit: '次', type: 'free' },
+      {
+        label: '免费配额',
+        used: 5,
+        total: 10,
+        unit: '次',
+        type: 'free',
+        expiry: '2026-03-31'
+      },
       {
         label: '付费配额',
         used: 0,
@@ -143,6 +145,7 @@ const LOGS_DATA = [
 const AiUsageDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview')
   const [activeMenu, setActiveMenu] = useState('AI用量')
+  const [displayScheme, setDisplayScheme] = useState('scheme3')
 
   const menuGroups = [
     { title: '组织架构', items: ['成员管理', '团队管理'], icon: <Users size={18} /> },
@@ -156,7 +159,7 @@ const AiUsageDashboard = () => {
     { title: '安全合规', items: ['安全设置', '管理员日志'], icon: <ShieldCheck size={18} /> }
   ]
 
-  const ProgressBar = ({ used, total, unit, label, type, annotation, emptyMsg }) => {
+  const ProgressBar = ({ used, total, unit, label, type, annotation, emptyMsg, expiry }) => {
     const hasTotal = typeof total === 'number' && total > 0
     const isNoBusiness = total === 0
     const percent = isNoBusiness
@@ -179,6 +182,9 @@ const AiUsageDashboard = () => {
                 {annotation}
               </span>
             )}
+            {expiry ? (
+              <span className="text-[10px] text-[#8F959E] font-medium">到期 {expiry}</span>
+            ) : null}
           </div>
           <span className="text-xs font-bold font-mono">
             {isNoBusiness ? (
@@ -206,6 +212,49 @@ const AiUsageDashboard = () => {
             style={{ width: `${isNoBusiness ? 100 : percent}%` }}
           />
         </div>
+      </div>
+    )
+  }
+
+  const UsageBlocks = ({ groups }) => {
+    return (
+      <div className="bg-[#F8F9FA] rounded-lg p-4 min-h-[110px] border border-[#F2F3F5] flex items-center justify-between">
+        {groups.map((g, idx) => {
+          const hasTotal = typeof g.total === 'number' && g.total > 0
+          const isNoBusiness = g.total === 0
+          const dotColor = g.type === 'paid' ? 'bg-[#3370FF]' : 'bg-[#00B42A]'
+          return (
+            <React.Fragment key={`${g.label}-${idx}`}>
+              {idx > 0 ? <div className="w-px h-12 bg-[#DEE0E3]" /> : null}
+              <div className="flex flex-col gap-2 min-w-0">
+                <div className="flex items-center gap-2 text-[11px] text-[#646A73] font-bold">
+                  <span className={`w-2 h-2 rounded-full ${dotColor}`} />
+                  {g.label}
+                </div>
+                <div className="text-[18px] font-extrabold font-mono text-[#1F2329]">
+                  {isNoBusiness ? (
+                    <span className="text-[#8F959E] font-normal text-[12px]">
+                      {g.emptyMsg}
+                    </span>
+                  ) : hasTotal ? (
+                    <>
+                      {g.used.toLocaleString()}/{g.total.toLocaleString()}{' '}
+                      <span className="text-[11px] text-[#8F959E] font-medium">{g.unit}</span>
+                    </>
+                  ) : (
+                    <>
+                      {g.used.toLocaleString()}{' '}
+                      <span className="text-[11px] text-[#8F959E] font-medium">{g.unit}</span>
+                    </>
+                  )}
+                </div>
+                {g.expiry ? (
+                  <div className="text-[10px] text-[#8F959E] font-medium">到期 {g.expiry}</div>
+                ) : null}
+              </div>
+            </React.Fragment>
+          )
+        })}
       </div>
     )
   }
@@ -292,6 +341,41 @@ const AiUsageDashboard = () => {
         <div className="flex-1 overflow-y-auto p-6">
           {activeTab === 'overview' ? (
             <div className="space-y-8">
+              <div className="flex justify-end">
+                <div className="flex bg-white border border-[#DEE0E3] rounded-lg p-1 shadow-sm">
+                  <button
+                    onClick={() => setDisplayScheme('scheme1')}
+                    className={`px-3 py-1 text-[12px] rounded transition-all font-bold ${
+                      displayScheme === 'scheme1'
+                        ? 'bg-[#EBF2FF] text-[#3370FF]'
+                        : 'text-[#646A73] hover:bg-gray-50'
+                    }`}
+                  >
+                    方案1 · 条
+                  </button>
+                  <button
+                    onClick={() => setDisplayScheme('scheme2')}
+                    className={`px-3 py-1 text-[12px] rounded transition-all font-bold ${
+                      displayScheme === 'scheme2'
+                        ? 'bg-[#EBF2FF] text-[#3370FF]'
+                        : 'text-[#646A73] hover:bg-gray-50'
+                    }`}
+                  >
+                    方案2 · 块
+                  </button>
+                  <button
+                    onClick={() => setDisplayScheme('scheme3')}
+                    className={`px-3 py-1 text-[12px] rounded transition-all font-bold ${
+                      displayScheme === 'scheme3'
+                        ? 'bg-[#EBF2FF] text-[#3370FF]'
+                        : 'text-[#646A73] hover:bg-gray-50'
+                    }`}
+                  >
+                    方案3 · 混合
+                  </button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {OFFICIAL_PRODUCTS.map((product) => (
                   <div
@@ -309,44 +393,28 @@ const AiUsageDashboard = () => {
                           <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
                               <h4 className="font-bold text-sm">{product.name}</h4>
+                              {product.aiPackageTag ? (
+                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#EBF2FF] text-[#3370FF] font-extrabold">
+                                  {product.aiPackageTag}
+                                </span>
+                              ) : null}
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="bg-[#F8F9FA] rounded-lg p-4 min-h-[110px] border border-[#F2F3F5] flex items-center justify-between">
-                        <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-2 text-[11px] text-[#646A73] font-bold">
-                            <span className="w-2 h-2 rounded-full bg-[#00B42A]" />
-                            免费用量
-                          </div>
-                          <div className="text-[18px] font-extrabold font-mono text-[#1F2329]">
-                            {product.freeUsed.toLocaleString()}{' '}
-                            <span className="text-[11px] text-[#8F959E] font-medium">
-                              {product.unit}
-                            </span>
-                          </div>
+                      {displayScheme === 'scheme1' ? (
+                        <div className="bg-[#F8F9FA] rounded-lg p-3.5 space-y-1 min-h-[110px] flex flex-col justify-center border border-[#F2F3F5]">
+                          {product.usageGroups.map((group, idx) => (
+                            <ProgressBar key={idx} {...group} />
+                          ))}
                         </div>
-                        <div className="w-px h-12 bg-[#DEE0E3]" />
-                        <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-2 text-[11px] text-[#646A73] font-bold">
-                            <span className="w-2 h-2 rounded-full bg-[#3370FF]" />
-                            付费用量
-                          </div>
-                          <div className="text-[18px] font-extrabold font-mono text-[#1F2329]">
-                            {product.paidUsed.toLocaleString()}{' '}
-                            <span className="text-[11px] text-[#8F959E] font-medium">
-                              {product.unit}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+                      ) : (
+                        <UsageBlocks groups={product.usageGroups} />
+                      )}
                     </div>
 
-                    <div className="px-5 py-3 bg-white border-t border-[#F2F3F5] mt-auto flex justify-between items-center text-[11px] text-[#8F959E]">
-                      <span className="flex items-center gap-1 font-medium">
-                        <Clock size={12} /> 到期日: {product.expiry}
-                      </span>
+                    <div className="px-5 py-3 bg-white border-t border-[#F2F3F5] mt-auto flex justify-end items-center text-[11px] text-[#8F959E]">
                       <button
                         onClick={() => setActiveTab('logs')}
                         className="text-[#3370FF] font-bold flex items-center gap-0.5 hover:underline"
@@ -396,17 +464,18 @@ const AiUsageDashboard = () => {
                             </div>
                           </div>
 
-                          <div className="bg-[#F8F9FA] rounded-lg p-3.5 space-y-1 min-h-[110px] flex flex-col justify-center border border-[#F2F3F5]">
-                            {product.usageGroups.map((group, idx) => (
-                              <ProgressBar key={idx} {...group} />
-                            ))}
-                          </div>
+                          {displayScheme === 'scheme2' ? (
+                            <UsageBlocks groups={product.usageGroups} />
+                          ) : (
+                            <div className="bg-[#F8F9FA] rounded-lg p-3.5 space-y-1 min-h-[110px] flex flex-col justify-center border border-[#F2F3F5]">
+                              {product.usageGroups.map((group, idx) => (
+                                <ProgressBar key={idx} {...group} />
+                              ))}
+                            </div>
+                          )}
                         </div>
 
-                        <div className="px-5 py-3 bg-white border-t border-[#F2F3F5] mt-auto flex justify-between items-center text-[11px] text-[#8F959E]">
-                          <span className="flex items-center gap-1 font-medium">
-                            <Clock size={12} /> 到期日: {product.expiry}
-                          </span>
+                        <div className="px-5 py-3 bg-white border-t border-[#F2F3F5] mt-auto flex justify-end items-center text-[11px] text-[#8F959E]">
                           <button
                             onClick={() => setActiveTab('logs')}
                             className="text-[#3370FF] font-bold flex items-center gap-0.5 hover:underline"
