@@ -14,8 +14,11 @@ import {
 
 const BillingManagement = () => {
   const [designVersion, setDesignVersion] = useState('v2')
-  const [flexMode, setFlexMode] = useState('A')
   const [sourceMode, setSourceMode] = useState('A')
+  const [flexSelection, setFlexSelection] = useState({
+    A: true,
+    B: true
+  })
   const [aiRatio, setAiRatio] = useState('10')
   const [trialConfig, setTrialConfig] = useState({
     enabled: true,
@@ -153,11 +156,11 @@ const BillingManagement = () => {
   const isSchemeAddon = designVersion === 'v3'
   const editionTitle = isSchemeTabs ? '版本限额方案' : '自营 A · 版本限额方案'
   const showSelf =
-    (isSchemeFlexible && flexMode !== 'B') ||
+    (isSchemeFlexible && flexSelection.A) ||
     (isSchemeTabs && sourceMode === 'A') ||
     isSchemeAddon
   const showExternal =
-    (isSchemeFlexible && flexMode !== 'A') || (isSchemeTabs && sourceMode === 'B')
+    (isSchemeFlexible && flexSelection.B) || (isSchemeTabs && sourceMode === 'B')
 
   const trialTypeOptions = useMemo(() => {
     if (isSchemeAddon) {
@@ -167,12 +170,13 @@ const BillingManagement = () => {
       return sourceMode === 'B' ? ['external'] : ['edition']
     }
     if (isSchemeFlexible) {
-      if (flexMode === 'A') return ['edition', 'ai']
-      if (flexMode === 'B') return ['external']
-      return ['edition', 'ai', 'external']
+      if (flexSelection.A && flexSelection.B) return ['edition', 'ai', 'external']
+      if (flexSelection.A) return ['edition', 'ai']
+      if (flexSelection.B) return ['external']
+      return []
     }
     return ['edition', 'ai']
-  }, [isSchemeAddon, isSchemeTabs, isSchemeFlexible, flexMode, sourceMode])
+  }, [isSchemeAddon, isSchemeTabs, isSchemeFlexible, flexSelection, sourceMode])
 
   const trialTypeLabels = {
     edition: '版本限额体验',
@@ -182,6 +186,7 @@ const BillingManagement = () => {
   }
 
   useEffect(() => {
+    if (trialTypeOptions.length === 0) return
     if (!trialTypeOptions.includes(trialConfig.type)) {
       const nextType = trialTypeOptions[0]
       const nextTarget =
@@ -323,37 +328,36 @@ const BillingManagement = () => {
                     付费方案
                   </div>
                   {isSchemeFlexible && (
-                    <div className="flex bg-[#f2f3f5] p-0.5 rounded ml-2 border border-[#dee0e3]/50">
+                    <div className="flex items-center gap-2 ml-2">
                       <button
-                        onClick={() => setFlexMode('A')}
-                        className={`px-4 py-1 text-[11px] rounded transition-all ${
-                          flexMode === 'A'
-                            ? 'bg-white shadow-sm font-bold text-[#3370ff]'
-                            : 'text-[#8f959e]'
+                        onClick={() =>
+                          setFlexSelection((prev) => ({ ...prev, A: !prev.A }))
+                        }
+                        className={`px-3 py-1.5 rounded text-[11px] font-bold border transition-all ${
+                          flexSelection.A
+                            ? 'bg-[#e8f0ff] text-[#3370ff] border-[#bcd3ff]'
+                            : 'bg-white text-[#8f959e] border-[#dee0e3]'
                         }`}
                       >
-                        自营 A
+                        {flexSelection.A ? '✓' : '○'} 自营 A
                       </button>
                       <button
-                        onClick={() => setFlexMode('B')}
-                        className={`px-4 py-1 text-[11px] rounded transition-all ${
-                          flexMode === 'B'
-                            ? 'bg-white shadow-sm font-bold text-[#3370ff]'
-                            : 'text-[#8f959e]'
+                        onClick={() =>
+                          setFlexSelection((prev) => ({ ...prev, B: !prev.B }))
+                        }
+                        className={`px-3 py-1.5 rounded text-[11px] font-bold border transition-all ${
+                          flexSelection.B
+                            ? 'bg-[#e8f0ff] text-[#3370ff] border-[#bcd3ff]'
+                            : 'bg-white text-[#8f959e] border-[#dee0e3]'
                         }`}
                       >
-                        外部 B
+                        {flexSelection.B ? '✓' : '○'} 外部 B
                       </button>
-                      <button
-                        onClick={() => setFlexMode('A+B')}
-                        className={`px-4 py-1 text-[11px] rounded transition-all ${
-                          flexMode === 'A+B'
-                            ? 'bg-white shadow-sm font-bold text-[#3370ff]'
-                            : 'text-[#8f959e]'
-                        }`}
-                      >
-                        A + B
-                      </button>
+                      {!flexSelection.A && !flexSelection.B && (
+                        <span className="text-[11px] text-[#f54a45] ml-2">
+                          请至少选择一种策略
+                        </span>
+                      )}
                     </div>
                   )}
                   {isSchemeTabs && (
