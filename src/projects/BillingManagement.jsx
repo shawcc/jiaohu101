@@ -171,6 +171,16 @@ const BillingManagement = () => {
             >
               方案二
             </button>
+            <button
+              onClick={() => setDesignVersion('v3')}
+              className={`px-4 py-1 text-[11px] rounded transition-all ${
+                designVersion === 'v3'
+                  ? 'bg-[#3370ff] text-white font-bold'
+                  : 'text-[#8f959e] hover:bg-gray-50'
+              }`}
+            >
+              方案三
+            </button>
           </div>
 
           <div className="max-w-5xl mx-auto space-y-6">
@@ -195,7 +205,7 @@ const BillingManagement = () => {
                     </div>
                     付费方案
                   </div>
-                  {designVersion === 'v2' && (
+                  {(designVersion === 'v2' || designVersion === 'v3') && (
                     <div className="flex bg-[#f2f3f5] p-0.5 rounded ml-2 border border-[#dee0e3]/50">
                       <button
                         onClick={() => handleModeSwitch('edition')}
@@ -227,7 +237,7 @@ const BillingManagement = () => {
                 )}
               </div>
 
-              {designVersion === 'v1' && (
+              {(designVersion === 'v1' || designVersion === 'v3') && (
                 <div className="px-6 py-5 bg-[#fafbfc] border-b border-[#f2f3f5] flex flex-col gap-4">
                   <div className="flex gap-4 p-1 bg-[#f2f3f5] w-fit rounded-lg border border-[#dee0e3]/30">
                     <button
@@ -286,6 +296,11 @@ const BillingManagement = () => {
                           <th className="pr-6 py-4 text-right">操作</th>
                         </>
                       )}
+                      {activeMode === 'ai' && (
+                        <th className="pr-6 py-4 font-medium uppercase tracking-tight">
+                          资源换算关系
+                        </th>
+                      )}
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#f2f3f5]">
@@ -326,6 +341,21 @@ const BillingManagement = () => {
                             </td>
                           </>
                         )}
+                        {activeMode === 'ai' && (
+                          <td className="pr-6 py-5">
+                            <div className="inline-flex items-center gap-2 bg-white border border-[#dee0e3] rounded-lg px-3 py-2">
+                              <span className="text-[12px] text-[#1f2329]">1 次调用</span>
+                              <span className="text-[11px] text-[#8f959e]">等同于</span>
+                              <input
+                                type="number"
+                                value={aiRatio}
+                                onChange={(e) => setAiRatio(e.target.value)}
+                                className="w-16 border border-[#dee0e3] rounded px-2 py-1 text-[12px] focus:border-[#3370ff] outline-none font-bold text-[#3370ff]"
+                              />
+                              <span className="text-[12px] text-[#1f2329]">点数</span>
+                            </div>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -334,35 +364,6 @@ const BillingManagement = () => {
 
               <div className="bg-[#f9fafb] border-t border-[#f2f3f5] p-8">
                 <div className="ml-4 border-l-2 border-[#dee0e3] pl-8 space-y-7">
-                  {activeMode === 'ai' && (
-                    <div className="space-y-4 pb-4 border-b border-[#dee0e3]/50">
-                      <div className="flex items-center gap-2 font-bold text-[14px] text-[#1f2329]">
-                        <ArrowRightLeft size={16} className="text-[#3370ff]" />
-                        资源换算关系设置
-                      </div>
-                      <div className="flex items-center gap-4 bg-white p-4 rounded-lg border border-[#dee0e3] shadow-sm w-fit transition-all hover:shadow-md">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[13px] font-medium">
-                            1 次调用
-                          </span>
-                          <span className="text-[#8f959e] text-xs">
-                            等同于
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="number"
-                            value={aiRatio}
-                            onChange={(e) => setAiRatio(e.target.value)}
-                            className="w-20 border border-[#dee0e3] rounded px-2 py-1 text-[13px] focus:border-[#3370ff] outline-none font-bold text-[#3370ff]"
-                          />
-                          <span className="text-[13px] font-medium">点数</span>
-                        </div>
-                        <Info size={14} className="text-[#8f959e] cursor-help" />
-                      </div>
-                    </div>
-                  )}
-
                   <div className="flex items-center gap-10">
                     <span className="text-[13px] font-bold text-[#1f2329] w-28">
                       支持试用
