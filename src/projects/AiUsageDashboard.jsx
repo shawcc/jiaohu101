@@ -17,6 +17,21 @@ import {
   Calendar
 } from 'lucide-react'
 
+const SHARED_QUOTAS = {
+  free: {
+    title: 'AI 免费用量',
+    periodUsed: 8600,
+    periodTotal: 20000,
+    unit: '点'
+  },
+  paid: {
+    title: 'AI 付费用量',
+    monthUsed: 1200,
+    monthLimit: 10000,
+    unit: '点'
+  }
+}
+
 const OFFICIAL_PRODUCTS = [
   {
     id: 'o_report',
@@ -25,18 +40,9 @@ const OFFICIAL_PRODUCTS = [
     expiry: '2026-09-09',
     icon: <FileText className="text-white" size={20} />,
     iconBg: 'bg-blue-500',
-    sourceType: '官方能力',
-    usageGroups: [
-      { label: '免费额度', used: 120, total: 500, unit: '次', type: 'free' },
-      {
-        label: '付费额度',
-        used: 600,
-        total: 2000,
-        unit: '次',
-        type: 'paid',
-        annotation: '基础版'
-      }
-    ]
+    unit: '点',
+    monthUsed: 3200,
+    totalUsed: 68000
   },
   {
     id: 'o_hr',
@@ -45,11 +51,9 @@ const OFFICIAL_PRODUCTS = [
     expiry: '2026-09-09',
     icon: <Users className="text-white" size={20} />,
     iconBg: 'bg-indigo-500',
-    sourceType: '官方能力',
-    usageGroups: [
-      { label: '免费额度', used: 2000, total: 5000, unit: '次', type: 'free' },
-      { label: '付费额度', used: 800, total: 3000, unit: '次', type: 'paid' }
-    ]
+    unit: '点',
+    monthUsed: 1800,
+    totalUsed: 25000
   },
   {
     id: 'o_field',
@@ -58,11 +62,9 @@ const OFFICIAL_PRODUCTS = [
     expiry: '2026-09-09',
     icon: <Sparkles className="text-white" size={20} />,
     iconBg: 'bg-emerald-500',
-    sourceType: '官方能力',
-    usageGroups: [
-      { label: '免费额度', used: 5000, total: 5000, unit: '点', type: 'free' },
-      { label: '付费额度', used: 1200, total: 10000, unit: '点', type: 'paid' }
-    ]
+    unit: '点',
+    monthUsed: 3600,
+    totalUsed: 98000
   }
 ]
 
@@ -74,7 +76,7 @@ const NODE_PRODUCTS_OFFICIAL = [
     expiry: '2026-09-09',
     icon: <Box className="text-white" size={20} />,
     iconBg: 'bg-sky-500',
-    sourceType: '官方',
+    sourceType: '飞书项目',
     usageGroups: [
       { label: '免费配额', used: 120, total: 500, unit: '次', type: 'free' },
       {
@@ -97,8 +99,8 @@ const NODE_PRODUCTS_ISV = [
     expiry: '2026-09-09',
     icon: <Cpu className="text-white" size={20} />,
     iconBg: 'bg-purple-500',
-    sourceType: 'ISV',
     isvName: '飞书伙伴·霓虹AI',
+    aiPackageTag: '飞书AI包',
     usageGroups: [
       { label: '免费额度', used: 20000, total: 20000, unit: '点', type: 'free' },
       { label: '付费额度', used: 4500, total: 50000, unit: '点', type: 'paid' }
@@ -111,7 +113,6 @@ const NODE_PRODUCTS_ISV = [
     expiry: '2026-09-09',
     icon: <FileText className="text-white" size={20} />,
     iconBg: 'bg-amber-500',
-    sourceType: 'ISV',
     isvName: '灵感工坊',
     usageGroups: [
       { label: '免费配额', used: 5, total: 10, unit: '次', type: 'free' },
@@ -212,6 +213,30 @@ const AiUsageDashboard = () => {
     )
   }
 
+  const formatNumber = (n) => {
+    if (typeof n !== 'number') return String(n ?? '')
+    return n.toLocaleString()
+  }
+
+  const MetricCard = ({ title, iconBg, icon, value, subLabel }) => {
+    return (
+      <div className="bg-white border border-[#DEE0E3] rounded-xl p-4 flex items-start gap-3">
+        <div className={`w-10 h-10 ${iconBg} rounded-lg flex items-center justify-center`}>
+          {icon}
+        </div>
+        <div className="min-w-0 flex-1">
+          <div className="text-[12px] text-[#646A73] font-bold">{title}</div>
+          <div className="text-[18px] font-extrabold text-[#1F2329] mt-1 leading-none">
+            {value}
+          </div>
+          {subLabel ? (
+            <div className="text-[11px] text-[#8F959E] font-medium mt-2">{subLabel}</div>
+          ) : null}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex h-screen bg-[#F5F6F7] text-[#1F2329] font-sans overflow-hidden">
       <aside className="w-64 bg-white border-r border-[#DEE0E3] flex flex-col flex-shrink-0">
@@ -294,6 +319,27 @@ const AiUsageDashboard = () => {
         <div className="flex-1 overflow-y-auto p-6">
           {activeTab === 'overview' ? (
             <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <MetricCard
+                  title={SHARED_QUOTAS.free.title}
+                  iconBg="bg-[#B37FEB]"
+                  icon={<Sparkles className="text-white" size={18} />}
+                  value={`${formatNumber(SHARED_QUOTAS.free.periodUsed)}/${formatNumber(
+                    SHARED_QUOTAS.free.periodTotal
+                  )} ${SHARED_QUOTAS.free.unit}`}
+                  subLabel="当期已用/当期限额"
+                />
+                <MetricCard
+                  title={SHARED_QUOTAS.paid.title}
+                  iconBg="bg-[#9254DE]"
+                  icon={<Sparkles className="text-white" size={18} />}
+                  value={`${formatNumber(SHARED_QUOTAS.paid.monthUsed)}/${formatNumber(
+                    SHARED_QUOTAS.paid.monthLimit
+                  )} ${SHARED_QUOTAS.paid.unit}`}
+                  subLabel="本月已用/本月上限"
+                />
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                 {OFFICIAL_PRODUCTS.map((product) => (
                   <div
@@ -311,20 +357,35 @@ const AiUsageDashboard = () => {
                           <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-2">
                               <h4 className="font-bold text-sm">{product.name}</h4>
-                              {product.sourceType && (
-                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#F2F3F5] text-[#646A73] font-bold">
-                                  {product.sourceType}
-                                </span>
-                              )}
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="bg-[#F8F9FA] rounded-lg p-3.5 space-y-1 min-h-[110px] flex flex-col justify-center border border-[#F2F3F5]">
-                        {product.usageGroups.map((group, idx) => (
-                          <ProgressBar key={idx} {...group} />
-                        ))}
+                      <div className="bg-[#F8F9FA] rounded-lg p-4 min-h-[110px] flex items-center justify-between border border-[#F2F3F5]">
+                        <div className="flex flex-col gap-2">
+                          <div className="text-[11px] text-[#646A73] font-bold">
+                            本月已用
+                          </div>
+                          <div className="text-[18px] font-extrabold font-mono">
+                            {formatNumber(product.monthUsed)}{' '}
+                            <span className="text-[11px] text-[#8F959E] font-medium">
+                              {product.unit}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="w-px h-12 bg-[#DEE0E3]" />
+                        <div className="flex flex-col gap-2">
+                          <div className="text-[11px] text-[#646A73] font-bold">
+                            累计已用
+                          </div>
+                          <div className="text-[18px] font-extrabold font-mono">
+                            {formatNumber(product.totalUsed)}{' '}
+                            <span className="text-[11px] text-[#8F959E] font-medium">
+                              {product.unit}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -347,9 +408,6 @@ const AiUsageDashboard = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-[15px] font-bold text-[#1F2329]">AI 节点</div>
-                    <div className="text-[12px] text-[#8F959E] mt-1">
-                      包含官方与 ISV 开发的节点能力
-                    </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -372,6 +430,11 @@ const AiUsageDashboard = () => {
                                   {product.sourceType && (
                                     <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#F2F3F5] text-[#646A73] font-bold">
                                       {product.sourceType}
+                                    </span>
+                                  )}
+                                  {product.aiPackageTag && (
+                                    <span className="text-[9px] px-1.5 py-0.5 rounded bg-[#EBF2FF] text-[#3370FF] font-extrabold">
+                                      {product.aiPackageTag}
                                     </span>
                                   )}
                                 </div>
