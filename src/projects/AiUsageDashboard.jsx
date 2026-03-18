@@ -123,6 +123,7 @@ const LOGS_DATA = [
     time: '2026-09-09 21:06:03',
     operator: '李天天',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Li',
+    isNode: true,
     equity: '付费配额 (基础版)',
     equityColor: 'bg-blue-100 text-blue-700',
     usage: '1 次',
@@ -135,9 +136,23 @@ const LOGS_DATA = [
     time: '2026-09-09 20:15:22',
     operator: '张敏',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Zhang',
+    isNode: true,
     equity: 'AI 免费额度',
     equityColor: 'bg-red-100 text-red-700',
     usage: '450 点',
+    remark: '无'
+  },
+  {
+    id: 3,
+    name: 'AI 人力分析',
+    desc: '生成组织人力结构洞察摘要',
+    time: '2026-09-09 18:40:10',
+    operator: '王晨',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Wang',
+    isNode: false,
+    equity: 'AI 付费用量',
+    equityColor: 'bg-blue-100 text-blue-700',
+    usage: '120 点',
     remark: '无'
   }
 ]
@@ -146,6 +161,7 @@ const AiUsageDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview')
   const [activeMenu, setActiveMenu] = useState('AI用量')
   const [displayScheme, setDisplayScheme] = useState('scheme3')
+  const [selectedApp, setSelectedApp] = useState('')
 
   const menuGroups = [
     { title: '组织架构', items: ['成员管理', '团队管理'], icon: <Users size={18} /> },
@@ -416,7 +432,10 @@ const AiUsageDashboard = () => {
 
                     <div className="px-5 py-3 bg-white border-t border-[#F2F3F5] mt-auto flex justify-end items-center text-[11px] text-[#8F959E]">
                       <button
-                        onClick={() => setActiveTab('logs')}
+                        onClick={() => {
+                          setSelectedApp(product.name)
+                          setActiveTab('logs')
+                        }}
                         className="text-[#3370FF] font-bold flex items-center gap-0.5 hover:underline"
                       >
                         消耗详情 <ChevronRight size={12} />
@@ -477,7 +496,10 @@ const AiUsageDashboard = () => {
 
                         <div className="px-5 py-3 bg-white border-t border-[#F2F3F5] mt-auto flex justify-end items-center text-[11px] text-[#8F959E]">
                           <button
-                            onClick={() => setActiveTab('logs')}
+                            onClick={() => {
+                              setSelectedApp(product.name)
+                              setActiveTab('logs')
+                            }}
                             className="text-[#3370FF] font-bold flex items-center gap-0.5 hover:underline"
                           >
                             消耗详情 <ChevronRight size={12} />
@@ -492,6 +514,25 @@ const AiUsageDashboard = () => {
             <div className="bg-white border border-[#DEE0E3] rounded-lg shadow-sm overflow-hidden">
               <div className="p-4 border-b border-[#DEE0E3] flex items-center justify-between bg-white">
                 <div className="flex items-center gap-3">
+                  <span className="text-sm text-[#646A73] font-medium">应用</span>
+                  <div className="relative">
+                    <select
+                      value={selectedApp}
+                      onChange={(e) => setSelectedApp(e.target.value)}
+                      className="pl-3 pr-9 py-1.5 bg-[#F5F6F7] border border-[#DEE0E3] rounded-md text-sm cursor-pointer hover:bg-gray-50 transition-colors appearance-none"
+                    >
+                      <option value="">全部</option>
+                      {[...new Set(LOGS_DATA.map((l) => l.name))].map((n) => (
+                        <option key={n} value={n}>
+                          {n}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={14}
+                      className="absolute right-2.5 top-2.5 text-[#8F959E] pointer-events-none"
+                    />
+                  </div>
                   <span className="text-sm text-[#646A73] font-medium">使用时间</span>
                   <div className="flex items-center gap-2 px-3 py-1.5 bg-[#F5F6F7] border border-[#DEE0E3] rounded-md text-sm cursor-pointer hover:bg-gray-50 transition-colors">
                     <Calendar size={14} className="text-[#8F959E]" />
@@ -517,14 +558,22 @@ const AiUsageDashboard = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#F2F3F5]">
-                    {LOGS_DATA.map((log) => (
+                    {LOGS_DATA.filter((l) => (selectedApp ? l.name === selectedApp : true)).map(
+                      (log) => (
                       <tr key={log.id} className="hover:bg-[#F5F7FA] transition-colors">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-2">
                             <div className="w-6 h-6 rounded bg-[#EBF2FF] flex items-center justify-center text-[#3370FF]">
                               <Zap size={12} />
                             </div>
-                            <span className="font-bold text-xs">{log.name}</span>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-xs">{log.name}</span>
+                              {log.isNode ? (
+                                <span className="text-[10px] px-2 py-0.5 rounded bg-[#F2F3F5] text-[#646A73] font-bold">
+                                  AI 节点
+                                </span>
+                              ) : null}
+                            </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 text-xs text-[#646A73] font-mono">
@@ -552,13 +601,18 @@ const AiUsageDashboard = () => {
                         </td>
                         <td className="px-6 py-4 text-xs text-[#8F959E]">{log.remark}</td>
                       </tr>
-                    ))}
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
 
               <div className="p-4 bg-white border-t border-[#DEE0E3] flex justify-between items-center text-xs text-[#8F959E]">
-                <span>共计 {LOGS_DATA.length} 条记录</span>
+                <span>
+                  共计{' '}
+                  {LOGS_DATA.filter((l) => (selectedApp ? l.name === selectedApp : true)).length}{' '}
+                  条记录
+                </span>
                 <div className="flex items-center gap-2">
                   <button
                     className="p-1 border border-[#DEE0E3] rounded disabled:opacity-30"
