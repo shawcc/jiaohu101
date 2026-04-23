@@ -266,12 +266,32 @@ const LeadFormExperiment = () => {
     </div>
   );
 
-  // --- 变体 B: 沉浸居中版 (Immersive) ---
+  // --- 变体 B: 沉浸居中版 (Immersive) - 融入“信任驱动” ---
   const VariantImmersive = () => (
     <div className="max-w-[800px] mx-auto py-20 px-8 flex flex-col items-center text-center">
       <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">与产品专家聊聊</h1>
-      <p className="text-[15px] text-gray-500 mb-10 max-w-[480px]">告诉我们您的业务痛点，我们将为您提供定制化的协作方案与专属报价。</p>
+      <p className="text-[15px] text-gray-500 mb-8 max-w-[480px]">告诉我们您的业务痛点，我们将为您提供定制化的协作方案与专属报价。</p>
       
+      {/* 融入信任背书元素 */}
+      <div className="flex items-center justify-center gap-6 mb-10">
+        <div className="flex -space-x-3">
+          <div className="w-8 h-8 rounded-full border-2 border-[#F8FAFC] bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">张</div>
+          <div className="w-8 h-8 rounded-full border-2 border-[#F8FAFC] bg-green-100 flex items-center justify-center text-green-600 font-bold text-xs">李</div>
+          <div className="w-8 h-8 rounded-full border-2 border-[#F8FAFC] bg-purple-100 flex items-center justify-center text-purple-600 font-bold text-xs">王</div>
+        </div>
+        <div className="flex flex-col items-start">
+          <div className="flex text-yellow-400">
+            {[...Array(5)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
+          </div>
+          <span className="text-[11px] text-gray-500 mt-0.5">超过 10,000+ 企业信赖选择</span>
+        </div>
+        <div className="w-px h-8 bg-gray-200" />
+        <div className="flex items-center gap-1.5 text-gray-600">
+          <ShieldCheck size={16} className="text-green-500" />
+          <span className="text-[11px] font-medium">ISO 27001 安全认证</span>
+        </div>
+      </div>
+
       <div className="w-full max-w-[560px] bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] p-10 border border-gray-100 text-left">
         <FormFields ctaText="提交需求" variant="Immersive" />
       </div>
@@ -282,15 +302,38 @@ const LeadFormExperiment = () => {
     </div>
   );
 
-  // --- 变体 B: 分步降阻版 (Multi-step) ---
+  // --- 变体 C: 分步降阻版 (Multi-step) - 融入“动态权益” ---
   const VariantMultiStep = () => (
     <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-16">
       <div className="flex-1 max-w-[460px]">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-600 font-bold text-xs rounded-md mb-6">
           <LayoutTemplate size={14} /> 专属方案定制
         </div>
-        <h1 className="text-[34px] font-extrabold text-gray-900 mb-5 leading-tight tracking-tight">获取专属于您团队的<br/>最佳实践与报价</h1>
-        <p className="text-[15px] text-gray-500 mb-10 leading-relaxed">只需 2 个简单步骤，即可预约演示并获取行业标杆的效率提升方案。</p>
+        <h1 className="text-[34px] font-extrabold text-gray-900 mb-5 leading-tight tracking-tight">留下您的需求<br/>解锁专属企业权益</h1>
+        <p className="text-[15px] text-gray-500 mb-8 leading-relaxed">只需 2 个简单步骤，即可在购买或试用时享受以下专属服务支持：</p>
+        
+        {/* 融入动态权益元素 */}
+        <div className="space-y-4 mb-10">
+          <div className="flex gap-3">
+            <div className="mt-0.5 shrink-0 w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+              <Check size={14} />
+            </div>
+            <div>
+              <h4 className="font-bold text-gray-900 text-[13px]">免费的数据迁移评估</h4>
+              <p className="text-[12px] text-gray-500 mt-0.5">由高级架构师提供 1v1 的现有系统迁移方案。</p>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <div className="mt-0.5 shrink-0 w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+              <Check size={14} />
+            </div>
+            <div>
+              <h4 className="font-bold text-gray-900 text-[13px]">长达 30 天的高级试用</h4>
+              <p className="text-[12px] text-gray-500 mt-0.5">开放所有企业级特性，无任何功能限制。</p>
+            </div>
+          </div>
+        </div>
+
         <Logos layout="grid" />
       </div>
 
