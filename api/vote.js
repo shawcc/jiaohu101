@@ -66,8 +66,17 @@ export default async function handler(req, res) {
       res.status(500).json({ error: error.message || 'Failed to save vote' });
     }
   } else if (req.method === 'DELETE') {
-    // 增加一个重置数据的隐藏接口
+    // 增加一个重置数据的隐藏接口，带有简单密钥保护
     try {
+      const { secret } = req.body || {};
+      
+      // 使用简单的硬编码密钥，或者最好在 Vercel 环境变量中配置 ADMIN_SECRET
+      const validSecret = process.env.ADMIN_SECRET || 'meegle-admin-888';
+      
+      if (secret !== validSecret) {
+        return res.status(403).json({ error: 'Forbidden: Invalid secret key' });
+      }
+
       await kv.set('meegle_votes_data', DEFAULT_VOTES);
       res.status(200).json({ message: 'Votes reset successfully', data: DEFAULT_VOTES });
     } catch (error) {
