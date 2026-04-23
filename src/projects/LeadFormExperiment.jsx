@@ -368,14 +368,6 @@ const LeadFormExperiment = () => {
 
         {step === 1 ? (
           <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300 flex-1">
-            <input type="text" className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="企业或组织名称*" />
-            <select className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm text-gray-700 bg-white">
-              <option value="">人员规模*</option>
-              <option value="1-50">1 - 50</option>
-              <option value="51-200">51 - 200</option>
-              <option value="201-500">201 - 500</option>
-              <option value="500+">500+</option>
-            </select>
             <select className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm text-gray-700 bg-white">
               <option value="">你需要什么帮助？*</option>
               <option value="demo">预约产品演示</option>
@@ -388,6 +380,14 @@ const LeadFormExperiment = () => {
           </div>
         ) : (
           <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300 flex-1 flex flex-col">
+            <input type="text" className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="企业或组织名称*" />
+            <select className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm text-gray-700 bg-white">
+              <option value="">人员规模*</option>
+              <option value="1-50">1 - 50</option>
+              <option value="51-200">51 - 200</option>
+              <option value="201-500">201 - 500</option>
+              <option value="500+">500+</option>
+            </select>
             <input type="email" className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="工作邮箱*" />
             <div className="flex gap-0">
               <select className="w-[100px] h-12 pl-4 pr-8 border border-gray-300 border-r-0 rounded-l-lg outline-none focus:border-blue-500 text-sm bg-gray-50">
@@ -445,11 +445,11 @@ const LeadFormExperiment = () => {
           
           <div className="flex gap-1 overflow-x-auto">
           {[
-            { id: 'Online', label: '线上原版 (Control)' },
-            { id: 'Classic', label: '变体A: 经典左右布局' },
-            { id: 'Immersive', label: '变体B: 沉浸居中' },
-            { id: 'MultiStep', label: '变体C: 分步降阻' }
-          ].map(v => (
+            { id: 'Online', label: '线上原版 (Control)', sources: ['contact', 'pricing'] },
+            { id: 'Classic', label: '变体A: 经典左右布局', sources: ['contact'] },
+            { id: 'Immersive', label: '变体B: 沉浸居中', sources: ['contact', 'pricing'] },
+            { id: 'MultiStep', label: '变体C: 分步降阻', sources: ['contact'] }
+          ].filter(v => v.sources.includes(source)).map(v => (
             <button
               key={v.id}
               onClick={() => { setActiveVariant(v.id); setStep(1); }}
