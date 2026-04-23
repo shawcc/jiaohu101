@@ -640,7 +640,7 @@ const LeadFormExperiment = () => {
           {activeVariant === 'Classic' && <VariantClassic />}
           {activeVariant === 'Immersive' && <VariantImmersive />}
           {activeVariant === 'MultiStep' && <VariantMultiStep />}
-          {activeVariant === 'Webinar' && <VariantWebinar />}
+          {activeVariant === 'Automated' && <VariantAutomated />}
         </div>
       </div>
 
