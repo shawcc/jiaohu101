@@ -4,6 +4,7 @@ import { Check, ChevronDown, HelpCircle, ArrowRight, ShieldCheck, ArrowLeft, Sta
 const LeadFormExperiment = () => {
   const [activeVariant, setActiveVariant] = useState('Online');
   const [step, setStep] = useState(1);
+  const [source, setSource] = useState('contact'); // 'contact' (联系我们) or 'pricing' (购买咨询)
 
   // 模拟完整线上环境的全局导航栏
   const Navbar = () => (
@@ -78,9 +79,19 @@ const LeadFormExperiment = () => {
       <div className="relative">
         <select className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm text-gray-700 bg-white">
           <option value="">你需要什么帮助？*</option>
-          <option value="demo">预约产品演示</option>
-          <option value="pricing">咨询价格方案</option>
-          <option value="tech">技术与集成支持</option>
+          {source === 'pricing' ? (
+            <>
+              <option value="pricing">咨询价格方案与折扣</option>
+              <option value="edition">评估适合的版本</option>
+              <option value="demo">预约产品演示</option>
+            </>
+          ) : (
+            <>
+              <option value="demo">预约产品演示</option>
+              <option value="pricing">咨询价格方案</option>
+              <option value="tech">技术与集成支持</option>
+            </>
+          )}
         </select>
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
       </div>
@@ -240,8 +251,12 @@ const LeadFormExperiment = () => {
   const VariantClassic = () => (
     <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-24">
       <div className="flex-1 max-w-[420px]">
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-3">联系销售</h1>
-        <p className="text-base text-gray-600 mb-8">在 Meegle 里畅快协作？？</p>
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-3">
+          {source === 'pricing' ? '购买咨询' : '联系销售'}
+        </h1>
+        <p className="text-base text-gray-600 mb-8">
+          {source === 'pricing' ? '获取适合您团队的报价方案。' : '在 Meegle 里畅快协作？'}
+        </p>
         
         <div className="space-y-4 mb-8">
           {['预约 Meegle 产品演示', '为你的团队选择最佳版本', '获取你所在行业的最佳实践', '从你现有的工具迁移到 Meegle'].map((text, i) => (
@@ -269,8 +284,12 @@ const LeadFormExperiment = () => {
   // --- 变体 B: 沉浸居中版 (Immersive) - 融入“信任驱动” ---
   const VariantImmersive = () => (
     <div className="max-w-[800px] mx-auto py-20 px-8 flex flex-col items-center text-center">
-      <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">与产品专家聊聊</h1>
-      <p className="text-[15px] text-gray-500 mb-8 max-w-[480px]">告诉我们您的业务痛点，我们将为您提供定制化的协作方案与专属报价。</p>
+      <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
+        {source === 'pricing' ? '与销售专家聊聊' : '与产品专家聊聊'}
+      </h1>
+      <p className="text-[15px] text-gray-500 mb-8 max-w-[480px]">
+        {source === 'pricing' ? '了解最新的价格方案与企业折扣，获取专属报价单。' : '告诉我们您的业务痛点，我们将为您提供定制化的协作方案。'}
+      </p>
       
       {/* 融入信任背书元素 */}
       <div className="flex items-center justify-center gap-6 mb-10">
@@ -404,7 +423,27 @@ const LeadFormExperiment = () => {
           <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
           A/B 实验台：留资转化优化
         </div>
-        <div className="flex gap-1 overflow-x-auto">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center bg-gray-800 rounded-md p-1 mr-4">
+            <button
+              onClick={() => setSource('contact')}
+              className={`px-3 py-1 rounded text-[11px] font-medium transition-all ${
+                source === 'contact' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              入口：联系我们
+            </button>
+            <button
+              onClick={() => setSource('pricing')}
+              className={`px-3 py-1 rounded text-[11px] font-medium transition-all ${
+                source === 'pricing' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              入口：购买咨询
+            </button>
+          </div>
+          
+          <div className="flex gap-1 overflow-x-auto">
           {[
             { id: 'Online', label: '线上原版 (Control)' },
             { id: 'Classic', label: '变体A: 经典左右布局' },
@@ -424,6 +463,7 @@ const LeadFormExperiment = () => {
             </button>
           ))}
         </div>
+      </div>
       </div>
 
       <Navbar />
