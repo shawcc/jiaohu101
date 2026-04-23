@@ -65,6 +65,15 @@ export default async function handler(req, res) {
       console.error(error);
       res.status(500).json({ error: error.message || 'Failed to save vote' });
     }
+  } else if (req.method === 'DELETE') {
+    // 增加一个重置数据的隐藏接口
+    try {
+      await kv.set('meegle_votes_data', DEFAULT_VOTES);
+      res.status(200).json({ message: 'Votes reset successfully', data: DEFAULT_VOTES });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message || 'Failed to reset votes' });
+    }
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
