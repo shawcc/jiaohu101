@@ -113,48 +113,125 @@ const LeadFormExperiment = () => {
     </div>
   );
 
-  // --- 变体 O: 线上原版 (Control) ---
+  // --- 变体 O: 线上原版 (Control) - 精确还原 ---
   const VariantOnline = () => (
-    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-24">
-      <div className="flex-1 max-w-[480px]">
-        <h1 className="text-[32px] font-extrabold text-gray-900 mb-4 leading-tight">体验 Meegle 完整产品能力</h1>
-        <p className="text-base text-gray-600 mb-8">一站式企业协同平台，打通沟通、项目与知识管理，为企业带来 10 倍效能提升。</p>
+    <div className="max-w-[1200px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-24">
+      {/* 左侧：产品图与标题 */}
+      <div className="flex-1 max-w-[560px] text-center md:text-left relative">
+        {/* 背景光晕模拟 */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-500/10 blur-[100px] rounded-full pointer-events-none" />
         
-        <div className="space-y-6 mb-10">
-          <div className="flex gap-4">
-            <div className="mt-1 shrink-0 w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-              <MessageSquare size={20} />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-[15px]">即时通讯与音视频会议</h4>
-              <p className="text-[13px] text-gray-500 mt-1">随时随地发起高质量会议，让团队沟通无缝衔接。</p>
-            </div>
-          </div>
-          <div className="flex gap-4">
-            <div className="mt-1 shrink-0 w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
-              <Kanban size={20} />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-[15px]">敏捷项目管理</h4>
-              <p className="text-[13px] text-gray-500 mt-1">从需求规划到任务流转，全链路追踪项目进度。</p>
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">完美协作</h1>
+        <p className="text-[15px] text-gray-500 mb-12">在可视化节点流里开启无缝合作</p>
+        
+        {/* 假装是一个轮播图组件的展示容器 */}
+        <div className="w-full bg-white rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.08)] border border-gray-100 overflow-hidden relative">
+          <div className="bg-gray-50 p-4 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-400" />
+              <div className="w-3 h-3 rounded-full bg-yellow-400" />
+              <div className="w-3 h-3 rounded-full bg-green-400" />
             </div>
           </div>
-          <div className="flex gap-4">
-            <div className="mt-1 shrink-0 w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
-              <Bot size={20} />
+          {/* 模拟的产品界面截图 */}
+          <div className="p-6 h-[300px] bg-[#FAFBFC] relative">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-white">
+                <Check size={14} />
+              </div>
+              <span className="font-bold text-sm">Character Posture Development</span>
+              <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] rounded-full font-bold">Ongoing</span>
             </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-[15px]">企业级 AI 助手</h4>
-              <p className="text-[13px] text-gray-500 mt-1">智能总结会议纪要、辅助编写文档，全面释放团队创造力。</p>
+            
+            <div className="space-y-4">
+              {/* 模拟的节点流 */}
+              <div className="flex items-center gap-3">
+                <div className="px-3 py-1.5 bg-green-100 text-green-700 text-xs rounded-full flex items-center gap-1 font-medium"><Check size={12}/> 3D Model Involved</div>
+                <div className="px-3 py-1.5 bg-gray-100 text-gray-500 text-xs rounded-full">FE Gray</div>
+                <div className="px-3 py-1.5 bg-green-100 text-green-700 text-xs rounded-full flex items-center gap-1 font-medium"><Check size={12}/> Sound Design</div>
+              </div>
+              <div className="h-px bg-gray-200 my-4" />
+              <div className="flex items-center gap-4">
+                <div className="px-3 py-1 bg-white border border-gray-200 text-gray-700 text-xs rounded-full flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-500"/>Story Init</div>
+                <div className="h-px w-8 bg-gray-300" />
+                <div className="px-3 py-1 bg-white border border-blue-500 text-blue-600 text-xs rounded-full font-medium flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-blue-500"/>Scene Setup</div>
+              </div>
             </div>
           </div>
         </div>
 
-        <Logos layout="grid" />
+        {/* 轮播图指示器 */}
+        <div className="flex justify-center gap-2 mt-8">
+          <div className="w-8 h-1.5 rounded-full bg-blue-600" />
+          <div className="w-8 h-1.5 rounded-full bg-gray-200" />
+          <div className="w-8 h-1.5 rounded-full bg-gray-200" />
+        </div>
       </div>
 
-      <div className="w-full md:w-[480px] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-100">
-        <FormFields ctaText="获得专属支持" variant="Online" />
+      {/* 右侧：线上原版双列表单 */}
+      <div className="w-full md:w-[500px] bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-8 border border-gray-100">
+        <div className="space-y-5">
+          <div className="flex gap-4">
+            <div className="flex-1 space-y-1">
+              <label className="text-[13px] text-gray-700 font-medium">工作邮箱 <span className="text-red-500">*</span></label>
+              <input type="email" className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="name@company.com" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <label className="text-[13px] text-gray-700 font-medium">电话号码 <span className="text-red-500">*</span></label>
+              <div className="flex gap-0">
+                <select className="w-[70px] h-10 px-2 border border-gray-300 border-r-0 rounded-l outline-none focus:border-blue-500 text-[13px] bg-gray-50">
+                  <option>+86</option>
+                </select>
+                <input type="tel" className="flex-1 h-10 px-3 border border-gray-300 rounded-r outline-none focus:border-blue-500 text-[13px]" placeholder="请输入" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <div className="flex-1 space-y-1">
+              <label className="text-[13px] text-gray-700 font-medium">名字 <span className="text-red-500">*</span></label>
+              <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="Jane" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <label className="text-[13px] text-gray-700 font-medium">姓氏 <span className="text-red-500">*</span></label>
+              <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="Doe" />
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <div className="flex-1 space-y-1">
+              <label className="text-[13px] text-gray-700 font-medium">公司名称 <span className="text-red-500">*</span></label>
+              <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="Acme Inc." />
+            </div>
+            <div className="flex-1 space-y-1">
+              <label className="text-[13px] text-gray-700 font-medium">公司规模 <span className="text-red-500">*</span></label>
+              <select className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px] bg-white appearance-none">
+                <option>请选择</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[13px] text-gray-700 font-medium">职位 <span className="text-red-500">*</span></label>
+            <select className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px] bg-white appearance-none">
+              <option>请选择</option>
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[13px] text-gray-700 font-medium">我们能为您提供什么帮助？ <span className="text-red-500">*</span></label>
+            <textarea className="w-full h-24 p-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px] resize-none" placeholder="请向我们咨询"></textarea>
+          </div>
+
+          <div className="flex items-end justify-between gap-4 mt-2">
+            <p className="text-[10px] text-gray-400 leading-relaxed flex-1">
+              继续使用即表示您同意我们的<a href="#" className="underline">服务条款</a>并确认您已阅读<a href="#" className="underline">隐私协议</a>了解我们如何收集、使用和共享您的数据。
+            </p>
+            <button className="px-8 py-2.5 bg-[#3370FF] hover:bg-blue-700 text-white rounded text-[13px] font-medium transition-colors shrink-0">
+              提交
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
