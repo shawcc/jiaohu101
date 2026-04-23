@@ -7,7 +7,7 @@ const ALL_VARIANTS = {
     { id: 'Classic', label: '变体A: 明确可获收益' },
     { id: 'Immersive', label: '变体B: 沉浸居中' },
     { id: 'MultiStep', label: '变体C: 分步降阻' },
-    { id: 'Webinar', label: '变体D: 直播资料留资' }
+    { id: 'Automated', label: '变体D: 效率提升版' }
   ],
   pricing: [
     { id: 'Online', label: '线上原版 (Control)' },
@@ -494,54 +494,72 @@ const LeadFormExperiment = () => {
     </div>
   );
 
-  // --- 变体 D: 直播资料沉浸版 (Webinar) ---
-  const VariantWebinar = () => (
-    <div className="max-w-[1200px] mx-auto py-12 px-8">
-      <div className="rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] bg-[#1A1F36] flex flex-col border border-gray-800">
-        {/* 模拟直播间头部 */}
-        <div className="h-16 bg-[#0B0F19] flex items-center justify-between px-6 border-b border-gray-800">
-          <div className="flex items-center gap-4">
-            <div className="text-yellow-500 font-black italic text-2xl tracking-wider font-serif">Lark Fireside Chats</div>
-            <div className="border border-blue-500/50 bg-blue-500/10 text-blue-400 text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
-              围炉夜话
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
-            <span className="text-gray-300 text-xs font-bold tracking-widest">LIVE REPLAY</span>
-          </div>
-        </div>
-
-        {/* 直播间主体 */}
-        <div className="flex flex-col md:flex-row relative h-[640px] bg-[#1A1F36] p-4 gap-4">
-          {/* 左侧：PPT 演示区 */}
-          <div className="flex-1 bg-white rounded-xl shadow-inner flex flex-col overflow-hidden relative">
-            <div className="h-14 border-b border-gray-100 flex items-center px-6 bg-white z-10">
-              <span className="text-purple-600 font-bold mr-4 text-lg">Lark Fireside Chats EP.84</span>
-              <span className="text-gray-500 text-sm">Q3 | AI 时代设计最大的挑战</span>
-            </div>
-            <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-blue-50 relative">
-              {/* 模拟背景水印文字 */}
-              <div className="absolute inset-0 flex flex-wrap items-center justify-center opacity-[0.03] overflow-hidden pointer-events-none gap-8 p-4">
-                {[...Array(24)].map((_, i) => (
-                  <div key={i} className="text-2xl font-bold -rotate-12 whitespace-nowrap">Lark Fireside Chats</div>
-                ))}
+  // --- 变体 D: 效率提升版 (Automated) - 英文版官网布局 ---
+  const VariantAutomated = () => (
+    <div className="max-w-[1200px] mx-auto py-24 px-8 flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-24">
+      {/* 左侧文案与图示 */}
+      <div className="flex-1 max-w-[540px]">
+        <h1 className="text-[44px] font-extrabold text-gray-900 mb-6 leading-[1.1] tracking-tight">Automated. Accelerated. Integrated.</h1>
+        <p className="text-xl text-gray-500 mb-12">Automate repetitive tasks and integrations with a variety of tools, all in one place with Meegle</p>
+        
+        {/* 模拟工作流配图 */}
+        <div className="relative w-full aspect-[4/3] bg-[#FCF8F3] rounded-xl border border-gray-100 shadow-sm overflow-hidden p-6">
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-50/50 to-blue-50/50" />
+          
+          <div className="relative z-10 flex flex-col gap-4">
+            {/* 模拟节点 1 */}
+            <div className="w-[280px] bg-white rounded-lg shadow-sm border border-blue-200 overflow-hidden ml-12">
+              <div className="bg-blue-600 px-3 py-1.5 flex items-center gap-1.5 text-white text-xs font-bold">
+                <div className="w-3 h-3 rounded-full bg-white/20 flex items-center justify-center"><Check size={8} /></div>
+                Trigger
               </div>
-              <h2 className="text-[40px] font-medium text-gray-800 tracking-wide z-10">AI 时代是设计师的黄金时代</h2>
+              <div className="p-4 text-sm font-medium text-gray-800">
+                When <span className="text-blue-600">Issues</span> status changed from <span className="text-blue-600">Any-state</span> to <span className="text-blue-600">Closed</span>
+              </div>
             </div>
-          </div>
+            
+            {/* 连接线 */}
+            <div className="w-px h-6 bg-gray-300 ml-48" />
 
-          {/* 右侧：留资表单（替换原有的视频流） */}
-          <div className="w-full md:w-[420px] bg-white rounded-xl shadow-lg p-6 flex flex-col relative z-10">
-            <div className="mb-6 text-center">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">获取完整直播资料</h3>
-              <p className="text-xs text-gray-500">填写信息，即刻发送至您的工作邮箱</p>
+            {/* 模拟悬浮菜单 */}
+            <div className="absolute left-0 top-32 w-[220px] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 z-20">
+              <div className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                <div className="w-8 h-8 rounded-lg bg-pink-500 flex items-center justify-center text-white"><MessageSquare size={16} /></div>
+                <span className="text-sm font-medium text-gray-700">Send Notifications</span>
+              </div>
+              <div className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                <div className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white"><Users size={16} /></div>
+                <span className="text-sm font-medium text-gray-700">Create Group Chat</span>
+              </div>
+              <div className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center text-white"><Check size={16} /></div>
+                <span className="text-sm font-medium text-gray-700">Status Update</span>
+              </div>
             </div>
-            <div className="flex-1 overflow-y-auto pr-1 -mr-1">
-              <FormFields ctaText="立即获取资料" variant="Webinar" />
+
+            {/* 模拟节点 2 */}
+            <div className="w-[280px] bg-white rounded-lg shadow-sm border border-green-200 overflow-hidden ml-48">
+              <div className="bg-emerald-500 px-3 py-1.5 flex items-center gap-1.5 text-white text-xs font-bold">
+                <div className="w-3 h-3 rounded-full bg-white/20 flex items-center justify-center"><Check size={8} /></div>
+                Issue Status Update
+              </div>
+              <div className="p-4">
+                <p className="text-xs text-gray-500 font-medium mb-3">Following Issues have been closed</p>
+                <div className="space-y-2">
+                  <div className="text-xs text-blue-600 font-medium">Display mode orientation not correc...</div>
+                  <div className="text-xs text-blue-600 font-medium">Crush when multi-tapping</div>
+                  <div className="text-xs text-blue-600 font-medium">Loading Stuck</div>
+                </div>
+                <button className="mt-4 w-full py-1.5 border border-blue-200 text-blue-600 rounded text-xs font-bold">Change to Reopen</button>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* 右侧中文版单列长表单 */}
+      <div className="w-full md:w-[480px] bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] p-8 border border-gray-100">
+        <FormFields ctaText="提交" variant="Automated" />
       </div>
     </div>
   );
@@ -672,6 +690,10 @@ const LeadFormExperiment = () => {
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                     <strong className="text-gray-900 block mb-1">变体 C (分步降阻)</strong>
                     <span className="text-blue-600 font-medium">假设：</span>利用沉没成本谬误，将长表单拆分。第一步仅 1 个无阻力选择题，极大提高漏斗起始留存。左侧维持收益描述以控制变量。
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                    <strong className="text-gray-900 block mb-1">变体 D (效率提升版)</strong>
+                    <span className="text-blue-600 font-medium">假设：</span>英文官网布局风格。大字号直击痛点，配以直观的自动化工作流界面图示，配合中文单列表单，测试跨文化排版在中文语境下的转化表现。
                   </div>
                 </div>
               </div>
