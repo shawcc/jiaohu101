@@ -18,6 +18,18 @@ const LeadFormExperiment = () => {
   const [activeVariant, setActiveVariant] = useState('Online');
   const [step, setStep] = useState(1);
   const [source, setSource] = useState('contact'); // 'contact' (联系我们) or 'pricing' (购买咨询)
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 模拟用户登录状态
+
+  // 模拟已登录用户的预填数据
+  const mockUser = {
+    company: '字节跳动',
+    size: '500+',
+    email: 'zhangsan@bytedance.com',
+    phone: '13800138000',
+    firstName: '三',
+    lastName: '张',
+    jobTitle: '产品经理'
+  };
 
   // 投票盘口相关状态
   const [showBettingPool, setShowBettingPool] = useState(false);
@@ -115,12 +127,16 @@ const LeadFormExperiment = () => {
         <div className="flex-1 relative">
           <input
             type="text"
+            defaultValue={isLoggedIn ? mockUser.company : ''}
             className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm"
             placeholder="企业或组织名称*"
           />
         </div>
         <div className="flex-1 relative">
-          <select className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm text-gray-700 bg-white">
+          <select 
+            defaultValue={isLoggedIn ? mockUser.size : ''}
+            className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm text-gray-700 bg-white"
+          >
             <option value="">人员规模*</option>
             <option value="1-50">1 - 50</option>
             <option value="51-200">51 - 200</option>
@@ -134,6 +150,7 @@ const LeadFormExperiment = () => {
       <div className="relative">
         <input
           type="email"
+          defaultValue={isLoggedIn ? mockUser.email : ''}
           className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm"
           placeholder="工作邮箱*"
         />
@@ -150,6 +167,7 @@ const LeadFormExperiment = () => {
         <div className="flex-1 relative">
           <input
             type="tel"
+            defaultValue={isLoggedIn ? mockUser.phone : ''}
             className="w-full h-12 px-4 border border-gray-300 rounded-r-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm"
             placeholder="手机号*"
           />
@@ -265,7 +283,7 @@ const LeadFormExperiment = () => {
           <div className="flex gap-4">
             <div className="flex-1 space-y-1">
               <label className="text-[13px] text-gray-700 font-medium">工作邮箱 <span className="text-red-500">*</span></label>
-              <input type="email" className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="name@company.com" />
+              <input type="email" defaultValue={isLoggedIn ? mockUser.email : ''} className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="name@company.com" />
             </div>
             <div className="flex-1 space-y-1">
               <label className="text-[13px] text-gray-700 font-medium">电话号码 <span className="text-red-500">*</span></label>
@@ -273,7 +291,7 @@ const LeadFormExperiment = () => {
                 <select className="w-[70px] h-10 px-2 border border-gray-300 border-r-0 rounded-l outline-none focus:border-blue-500 text-[13px] bg-gray-50">
                   <option>+86</option>
                 </select>
-                <input type="tel" className="flex-1 h-10 px-3 border border-gray-300 rounded-r outline-none focus:border-blue-500 text-[13px]" placeholder="请输入" />
+                <input type="tel" defaultValue={isLoggedIn ? mockUser.phone : ''} className="flex-1 h-10 px-3 border border-gray-300 rounded-r outline-none focus:border-blue-500 text-[13px]" placeholder="请输入" />
               </div>
             </div>
           </div>
@@ -281,31 +299,39 @@ const LeadFormExperiment = () => {
           <div className="flex gap-4">
             <div className="flex-1 space-y-1">
               <label className="text-[13px] text-gray-700 font-medium">名字 <span className="text-red-500">*</span></label>
-              <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="Jane" />
+              <input type="text" defaultValue={isLoggedIn ? mockUser.firstName : ''} className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="Jane" />
             </div>
             <div className="flex-1 space-y-1">
               <label className="text-[13px] text-gray-700 font-medium">姓氏 <span className="text-red-500">*</span></label>
-              <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="Doe" />
+              <input type="text" defaultValue={isLoggedIn ? mockUser.lastName : ''} className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="Doe" />
             </div>
           </div>
 
           <div className="flex gap-4">
             <div className="flex-1 space-y-1">
               <label className="text-[13px] text-gray-700 font-medium">公司名称 <span className="text-red-500">*</span></label>
-              <input type="text" className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="Acme Inc." />
+              <input type="text" defaultValue={isLoggedIn ? mockUser.company : ''} className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px]" placeholder="Acme Inc." />
             </div>
             <div className="flex-1 space-y-1">
               <label className="text-[13px] text-gray-700 font-medium">公司规模 <span className="text-red-500">*</span></label>
-              <select className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px] bg-white appearance-none">
-                <option>请选择</option>
+              <select defaultValue={isLoggedIn ? mockUser.size : ''} className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px] bg-white appearance-none">
+                <option value="">请选择</option>
+                <option value="1-50">1 - 50</option>
+                <option value="51-200">51 - 200</option>
+                <option value="201-500">201 - 500</option>
+                <option value="500+">500+</option>
               </select>
             </div>
           </div>
 
           <div className="space-y-1">
             <label className="text-[13px] text-gray-700 font-medium">职位 <span className="text-red-500">*</span></label>
-            <select className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px] bg-white appearance-none">
-              <option>请选择</option>
+            <select defaultValue={isLoggedIn ? mockUser.jobTitle : ''} className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-[13px] bg-white appearance-none">
+              <option value="">请选择</option>
+              <option value="产品经理">产品经理</option>
+              <option value="研发工程师">开发工程师</option>
+              <option value="总监/高管">总监/高管</option>
+              <option value="其他">其他</option>
             </select>
           </div>
 
@@ -434,20 +460,20 @@ const LeadFormExperiment = () => {
           </div>
         ) : (
           <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300 flex-1 flex flex-col">
-            <input type="text" className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="企业或组织名称*" />
-            <select className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm text-gray-700 bg-white">
+            <input type="text" defaultValue={isLoggedIn ? mockUser.company : ''} className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="企业或组织名称*" />
+            <select defaultValue={isLoggedIn ? mockUser.size : ''} className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm text-gray-700 bg-white">
               <option value="">人员规模*</option>
               <option value="1-50">1 - 50</option>
               <option value="51-200">51 - 200</option>
               <option value="201-500">201 - 500</option>
               <option value="500+">500+</option>
             </select>
-            <input type="email" className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="工作邮箱*" />
+            <input type="email" defaultValue={isLoggedIn ? mockUser.email : ''} className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="工作邮箱*" />
             <div className="flex gap-0">
               <select className="w-[100px] h-12 pl-4 pr-8 border border-gray-300 border-r-0 rounded-l-lg outline-none focus:border-blue-500 text-sm bg-gray-50">
                 <option value="+86">+86</option>
               </select>
-              <input type="tel" className="flex-1 h-12 px-4 border border-gray-300 rounded-r-lg outline-none focus:border-blue-500 text-sm" placeholder="手机号*" />
+              <input type="tel" defaultValue={isLoggedIn ? mockUser.phone : ''} className="flex-1 h-12 px-4 border border-gray-300 rounded-r-lg outline-none focus:border-blue-500 text-sm" placeholder="手机号*" />
             </div>
             
             <div className="mt-auto pt-6">
@@ -478,6 +504,27 @@ const LeadFormExperiment = () => {
           A/B 实验台：留资转化优化
         </div>
         <div className="flex items-center gap-4">
+          <div className="flex items-center bg-gray-800 rounded-md p-1">
+            <button
+              onClick={() => setIsLoggedIn(false)}
+              className={`px-3 py-1 rounded text-[11px] font-medium transition-all ${
+                !isLoggedIn ? 'bg-indigo-500 text-white' : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              未登录访客
+            </button>
+            <button
+              onClick={() => setIsLoggedIn(true)}
+              className={`px-3 py-1 rounded text-[11px] font-medium transition-all ${
+                isLoggedIn ? 'bg-indigo-500 text-white' : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              已登录用户
+            </button>
+          </div>
+
+          <div className="w-px h-4 bg-gray-700" />
+
           <div className="flex items-center bg-gray-800 rounded-md p-1 mr-4">
             <button
               onClick={() => setSource('contact')}
