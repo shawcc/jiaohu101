@@ -542,7 +542,7 @@ const LeadFormExperiment = () => {
                   </div>
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                     <strong className="text-gray-900 block mb-1">变体 A (经典对照)</strong>
-                    <span className="text-blue-600 font-medium">假设：</span>线上原版左侧信息过载。精简为短平快的 4 个卖点，能降低认知负荷，让视线更快聚焦到表单。
+                    <span className="text-blue-600 font-medium">假设：</span>线上原版左侧信息过载。精简为短平快的 4 个“联系销售后能获得什么”（即期望值管理），能降低认知负荷，让视线更快聚焦到表单。
                   </div>
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
                     <strong className="text-gray-900 block mb-1">变体 B (沉浸居中) + 信任驱动</strong>
