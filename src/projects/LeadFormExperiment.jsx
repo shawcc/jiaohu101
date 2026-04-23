@@ -1,10 +1,42 @@
-import React, { useState } from 'react';
-import { Check, ChevronDown, HelpCircle, ArrowRight, ShieldCheck, ArrowLeft, Star, LayoutTemplate, Globe, Zap, Users, MessageSquare, Kanban, Bot } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Check, ChevronDown, HelpCircle, ArrowRight, ShieldCheck, ArrowLeft, Star, LayoutTemplate, Globe, Zap, Users, MessageSquare, Kanban, Bot, Trophy, X, BarChart2 } from 'lucide-react';
+
+const ALL_VARIANTS = [
+  { id: 'Online', label: '线上原版 (Control)', sources: ['contact', 'pricing'] },
+  { id: 'Classic', label: '变体A: 经典左右布局', sources: ['contact'] },
+  { id: 'Immersive', label: '变体B: 沉浸居中', sources: ['contact', 'pricing'] },
+  { id: 'MultiStep', label: '变体C: 分步降阻', sources: ['contact'] }
+];
 
 const LeadFormExperiment = () => {
   const [activeVariant, setActiveVariant] = useState('Online');
   const [step, setStep] = useState(1);
   const [source, setSource] = useState('contact'); // 'contact' (联系我们) or 'pricing' (购买咨询)
+
+  // 投票盘口相关状态
+  const [showBettingPool, setShowBettingPool] = useState(false);
+  const [votedVariant, setVotedVariant] = useState(null);
+  const [votes, setVotes] = useState({
+    Online: 1,
+    Classic: 2,
+    Immersive: 6,
+    MultiStep: 8
+  }); // 模拟的初始票数
+
+  useEffect(() => {
+    // 从 localStorage 读取历史投票
+    const savedVote = localStorage.getItem('meegle_experiment_vote');
+    if (savedVote) {
+      setVotedVariant(savedVote);
+      setVotes(prev => ({ ...prev, [savedVote]: (prev[savedVote] || 0) + 1 }));
+    }
+  }, []);
+
+  const handleVote = (id) => {
+    setVotedVariant(id);
+    localStorage.setItem('meegle_experiment_vote', id);
+    setVotes(prev => ({ ...prev, [id]: prev[id] + 1 }));
+  };
 
   // 模拟完整线上环境的全局导航栏
   const Navbar = () => (
@@ -444,14 +476,9 @@ const LeadFormExperiment = () => {
           </div>
           
           <div className="flex gap-1 overflow-x-auto">
-          {[
-            { id: 'Online', label: '线上原版 (Control)', sources: ['contact', 'pricing'] },
-            { id: 'Classic', label: '变体A: 经典左右布局', sources: ['contact'] },
-            { id: 'Immersive', label: '变体B: 沉浸居中', sources: ['contact', 'pricing'] },
-            { id: 'MultiStep', label: '变体C: 分步降阻', sources: ['contact'] }
-          ].filter(v => v.sources.includes(source)).map(v => (
-            <button
-              key={v.id}
+           {ALL_VARIANTS.filter(v => v.sources.includes(source)).map(v => (
+             <button
+               key={v.id}
               onClick={() => { setActiveVariant(v.id); setStep(1); }}
               className={`px-3 py-1.5 rounded text-xs font-semibold transition-all whitespace-nowrap ${
                 activeVariant === v.id 
@@ -477,6 +504,109 @@ const LeadFormExperiment = () => {
           {activeVariant === 'MultiStep' && <VariantMultiStep />}
         </div>
       </div>
+
+      {/* 悬浮盘口按钮 */}
+      <button
+        onClick={() => setShowBettingPool(true)}
+        className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full px-6 py-3.5 shadow-xl flex items-center gap-2 font-bold text-sm transition-transform hover:scale-105 z-[90]"
+      >
+        <Trophy size={18} className="text-yellow-300" />
+        {votedVariant ? '查看盘口赛况' : '预测冠军方案'}
+      </button>
+
+      {/* 实验说明与投票侧边栏 */}
+      {showBettingPool && (
+        <>
+          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[90]" onClick={() => setShowBettingPool(false)} />
+          <div className="fixed inset-y-0 right-0 w-[440px] bg-white shadow-2xl z-[100] flex flex-col border-l border-gray-200 animate-in slide-in-from-right duration-300">
+            <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+              <h2 className="text-lg font-extrabold flex items-center gap-2 text-gray-900">
+                <BarChart2 className="text-blue-600" size={22} />
+                留资转化实验盘口
+              </h2>
+              <button onClick={() => setShowBettingPool(false)} className="text-gray-400 hover:text-gray-900 bg-white rounded-full p-1 shadow-sm border border-gray-200">
+                <X size={18} />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6 space-y-8">
+              {/* 实验说明 */}
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded mb-4">
+                  <Check size={12} /> 实验目的与假设
+                </div>
+                <div className="space-y-4 text-[13px] text-gray-600 leading-relaxed">
+                  <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                    <strong className="text-gray-900 block mb-1">线上原版 (Control)</strong>
+                    作为基线（Baseline），提供当前转化率基准。左侧展示完整产品能力，右侧为长表单。
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                    <strong className="text-gray-900 block mb-1">变体 A (经典对照)</strong>
+                    <span className="text-blue-600 font-medium">假设：</span>线上原版左侧信息过载。精简为短平快的 4 个卖点，能降低认知负荷，让视线更快聚焦到表单。
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                    <strong className="text-gray-900 block mb-1">变体 B (沉浸居中) + 信任驱动</strong>
+                    <span className="text-blue-600 font-medium">假设：</span>隧道视觉效应（强制聚焦）+ 强有力的社会认同（星级/安全认证），能有效对冲隐私焦虑。适合强意向的「购买咨询」入口。
+                  </div>
+                  <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                    <strong className="text-gray-900 block mb-1">变体 C (分步降阻) + 动态权益</strong>
+                    <span className="text-blue-600 font-medium">假设：</span>将枯燥的“填表”变为“用信息换高价值权益”。利用沉没成本谬误，第一步仅 1 个无阻力选择题，极大提高漏斗起始留存。
+                  </div>
+                </div>
+              </div>
+
+              {/* 投票区 */}
+              <div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-yellow-50 text-yellow-700 text-xs font-bold rounded mb-4">
+                  <Trophy size={12} /> 组内下注预测
+                </div>
+                <h3 className="text-sm font-bold text-gray-900 mb-4">你认为最终哪个版本的留资转化率最高？</h3>
+                
+                {!votedVariant ? (
+                  <div className="space-y-2">
+                    {ALL_VARIANTS.map(v => (
+                      <button 
+                        key={v.id}
+                        onClick={() => handleVote(v.id)} 
+                        className="w-full text-left p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-gray-700 text-sm flex justify-between items-center group"
+                      >
+                        {v.label}
+                        <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 text-blue-500 transition-opacity" />
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="space-y-4 bg-gray-50 p-5 rounded-xl border border-gray-100">
+                    <p className="text-xs text-gray-500 mb-2 font-medium">当前赛况（已记录你的预测）</p>
+                    {ALL_VARIANTS.sort((a, b) => votes[b.id] - votes[a.id]).map(v => {
+                      const total = Object.values(votes).reduce((a, b) => a + b, 0);
+                      const pct = Math.round((votes[v.id] / total) * 100) || 0;
+                      const isVoted = votedVariant === v.id;
+                      
+                      return (
+                        <div key={v.id}>
+                          <div className="flex justify-between text-xs mb-1.5">
+                            <span className={`font-medium ${isVoted ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
+                              {v.label} {isVoted && '👈 你选的'}
+                            </span>
+                            <span className="font-bold text-gray-900">{pct}% <span className="text-gray-500 font-normal">({votes[v.id]}票)</span></span>
+                          </div>
+                          <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                            <div 
+                              className={`h-full rounded-full transition-all duration-1000 ${isVoted ? 'bg-blue-600' : 'bg-gray-400'}`} 
+                              style={{ width: `${pct}%` }} 
+                            />
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
