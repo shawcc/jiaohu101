@@ -6,7 +6,8 @@ const ALL_VARIANTS = {
     { id: 'Online', label: '线上原版 (Control)' },
     { id: 'Classic', label: '变体A: 明确可获收益' },
     { id: 'Immersive', label: '变体B: 沉浸居中' },
-    { id: 'MultiStep', label: '变体C: 分步降阻' }
+    { id: 'MultiStep', label: '变体C: 分步降阻' },
+    { id: 'Webinar', label: '变体D: 直播资料留资' }
   ],
   pricing: [
     { id: 'Online', label: '线上原版 (Control)' },
@@ -493,7 +494,57 @@ const LeadFormExperiment = () => {
     </div>
   );
 
-  // 变体D和变体E已根据要求移除
+  // --- 变体 D: 直播资料沉浸版 (Webinar) ---
+  const VariantWebinar = () => (
+    <div className="max-w-[1200px] mx-auto py-12 px-8">
+      <div className="rounded-2xl overflow-hidden shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] bg-[#1A1F36] flex flex-col border border-gray-800">
+        {/* 模拟直播间头部 */}
+        <div className="h-16 bg-[#0B0F19] flex items-center justify-between px-6 border-b border-gray-800">
+          <div className="flex items-center gap-4">
+            <div className="text-yellow-500 font-black italic text-2xl tracking-wider font-serif">Lark Fireside Chats</div>
+            <div className="border border-blue-500/50 bg-blue-500/10 text-blue-400 text-xs font-bold px-2 py-0.5 rounded flex items-center gap-1">
+              围炉夜话
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
+            <span className="text-gray-300 text-xs font-bold tracking-widest">LIVE REPLAY</span>
+          </div>
+        </div>
+
+        {/* 直播间主体 */}
+        <div className="flex flex-col md:flex-row relative h-[640px] bg-[#1A1F36] p-4 gap-4">
+          {/* 左侧：PPT 演示区 */}
+          <div className="flex-1 bg-white rounded-xl shadow-inner flex flex-col overflow-hidden relative">
+            <div className="h-14 border-b border-gray-100 flex items-center px-6 bg-white z-10">
+              <span className="text-purple-600 font-bold mr-4 text-lg">Lark Fireside Chats EP.84</span>
+              <span className="text-gray-500 text-sm">Q3 | AI 时代设计最大的挑战</span>
+            </div>
+            <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-blue-50 relative">
+              {/* 模拟背景水印文字 */}
+              <div className="absolute inset-0 flex flex-wrap items-center justify-center opacity-[0.03] overflow-hidden pointer-events-none gap-8 p-4">
+                {[...Array(24)].map((_, i) => (
+                  <div key={i} className="text-2xl font-bold -rotate-12 whitespace-nowrap">Lark Fireside Chats</div>
+                ))}
+              </div>
+              <h2 className="text-[40px] font-medium text-gray-800 tracking-wide z-10">AI 时代是设计师的黄金时代</h2>
+            </div>
+          </div>
+
+          {/* 右侧：留资表单（替换原有的视频流） */}
+          <div className="w-full md:w-[420px] bg-white rounded-xl shadow-lg p-6 flex flex-col relative z-10">
+            <div className="mb-6 text-center">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">获取完整直播资料</h3>
+              <p className="text-xs text-gray-500">填写信息，即刻发送至您的工作邮箱</p>
+            </div>
+            <div className="flex-1 overflow-y-auto pr-1 -mr-1">
+              <FormFields ctaText="立即获取资料" variant="Webinar" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-[#1F2329] flex flex-col relative">
@@ -571,6 +622,7 @@ const LeadFormExperiment = () => {
           {activeVariant === 'Classic' && <VariantClassic />}
           {activeVariant === 'Immersive' && <VariantImmersive />}
           {activeVariant === 'MultiStep' && <VariantMultiStep />}
+          {activeVariant === 'Webinar' && <VariantWebinar />}
         </div>
       </div>
 
