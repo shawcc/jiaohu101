@@ -4,7 +4,7 @@ import { Check, ChevronDown, HelpCircle, ArrowRight, ShieldCheck, ArrowLeft, Sta
 const ALL_VARIANTS = {
   contact: [
     { id: 'Online', label: '线上原版 (Control)' },
-    { id: 'Classic', label: '变体A: 经典左右布局' },
+    { id: 'Classic', label: '变体A: 明确可获收益' },
     { id: 'Immersive', label: '变体B: 沉浸居中' },
     { id: 'MultiStep', label: '变体C: 分步降阻' }
   ],
@@ -327,34 +327,38 @@ const LeadFormExperiment = () => {
     </div>
   );
 
-  // --- 变体 A: 经典对照版 (Classic) - 原先漏掉的版本 ---
-  const VariantClassic = () => (
-    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-24">
-      <div className="flex-1 max-w-[420px]">
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-3">
-          {source === 'pricing' ? '购买咨询' : '联系销售'}
-        </h1>
-        <p className="text-base text-gray-600 mb-8">
-          {source === 'pricing' ? '获取适合您团队的报价方案。' : '在 Meegle 里畅快协作？'}
-        </p>
-        
-        <div className="space-y-4 mb-8">
-          {['预约 Meegle 产品演示', '为你的团队选择最佳版本', '获取你所在行业的最佳实践', '从你现有的工具迁移到 Meegle'].map((text, i) => (
-            <div key={i} className="flex items-center gap-3 text-[13px] text-gray-800 font-medium">
-              <Check size={16} className="text-gray-900 shrink-0" />
-              {text}
-            </div>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-2 text-[13px] text-gray-600 font-medium mb-10">
-          <HelpCircle size={14} className="shrink-0" />
-          <span>获取更多产品信息或客户支持，请访问<a href="#" className="text-blue-600 hover:underline">帮助中心</a></span>
-        </div>
-
-        <Logos layout="grid" />
+  // --- 提取变体A和变体C共用的左侧“明确收益”组件，以控制实验变量 ---
+  const BenefitLeftSide = () => (
+    <div className="flex-1 max-w-[420px]">
+      <h1 className="text-3xl font-extrabold text-gray-900 mb-3">
+        {source === 'pricing' ? '购买咨询' : '联系销售'}
+      </h1>
+      <p className="text-base text-gray-600 mb-8">
+        {source === 'pricing' ? '获取适合您团队的报价方案。' : '在 Meegle 里畅快协作？'}
+      </p>
+      
+      <div className="space-y-4 mb-8">
+        {['预约 Meegle 产品演示', '为你的团队选择最佳版本', '获取你所在行业的最佳实践', '从你现有的工具迁移到 Meegle'].map((text, i) => (
+          <div key={i} className="flex items-center gap-3 text-[13px] text-gray-800 font-medium">
+            <Check size={16} className="text-gray-900 shrink-0" />
+            {text}
+          </div>
+        ))}
       </div>
 
+      <div className="flex items-center gap-2 text-[13px] text-gray-600 font-medium mb-10">
+        <HelpCircle size={14} className="shrink-0" />
+        <span>获取更多产品信息或客户支持，请访问<a href="#" className="text-blue-600 hover:underline">帮助中心</a></span>
+      </div>
+
+      <Logos layout="grid" />
+    </div>
+  );
+
+  // --- 变体 A: 明确收益 (原经典对照版) ---
+  const VariantClassic = () => (
+    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-24">
+      <BenefitLeftSide />
       <div className="w-full md:w-[480px] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-100">
         <FormFields ctaText="获得专属支持" variant="Classic" />
       </div>
@@ -401,40 +405,10 @@ const LeadFormExperiment = () => {
     </div>
   );
 
-  // --- 变体 C: 分步降阻版 (Multi-step) - 融入“动态权益” ---
+  // --- 变体 C: 分步降阻版 (Multi-step) ---
   const VariantMultiStep = () => (
     <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-16">
-      <div className="flex-1 max-w-[460px]">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-600 font-bold text-xs rounded-md mb-6">
-          <LayoutTemplate size={14} /> 专属方案定制
-        </div>
-        <h1 className="text-[34px] font-extrabold text-gray-900 mb-5 leading-tight tracking-tight">留下您的需求<br/>解锁专属企业权益</h1>
-        <p className="text-[15px] text-gray-500 mb-8 leading-relaxed">只需 2 个简单步骤，即可在购买或试用时享受以下专属服务支持：</p>
-        
-        {/* 融入动态权益元素 */}
-        <div className="space-y-4 mb-10">
-          <div className="flex gap-3">
-            <div className="mt-0.5 shrink-0 w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-              <Check size={14} />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-[13px]">免费的数据迁移评估</h4>
-              <p className="text-[12px] text-gray-500 mt-0.5">由高级架构师提供 1v1 的现有系统迁移方案。</p>
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <div className="mt-0.5 shrink-0 w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
-              <Check size={14} />
-            </div>
-            <div>
-              <h4 className="font-bold text-gray-900 text-[13px]">长达 30 天的高级试用</h4>
-              <p className="text-[12px] text-gray-500 mt-0.5">开放所有企业级特性，无任何功能限制。</p>
-            </div>
-          </div>
-        </div>
-
-        <Logos layout="grid" />
-      </div>
+      <BenefitLeftSide />
 
       <div className="w-full md:w-[480px] bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] p-8 border border-gray-100 relative overflow-hidden min-h-[460px] flex flex-col">
         <div className="flex items-center gap-2 mb-8">
@@ -597,8 +571,8 @@ const LeadFormExperiment = () => {
                     <span className="text-blue-600 font-medium">假设：</span>隧道视觉效应（强制聚焦）+ 强有力的社会认同（星级/安全认证），能有效对冲隐私焦虑。适合强意向的「购买咨询」入口。
                   </div>
                   <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                    <strong className="text-gray-900 block mb-1">变体 C (分步降阻) + 动态权益</strong>
-                    <span className="text-blue-600 font-medium">假设：</span>将枯燥的“填表”变为“用信息换高价值权益”。利用沉没成本谬误，第一步仅 1 个无阻力选择题，极大提高漏斗起始留存。
+                    <strong className="text-gray-900 block mb-1">变体 C (分步降阻)</strong>
+                    <span className="text-blue-600 font-medium">假设：</span>利用沉没成本谬误，将长表单拆分。第一步仅 1 个无阻力选择题，极大提高漏斗起始留存。左侧维持收益描述以控制变量。
                   </div>
                 </div>
               </div>
