@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, ChevronDown, HelpCircle, ArrowRight, ShieldCheck, ArrowLeft, Star, LayoutTemplate, Globe, Zap, Users } from 'lucide-react';
+import { Check, ChevronDown, HelpCircle, ArrowRight, ShieldCheck, ArrowLeft, Star, LayoutTemplate, Globe, Zap, Users, MessageSquare, Kanban, Bot } from 'lucide-react';
 
 const LeadFormExperiment = () => {
   const [activeVariant, setActiveVariant] = useState('Online');
@@ -116,22 +116,38 @@ const LeadFormExperiment = () => {
   // --- 变体 O: 线上原版 (Control) ---
   const VariantOnline = () => (
     <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-24">
-      <div className="flex-1 max-w-[420px]">
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-3">联系销售</h1>
-        <p className="text-base text-gray-600 mb-8">在 Meegle 里畅快协作？</p>
+      <div className="flex-1 max-w-[480px]">
+        <h1 className="text-[32px] font-extrabold text-gray-900 mb-4 leading-tight">体验 Meegle 完整产品能力</h1>
+        <p className="text-base text-gray-600 mb-8">一站式企业协同平台，打通沟通、项目与知识管理，为企业带来 10 倍效能提升。</p>
         
-        <div className="space-y-4 mb-8">
-          {['预约 Meegle 产品演示', '为你的团队选择最佳版本', '获取你所在行业的最佳实践', '从你现有的工具迁移到 Meegle'].map((text, i) => (
-            <div key={i} className="flex items-center gap-3 text-[13px] text-gray-800 font-medium">
-              <Check size={16} className="text-gray-900 shrink-0" />
-              {text}
+        <div className="space-y-6 mb-10">
+          <div className="flex gap-4">
+            <div className="mt-1 shrink-0 w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+              <MessageSquare size={20} />
             </div>
-          ))}
-        </div>
-
-        <div className="flex items-center gap-2 text-[13px] text-gray-600 font-medium mb-10">
-          <HelpCircle size={14} className="shrink-0" />
-          <span>获取更多产品信息或客户支持，请访问<a href="#" className="text-blue-600 hover:underline">帮助中心</a></span>
+            <div>
+              <h4 className="font-bold text-gray-900 text-[15px]">即时通讯与音视频会议</h4>
+              <p className="text-[13px] text-gray-500 mt-1">随时随地发起高质量会议，让团队沟通无缝衔接。</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="mt-1 shrink-0 w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
+              <Kanban size={20} />
+            </div>
+            <div>
+              <h4 className="font-bold text-gray-900 text-[15px]">敏捷项目管理</h4>
+              <p className="text-[13px] text-gray-500 mt-1">从需求规划到任务流转，全链路追踪项目进度。</p>
+            </div>
+          </div>
+          <div className="flex gap-4">
+            <div className="mt-1 shrink-0 w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
+              <Bot size={20} />
+            </div>
+            <div>
+              <h4 className="font-bold text-gray-900 text-[15px]">企业级 AI 助手</h4>
+              <p className="text-[13px] text-gray-500 mt-1">智能总结会议纪要、辅助编写文档，全面释放团队创造力。</p>
+            </div>
+          </div>
         </div>
 
         <Logos layout="grid" />
