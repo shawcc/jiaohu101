@@ -25,48 +25,65 @@ const LeadFormExperiment = () => {
   const [votedChoices, setVotedChoices] = useState(null); // { contact: 'id', pricing: 'id' }
   const [pendingVotes, setPendingVotes] = useState({ contact: null, pricing: null });
   
-  // 模拟的票仓数据（存储真实姓名）
-  const [votesData, setVotesData] = useState({
-    contact: {
-      Online: ['产品经理老张'],
-      Classic: ['设计小李', '前端小王'],
-      Immersive: ['运营大刘', '数据分析师'],
-      MultiStep: ['销售总监', '老板', '市场小赵']
-    },
-    pricing: {
-      Online: ['开发老陈'],
-      Immersive: ['设计小李', '销售总监', '运营大刘', '老板']
+  const [votesData, setVotesData] = useState({ contact: {}, pricing: {} });
+  const [isVoting, setIsVoting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 每次打开盘口时刷新云端数据
+  useEffect(() => {
+    if (showBettingPool) {
+      setIsLoading(true);
+      fetch('/api/vote')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.contact) setVotesData(data);
+        })
+        .catch(err => console.error('获取票数失败:', err))
+        .finally(() => setIsLoading(false));
     }
-  });
+  }, [showBettingPool]);
 
   useEffect(() => {
-    // 模拟从后端获取数据
-    const savedData = localStorage.getItem('meegle_votes_data');
+    // 从 localStorage 读取“我自己”的投票记录
     const savedMyVote = localStorage.getItem('meegle_my_vote');
-    if (savedData) setVotesData(JSON.parse(savedData));
+    const savedMyName = localStorage.getItem('meegle_my_name');
     if (savedMyVote) setVotedChoices(JSON.parse(savedMyVote));
+    if (savedMyName) setVoterName(savedMyName);
   }, []);
 
-  const handleVoteSubmit = () => {
+  const handleVoteSubmit = async () => {
     if (!voterName.trim()) return alert('请先填写您的姓名或花名');
     if (!pendingVotes.contact || !pendingVotes.pricing) return alert('请为两个实验都选择一个方案');
 
-    const newVotesData = { ...votesData };
-    
-    // 更新联系我们实验的票数
-    if (!newVotesData.contact[pendingVotes.contact]) newVotesData.contact[pendingVotes.contact] = [];
-    newVotesData.contact[pendingVotes.contact].push(voterName);
+    setIsVoting(true);
+    try {
+      const res = await fetch('/api/vote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          voterName: voterName.trim(),
+          contactVote: pendingVotes.contact,
+          pricingVote: pendingVotes.pricing
+        })
+      });
 
-    // 更新购买咨询实验的票数
-    if (!newVotesData.pricing[pendingVotes.pricing]) newVotesData.pricing[pendingVotes.pricing] = [];
-    newVotesData.pricing[pendingVotes.pricing].push(voterName);
-
-    setVotesData(newVotesData);
-    setVotedChoices(pendingVotes);
-    
-    // 模拟保存到后端
-    localStorage.setItem('meegle_votes_data', JSON.stringify(newVotesData));
-    localStorage.setItem('meegle_my_vote', JSON.stringify(pendingVotes));
+      if (res.ok) {
+        const updatedData = await res.json();
+        setVotesData(updatedData);
+        setVotedChoices(pendingVotes);
+        
+        // 保存到本地以记住状态
+        localStorage.setItem('meegle_my_vote', JSON.stringify(pendingVotes));
+        localStorage.setItem('meegle_my_name', voterName.trim());
+      } else {
+        const error = await res.json();
+        alert('提交失败: ' + (error.error || '未知错误'));
+      }
+    } catch (e) {
+      alert('网络错误，请检查网络或确认 Vercel KV 是否配置正确');
+    } finally {
+      setIsVoting(false);
+    }
   };
 
   // 模拟完整线上环境的全局导航栏
@@ -643,9 +660,10 @@ const LeadFormExperiment = () => {
 
                     <button 
                       onClick={handleVoteSubmit}
-                      className="w-full py-3 bg-[#2152F3] hover:bg-blue-700 text-white rounded-lg font-bold transition-colors shadow-md"
+                      disabled={isVoting}
+                      className="w-full py-3 bg-[#2152F3] hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-bold transition-colors shadow-md flex items-center justify-center"
                     >
-                      提交我的预测
+                      {isVoting ? '提交中...' : '提交我的预测'}
                     </button>
                   </div>
                 ) : (
