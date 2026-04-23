@@ -1,14 +1,36 @@
 import React, { useState } from 'react';
-import { Check, ChevronDown, HelpCircle, ArrowRight, ShieldCheck, ArrowLeft, Star } from 'lucide-react';
+import { Check, ChevronDown, HelpCircle, ArrowRight, ShieldCheck, ArrowLeft, Star, LayoutTemplate, Globe, Zap, Users } from 'lucide-react';
 
 const LeadFormExperiment = () => {
-  const [activeVariant, setActiveVariant] = useState('A');
+  const [activeVariant, setActiveVariant] = useState('Online');
   const [step, setStep] = useState(1);
 
-  // 共享的表单项组件
-  const FormFields = ({ variant }) => (
-    <div className="space-y-4">
-      <div className="flex gap-4">
+  // 模拟完整线上环境的全局导航栏
+  const Navbar = () => (
+    <nav className="h-16 bg-white border-b border-gray-100 px-8 flex items-center justify-between sticky top-0 z-50">
+      <div className="flex items-center gap-10">
+        <div className="font-black text-2xl tracking-tighter text-blue-600">Meegle</div>
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+          <a href="#" className="hover:text-blue-600 transition-colors">产品</a>
+          <a href="#" className="hover:text-blue-600 transition-colors">解决方案</a>
+          <a href="#" className="hover:text-blue-600 transition-colors">价格</a>
+          <a href="#" className="hover:text-blue-600 transition-colors">客户案例</a>
+          <a href="#" className="hover:text-blue-600 transition-colors">资源中心</a>
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <a href="#" className="text-sm font-medium text-gray-600 hover:text-gray-900 hidden md:block">登录</a>
+        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors">
+          免费试用
+        </button>
+      </div>
+    </nav>
+  );
+
+  // 共享的表单核心字段（保证字段数不少）
+  const FormFields = ({ ctaText, variant }) => (
+    <div className="space-y-4 w-full">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 relative">
           <input
             type="text"
@@ -37,7 +59,7 @@ const LeadFormExperiment = () => {
       </div>
 
       <div className="flex gap-0">
-        <div className="relative w-24">
+        <div className="relative w-[100px]">
           <select className="w-full h-12 pl-4 pr-8 appearance-none border border-gray-300 border-r-0 rounded-l-lg outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm text-gray-700 bg-gray-50">
             <option value="+86">+86</option>
             <option value="+1">+1</option>
@@ -63,221 +85,265 @@ const LeadFormExperiment = () => {
         <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
       </div>
 
-      <button className="w-full h-12 bg-[#2152F3] hover:bg-blue-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2">
-        {variant === 'C' ? '获取专属解决方案' : variant === 'D' ? '免费申请演示' : '获得专属支持'}
+      <button className="w-full h-12 mt-2 bg-[#2152F3] hover:bg-blue-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 shadow-sm shadow-blue-500/20">
+        {ctaText}
       </button>
 
       <p className="text-[11px] text-gray-400 leading-relaxed mt-4">
-        继续使用即表示您同意我们的<a href="#" className="underline">服务条款</a>并确认您已阅读<a href="#" className="underline">隐私协议</a>了解我们如何收集、使用和共享您的数据。
+        继续使用即表示您同意我们的<a href="#" className="underline hover:text-blue-500">服务条款</a>并确认您已阅读<a href="#" className="underline hover:text-blue-500">隐私协议</a>了解我们如何收集、使用和共享您的数据。
       </p>
     </div>
   );
 
-  // 客户 Logo 区
-  const Logos = () => (
-    <div className="mt-12">
-      <p className="text-xs text-gray-500 font-medium mb-6">行业领先者的最佳选择</p>
-      <div className="grid grid-cols-4 gap-y-6 gap-x-8 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
-        {/* 使用文字/简单图形模拟 Logo 以节省资源 */}
-        <div className="font-black text-lg text-blue-800 tracking-tighter">ZUS<span className="text-xs font-normal ml-1">COFFEE</span></div>
-        <div className="font-black text-lg text-red-600 tracking-tighter">7-ELEVEn</div>
-        <div className="font-bold text-lg text-red-600">海底捞</div>
-        <div className="font-black text-lg text-green-500">goto</div>
-        <div className="font-black text-lg text-yellow-500">MR.DIY</div>
-        <div className="font-black text-lg text-red-500">POP MART</div>
-        <div className="font-black text-xl text-orange-500">mi</div>
-        <div className="font-bold text-lg text-blue-400">traveloka</div>
+  const Logos = ({ layout = 'grid' }) => (
+    <div className={`mt-10 ${layout === 'flex' ? 'w-full' : ''}`}>
+      <p className="text-[11px] text-gray-500 font-medium mb-5">行业领先者的最佳选择</p>
+      <div className={layout === 'grid' 
+        ? "grid grid-cols-4 gap-y-6 gap-x-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500"
+        : "flex flex-wrap justify-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500"}>
+        <div className="font-black text-sm text-blue-800">ZUS COFFEE</div>
+        <div className="font-black text-sm text-red-600">7-ELEVEn</div>
+        <div className="font-bold text-sm text-red-600">海底捞</div>
+        <div className="font-black text-sm text-green-500">goto</div>
+        <div className="font-black text-sm text-yellow-500">MR.DIY</div>
+        <div className="font-black text-sm text-red-500">POP MART</div>
+        <div className="font-black text-lg text-orange-500 -mt-1">mi</div>
+        <div className="font-bold text-sm text-blue-400">traveloka</div>
       </div>
     </div>
   );
 
-  // 方案 A: 经典对照组（左图右表）
-  const VariantA = () => (
-    <div className="max-w-[1000px] mx-auto pt-16 pb-24 px-8 flex flex-col md:flex-row items-center gap-16">
-      <div className="flex-1">
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-4">联系销售</h1>
-        <p className="text-lg text-gray-600 mb-10">在 Meegle 里畅快协作。</p>
+  // --- 变体 O: 线上原版 (Control) ---
+  const VariantOnline = () => (
+    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-24">
+      <div className="flex-1 max-w-[420px]">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-3">联系销售</h1>
+        <p className="text-base text-gray-600 mb-8">在 Meegle 里畅快协作？</p>
         
-        <div className="space-y-4 mb-10">
+        <div className="space-y-4 mb-8">
           {['预约 Meegle 产品演示', '为你的团队选择最佳版本', '获取你所在行业的最佳实践', '从你现有的工具迁移到 Meegle'].map((text, i) => (
-            <div key={i} className="flex items-center gap-3 text-gray-700 font-medium">
-              <Check size={18} className="text-gray-900" />
+            <div key={i} className="flex items-center gap-3 text-[13px] text-gray-800 font-medium">
+              <Check size={16} className="text-gray-900 shrink-0" />
               {text}
             </div>
           ))}
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-gray-600 font-medium">
-          <HelpCircle size={16} />
-          获取更多产品信息或客户支持，请访问<a href="#" className="text-blue-600 hover:underline">帮助中心</a>
+        <div className="flex items-center gap-2 text-[13px] text-gray-600 font-medium mb-10">
+          <HelpCircle size={14} className="shrink-0" />
+          <span>获取更多产品信息或客户支持，请访问<a href="#" className="text-blue-600 hover:underline">帮助中心</a></span>
         </div>
 
-        <Logos />
+        <Logos layout="grid" />
       </div>
 
-      <div className="w-full md:w-[480px] bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-        <FormFields variant="A" />
+      <div className="w-full md:w-[480px] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-100">
+        <FormFields ctaText="获得专属支持" variant="Online" />
       </div>
     </div>
   );
 
-  // 方案 B: 沉浸式居中（降低两侧干扰，提升专注度）
-  const VariantB = () => (
-    <div className="max-w-[800px] mx-auto pt-16 pb-24 px-8 flex flex-col items-center text-center">
-      <h1 className="text-4xl font-extrabold text-gray-900 mb-4">与产品专家聊聊</h1>
-      <p className="text-lg text-gray-600 mb-12">告诉我们您的需求，我们将为您提供定制化的协作方案与报价。</p>
+  // --- 变体 A: 沉浸居中版 (Immersive) ---
+  const VariantImmersive = () => (
+    <div className="max-w-[800px] mx-auto py-20 px-8 flex flex-col items-center text-center">
+      <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">与产品专家聊聊</h1>
+      <p className="text-[15px] text-gray-500 mb-10 max-w-[480px]">告诉我们您的业务痛点，我们将为您提供定制化的协作方案与专属报价。</p>
       
-      <div className="w-full max-w-[560px] bg-white rounded-2xl shadow-2xl p-10 border border-gray-100 text-left">
-        <FormFields variant="B" />
+      <div className="w-full max-w-[560px] bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] p-10 border border-gray-100 text-left">
+        <FormFields ctaText="提交需求" variant="Immersive" />
       </div>
 
-      <div className="mt-16 border-t border-gray-200 pt-10 w-full flex flex-col items-center">
-        <p className="text-xs text-gray-500 font-medium mb-6">超过 10,000+ 优秀团队的共同选择</p>
-        <div className="flex flex-wrap justify-center gap-8 opacity-60">
-          <div className="font-black text-lg text-blue-800">ZUS COFFEE</div>
-          <div className="font-black text-lg text-red-600">7-ELEVEn</div>
-          <div className="font-bold text-lg text-red-600">海底捞</div>
-          <div className="font-black text-lg text-green-500">goto</div>
-          <div className="font-black text-lg text-red-500">POP MART</div>
-          <div className="font-bold text-lg text-blue-400">traveloka</div>
-        </div>
+      <div className="mt-16 w-full flex flex-col items-center border-t border-gray-100 pt-10">
+        <Logos layout="flex" />
       </div>
     </div>
   );
 
-  // 方案 C: 分步降阻（将 5 个表单项拆为 2 步，先业务后联系方式）
-  const VariantC = () => (
-    <div className="max-w-[1000px] mx-auto pt-16 pb-24 px-8 flex flex-col md:flex-row items-center gap-16">
-      <div className="flex-1">
-        <div className="inline-block px-3 py-1 bg-blue-50 text-blue-600 font-bold text-sm rounded-full mb-6">定制方案</div>
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-6 leading-tight">获取专属于您团队的<br/>Meegle 解决方案</h1>
-        <p className="text-lg text-gray-600 mb-10 leading-relaxed">只需 2 个简单步骤，即可预约演示并获取行业最佳实践参考。</p>
-        <Logos />
+  // --- 变体 B: 分步降阻版 (Multi-step) ---
+  const VariantMultiStep = () => (
+    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-16">
+      <div className="flex-1 max-w-[460px]">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 text-blue-600 font-bold text-xs rounded-md mb-6">
+          <LayoutTemplate size={14} /> 专属方案定制
+        </div>
+        <h1 className="text-[34px] font-extrabold text-gray-900 mb-5 leading-tight tracking-tight">获取专属于您团队的<br/>最佳实践与报价</h1>
+        <p className="text-[15px] text-gray-500 mb-10 leading-relaxed">只需 2 个简单步骤，即可预约演示并获取行业标杆的效率提升方案。</p>
+        <Logos layout="grid" />
       </div>
 
-      <div className="w-full md:w-[480px] bg-white rounded-2xl shadow-xl p-8 border border-gray-100 relative overflow-hidden">
+      <div className="w-full md:w-[480px] bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] p-8 border border-gray-100 relative overflow-hidden min-h-[460px] flex flex-col">
         <div className="flex items-center gap-2 mb-8">
-          <div className={`h-1.5 flex-1 rounded-full ${step >= 1 ? 'bg-blue-600' : 'bg-gray-100'}`} />
-          <div className={`h-1.5 flex-1 rounded-full ${step >= 2 ? 'bg-blue-600' : 'bg-gray-100'}`} />
+          <div className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= 1 ? 'bg-blue-600' : 'bg-gray-100'}`} />
+          <div className={`h-1.5 flex-1 rounded-full transition-all duration-500 ${step >= 2 ? 'bg-blue-600' : 'bg-gray-100'}`} />
         </div>
         
-        <h3 className="text-xl font-bold text-gray-900 mb-6">
-          {step === 1 ? '步骤 1：了解您的企业' : '步骤 2：如何联系您？'}
+        <h3 className="text-lg font-bold text-gray-900 mb-6">
+          {step === 1 ? '步骤 1：了解您的企业诉求' : '步骤 2：如何发送方案给您？'}
         </h3>
 
         {step === 1 ? (
-          <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
+          <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300 flex-1">
             <input type="text" className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="企业或组织名称*" />
             <select className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm text-gray-700 bg-white">
               <option value="">人员规模*</option>
               <option value="1-50">1 - 50</option>
               <option value="51-200">51 - 200</option>
+              <option value="201-500">201 - 500</option>
+              <option value="500+">500+</option>
             </select>
             <select className="w-full h-12 px-4 appearance-none border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm text-gray-700 bg-white">
               <option value="">你需要什么帮助？*</option>
               <option value="demo">预约产品演示</option>
+              <option value="pricing">咨询价格方案</option>
+              <option value="tech">技术与集成支持</option>
             </select>
-            <button onClick={() => setStep(2)} className="w-full h-12 bg-[#2152F3] hover:bg-blue-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 mt-4">
-              下一步 <ArrowRight size={18} />
+            <button onClick={() => setStep(2)} className="w-full h-12 bg-[#2152F3] hover:bg-blue-700 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2 mt-6">
+              下一步 <ArrowRight size={16} />
             </button>
           </div>
         ) : (
-          <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
+          <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300 flex-1 flex flex-col">
             <input type="email" className="w-full h-12 px-4 border border-gray-300 rounded-lg outline-none focus:border-blue-500 text-sm" placeholder="工作邮箱*" />
             <div className="flex gap-0">
-              <select className="w-24 h-12 pl-4 pr-8 border border-gray-300 border-r-0 rounded-l-lg outline-none focus:border-blue-500 text-sm bg-gray-50">
+              <select className="w-[100px] h-12 pl-4 pr-8 border border-gray-300 border-r-0 rounded-l-lg outline-none focus:border-blue-500 text-sm bg-gray-50">
                 <option value="+86">+86</option>
               </select>
               <input type="tel" className="flex-1 h-12 px-4 border border-gray-300 rounded-r-lg outline-none focus:border-blue-500 text-sm" placeholder="手机号*" />
             </div>
-            <div className="flex gap-3 mt-4">
-              <button onClick={() => setStep(1)} className="w-12 h-12 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-lg font-medium flex items-center justify-center transition-all">
-                <ArrowLeft size={18} />
-              </button>
-              <button className="flex-1 h-12 bg-[#2152F3] hover:bg-blue-700 text-white rounded-lg font-medium transition-all">
-                获取专属解决方案
-              </button>
+            
+            <div className="mt-auto pt-6">
+              <div className="flex gap-3">
+                <button onClick={() => setStep(1)} className="w-12 h-12 border border-gray-200 hover:bg-gray-50 text-gray-600 rounded-lg font-medium flex items-center justify-center transition-all shrink-0">
+                  <ArrowLeft size={16} />
+                </button>
+                <button className="flex-1 h-12 bg-[#2152F3] hover:bg-blue-700 text-white rounded-lg font-medium transition-all shadow-sm shadow-blue-500/20">
+                  获取专属解决方案
+                </button>
+              </div>
+              <p className="text-[11px] text-gray-400 mt-4 leading-relaxed">继续使用即表示您同意我们的<a href="#" className="underline">服务条款</a>并确认隐私协议。</p>
             </div>
-            <p className="text-[11px] text-gray-400 mt-2">继续使用即表示您同意我们的服务条款并确认隐私协议。</p>
           </div>
         )}
       </div>
     </div>
   );
 
-  // 方案 D: 右侧信任驱动（表单在左，右侧强化客户背书）
-  const VariantD = () => (
-    <div className="max-w-[1000px] mx-auto pt-16 pb-24 px-8 flex flex-col md:flex-row items-start gap-16">
-      <div className="w-full md:w-[440px] bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">申请产品演示</h2>
-        <p className="text-sm text-gray-500 mb-8">填写信息，销售专家将在 1 个工作日内与您联系</p>
-        <FormFields variant="D" />
+  // --- 变体 C: 信任驱动版 (Trust-driven) ---
+  const VariantTrust = () => (
+    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row-reverse items-center justify-between gap-12 lg:gap-20">
+      <div className="flex-1 max-w-[480px]">
+        <h1 className="text-[32px] font-extrabold text-gray-900 mb-6 leading-tight tracking-tight">全球 10,000+ 优秀团队的<br/>共同选择</h1>
+        
+        <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm mb-8 relative">
+          <div className="absolute -top-3 -left-3 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-serif">"</div>
+          <div className="flex text-yellow-400 mb-3 ml-2">
+            {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
+          </div>
+          <p className="text-[14px] text-gray-700 font-medium leading-relaxed mb-5">"自从全公司迁移到 Meegle，我们跨部门的沟通效率提升了至少 40%，安全合规也完全达到了我们的严苛标准，是非常值得信赖的伙伴。"</p>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-tr from-blue-100 to-indigo-100 rounded-full border border-gray-100 flex items-center justify-center text-blue-600 font-bold">张</div>
+            <div>
+              <div className="font-bold text-[13px] text-gray-900">张明 (Ming Zhang)</div>
+              <div className="text-[12px] text-gray-500">某知名互联网公司 IT 负责人</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid gap-5">
+          <div className="flex gap-4 items-start">
+            <div className="mt-0.5 w-6 h-6 rounded-full bg-green-50 text-green-600 flex items-center justify-center shrink-0">
+              <ShieldCheck size={14} />
+            </div>
+            <div>
+              <h4 className="font-bold text-[14px] text-gray-900">企业级数据安全</h4>
+              <p className="text-[13px] text-gray-500 mt-1">符合 ISO 27001 等全球最高标准的安全合规认证。</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="flex-1 pt-4">
-        <div className="mb-10">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-6 leading-tight">为何选择 Meegle？</h1>
-          <div className="grid gap-6">
-            <div className="flex gap-4">
-              <div className="mt-1 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                <ShieldCheck size={18} />
-              </div>
-              <div>
-                <h4 className="font-bold text-gray-900">企业级数据安全</h4>
-                <p className="text-sm text-gray-600 mt-1">符合全球最高标准的安全合规认证，保护您的核心资产。</p>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="mt-1 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
-                <Check size={18} />
-              </div>
-              <div>
-                <h4 className="font-bold text-gray-900">无缝迁移与集成</h4>
-                <p className="text-sm text-gray-600 mt-1">支持与主流办公软件打通，提供专业团队协助数据迁移。</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="w-full md:w-[440px] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-100 shrink-0">
+        <h2 className="text-xl font-bold text-gray-900 mb-2">免费申请演示</h2>
+        <p className="text-[13px] text-gray-500 mb-6">填写信息，我们的产品专家将在 1 个工作日内与您联系</p>
+        <FormFields ctaText="立即申请演示" variant="Trust" />
+      </div>
+    </div>
+  );
 
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-100/50">
-          <div className="flex text-yellow-400 mb-3">
-            {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
-          </div>
-          <p className="text-gray-800 font-medium italic mb-4">"自从迁移到 Meegle，我们跨部门的沟通效率提升了至少 40%，管理成本显著下降。"</p>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gray-200 rounded-full" />
+  // --- 变体 D: 动态权益版 (Benefit-driven) ---
+  const VariantBenefit = () => (
+    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-start justify-between gap-12 lg:gap-16">
+      <div className="flex-1 sticky top-24 pt-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs rounded-full mb-6 shadow-sm">
+          限时权益
+        </div>
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-6 tracking-tight">留下您的需求<br/>解锁专属企业权益</h1>
+        <p className="text-base text-gray-600 mb-10 max-w-[400px]">现在提交需求，即可在购买或试用时享受以下专属服务支持：</p>
+        
+        <div className="space-y-6 mb-12">
+          <div className="flex gap-4 group">
+            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+              <Globe size={24} />
+            </div>
             <div>
-              <div className="font-bold text-sm text-gray-900">张明</div>
-              <div className="text-xs text-gray-500">某知名互联网公司 IT 总监</div>
+              <h3 className="font-bold text-gray-900 text-base">免费的数据迁移评估</h3>
+              <p className="text-sm text-gray-500 mt-1">由高级架构师提供 1v1 的现有系统迁移方案。</p>
+            </div>
+          </div>
+          <div className="flex gap-4 group">
+            <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+              <Zap size={24} />
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-900 text-base">长达 30 天的高级试用</h3>
+              <p className="text-sm text-gray-500 mt-1">开放所有企业级特性，无任何功能限制。</p>
+            </div>
+          </div>
+          <div className="flex gap-4 group">
+            <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+              <Users size={24} />
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-900 text-base">专属的实施培训</h3>
+              <p className="text-sm text-gray-500 mt-1">提供面向您团队的线上实施培训课程。</p>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="w-full md:w-[460px] bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] p-8 border border-gray-100 shrink-0">
+        <div className="mb-6 pb-6 border-b border-gray-100">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">获取您的专属权益</h2>
+          <p className="text-[13px] text-gray-500">请确保填写有效的企业联系方式以激活权益</p>
+        </div>
+        <FormFields ctaText="提交并解锁权益" variant="Benefit" />
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F4F7FF] via-[#F8FAFF] to-white font-sans text-[#1F2329]">
-      {/* 实验控制台 (仅演示用) */}
-      <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10 shadow-sm">
-        <div className="font-bold text-sm text-gray-800 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          留资表单 A/B 实验台
+    <div className="min-h-screen bg-[#F8FAFC] font-sans text-[#1F2329] flex flex-col relative">
+      {/* 实验控制台 (仅供内部查看) */}
+      <div className="bg-[#1F2329] px-6 py-3 flex items-center justify-between z-50">
+        <div className="font-bold text-xs text-white flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+          A/B 实验台：留资转化优化
         </div>
-        <div className="flex bg-gray-100 p-1 rounded-lg">
+        <div className="flex gap-1 overflow-x-auto">
           {[
-            { id: 'A', label: '方案 A (原版对照)' },
-            { id: 'B', label: '方案 B (沉浸居中)' },
-            { id: 'C', label: '方案 C (分步降阻)' },
-            { id: 'D', label: '方案 D (信任驱动)' }
+            { id: 'Online', label: '线上原版 (Control)' },
+            { id: 'Immersive', label: '变体A: 沉浸居中' },
+            { id: 'MultiStep', label: '变体B: 分步降阻' },
+            { id: 'Trust', label: '变体C: 信任驱动' },
+            { id: 'Benefit', label: '变体D: 动态权益' }
           ].map(v => (
             <button
               key={v.id}
               onClick={() => { setActiveVariant(v.id); setStep(1); }}
-              className={`px-4 py-1.5 rounded-md text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded text-xs font-semibold transition-all whitespace-nowrap ${
                 activeVariant === v.id 
-                  ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-900'
+                  ? 'bg-blue-600 text-white' 
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
               }`}
             >
               {v.label}
@@ -286,12 +352,17 @@ const LeadFormExperiment = () => {
         </div>
       </div>
 
-      {/* 渲染对应的变体 */}
-      <div className="transition-opacity duration-500">
-        {activeVariant === 'A' && <VariantA />}
-        {activeVariant === 'B' && <VariantB />}
-        {activeVariant === 'C' && <VariantC />}
-        {activeVariant === 'D' && <VariantD />}
+      <Navbar />
+
+      {/* 实验变体渲染区 */}
+      <div className="flex-1 bg-gradient-to-b from-[#F4F7FF]/60 to-transparent">
+        <div className="transition-opacity duration-500">
+          {activeVariant === 'Online' && <VariantOnline />}
+          {activeVariant === 'Immersive' && <VariantImmersive />}
+          {activeVariant === 'MultiStep' && <VariantMultiStep />}
+          {activeVariant === 'Trust' && <VariantTrust />}
+          {activeVariant === 'Benefit' && <VariantBenefit />}
+        </div>
       </div>
     </div>
   );
