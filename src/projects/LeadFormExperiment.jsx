@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Check, ChevronDown, HelpCircle, ArrowRight, ShieldCheck, ArrowLeft, Star, LayoutTemplate, Globe, Zap, Users, MessageSquare, Kanban, Bot, Trophy, X, BarChart2 } from 'lucide-react';
 
-const ALL_VARIANTS = [
-  { id: 'Online', label: '线上原版 (Control)', sources: ['contact', 'pricing'] },
-  { id: 'Classic', label: '变体A: 经典左右布局', sources: ['contact'] },
-  { id: 'Immersive', label: '变体B: 沉浸居中', sources: ['contact', 'pricing'] },
-  { id: 'MultiStep', label: '变体C: 分步降阻', sources: ['contact'] }
-];
+const ALL_VARIANTS = {
+  contact: [
+    { id: 'Online', label: '线上原版 (Control)' },
+    { id: 'Classic', label: '变体A: 经典左右布局' },
+    { id: 'Immersive', label: '变体B: 沉浸居中' },
+    { id: 'MultiStep', label: '变体C: 分步降阻' }
+  ],
+  pricing: [
+    { id: 'Online', label: '线上原版 (Control)' },
+    { id: 'Immersive', label: '变体B: 沉浸居中' }
+  ]
+};
 
 const LeadFormExperiment = () => {
   const [activeVariant, setActiveVariant] = useState('Online');
@@ -15,27 +21,52 @@ const LeadFormExperiment = () => {
 
   // 投票盘口相关状态
   const [showBettingPool, setShowBettingPool] = useState(false);
-  const [votedVariant, setVotedVariant] = useState(null);
-  const [votes, setVotes] = useState({
-    Online: 1,
-    Classic: 2,
-    Immersive: 6,
-    MultiStep: 8
-  }); // 模拟的初始票数
+  const [voterName, setVoterName] = useState('');
+  const [votedChoices, setVotedChoices] = useState(null); // { contact: 'id', pricing: 'id' }
+  const [pendingVotes, setPendingVotes] = useState({ contact: null, pricing: null });
+  
+  // 模拟的票仓数据（存储真实姓名）
+  const [votesData, setVotesData] = useState({
+    contact: {
+      Online: ['产品经理老张'],
+      Classic: ['设计小李', '前端小王'],
+      Immersive: ['运营大刘', '数据分析师'],
+      MultiStep: ['销售总监', '老板', '市场小赵']
+    },
+    pricing: {
+      Online: ['开发老陈'],
+      Immersive: ['设计小李', '销售总监', '运营大刘', '老板']
+    }
+  });
 
   useEffect(() => {
-    // 从 localStorage 读取历史投票
-    const savedVote = localStorage.getItem('meegle_experiment_vote');
-    if (savedVote) {
-      setVotedVariant(savedVote);
-      setVotes(prev => ({ ...prev, [savedVote]: (prev[savedVote] || 0) + 1 }));
-    }
+    // 模拟从后端获取数据
+    const savedData = localStorage.getItem('meegle_votes_data');
+    const savedMyVote = localStorage.getItem('meegle_my_vote');
+    if (savedData) setVotesData(JSON.parse(savedData));
+    if (savedMyVote) setVotedChoices(JSON.parse(savedMyVote));
   }, []);
 
-  const handleVote = (id) => {
-    setVotedVariant(id);
-    localStorage.setItem('meegle_experiment_vote', id);
-    setVotes(prev => ({ ...prev, [id]: prev[id] + 1 }));
+  const handleVoteSubmit = () => {
+    if (!voterName.trim()) return alert('请先填写您的姓名或花名');
+    if (!pendingVotes.contact || !pendingVotes.pricing) return alert('请为两个实验都选择一个方案');
+
+    const newVotesData = { ...votesData };
+    
+    // 更新联系我们实验的票数
+    if (!newVotesData.contact[pendingVotes.contact]) newVotesData.contact[pendingVotes.contact] = [];
+    newVotesData.contact[pendingVotes.contact].push(voterName);
+
+    // 更新购买咨询实验的票数
+    if (!newVotesData.pricing[pendingVotes.pricing]) newVotesData.pricing[pendingVotes.pricing] = [];
+    newVotesData.pricing[pendingVotes.pricing].push(voterName);
+
+    setVotesData(newVotesData);
+    setVotedChoices(pendingVotes);
+    
+    // 模拟保存到后端
+    localStorage.setItem('meegle_votes_data', JSON.stringify(newVotesData));
+    localStorage.setItem('meegle_my_vote', JSON.stringify(pendingVotes));
   };
 
   // 模拟完整线上环境的全局导航栏
@@ -476,9 +507,9 @@ const LeadFormExperiment = () => {
           </div>
           
           <div className="flex gap-1 overflow-x-auto">
-           {ALL_VARIANTS.filter(v => v.sources.includes(source)).map(v => (
-             <button
-               key={v.id}
+          {ALL_VARIANTS[source].map(v => (
+            <button
+              key={v.id}
               onClick={() => { setActiveVariant(v.id); setStep(1); }}
               className={`px-3 py-1.5 rounded text-xs font-semibold transition-all whitespace-nowrap ${
                 activeVariant === v.id 
@@ -511,7 +542,7 @@ const LeadFormExperiment = () => {
         className="fixed bottom-8 right-8 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full px-6 py-3.5 shadow-xl flex items-center gap-2 font-bold text-sm transition-transform hover:scale-105 z-[90]"
       >
         <Trophy size={18} className="text-yellow-300" />
-        {votedVariant ? '查看盘口赛况' : '预测冠军方案'}
+        {votedChoices ? '查看盘口赛况' : '参与组内预测'}
       </button>
 
       {/* 实验说明与投票侧边栏 */}
@@ -560,46 +591,131 @@ const LeadFormExperiment = () => {
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-yellow-50 text-yellow-700 text-xs font-bold rounded mb-4">
                   <Trophy size={12} /> 组内下注预测
                 </div>
-                <h3 className="text-sm font-bold text-gray-900 mb-4">你认为最终哪个版本的留资转化率最高？</h3>
                 
-                {!votedVariant ? (
-                  <div className="space-y-2">
-                    {ALL_VARIANTS.map(v => (
-                      <button 
-                        key={v.id}
-                        onClick={() => handleVote(v.id)} 
-                        className="w-full text-left p-3 border border-gray-200 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-all font-medium text-gray-700 text-sm flex justify-between items-center group"
-                      >
-                        {v.label}
-                        <ArrowRight size={14} className="opacity-0 group-hover:opacity-100 text-blue-500 transition-opacity" />
-                      </button>
-                    ))}
+                {!votedChoices ? (
+                  <div className="space-y-6">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-900 mb-2">我是谁？（姓名/花名）</label>
+                      <input 
+                        type="text" 
+                        value={voterName}
+                        onChange={e => setVoterName(e.target.value)}
+                        className="w-full h-10 px-3 border border-gray-300 rounded outline-none focus:border-blue-500 text-sm" 
+                        placeholder="输入你的名字..." 
+                      />
+                    </div>
+
+                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-3">
+                      <h4 className="font-bold text-sm text-gray-900">Q1. 实验一（联系我们）中，谁会胜出？</h4>
+                      <div className="space-y-2">
+                        {ALL_VARIANTS.contact.map(v => (
+                          <button 
+                            key={v.id}
+                            onClick={() => setPendingVotes(p => ({ ...p, contact: v.id }))} 
+                            className={`w-full text-left p-3 border rounded-lg transition-all font-medium text-sm flex justify-between items-center ${
+                              pendingVotes.contact === v.id ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-700 hover:border-blue-300'
+                            }`}
+                          >
+                            {v.label}
+                            {pendingVotes.contact === v.id && <Check size={16} className="text-blue-600" />}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-3">
+                      <h4 className="font-bold text-sm text-gray-900">Q2. 实验二（购买咨询）中，谁会胜出？</h4>
+                      <div className="space-y-2">
+                        {ALL_VARIANTS.pricing.map(v => (
+                          <button 
+                            key={v.id}
+                            onClick={() => setPendingVotes(p => ({ ...p, pricing: v.id }))} 
+                            className={`w-full text-left p-3 border rounded-lg transition-all font-medium text-sm flex justify-between items-center ${
+                              pendingVotes.pricing === v.id ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-700 hover:border-blue-300'
+                            }`}
+                          >
+                            {v.label}
+                            {pendingVotes.pricing === v.id && <Check size={16} className="text-blue-600" />}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={handleVoteSubmit}
+                      className="w-full py-3 bg-[#2152F3] hover:bg-blue-700 text-white rounded-lg font-bold transition-colors shadow-md"
+                    >
+                      提交我的预测
+                    </button>
                   </div>
                 ) : (
-                  <div className="space-y-4 bg-gray-50 p-5 rounded-xl border border-gray-100">
-                    <p className="text-xs text-gray-500 mb-2 font-medium">当前赛况（已记录你的预测）</p>
-                    {ALL_VARIANTS.sort((a, b) => votes[b.id] - votes[a.id]).map(v => {
-                      const total = Object.values(votes).reduce((a, b) => a + b, 0);
-                      const pct = Math.round((votes[v.id] / total) * 100) || 0;
-                      const isVoted = votedVariant === v.id;
-                      
-                      return (
-                        <div key={v.id}>
-                          <div className="flex justify-between text-xs mb-1.5">
-                            <span className={`font-medium ${isVoted ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
-                              {v.label} {isVoted && '👈 你选的'}
-                            </span>
-                            <span className="font-bold text-gray-900">{pct}% <span className="text-gray-500 font-normal">({votes[v.id]}票)</span></span>
-                          </div>
-                          <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                            <div 
-                              className={`h-full rounded-full transition-all duration-1000 ${isVoted ? 'bg-blue-600' : 'bg-gray-400'}`} 
-                              style={{ width: `${pct}%` }} 
-                            />
-                          </div>
-                        </div>
-                      )
-                    })}
+                  <div className="space-y-8">
+                    {/* 实验一赛况 */}
+                    <div className="bg-gray-50 p-5 rounded-xl border border-gray-100">
+                      <h4 className="font-bold text-sm text-gray-900 mb-4 border-b border-gray-200 pb-2">实验一（联系我们）当前赛况</h4>
+                      <div className="space-y-4">
+                        {ALL_VARIANTS.contact.sort((a, b) => (votesData.contact[b.id]?.length || 0) - (votesData.contact[a.id]?.length || 0)).map(v => {
+                          const voters = votesData.contact[v.id] || [];
+                          const total = Object.values(votesData.contact).reduce((sum, arr) => sum + arr.length, 0);
+                          const pct = total === 0 ? 0 : Math.round((voters.length / total) * 100);
+                          const isMyChoice = votedChoices.contact === v.id;
+                          
+                          return (
+                            <div key={v.id}>
+                              <div className="flex justify-between text-xs mb-1.5">
+                                <span className={`font-medium ${isMyChoice ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
+                                  {v.label} {isMyChoice && '👈 你选的'}
+                                </span>
+                                <span className="font-bold text-gray-900">{pct}% <span className="text-gray-500 font-normal">({voters.length}票)</span></span>
+                              </div>
+                              <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden mb-1">
+                                <div 
+                                  className={`h-full rounded-full transition-all duration-1000 ${isMyChoice ? 'bg-blue-600' : 'bg-gray-400'}`} 
+                                  style={{ width: `${pct}%` }} 
+                                />
+                              </div>
+                              {voters.length > 0 && (
+                                <p className="text-[10px] text-gray-500 leading-tight">支持者：{voters.join(', ')}</p>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    {/* 实验二赛况 */}
+                    <div className="bg-gray-50 p-5 rounded-xl border border-gray-100">
+                      <h4 className="font-bold text-sm text-gray-900 mb-4 border-b border-gray-200 pb-2">实验二（购买咨询）当前赛况</h4>
+                      <div className="space-y-4">
+                        {ALL_VARIANTS.pricing.sort((a, b) => (votesData.pricing[b.id]?.length || 0) - (votesData.pricing[a.id]?.length || 0)).map(v => {
+                          const voters = votesData.pricing[v.id] || [];
+                          const total = Object.values(votesData.pricing).reduce((sum, arr) => sum + arr.length, 0);
+                          const pct = total === 0 ? 0 : Math.round((voters.length / total) * 100);
+                          const isMyChoice = votedChoices.pricing === v.id;
+                          
+                          return (
+                            <div key={v.id}>
+                              <div className="flex justify-between text-xs mb-1.5">
+                                <span className={`font-medium ${isMyChoice ? 'text-blue-700 font-bold' : 'text-gray-700'}`}>
+                                  {v.label} {isMyChoice && '👈 你选的'}
+                                </span>
+                                <span className="font-bold text-gray-900">{pct}% <span className="text-gray-500 font-normal">({voters.length}票)</span></span>
+                              </div>
+                              <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden mb-1">
+                                <div 
+                                  className={`h-full rounded-full transition-all duration-1000 ${isMyChoice ? 'bg-blue-600' : 'bg-gray-400'}`} 
+                                  style={{ width: `${pct}%` }} 
+                                />
+                              </div>
+                              {voters.length > 0 && (
+                                <p className="text-[10px] text-gray-500 leading-tight">支持者：{voters.join(', ')}</p>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+
                   </div>
                 )}
               </div>
