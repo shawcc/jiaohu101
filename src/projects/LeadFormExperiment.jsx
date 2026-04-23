@@ -351,98 +351,7 @@ const LeadFormExperiment = () => {
     </div>
   );
 
-  // --- 变体 C: 信任驱动版 (Trust-driven) ---
-  const VariantTrust = () => (
-    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row-reverse items-center justify-between gap-12 lg:gap-20">
-      <div className="flex-1 max-w-[480px]">
-        <h1 className="text-[32px] font-extrabold text-gray-900 mb-6 leading-tight tracking-tight">全球 10,000+ 优秀团队的<br/>共同选择</h1>
-        
-        <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm mb-8 relative">
-          <div className="absolute -top-3 -left-3 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-serif">"</div>
-          <div className="flex text-yellow-400 mb-3 ml-2">
-            {[...Array(5)].map((_, i) => <Star key={i} size={14} fill="currentColor" />)}
-          </div>
-          <p className="text-[14px] text-gray-700 font-medium leading-relaxed mb-5">"自从全公司迁移到 Meegle，我们跨部门的沟通效率提升了至少 40%，安全合规也完全达到了我们的严苛标准，是非常值得信赖的伙伴。"</p>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-tr from-blue-100 to-indigo-100 rounded-full border border-gray-100 flex items-center justify-center text-blue-600 font-bold">张</div>
-            <div>
-              <div className="font-bold text-[13px] text-gray-900">张明 (Ming Zhang)</div>
-              <div className="text-[12px] text-gray-500">某知名互联网公司 IT 负责人</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid gap-5">
-          <div className="flex gap-4 items-start">
-            <div className="mt-0.5 w-6 h-6 rounded-full bg-green-50 text-green-600 flex items-center justify-center shrink-0">
-              <ShieldCheck size={14} />
-            </div>
-            <div>
-              <h4 className="font-bold text-[14px] text-gray-900">企业级数据安全</h4>
-              <p className="text-[13px] text-gray-500 mt-1">符合 ISO 27001 等全球最高标准的安全合规认证。</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full md:w-[440px] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-100 shrink-0">
-        <h2 className="text-xl font-bold text-gray-900 mb-2">免费申请演示</h2>
-        <p className="text-[13px] text-gray-500 mb-6">填写信息，我们的产品专家将在 1 个工作日内与您联系</p>
-        <FormFields ctaText="立即申请演示" variant="Trust" />
-      </div>
-    </div>
-  );
-
-  // --- 变体 D: 动态权益版 (Benefit-driven) ---
-  const VariantBenefit = () => (
-    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-start justify-between gap-12 lg:gap-16">
-      <div className="flex-1 sticky top-24 pt-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs rounded-full mb-6 shadow-sm">
-          限时权益
-        </div>
-        <h1 className="text-4xl font-extrabold text-gray-900 mb-6 tracking-tight">留下您的需求<br/>解锁专属企业权益</h1>
-        <p className="text-base text-gray-600 mb-10 max-w-[400px]">现在提交需求，即可在购买或试用时享受以下专属服务支持：</p>
-        
-        <div className="space-y-6 mb-12">
-          <div className="flex gap-4 group">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-              <Globe size={24} />
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 text-base">免费的数据迁移评估</h3>
-              <p className="text-sm text-gray-500 mt-1">由高级架构师提供 1v1 的现有系统迁移方案。</p>
-            </div>
-          </div>
-          <div className="flex gap-4 group">
-            <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-              <Zap size={24} />
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 text-base">长达 30 天的高级试用</h3>
-              <p className="text-sm text-gray-500 mt-1">开放所有企业级特性，无任何功能限制。</p>
-            </div>
-          </div>
-          <div className="flex gap-4 group">
-            <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
-              <Users size={24} />
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 text-base">专属的实施培训</h3>
-              <p className="text-sm text-gray-500 mt-1">提供面向您团队的线上实施培训课程。</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full md:w-[460px] bg-white rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] p-8 border border-gray-100 shrink-0">
-        <div className="mb-6 pb-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-900 mb-2">获取您的专属权益</h2>
-          <p className="text-[13px] text-gray-500">请确保填写有效的企业联系方式以激活权益</p>
-        </div>
-        <FormFields ctaText="提交并解锁权益" variant="Benefit" />
-      </div>
-    </div>
-  );
+  // 变体D和变体E已根据要求移除
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans text-[#1F2329] flex flex-col relative">
@@ -457,9 +366,7 @@ const LeadFormExperiment = () => {
             { id: 'Online', label: '线上原版 (Control)' },
             { id: 'Classic', label: '变体A: 经典左右布局' },
             { id: 'Immersive', label: '变体B: 沉浸居中' },
-            { id: 'MultiStep', label: '变体C: 分步降阻' },
-            { id: 'Trust', label: '变体D: 信任驱动' },
-            { id: 'Benefit', label: '变体E: 动态权益' }
+            { id: 'MultiStep', label: '变体C: 分步降阻' }
           ].map(v => (
             <button
               key={v.id}
@@ -485,8 +392,6 @@ const LeadFormExperiment = () => {
           {activeVariant === 'Classic' && <VariantClassic />}
           {activeVariant === 'Immersive' && <VariantImmersive />}
           {activeVariant === 'MultiStep' && <VariantMultiStep />}
-          {activeVariant === 'Trust' && <VariantTrust />}
-          {activeVariant === 'Benefit' && <VariantBenefit />}
         </div>
       </div>
     </div>
