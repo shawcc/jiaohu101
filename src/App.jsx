@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import BillingManagement from './projects/BillingManagement'
 import AiUsageDashboard from './projects/AiUsageDashboard'
+import LeadFormExperiment from './projects/LeadFormExperiment'
 
 const projects = [
   {
@@ -14,6 +15,12 @@ const projects = [
     name: 'AI 用量管理面板',
     desc: 'AI 用量概览与消耗明细',
     component: AiUsageDashboard
+  },
+  {
+    id: 'lead-form-experiment',
+    name: '留资表单优化实验',
+    desc: 'A/B 测试四种不同的留资表单设计',
+    component: LeadFormExperiment
   }
 ]
 
