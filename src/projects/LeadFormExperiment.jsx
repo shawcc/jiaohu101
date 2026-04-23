@@ -236,7 +236,37 @@ const LeadFormExperiment = () => {
     </div>
   );
 
-  // --- 变体 A: 沉浸居中版 (Immersive) ---
+  // --- 变体 A: 经典对照版 (Classic) - 原先漏掉的版本 ---
+  const VariantClassic = () => (
+    <div className="max-w-[1080px] mx-auto py-16 px-8 flex flex-col md:flex-row items-center justify-between gap-12 lg:gap-24">
+      <div className="flex-1 max-w-[420px]">
+        <h1 className="text-3xl font-extrabold text-gray-900 mb-3">联系销售</h1>
+        <p className="text-base text-gray-600 mb-8">在 Meegle 里畅快协作？？</p>
+        
+        <div className="space-y-4 mb-8">
+          {['预约 Meegle 产品演示', '为你的团队选择最佳版本', '获取你所在行业的最佳实践', '从你现有的工具迁移到 Meegle'].map((text, i) => (
+            <div key={i} className="flex items-center gap-3 text-[13px] text-gray-800 font-medium">
+              <Check size={16} className="text-gray-900 shrink-0" />
+              {text}
+            </div>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2 text-[13px] text-gray-600 font-medium mb-10">
+          <HelpCircle size={14} className="shrink-0" />
+          <span>获取更多产品信息或客户支持，请访问<a href="#" className="text-blue-600 hover:underline">帮助中心</a></span>
+        </div>
+
+        <Logos layout="grid" />
+      </div>
+
+      <div className="w-full md:w-[480px] bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 border border-gray-100">
+        <FormFields ctaText="获得专属支持" variant="Classic" />
+      </div>
+    </div>
+  );
+
+  // --- 变体 B: 沉浸居中版 (Immersive) ---
   const VariantImmersive = () => (
     <div className="max-w-[800px] mx-auto py-20 px-8 flex flex-col items-center text-center">
       <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">与产品专家聊聊</h1>
@@ -425,10 +455,11 @@ const LeadFormExperiment = () => {
         <div className="flex gap-1 overflow-x-auto">
           {[
             { id: 'Online', label: '线上原版 (Control)' },
-            { id: 'Immersive', label: '变体A: 沉浸居中' },
-            { id: 'MultiStep', label: '变体B: 分步降阻' },
-            { id: 'Trust', label: '变体C: 信任驱动' },
-            { id: 'Benefit', label: '变体D: 动态权益' }
+            { id: 'Classic', label: '变体A: 经典左右布局' },
+            { id: 'Immersive', label: '变体B: 沉浸居中' },
+            { id: 'MultiStep', label: '变体C: 分步降阻' },
+            { id: 'Trust', label: '变体D: 信任驱动' },
+            { id: 'Benefit', label: '变体E: 动态权益' }
           ].map(v => (
             <button
               key={v.id}
@@ -451,6 +482,7 @@ const LeadFormExperiment = () => {
       <div className="flex-1 bg-gradient-to-b from-[#F4F7FF]/60 to-transparent">
         <div className="transition-opacity duration-500">
           {activeVariant === 'Online' && <VariantOnline />}
+          {activeVariant === 'Classic' && <VariantClassic />}
           {activeVariant === 'Immersive' && <VariantImmersive />}
           {activeVariant === 'MultiStep' && <VariantMultiStep />}
           {activeVariant === 'Trust' && <VariantTrust />}
