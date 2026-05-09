@@ -1,7 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import BillingManagement from './projects/BillingManagement'
 import AiUsageDashboard from './projects/AiUsageDashboard'
 import LeadFormExperiment from './projects/LeadFormExperiment'
+import WorkflowCollaborationShowcase from './projects/WorkflowCollaborationShowcase'
 
 const projects = [
   {
@@ -21,6 +22,12 @@ const projects = [
     name: '留资表单优化实验',
     desc: 'A/B 测试四种不同的留资表单设计',
     component: LeadFormExperiment
+  },
+  {
+    id: 'workflow-collaboration-showcase',
+    name: '官网篇章：流程协作',
+    desc: '节点流转、人机协作、确认后自动推进',
+    component: WorkflowCollaborationShowcase
   }
 ]
 
