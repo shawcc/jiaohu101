@@ -313,73 +313,110 @@ const AGENT_BENCH = [
   { id: 'sec', label: 'Security Agent', color: '#EF4444' },
 ]
 
-const IsometricPlatform = ({ node, isActive, isDone, isPending, agentColor, style }) => {
+
+const IsometricPlatform = ({ node, state, agentColor, style, onBuilt }) => {
   const c = node.color
   const w = 120
   const h = 88
   const d = 14
-  const alpha = isPending ? 0.35 : isDone ? 0.55 : 1
-  const glow = isActive ? `0 0 40px ${c}40, 0 8px 30px ${c}20` : isDone ? `0 2px 10px ${c}10` : 'none'
-  const scale = isActive ? 1.08 : isDone ? 0.96 : 0.92
+
+  const isHidden = state === 'hidden'
+  const isBuilding = state === 'building'
+  const isBuilt = state === 'built'
+  const isPopulated = state === 'populated'
+
+  useEffect(() => {
+    if (isBuilding && onBuilt) {
+      const t = setTimeout(onBuilt, 500)
+      return () => clearTimeout(t)
+    }
+  }, [isBuilding, onBuilt])
+
+  const alpha = isHidden ? 0 : 1
+  const scale = isPopulated ? 1.05 : isBuilt ? 1 : isBuilding ? 0.85 : 0
+  const glow = isPopulated ? `0 0 40px ${c}40, 0 8px 30px ${c}20` : 'none'
+  const charAlpha = isPopulated ? 1 : 0
+  const charX = isPopulated ? 0 : -10
 
   return (
-    <div className="absolute transition-all duration-700" style={{ ...style, transform: `scale(${scale})`, opacity: alpha }}>
-      <div style={{ position: 'relative', width: w + d + 4, height: h + d + 4, filter: glow ? `drop-shadow(${glow})` : undefined }}>
+    <div
+      className="absolute"
+      style={{
+        ...style,
+        opacity: alpha,
+        transform: `scale(${scale})`,
+        transition: 'opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1)'
+      }}
+    >
+      <div style={{ position: 'relative', width: w + d + 4, height: h + d + 4, filter: glow }}>
         <svg viewBox={`0 0 ${w + d + 4} ${h + d + 4}`} width={w + d + 4} height={h + d + 4} style={{ display: 'block' }}>
-          {/* Right face (3D side) */}
           <path
             d={`M${w} ${d} L${w + d} ${0} L${w + d} ${h} L${w} ${h + d} Z`}
-            fill={isActive ? c + '28' : isDone ? c + '18' : '#e8eaed'}
-            stroke={isActive ? c + '18' : '#e0e3e7'}
+            fill={isPopulated ? c + '28' : isBuilt || isBuilding ? c + '15' : '#e8eaed'}
+            stroke={isPopulated ? c + '18' : '#e0e3e7'}
             strokeWidth="0.5"
           />
-          {/* Front face (3D side) */}
           <path
             d={`M${0} ${h} L${d} ${h + d} L${w + d} ${h + d} L${w} ${h} Z`}
-            fill={isActive ? c + '20' : isDone ? c + '14' : '#e8eaed'}
-            stroke={isActive ? c + '15' : '#e0e3e7'}
+            fill={isPopulated ? c + '20' : isBuilt || isBuilding ? c + '10' : '#e8eaed'}
+            stroke={isPopulated ? c + '15' : '#e0e3e7'}
             strokeWidth="0.5"
           />
-          {/* Top face */}
           <rect
             x="0" y="0" width={w} height={h}
             rx="12"
-            fill={isActive ? c + '0F' : isDone ? c + '08' : '#f7f8fa'}
-            stroke={isActive ? c + '50' : isDone ? c + '25' : '#e0e3e7'}
-            strokeWidth={isActive ? 2 : 1}
+            fill={isPopulated ? c + '0F' : isBuilt || isBuilding ? c + '06' : '#f7f8fa'}
+            stroke={isPopulated ? c + '50' : isBuilt || isBuilding ? c + '30' : '#e0e3e7'}
+            strokeWidth={isPopulated ? 2 : 1.2}
           />
 
-          {/* Label */}
-          <text x={w / 2} y={h / 2 + 2} textAnchor="middle" dominantBaseline="central"
+          {isBuilding && (
+            <g>
+              <line x1="20" y1="0" x2="20" y2={h} stroke={c + '08'} strokeWidth="0.3" strokeDasharray="3 6" />
+              <line x1={w - 20} y1="0" x2={w - 20} y2={h} stroke={c + '08'} strokeWidth="0.3" strokeDasharray="3 6" />
+              <line x1="0" y1="20" x2={w} y2="20" stroke={c + '08'} strokeWidth="0.3" strokeDasharray="3 6" />
+              <line x1="0" y1={h - 20} x2={w} y2={h - 20} stroke={c + '08'} strokeWidth="0.3" strokeDasharray="3 6" />
+            </g>
+          )}
+
+          <text x={w / 2} y={h / 2 + 4} textAnchor="middle" dominantBaseline="central"
             fontWeight="700" fontSize="11"
-            fill={isActive ? c : isDone ? c + '70' : '#9ca3af'}
+            fill={isPopulated ? c : isBuilt ? c + '80' : isBuilding ? c + '50' : '#c0c5ce'}
             fontFamily="system-ui, -apple-system, sans-serif"
             letterSpacing="0.02em"
           >
             {node.label}
           </text>
 
-          {/* Agent avatar on platform */}
-          <g transform={`translate(${w / 2 - 28}, ${h / 2 - 20})`}>
-            <circle cx="0" cy="0" r="8" fill={agentColor || c} opacity="0.85" />
-            <rect x="-3" y="3" width="2.5" height="4" rx="1.2" fill={agentColor || c} opacity="0.5" />
-            <rect x="1" y="3" width="2.5" height="4" rx="1.2" fill={agentColor || c} opacity="0.5" />
-            <rect x="-6" y="6" width="12" height="8" rx="4" fill={agentColor || c} opacity="0.65" />
-            <circle cx="-2.5" cy="-1" r="1.2" fill="white" />
-            <circle cx="2.5" cy="-1" r="1.2" fill="white" />
-            <circle cx="-2.5" cy="-1" r="0.6" fill="#111" />
-            <circle cx="2.5" cy="-1" r="0.6" fill="#111" />
+          <g transform={`translate(${w / 2 - 30 + charX}, ${h / 2 - 22})`} opacity={charAlpha}
+            style={{ transition: 'opacity 0.6s ease-out 0.3s' }}>
+            <circle cx="0" cy="0" r="7" fill={agentColor || c} opacity="0.85" />
+            <rect x="-2.5" y="2.5" width="2" height="3.5" rx="1" fill={agentColor || c} opacity="0.5" />
+            <rect x="1" y="2.5" width="2" height="3.5" rx="1" fill={agentColor || c} opacity="0.5" />
+            <rect x="-5" y="5" width="10" height="7" rx="3.5" fill={agentColor || c} opacity="0.65" />
+            <circle cx="-2" cy="-1" r="1" fill="white" />
+            <circle cx="2" cy="-1" r="1" fill="white" />
+            <circle cx="-2" cy="-1" r="0.5" fill="#111" />
+            <circle cx="2" cy="-1" r="0.5" fill="#111" />
           </g>
 
-          {/* Human avatar on platform */}
-          <g transform={`translate(${w / 2 + 16}, ${h / 2 - 18})`}>
-            <circle cx="0" cy="-5" r="5" fill={isActive ? '#374151' : '#9ca3af'} />
-            <path d="M-6 6c0-3.3 2.7-6 6-6s6 2.7 6 6" fill={isActive ? '#374151' : '#9ca3af'} opacity="0.7" />
+          <g transform={`translate(${w / 2 + 16 + charX}, ${h / 2 - 20})`} opacity={charAlpha}
+            style={{ transition: 'opacity 0.6s ease-out 0.45s' }}>
+            <circle cx="0" cy="-4" r="4.5" fill={isPopulated ? '#374151' : '#9ca3af'} />
+            <path d="M-5 5c0-2.8 2.2-5 5-5s5 2.2 5 5" fill={isPopulated ? '#374151' : '#9ca3af'} opacity="0.7" />
           </g>
+
+          {isBuilding && (
+            <g>
+              <circle cx={w * 0.65} cy={h * 0.35} r="2" fill={c} opacity="0.4">
+                <animate attributeName="opacity" values="0.4;0.1;0.4" dur="0.6s" repeatCount="indefinite" />
+                <animate attributeName="r" values="2;3;2" dur="0.6s" repeatCount="indefinite" />
+              </circle>
+            </g>
+          )}
         </svg>
 
-        {/* Active pulse ring */}
-        {isActive && (
+        {isPopulated && (
           <div
             className="absolute rounded-xl animate-pulse"
             style={{
@@ -396,7 +433,7 @@ const IsometricPlatform = ({ node, isActive, isDone, isPending, agentColor, styl
   )
 }
 
-const ConnectorBridge = ({ from, to, color = '#d1d5db', active = false }) => {
+const ConnectorBridge = ({ from, to, color, active = false, building = false }) => {
   const fx = from.left + from.width / 2
   const fy = from.top + from.height / 2
   const tx = to.left + to.width / 2
@@ -406,71 +443,84 @@ const ConnectorBridge = ({ from, to, color = '#d1d5db', active = false }) => {
 
   return (
     <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-      <defs>
-        <linearGradient id={`bridge-${from.id}-${to.id}`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor={color} stopOpacity={active ? 0.6 : 0.2} />
-          <stop offset="100%" stopColor={to.color} stopOpacity={active ? 0.6 : 0.2} />
-        </linearGradient>
-      </defs>
+      {active && (
+        <defs>
+          <linearGradient id={`bga-${from.id}-${to.id}`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor={color} stopOpacity="0.6" />
+            <stop offset="100%" stopColor={to.color} stopOpacity="0.6" />
+          </linearGradient>
+        </defs>
+      )}
       <path
         d={`M${fx} ${fy} Q${midX} ${midY} ${tx} ${ty}`}
         fill="none"
-        stroke={active ? `url(#bridge-${from.id}-${to.id})` : '#e5e7eb'}
+        stroke={active ? `url(#bga-${from.id}-${to.id})` : color + '40'}
         strokeWidth={active ? 2.5 : 1.5}
-        strokeDasharray={active ? '6 3' : '4 4'}
-        opacity={active ? 1 : 0.5}
+        strokeDasharray={building ? '6 3' : active ? 'none' : '4 4'}
+        opacity={building ? 0.6 : active ? 1 : 0.5}
       >
-        {active && (
-          <animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.8s" repeatCount="indefinite" />
+        {building && (
+          <animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.6s" repeatCount="indefinite" />
         )}
       </path>
-      {/* Arrow head */}
-      {active && (
-        <polygon
-          points={`${tx - 6},${ty - 4} ${tx},${ty} ${tx - 6},${ty + 4}`}
-          fill={to.color}
-          opacity="0.7"
-        />
-      )}
-      {!active && (
-        <polygon
-          points={`${tx - 4},${ty - 3} ${tx},${ty} ${tx - 4},${ty + 3}`}
-          fill="#d1d5db"
-          opacity="0.4"
-        />
-      )}
+      <polygon
+        points={`${tx - 6},${ty - 4} ${tx},${ty} ${tx - 6},${ty + 4}`}
+        fill={active ? to.color : color + '50'}
+        opacity={active ? 0.8 : 0.4}
+      />
     </svg>
   )
 }
 
 const WorkflowBoard = () => {
-  const [activeIdx, setActiveIdx] = useState(0)
-  const [phase, setPhase] = useState('targeting')
-  const phaseRef = useRef('targeting')
+  const [buildPhase, setBuildPhase] = useState('building')
+  const [step, setStep] = useState(0)
+  const phaseRef = useRef('building')
+  const stepRef = useRef(0)
+
+  const totalPlatforms = WORKFLOW_PLATFORMS.length
 
   const advance = useCallback(() => {
-    if (phaseRef.current === 'targeting') { phaseRef.current = 'placing'; setPhase('placing') }
-    else if (phaseRef.current === 'placing') { phaseRef.current = 'working'; setPhase('working') }
-    else if (phaseRef.current === 'working') { phaseRef.current = 'done'; setPhase('done') }
-    else if (phaseRef.current === 'done') {
-      setActiveIdx(p => (p + 1) % WORKFLOW_PLATFORMS.length)
-      phaseRef.current = 'targeting'
-      setPhase('targeting')
+    if (phaseRef.current === 'building') {
+      if (stepRef.current >= totalPlatforms - 1) {
+        phaseRef.current = 'populating'
+        stepRef.current = 0
+        setBuildPhase('populating')
+        setStep(0)
+      } else {
+        stepRef.current += 1
+        setStep(s => s + 1)
+      }
+    } else {
+      if (stepRef.current >= totalPlatforms) return
+      stepRef.current += 1
+      setStep(s => s + 1)
     }
-  }, [])
+  }, [totalPlatforms])
 
   useEffect(() => {
-    const durations = { targeting: 700, placing: 500, working: 2000, done: 1200 }
-    const t = setTimeout(advance, durations[phase] || 1000)
-    return () => clearTimeout(t)
-  }, [phase, activeIdx, advance])
+    if (buildPhase === 'populating' && step >= totalPlatforms) {
+      const t = setTimeout(() => {
+        phaseRef.current = 'building'
+        stepRef.current = 0
+        setBuildPhase('building')
+        setStep(0)
+      }, 2500)
+      return () => clearTimeout(t)
+    }
+  }, [buildPhase, step, totalPlatforms])
 
-  const currentAgent = AGENT_BENCH[activeIdx % AGENT_BENCH.length]
+  useEffect(() => {
+    const dur = buildPhase === 'building' ? 650 : 750
+    if (buildPhase === 'populating' && step >= totalPlatforms) return
+    const t = setTimeout(advance, dur)
+    return () => clearTimeout(t)
+  }, [step, buildPhase, advance, totalPlatforms])
 
   const platW = 134
   const platH = 106
   const sceneW = 700
-  const sceneH = 360
+  const sceneH = 380
 
   const positions = WORKFLOW_PLATFORMS.map((p) => ({
     id: p.id,
@@ -481,10 +531,22 @@ const WorkflowBoard = () => {
     color: p.color
   }))
 
+  const builtCount = buildPhase === 'building' ? step + 1 : totalPlatforms
+
+  const getState = (i) => {
+    if (buildPhase === 'building') {
+      if (i < step) return 'built'
+      if (i === step) return 'building'
+      return 'hidden'
+    }
+    if (i < step) return 'populated'
+    if (i === step) return 'built'
+    return 'built'
+  }
+
   return (
     <div className="relative w-full select-none" style={{ height: sceneH }}>
-      {/* Background grid */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.06 }}>
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.05 }}>
         <defs>
           <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
             <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#5B5FE3" strokeWidth="0.3" />
@@ -493,63 +555,64 @@ const WorkflowBoard = () => {
         <rect width="100%" height="100%" fill="url(#grid)" />
       </svg>
 
-      {/* Connector bridges */}
       {positions.map((pos, i) => {
         if (i >= positions.length - 1) return null
         const next = positions[i + 1]
-        const isActiveBridge = i === activeIdx && (phase === 'placing' || phase === 'working')
-        const isDoneBridge = i < activeIdx
-        const bridgeColor = isDoneBridge ? WORKFLOW_PLATFORMS[i].color : WORKFLOW_PLATFORMS[i + 1].color
+        const builtSoFar = buildPhase === 'building' ? step + 1 : totalPlatforms
+        if (i + 1 >= builtSoFar) return null
+        const idxInPopulate = buildPhase === 'populating' ? step : -1
+        const isActiveBridge = buildPhase === 'populating' && i + 1 === idxInPopulate
+        const isBuildingBridge = buildPhase === 'building' && i + 1 === step + 1
+        const color = WORKFLOW_PLATFORMS[i + 1].color
         return (
           <ConnectorBridge
             key={`bridge-${i}`}
             from={{ id: i, left: pos.left + 10, top: pos.top + 10, width: pos.width - 20, height: pos.height - 20, color: pos.color }}
             to={{ id: i + 1, left: next.left + 10, top: next.top + 10, width: next.width - 20, height: next.height - 20, color: next.color }}
-            color={bridgeColor}
+            color={color}
             active={isActiveBridge}
+            building={isBuildingBridge}
           />
         )
       })}
 
-      {/* Platforms */}
       {positions.map((pos, i) => {
-        const isActive = i === activeIdx
-        const isDone = i < activeIdx
-        const isPending = i > activeIdx
+        const state = getState(i)
         const agent = AGENT_BENCH[i % AGENT_BENCH.length]
         return (
           <IsometricPlatform
             key={pos.id}
             node={{ id: WORKFLOW_PLATFORMS[i].id, label: WORKFLOW_PLATFORMS[i].label, color: WORKFLOW_PLATFORMS[i].color }}
-            isActive={isActive}
-            isDone={isDone}
-            isPending={isPending}
+            state={state}
             agentColor={agent.color}
             style={{ left: pos.left, top: pos.top }}
           />
         )
       })}
 
-      {/* Status indicator */}
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
-        {phase === 'targeting' && (
-          <span className="text-[11px] font-semibold" style={{ color: currentAgent.color, animation: 'fadeSlideUp 0.5s ease-out' }}>
-            Assigning {currentAgent.label} to {WORKFLOW_PLATFORMS[activeIdx].label}...
+        {buildPhase === 'building' && (
+          <span
+            className="text-[11px] font-semibold"
+            style={{ color: WORKFLOW_PLATFORMS[Math.min(step, totalPlatforms - 1)].color, animation: 'fadeSlideUp 0.5s ease-out' }}
+          >
+            Building the workflow pipeline... Step {step + 1}/{totalPlatforms}
           </span>
         )}
-        {phase === 'placing' && (
-          <span className="text-[11px] font-semibold" style={{ color: WORKFLOW_PLATFORMS[activeIdx].color, animation: 'fadeSlideUp 0.5s ease-out' }}>
-            {currentAgent.label} + Human collaborating on {WORKFLOW_PLATFORMS[activeIdx].label}
+        {buildPhase === 'populating' && step < totalPlatforms && (
+          <span
+            className="text-[11px] font-semibold"
+            style={{ color: AGENT_BENCH[step % AGENT_BENCH.length].color, animation: 'fadeSlideUp 0.5s ease-out' }}
+          >
+            Placing {AGENT_BENCH[step % AGENT_BENCH.length].label} + Human into {WORKFLOW_PLATFORMS[step].label}
           </span>
         )}
-        {phase === 'working' && (
-          <span className="text-[11px] font-semibold text-[#3EAB6E]" style={{ animation: 'fadeSlideUp 0.5s ease-out' }}>
-            Building the workflow pipeline...
-          </span>
-        )}
-        {phase === 'done' && (
-          <span className="text-[11px] font-semibold text-[#16A34A]" style={{ animation: 'fadeSlideUp 0.5s ease-out' }}>
-            {WORKFLOW_PLATFORMS[activeIdx].label} complete — flowing to next →
+        {buildPhase === 'populating' && step >= totalPlatforms && (
+          <span
+            className="text-[11px] font-semibold text-[#3EAB6E]"
+            style={{ animation: 'fadeSlideUp 0.5s ease-out' }}
+          >
+            Workflow pipeline active — Architect. Ship. Scale with Agents.
           </span>
         )}
       </div>
@@ -561,43 +624,43 @@ const CHAT_MESSAGES = [
   {
     id: 1,
     sender: 'user',
-    avatar: 'U',
     text: 'What\'s the status of our Q3 product launch across all teams?',
-    delay: 0
+    delay: 0,
+    imageIndex: 0
   },
   {
     id: 2,
     sender: 'ai',
-    avatar: 'M',
     text: 'Here\'s the cross-team status dashboard for Q3 launch.\n\n⏱ Sprint Progress: 76% complete\n👥 Resource Load: 82% allocated\n⚠ Risk Items: 3 detected (mitigated)\n\nEngineering is tracking ahead by 2 sprints. However, Design has a minor bottleneck — I recommend rebalancing resources.',
-    delay: 1800
+    delay: 1800,
+    imageIndex: 1
   },
   {
     id: 3,
     sender: 'user',
-    avatar: 'U',
     text: 'Can you draft a resource rebalancing plan for Design?',
-    delay: 4200
+    delay: 5000,
+    imageIndex: 1
   },
   {
     id: 4,
     sender: 'ai',
-    avatar: 'M',
     text: 'Sure! I\'ve analyzed team capacity and created a draft plan:\n\n📋 Rebalancing Recommendations:\n• Move 2 engineers from Platform to Design Review\n• Extend sprint scope by 3 days to absorb backlog\n• Auto-schedule stakeholder alignment for Thursday\n\nWould you like me to apply these changes to the active sprint?',
-    delay: 6000
+    delay: 7000,
+    imageIndex: 2
   }
 ]
 
-const AI_PROJECT_CARDS = [
-  { label: 'Sprint Progress', value: '76%', color: '#5B5FE3', trend: '+8%' },
-  { label: 'Resource Load', value: '82%', color: '#3EAB6E', trend: 'Balanced' },
-  { label: 'Risk Items', value: '3', color: '#F59E0B', trend: 'Mitigated' },
-  { label: 'On Track', value: '5/7', color: '#16A34A', trend: 'Teams' }
+const AI_SCREENSHOTS = [
+  { id: 0, label: 'Dashboard Overview', gradient: 'from-[#5B5FE3] to-[#787BEE]' },
+  { id: 1, label: 'Project Status Detail', gradient: 'from-[#3EAB6E] to-[#58C98A]' },
+  { id: 2, label: 'Resource Rebalancing', gradient: 'from-[#F59E0B] to-[#FBBF24]' }
 ]
 
 const AIAssistantSection = () => {
   const [visibleMessages, setVisibleMessages] = useState([])
   const [typingMessageId, setTypingMessageId] = useState(null)
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
   const sectionRef = useRef(null)
   const started = useRef(false)
 
@@ -609,8 +672,16 @@ const AIAssistantSection = () => {
         started.current = true
         CHAT_MESSAGES.forEach((msg) => {
           setTimeout(() => {
-            setVisibleMessages(prev => [...prev, msg.id])
+            setVisibleMessages(prev => {
+              if (prev.includes(msg.id)) return prev
+              return [...prev, msg.id]
+            })
             setTypingMessageId(msg.id)
+            if (msg.sender === 'ai') {
+              setTimeout(() => {
+                setActiveImageIndex(msg.imageIndex)
+              }, 600)
+            }
             const textLen = msg.text.length
             setTimeout(() => {
               setTypingMessageId(null)
@@ -618,7 +689,7 @@ const AIAssistantSection = () => {
           }, msg.delay)
         })
       }
-    }, { threshold: 0.2 })
+    }, { threshold: 0.15 })
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
@@ -629,137 +700,170 @@ const AIAssistantSection = () => {
       <div className="absolute bottom-[-5%] left-[-8%] w-[500px] h-[500px] rounded-full bg-[#3EAB6E]/[0.02] blur-[100px]" />
 
       <div className="relative max-w-[1340px] mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-20 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-white border border-[#D8DFFF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-6 shadow-sm">
-              <MessageSquare size={14} />
-              AI-Native Project Intelligence
-            </div>
+        <div className="mb-14">
+          <div className="inline-flex items-center gap-2 rounded-full bg-white border border-[#D8DFFF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-6 shadow-sm">
+            <MessageSquare size={14} />
+            AI-Native Project Intelligence
+          </div>
 
-            <h2 className="text-[40px] md:text-[52px] leading-[1.04] font-black tracking-[-0.05em] text-[#0A0A14]">
-              Professional Standards.
-              <br />
-              <span className="bg-gradient-to-r from-[#5B5FE3] via-[#787BEE] to-[#A78BFA] bg-clip-text text-transparent gradient-shift">
-                AI-Native Power.
-              </span>
-            </h2>
+          <h2 className="text-[40px] md:text-[52px] leading-[1.04] font-black tracking-[-0.05em] text-[#0A0A14]">
+            Professional Standards.
+            <br />
+            <span className="bg-gradient-to-r from-[#5B5FE3] via-[#787BEE] to-[#A78BFA] bg-clip-text text-transparent gradient-shift">
+              AI-Native Power.
+            </span>
+          </h2>
 
-            <p className="mt-5 text-[16px] leading-7 text-[#646A73] max-w-[460px]">
-              Professional project management fundamentals, supercharged by AI. From project planning to resource allocation. Experience native intelligence, ready out-of-the-box.
-            </p>
+          <p className="mt-5 text-[16px] leading-7 text-[#646A73] max-w-[560px]">
+            Professional project management fundamentals, supercharged by AI. From project planning to resource allocation. Experience native intelligence, ready out-of-the-box.
+          </p>
+        </div>
 
-            <div className="mt-10 grid grid-cols-2 gap-3">
-              {AI_PROJECT_CARDS.map((card) => (
-                <div
-                  key={card.label}
-                  className="rounded-2xl border border-black/[0.04] bg-white p-5 hover:shadow-[0_16px_48px_rgba(91,94,227,0.06)] hover:border-[#D8DFFF] transition-all duration-500"
-                >
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8F959E] mb-2">{card.label}</div>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[28px] font-black tracking-[-0.04em] text-[#111827]">{card.value}</span>
-                    <span className="text-[12px] font-bold" style={{ color: card.color }}>{card.trend}</span>
-                  </div>
-                  <div className="mt-3 h-1 rounded-full bg-[#F3F4F6] overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-1000"
-                      style={{
-                        width: card.value.endsWith('%') ? card.value : card.value.includes('/') ? `${(parseInt(card.value) / parseInt(card.value.split('/')[1]) * 100).toFixed(0)}%` : '0%',
-                        background: `linear-gradient(90deg, ${card.color}, ${card.color}88)`
-                      }}
-                    />
+        <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-14 items-start">
+          {/* Left: Chat */}
+          <div className="rounded-[28px] border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.04)] overflow-hidden">
+            <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-[#F3F4F6] bg-white">
+              <div className="flex items-center gap-1.5">
+                <div className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
+                <div className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
+                <div className="h-2.5 w-2.5 rounded-full bg-[#16A34A]" />
+              </div>
+              <div className="ml-3 flex items-center gap-2">
+                <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center shadow-[0_2px_8px_rgba(91,94,227,0.3)]">
+                  <Sparkles size={12} className="text-white" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-bold text-[#111827]">Meegle AI</div>
+                  <div className="text-[9px] text-[#16A34A] font-semibold flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
+                    Online
                   </div>
                 </div>
-              ))}
+              </div>
+            </div>
+
+            <div className="px-4 py-4 space-y-3.5 min-h-[420px] bg-[#FBFCFD]">
+              {visibleMessages.length === 0 && (
+                <div className="flex items-center justify-center h-full text-[13px] text-[#B0B8C5]">
+                  Waiting for conversation...
+                </div>
+              )}
+              {CHAT_MESSAGES.map((msg) => {
+                if (!visibleMessages.includes(msg.id)) return null
+                const isTyping = typingMessageId === msg.id
+                const isUser = msg.sender === 'user'
+
+                return (
+                  <div
+                    key={msg.id}
+                    className={`flex gap-2.5 animate-fade-slide-up ${isUser ? 'justify-end' : ''}`}
+                  >
+                    {!isUser && (
+                      <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5">
+                        <Sparkles size={11} className="text-white" />
+                      </div>
+                    )}
+                    <div
+                      className={`rounded-2xl px-3.5 py-2.5 max-w-[85%] ${
+                        isUser
+                          ? 'bg-[#5B5FE3] text-white rounded-br-md'
+                          : 'bg-white border border-[#EEF0F4] text-[#111827] rounded-bl-md shadow-sm'
+                      }`}
+                    >
+                      <div className={`text-[10px] font-bold mb-1 ${isUser ? 'text-white/60' : 'text-[#8F959E]'}`}>
+                        {isUser ? 'You' : 'Meegle AI'}
+                      </div>
+                      <div className={`text-[12px] leading-[1.65] whitespace-pre-line ${isUser ? 'text-white' : 'text-[#374151]'}`}>
+                        {isTyping ? (
+                          <span>
+                            {msg.text.substring(0, Math.floor(msg.text.length * 0.65))}
+                            <span className="inline-flex ml-0.5">
+                              <span className="animate-pulse" style={{ animationDelay: '0ms' }}>.</span>
+                              <span className="animate-pulse" style={{ animationDelay: '150ms' }}>.</span>
+                              <span className="animate-pulse" style={{ animationDelay: '300ms' }}>.</span>
+                            </span>
+                          </span>
+                        ) : (
+                          msg.text
+                        )}
+                      </div>
+                    </div>
+                    {isUser && (
+                      <div className="h-7 w-7 rounded-lg bg-[#F4F6F9] flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <User size={12} className="text-[#8F959E]" />
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="px-4 py-3.5 border-t border-[#F3F4F6] bg-white flex items-center gap-2.5">
+              <input
+                type="text"
+                placeholder="Ask Meegle AI anything about your projects..."
+                className="flex-1 bg-[#F4F6F9] rounded-xl px-3.5 py-2.5 text-[12px] text-[#111827] placeholder-[#B0B8C5] outline-none focus:ring-2 focus:ring-[#5B5FE3]/20 transition-all"
+                readOnly
+              />
+              <button className="h-9 w-9 rounded-xl bg-[#5B5FE3] flex items-center justify-center hover:bg-[#4A4ED4] transition-all shadow-[0_2px_8px_rgba(91,94,227,0.3)] flex-shrink-0">
+                <Send size={13} className="text-white" />
+              </button>
             </div>
           </div>
 
+          {/* Right: Screenshot area */}
           <div className="relative">
-            <div className="rounded-[32px] border border-black/[0.04] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.06)] overflow-hidden">
-              <div className="flex items-center gap-2.5 px-6 py-4 border-b border-[#F3F4F6] bg-[#FAFBFF]">
-                <div className="flex items-center gap-1.5">
-                  <div className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
-                  <div className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
-                  <div className="h-2.5 w-2.5 rounded-full bg-[#16A34A]" />
+            <div className="rounded-[28px] border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.06)] overflow-hidden">
+              <div className="flex items-center gap-1.5 px-5 py-3 border-b border-[#F3F4F6] bg-white">
+                <div className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
+                <div className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
+                <div className="h-2.5 w-2.5 rounded-full bg-[#16A34A]" />
+                <div className="flex-1 text-center">
+                  <span className="text-[10px] font-semibold text-[#8F959E]">{AI_SCREENSHOTS[activeImageIndex]?.label || 'Dashboard'}</span>
                 </div>
-                <div className="ml-3 flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center shadow-[0_4px_12px_rgba(91,94,227,0.3)]">
-                    <Sparkles size={14} className="text-white" />
-                  </div>
-                  <div>
-                    <div className="text-[12px] font-bold text-[#111827]">Meegle AI</div>
-                    <div className="text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A] animate-pulse" />
-                      Online
-                    </div>
-                  </div>
-                </div>
+                <div className="w-10" />
               </div>
 
-              <div className="px-5 py-5 space-y-4 min-h-[380px] bg-[#FBFCFD]">
-                {CHAT_MESSAGES.map((msg) => {
-                  if (!visibleMessages.includes(msg.id)) return null
-                  const isTyping = typingMessageId === msg.id
-                  const isUser = msg.sender === 'user'
-
-                  return (
-                    <div
-                      key={msg.id}
-                      className={`flex gap-3 animate-fade-slide-up ${isUser ? 'justify-end' : ''}`}
-                    >
-                      {!isUser && (
-                        <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center flex-shrink-0 shadow-sm">
-                          <Sparkles size={14} className="text-white" />
-                        </div>
-                      )}
-                      <div
-                        className={`rounded-2xl px-4 py-3 max-w-[80%] ${
-                          isUser
-                            ? 'bg-[#5B5FE3] text-white rounded-br-md'
-                            : 'bg-white border border-[#EEF0F4] text-[#111827] rounded-bl-md shadow-sm'
-                        }`}
-                      >
-                        <div className={`text-[11px] font-bold mb-1 ${isUser ? 'text-white/60' : 'text-[#8F959E]'}`}>
-                          {isUser ? 'You' : 'Meegle AI'}
-                        </div>
-                        <div className={`text-[13px] leading-6 whitespace-pre-line ${isUser ? 'text-white' : 'text-[#374151]'}`}>
-                          {isTyping ? (
-                            <span>
-                              {msg.text.substring(0, Math.floor(msg.text.length * 0.7))}
-                              <span className="inline-flex ml-1">
-                                <span className="animate-pulse" style={{ animationDelay: '0ms' }}>.</span>
-                                <span className="animate-pulse" style={{ animationDelay: '150ms' }}>.</span>
-                                <span className="animate-pulse" style={{ animationDelay: '300ms' }}>.</span>
-                              </span>
-                            </span>
-                          ) : (
-                            msg.text
-                          )}
-                        </div>
+              <div className="relative min-h-[480px] bg-gradient-to-b from-[#FAFBFF] to-[#F4F6FF]">
+                {AI_SCREENSHOTS.map((shot, idx) => (
+                  <div
+                    key={shot.id}
+                    className="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    style={{
+                      opacity: activeImageIndex === idx ? 1 : 0,
+                      transform: `translateX(${activeImageIndex === idx ? 0 : idx > activeImageIndex ? 40 : -40}px)`,
+                      pointerEvents: activeImageIndex === idx ? 'auto' : 'none'
+                    }}
+                  >
+                    <div className={`w-full max-w-[360px] aspect-[4/3] rounded-2xl bg-gradient-to-br ${shot.gradient} opacity-10 mb-4`} />
+                    <div className="text-center">
+                      <div className="inline-flex items-center gap-2 rounded-xl bg-white border border-[#EEF0F4] px-4 py-2.5 shadow-sm mb-3">
+                        <div className={`h-5 w-5 rounded-md bg-gradient-to-br ${shot.gradient} shadow-sm`} />
+                        <span className="text-[12px] font-bold text-[#8F959E]">{shot.label}</span>
                       </div>
-                      {isUser && (
-                        <div className="h-8 w-8 rounded-xl bg-[#F4F6F9] flex items-center justify-center flex-shrink-0">
-                          <User size={14} className="text-[#8F959E]" />
-                        </div>
-                      )}
+                      <p className="text-[11px] text-[#B0B8C5]">Replace with product screenshot</p>
                     </div>
-                  )
-                })}
-              </div>
-
-              <div className="px-5 py-4 border-t border-[#F3F4F6] bg-white flex items-center gap-3">
-                <input
-                  type="text"
-                  placeholder="Ask Meegle AI anything about your projects..."
-                  className="flex-1 bg-[#F4F6F9] rounded-xl px-4 py-2.5 text-[13px] text-[#111827] placeholder-[#B0B8C5] outline-none focus:ring-2 focus:ring-[#5B5FE3]/20 transition-all"
-                  readOnly
-                />
-                <button className="h-10 w-10 rounded-xl bg-[#5B5FE3] flex items-center justify-center hover:bg-[#4A4ED4] transition-all shadow-[0_4px_12px_rgba(91,94,227,0.3)] flex-shrink-0">
-                  <Send size={15} className="text-white" />
-                </button>
+                  </div>
+                ))}
               </div>
             </div>
 
-            <div className="absolute -z-10 top-4 left-4 w-full h-full rounded-[32px] bg-[#5B5FE3]/[0.04] border border-[#5B5FE3]/[0.06]" />
+            <div className="mt-4 flex justify-center gap-2">
+              {AI_SCREENSHOTS.map((shot, idx) => (
+                <button
+                  key={shot.id}
+                  onClick={() => setActiveImageIndex(idx)}
+                  className="rounded-full transition-all duration-500"
+                  style={{
+                    width: activeImageIndex === idx ? 24 : 8,
+                    height: 8,
+                    backgroundColor: activeImageIndex === idx ? '#5B5FE3' : '#D1D5DB'
+                  }}
+                />
+              ))}
+            </div>
+
+            <div className="absolute -z-10 top-3 left-3 w-full h-full rounded-[28px] bg-[#5B5FE3]/[0.03] border border-[#5B5FE3]/[0.06]" />
           </div>
         </div>
       </div>
