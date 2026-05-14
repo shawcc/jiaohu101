@@ -3,6 +3,7 @@ import BillingManagement from './projects/BillingManagement'
 import AiUsageDashboard from './projects/AiUsageDashboard'
 import LeadFormExperiment from './projects/LeadFormExperiment'
 import WorkflowCollaborationShowcase from './projects/WorkflowCollaborationShowcase'
+import MeegleHomepage from './projects/MeegleHomepage'
 
 const projects = [
   {
@@ -28,6 +29,12 @@ const projects = [
     name: '官网篇章：流程协作',
     desc: '节点流转、人机协作、确认后自动推进',
     component: WorkflowCollaborationShowcase
+  },
+  {
+    id: 'meegle-homepage',
+    name: 'Meegle 官网首页',
+    desc: 'AI-native 项目管理官网，参考 monday.com 风格',
+    component: MeegleHomepage
   }
 ]
 
