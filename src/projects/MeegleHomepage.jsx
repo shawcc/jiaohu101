@@ -995,7 +995,7 @@ const MeegleHomepage = () => {
   const heroRef = useRef(null)
 
   return (
-    <div className="bg-white text-[#1F2329] font-sans overflow-x-hidden">
+    <div className="bg-white text-[#1F2329] font-sans" style={{ overflowX: 'clip', overflowY: 'visible' }}>
       <style>{`
         @keyframes gradientShift {
           0% { background-position: 0% 50%; }
