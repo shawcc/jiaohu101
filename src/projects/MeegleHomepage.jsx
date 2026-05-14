@@ -4,8 +4,6 @@ import {
   ArrowUpRight,
   Bot,
   CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
   GitBranch,
   Globe,
   Layers,
@@ -32,40 +30,197 @@ const METRICS = [
   { value: 99.9, suffix: '%', label: 'Enterprise uptime SLA', decimals: 1 }
 ]
 
-const AGENT_CARDS = [
+const STACK_CARDS = [
   {
-    icon: <Workflow size={28} className="text-white" />,
-    bg: 'from-[#5B5FE3] to-[#787BEE]',
+    id: 'workflows',
     title: 'Architect Workflows',
-    sub: 'Anchor AI to business processes',
-    desc: 'Transform point-solution AI into scalable workflows. Every project becomes a template for organizational intelligence.',
-    tag: 'MCP Server · CLI · API'
+    subtitle: 'Standardize intelligence through SOPs',
+    desc: 'Standardize intelligence through SOPs and automated processes. Collaborate with agents to drive R&D, GTM, and operation workflows. Transform manual effort into repeatable organizational wisdom.',
+    tag: 'SOP · Automation · Process-driven',
+    color: '#5B5FE3',
+    colorLight: '#F4F6FF',
+    gradient: 'from-[#5B5FE3] to-[#787BEE]',
+    icon: <Workflow size={28} className="text-white" />
   },
   {
-    icon: <Bot size={28} className="text-white" />,
-    bg: 'from-[#3EAB6E] to-[#58C98A]',
+    id: 'orchestrate',
     title: 'Orchestrate Agents',
-    sub: 'Multi-agent, one platform',
-    desc: 'Bridge proprietary agents and third-party models. Meegle coordinates them with shared context and automatic handoff.',
-    tag: 'Auto-routing · Context-aware'
+    subtitle: 'Multi-agent, one unified fleet',
+    desc: 'Integrate proprietary and third-party agents. Embed intelligence into workflow via AI nodes. Bridge business systems via MCP and CLI for a unified multi-agent fleet.',
+    tag: 'MCP · CLI · Multi-agent',
+    color: '#3EAB6E',
+    colorLight: '#EDF7F0',
+    gradient: 'from-[#3EAB6E] to-[#58C98A]',
+    icon: <Bot size={28} className="text-white" />
   },
   {
-    icon: <Globe size={28} className="text-white" />,
-    bg: 'from-[#F59E0B] to-[#FBBF24]',
-    title: 'Global Context',
-    sub: 'Every agent sees the full picture',
-    desc: 'Slack messages, meeting notes, org charts, project timelines — unified enterprise data powers every AI decision.',
-    tag: 'Unified data layer'
-  },
-  {
-    icon: <Shield size={28} className="text-white" />,
-    bg: 'from-[#8B5CF6] to-[#A78BFA]',
-    title: 'Enterprise Governance',
-    sub: 'Intelligence under control',
-    desc: 'Role-based access, audit trails, and data residency ensure your AI operates within your security boundaries.',
-    tag: 'SOC 2 · ISO 27001 · GDPR'
+    id: 'context',
+    title: 'Unify Context',
+    subtitle: 'One data layer, infinite clarity',
+    desc: 'Ensure every agent operates with a unified data flow. Break down silos to support informed decision-making and task execution. Achieve true end-to-end automation with full visibility.',
+    tag: 'Unified data · End-to-end visibility',
+    color: '#F59E0B',
+    colorLight: '#FFFBF0',
+    gradient: 'from-[#F59E0B] to-[#FBBF24]',
+    icon: <Globe size={28} className="text-white" />
   }
 ]
+
+const AgentCardIllustration = ({ card, isVisible }) => {
+  if (card.id === 'workflows') {
+    return (
+      <div className="relative w-full h-full flex items-center justify-center">
+        <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#F4F6FF] to-[#E8EBFF]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
+        <svg viewBox="0 0 480 380" className="relative w-full max-w-[480px] h-auto drop-shadow-2xl" style={{ filter: 'drop-shadow(0 20px 40px rgba(91,94,227,0.12))' }}>
+          <defs>
+            <linearGradient id="wf-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#5B5FE3" />
+              <stop offset="100%" stopColor="#787BEE" />
+            </linearGradient>
+            <filter id="wf-shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#5B5FE3" floodOpacity="0.15" /></filter>
+          </defs>
+          {[
+            { x: 40, y: 30, w: 140, h: 56, label: 'Requirement\nIntake', done: true },
+            { x: 40, y: 110, w: 140, h: 56, label: 'Scope &\nTriage', done: true },
+            { x: 40, y: 190, w: 140, h: 56, label: 'Design\nReview', done: false },
+            { x: 220, y: 80, w: 140, h: 56, label: 'Agent\nPlanning', done: true },
+            { x: 220, y: 160, w: 140, h: 56, label: 'Auto\nExecution', done: false },
+            { x: 300, y: 260, w: 140, h: 56, label: 'Quality\nGate', done: false },
+            { x: 80, y: 280, w: 160, h: 56, label: 'Release &\nMonitor', done: false }
+          ].map((node, i) => (
+            <g key={i} filter="url(#wf-shadow)">
+              <rect x={node.x} y={node.y} width={node.w} height={node.h} rx="14" fill="white" stroke={node.done ? '#16A34A' : node.label === 'Agent\nPlanning' || node.label === 'Auto\nExecution' ? '#5B5FE3' : '#E2E4E9'} strokeWidth="2" />
+              {node.done && <rect x={node.x} y={node.y} width={node.w} height={node.h} rx="14" fill="#F0FDF4" />}
+              {node.done ? (
+                <>
+                  <text x={node.x + node.w / 2} y={node.y + 22} textAnchor="middle" fill="#16A34A" fontSize="11" fontWeight="700">{node.label.split('\n')[0]}</text>
+                  <text x={node.x + node.w / 2} y={node.y + 40} textAnchor="middle" fill="#16A34A" fontSize="11" fontWeight="700">{node.label.split('\n')[1]}</text>
+                  <circle cx={node.x + node.w - 14} cy={node.y + 14} r="8" fill="#16A34A" />
+                  <path d={`M${node.x + node.w - 18} ${node.y + 14} l3 4 l6 -7`} stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </>
+              ) : (
+                <>
+                  <text x={node.x + node.w / 2} y={node.y + 22} textAnchor="middle" fill={node.label === 'Agent\nPlanning' || node.label === 'Auto\nExecution' ? '#5B5FE3' : '#646A73'} fontSize="11" fontWeight="700">{node.label.split('\n')[0]}</text>
+                  <text x={node.x + node.w / 2} y={node.y + 40} textAnchor="middle" fill={node.label === 'Agent\nPlanning' || node.label === 'Auto\nExecution' ? '#5B5FE3' : '#646A73'} fontSize="11" fontWeight="700">{node.label.split('\n')[1]}</text>
+                </>
+              )}
+            </g>
+          ))}
+          <line x1="110" y1="86" x2="110" y2="110" stroke="#16A34A" strokeWidth="2" markerEnd="url(#arrow-done)" />
+          <line x1="110" y1="166" x2="110" y2="190" stroke={isVisible ? '#5B5FE3' : '#E2E4E9'} strokeWidth="2" strokeDasharray="6,3" />
+          <path d="M180 58 C200 58, 200 108, 220 108" stroke="#16A34A" strokeWidth="2" fill="none" markerEnd="url(#arrow-done)" />
+          <path d="M290 108 C310 108, 310 158, 220 158" stroke={isVisible ? '#5B5FE3' : '#E2E4E9'} strokeWidth="2" fill="none" strokeDasharray="6,3" />
+          <path d="M180 188 C200 188, 200 288, 300 288" stroke={isVisible ? '#5B5FE3' : '#E2E4E9'} strokeWidth="2" fill="none" strokeDasharray="6,3" />
+          <defs>
+            <marker id="arrow-done" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#16A34A" />
+            </marker>
+          </defs>
+        </svg>
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+          {[0, 1, 2].map(i => (
+            <div key={i} className="h-1 rounded-full transition-all duration-700" style={{ width: i === 0 ? 32 : 18, backgroundColor: i === 0 ? '#5B5FE3' : '#E2E4E9' }} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (card.id === 'orchestrate') {
+    return (
+      <div className="relative w-full h-full flex items-center justify-center">
+        <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#EDF7F0] to-[#D6F3E2]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
+        <svg viewBox="0 0 480 380" className="relative w-full max-w-[480px] h-auto" style={{ filter: 'drop-shadow(0 20px 40px rgba(62,171,110,0.12))' }}>
+          <defs>
+            <linearGradient id="og-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#3EAB6E" />
+              <stop offset="100%" stopColor="#58C98A" />
+            </linearGradient>
+          </defs>
+          <rect x="190" y="140" width="100" height="100" rx="24" fill="url(#og-grad)" filter="drop-shadow(0 12px 32px rgba(62,171,110,0.35))" />
+          <text x="240" y="195" textAnchor="middle" fill="white" fontSize="13" fontWeight="800">Meegle</text>
+          {[
+            { cx: 120, cy: 100, color: '#5B5FE3', label: 'Code Agent', delay: 0 },
+            { cx: 360, cy: 100, color: '#F59E0B', label: 'Data Agent', delay: 0.3 },
+            { cx: 90, cy: 280, color: '#8B5CF6', label: 'Doc Agent', delay: 0.6 },
+            { cx: 390, cy: 280, color: '#EF4444', label: 'QA Agent', delay: 0.9 },
+            { cx: 240, cy: 60, color: '#3B82F6', label: 'PM Agent', delay: 0.15 },
+          ].map((agent, i) => (
+            <g key={i}>
+              <line
+                x1={agent.cx} y1={agent.cy} x2="240" y2="190"
+                stroke={agent.color} strokeWidth="2" strokeDasharray="4,4" opacity="0.5"
+                className={isVisible ? 'animate-pulse' : ''}
+              />
+              <circle cx={agent.cx} cy={agent.cy} r="22" fill="white" stroke={agent.color} strokeWidth="2" filter="drop-shadow(0 4px 12px rgba(0,0,0,0.06))" />
+              <circle cx={agent.cx} cy={agent.cy} r="10" fill={agent.color} opacity="0.15" />
+              <circle cx={agent.cx} cy={agent.cy} r="5" fill={agent.color} />
+              <text x={agent.cx} y={agent.cy + 34} textAnchor="middle" fill="#646A73" fontSize="9" fontWeight="600">{agent.label}</text>
+            </g>
+          ))}
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0 240 190" to="360 240 190" dur="20s" repeatCount="indefinite" />
+            <circle cx="280" cy="160" r="4" fill="#3EAB6E" opacity="0.6" />
+            <circle cx="300" cy="180" r="3" fill="#58C98A" opacity="0.5" />
+            <circle cx="260" cy="200" r="3.5" fill="#3EAB6E" opacity="0.5" />
+            <circle cx="310" cy="150" r="2.5" fill="#58C98A" opacity="0.4" />
+          </g>
+        </svg>
+      </div>
+    )
+  }
+
+  if (card.id === 'context') {
+    return (
+      <div className="relative w-full h-full flex items-center justify-center">
+        <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#FFFBF0] to-[#FFF3D6]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
+        <svg viewBox="0 0 480 380" className="relative w-full max-w-[480px] h-auto" style={{ filter: 'drop-shadow(0 20px 40px rgba(245,158,11,0.12))' }}>
+          <defs>
+            <linearGradient id="uc-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#F59E0B" />
+              <stop offset="100%" stopColor="#FBBF24" />
+            </linearGradient>
+            <filter id="uc-glow"><feGaussianBlur stdDeviation="4" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+          </defs>
+          {[
+            { x: 30, y: 50, w: 130, h: 50, icon: '📄', label: 'Documents', color: '#3B82F6' },
+            { x: 30, y: 120, w: 130, h: 50, icon: '💬', label: 'Messages', color: '#8B5CF6' },
+            { x: 30, y: 190, w: 130, h: 50, icon: '📊', label: 'Analytics', color: '#EF4444' },
+            { x: 30, y: 260, w: 130, h: 50, icon: '📅', label: 'Calendar', color: '#3EAB6E' },
+          ].map((src, i) => (
+            <g key={i}>
+              <rect x={src.x} y={src.y} width={src.w} height={src.h} rx="12" fill="white" stroke="#E2E4E9" strokeWidth="1.5" filter="drop-shadow(0 2px 8px rgba(0,0,0,0.04))" />
+              <text x={src.x + 16} y={src.y + 31} fontSize="16">{src.icon}</text>
+              <text x={src.x + 46} y={src.y + 31} fill="#111827" fontSize="12" fontWeight="600">{src.label}</text>
+              <line x1={src.x + src.w} y1={src.y + src.h / 2} x2="310" y2={src.y + src.h / 2} stroke={src.color} strokeWidth="1.5" strokeDasharray="5,3" opacity="0.4" />
+            </g>
+          ))}
+          <rect x="320" y="30" width="140" height="280" rx="20" fill="white" stroke="#E2E4E9" strokeWidth="1.5" filter="drop-shadow(0 8px 32px rgba(0,0,0,0.06))" />
+          <rect x="320" y="30" width="140" height="48" rx="20" fill="url(#uc-grad)" />
+          <text x="390" y="60" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">Unified Context</text>
+          {[
+            { y: 95, label: 'Docs ingested', pct: 100 },
+            { y: 145, label: 'Messages synced', pct: 100 },
+            { y: 195, label: 'Reports parsed', pct: 88 },
+            { y: 245, label: 'Events loaded', pct: 100 },
+          ].map((item, i) => (
+            <g key={i}>
+              <text x="340" y={item.y} fill="#646A73" fontSize="10" fontWeight="500">{item.label}</text>
+              <rect x="340" y={item.y + 6} width="100" height="6" rx="3" fill="#F3F4F6" />
+              <rect x="340" y={item.y + 6} width={item.pct} height="6" rx="3" fill={item.pct === 100 ? '#16A34A' : '#F59E0B'} className="transition-all duration-1000" />
+              <text x="448" y={item.y} textAnchor="end" fill={item.pct === 100 ? '#16A34A' : '#F59E0B'} fontSize="10" fontWeight="700">{item.pct}%</text>
+            </g>
+          ))}
+          <circle cx="390" cy="330" r="12" fill="#F0FDF4" stroke="#16A34A" strokeWidth="2" />
+          <path d="M384 330 l3 4 l6 -7" stroke="#16A34A" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          <text x="410" y="334" fill="#16A34A" fontSize="11" fontWeight="700">All agents synced</text>
+        </svg>
+      </div>
+    )
+  }
+
+  return null
+}
 
 const AI_TABS = [
   {
@@ -147,330 +302,278 @@ const WORKFLOW_NODES = [
   { id: 6, label: 'Release' }
 ]
 
-const STAGE = {
-  plan: { label: 'Plan', color: '#5B5FE3', emoji: '📋' },
-  build: { label: 'Build', color: '#3EAB6E', emoji: '🔧' },
-  confirm: { label: 'Confirm', color: '#F59E0B', emoji: '✨' }
+const STAGE_CONFIG = {
+  idle: { label: 'Empty', color: '#D1D5DB', bg: '#F3F4F6' },
+  targeting: { label: 'Targeting', color: '#F59E0B', bg: '#FFFBF0' },
+  placing: { label: 'Placing', color: '#5B5FE3', bg: '#F4F6FF' },
+  working: { label: 'Working', color: '#3EAB6E', bg: '#EDF7F0' },
+  done: { label: 'Done', color: '#16A34A', bg: '#F0FDF4' }
 }
 
-const AgentAvatar = ({ color, size = 40 }) => (
+const AGENT_BENCH = [
+  { id: 'qa', label: 'QA Agent', color: '#5B5FE3' },
+  { id: 'code', label: 'Code Agent', color: '#3EAB6E' },
+  { id: 'design', label: 'Design Agent', color: '#F59E0B' },
+  { id: 'deploy', label: 'Deploy Agent', color: '#EC4899' },
+  { id: 'review', label: 'Review Agent', color: '#8B5CF6' },
+  { id: 'data', label: 'Data Agent', color: '#06B6D4' },
+  { id: 'sec', label: 'Security Agent', color: '#EF4444' },
+]
+
+const TinyAgent = ({ color, size = 20, flying = false }) => (
   <div
-    className="relative flex items-center justify-center transition-all duration-300"
-    style={{ width: size, height: size }}
+    className="transition-all duration-500"
+    style={{
+      width: size,
+      height: size,
+      filter: flying ? `drop-shadow(0 0 10px ${color}60)` : 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
+    }}
   >
-    <div
-      className="absolute inset-0 rounded-full animate-pulse"
-      style={{ backgroundColor: color + '20' }}
-    />
-    <svg viewBox="0 0 40 40" width={size} height={size} className="relative" style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.15))' }}>
+    <svg viewBox="0 0 40 40" width={size} height={size}>
       <defs>
-        <linearGradient id={`ag-${color.replace('#','')}`} x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={`ta-${color?.replace('#','')}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={color} />
           <stop offset="100%" stopColor={color} stopOpacity="0.7" />
         </linearGradient>
       </defs>
-      <circle cx="20" cy="14" r="10" fill={`url(#ag-${color.replace('#','')})`} />
-      <rect x="14" y="18" width="5" height="6" rx="2" fill={color} opacity="0.6" />
-      <rect x="21" y="18" width="5" height="6" rx="2" fill={color} opacity="0.6" />
-      <rect x="10" y="22" width="20" height="12" rx="6" fill={`url(#ag-${color.replace('#','')})`} />
-      <circle cx="16" cy="14" r="2" fill="white" />
-      <circle cx="24" cy="14" r="2" fill="white" />
-      <circle cx="16" cy="14" r="1" fill="#111" />
-      <circle cx="24" cy="14" r="1" fill="#111" />
+      <circle cx="20" cy="12" r="9" fill={`url(#ta-${color?.replace('#','')})`} />
+      <rect x="15" y="16" width="4" height="5" rx="2" fill={color} opacity="0.5" />
+      <rect x="21" y="16" width="4" height="5" rx="2" fill={color} opacity="0.5" />
+      <rect x="11" y="20" width="18" height="11" rx="5" fill={`url(#ta-${color?.replace('#','')})`} />
+      <circle cx="17" cy="12" r="1.5" fill="white" />
+      <circle cx="23" cy="12" r="1.5" fill="white" />
+      <circle cx="17" cy="12" r="0.8" fill="#111" />
+      <circle cx="23" cy="12" r="0.8" fill="#111" />
     </svg>
   </div>
 )
 
-const PlatformBase = ({ width, height, color }) => (
-  <div
-    className="absolute rounded-2xl"
-    style={{
-      width: width + 40,
-      height: height + 30,
-      left: -20,
-      top: height - 20,
-      background: `linear-gradient(180deg, white 0%, ${color}06 100%)`,
-      border: `1px solid ${color}10`,
-      boxShadow: `0 20px 60px ${color}10, 0 4px 16px rgba(0,0,0,0.04)`,
-      transform: 'rotateX(55deg) rotateZ(-5deg) translateZ(-10px)'
-    }}
-  />
-)
-
-const ConfirmButton = ({ color, onClick }) => (
-  <button
-    onClick={onClick}
-    className="relative inline-flex items-center gap-1.5 cursor-pointer rounded-full px-4 py-2 text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95 z-30"
-    style={{
-      backgroundColor: color,
-      boxShadow: `0 0 28px ${color}60, 0 4px 12px rgba(0,0,0,0.1)`,
-      animation: 'confirmPulse 1.5s ease-in-out infinite'
-    }}
-  >
-    <span className="relative z-10">✓ Confirm</span>
-  </button>
-)
-
-const FloatingDot = ({ x, y, size, color, delay }) => (
-  <div
-    className="absolute rounded-full"
-    style={{
-      left: x,
-      top: y,
-      width: size,
-      height: size,
-      backgroundColor: color,
-      opacity: 0,
-      animation: `dotFloat 3s ease-in-out ${delay}s infinite`
-    }}
-  />
-)
-
 const WorkflowBoard = () => {
   const [activeIdx, setActiveIdx] = useState(0)
-  const [stage, setStage] = useState('plan')
-  const confirmingRef = useRef(false)
-  const trackRef = useRef(null)
+  const [phase, setPhase] = useState('targeting')
+  const phaseRef = useRef('targeting')
 
   const advance = useCallback(() => {
-    setStage(prev => {
-      if (prev === 'plan') return 'build'
-      if (prev === 'build') return 'confirm'
-      return prev
-    })
+    if (phaseRef.current === 'targeting') { phaseRef.current = 'flying'; setPhase('flying') }
+    else if (phaseRef.current === 'flying') { phaseRef.current = 'placed'; setPhase('placed') }
+    else if (phaseRef.current === 'placed') { phaseRef.current = 'working'; setPhase('working') }
+    else if (phaseRef.current === 'working') { phaseRef.current = 'done'; setPhase('done') }
+    else if (phaseRef.current === 'done') {
+      setActiveIdx(p => (p + 1) % WORKFLOW_NODES.length)
+      phaseRef.current = 'targeting'
+      setPhase('targeting')
+    }
   }, [])
 
   useEffect(() => {
-    if (stage === 'confirm') return
-    const dur = stage === 'plan' ? 1400 : 1600
-    const t = setTimeout(advance, dur)
+    const durations = { targeting: 800, flying: 600, placed: 400, working: 1600, done: 1000 }
+    const t = setTimeout(advance, durations[phase] || 1000)
     return () => clearTimeout(t)
-  }, [stage, activeIdx, advance])
+  }, [phase, activeIdx, advance])
 
-  useEffect(() => {
-    const el = trackRef.current
-    if (!el) return
-    const nodeCenter = activeIdx * (84 + 24) + 42
-    const containerWidth = el.clientWidth
-    const scrollTarget = Math.max(0, nodeCenter - containerWidth / 2)
-    el.scrollTo({ left: scrollTarget, behavior: 'smooth' })
-  }, [activeIdx])
-
-  const handleConfirm = useCallback(() => {
-    if (confirmingRef.current) return
-    confirmingRef.current = true
-    setActiveIdx(p => (p + 1) % WORKFLOW_NODES.length)
-    setStage('plan')
-    setTimeout(() => { confirmingRef.current = false }, 400)
-  }, [])
-
-  const nodeW = 84
-  const gap = 24
-  const totalW = WORKFLOW_NODES.length * nodeW + (WORKFLOW_NODES.length - 1) * gap
-
-  const dots = [
-    { x: '10%', y: '18%', size: 4, color: '#5B5FE3', delay: 0 },
-    { x: '55%', y: '12%', size: 3, color: '#3EAB6E', delay: 1.2 },
-    { x: '35%', y: '24%', size: 5, color: '#F59E0B', delay: 0.6 },
-    { x: '75%', y: '14%', size: 3, color: '#5B5FE3', delay: 2.1 },
-    { x: '42%', y: '20%', size: 4, color: '#3EAB6E', delay: 1.6 },
-    { x: '88%', y: '16%', size: 3, color: '#F59E0B', delay: 2.8 },
-    { x: '68%', y: '22%', size: 4, color: '#5B5FE3', delay: 0.9 },
-    { x: '22%', y: '15%', size: 3, color: '#3EAB6E', delay: 1.9 },
-  ]
+  const currentAgent = AGENT_BENCH[activeIdx % AGENT_BENCH.length]
+  const nodeGap = 20
+  const nodeW = 80
+  const slotW = 72
+  const slotH = 44
 
   return (
     <div className="relative w-full select-none">
-      <div
-        className="relative mx-auto"
-        style={{
-          perspective: '800px',
-          height: 380
-        }}
-      >
-        <div className="absolute inset-x-0 flex justify-center" style={{ top: 16 }}>
-          <div className="relative" style={{ width: totalW + 40, height: 220 }}>
-            <PlatformBase width={totalW} height={200} color="#5B5FE3" />
-          </div>
+      <div className="relative" style={{ perspective: '800px', height: 400 }}>
+        <div className="absolute inset-x-0 flex justify-center" style={{ top: 24 }}>
+          <div
+            className="rounded-3xl"
+            style={{
+              width: WORKFLOW_NODES.length * (slotW + nodeGap) + 80,
+              height: 240,
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(245,246,250,0.6) 100%)',
+              border: '1px solid rgba(0,0,0,0.04)',
+              boxShadow: '0 24px 80px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.02)',
+              transform: 'rotateX(55deg) rotateZ(-5deg)'
+            }}
+          />
         </div>
 
-        {dots.map((d, i) => (
-          <FloatingDot key={i} {...d} />
-        ))}
-
         <div
-          className="absolute inset-x-0"
+          className="absolute inset-x-0 flex items-center justify-center"
           style={{
             transform: 'rotateX(55deg) rotateZ(-5deg)',
-            transformStyle: 'preserve-3d',
-            top: 44,
-            height: 200,
+            top: 60,
+            gap: nodeGap,
             pointerEvents: 'none'
           }}
         >
-          <div
-            ref={trackRef}
-            className="absolute width-full flex overflow-hidden"
-            style={{ left: 0, top: 18, gap, maxWidth: totalW + 60, paddingLeft: 30, paddingRight: 30 }}
-          >
-            <div className="flex" style={{ gap, width: totalW + 60, flexShrink: 0 }}>
-              {WORKFLOW_NODES.map((node, idx) => {
-                const isActive = idx === activeIdx
-                const isDone = idx < activeIdx
-                const color = isActive ? STAGE[stage]?.color : isDone ? '#16A34A' : '#D1D5DB'
+          {WORKFLOW_NODES.map((node, idx) => {
+            const isActive = idx === activeIdx
+            const isDone = idx < activeIdx
+            const slotPhase = isActive ? phase : isDone ? 'done' : 'idle'
+            const cfg = STAGE_CONFIG[slotPhase]
 
-                return (
-                  <div key={node.id} style={{ width: nodeW }} className="relative flex justify-center">
-                    <div
-                      className="transition-all duration-700 flex flex-col items-center"
-                      style={{
-                        opacity: isDone ? 0.5 : 1,
-                        filter: !isActive ? 'grayscale(0.4)' : 'none'
-                      }}
-                    >
-                      {isActive ? (
-                        <div
-                          className="rounded-2xl bg-white border-2 p-3 flex flex-col items-center gap-2 shadow-2xl"
-                          style={{
-                            width: 98,
-                            borderColor: color,
-                            boxShadow: `0 16px 48px ${color}25, 0 8px 16px rgba(0,0,0,0.06)`,
-                            transform: 'translateZ(30px) translateY(-8px)'
-                          }}
-                        >
-                          <div className="flex items-center gap-2 w-full">
-                            <AgentAvatar color={color} size={26} />
-                            <div className="flex flex-col flex-1">
-                              <span className="text-[9px] font-extrabold uppercase tracking-[0.1em]" style={{ color }}>
-                                {STAGE[stage]?.label}
-                              </span>
-                              <span className="text-[11px] font-black text-[#111827] leading-tight">{node.label}</span>
-                            </div>
-                          </div>
-
-                          <div className="w-full rounded-lg px-2 py-1.5 flex items-center gap-2" style={{ backgroundColor: color + '10' }}>
-                            <span className="text-[9px] font-semibold" style={{ color }}>
-                              {stage === 'plan' ? 'Agent analyzing...' :
-                               stage === 'build' ? 'Agent executing...' :
-                               'Ready for review'}
-                            </span>
-                          </div>
-
-                          {stage !== 'confirm' && (
-                            <div className="flex items-center gap-2 w-full">
-                              <div className="flex-1 h-1 rounded-full bg-gray-100 overflow-hidden">
-                                <div
-                                  className="h-full rounded-full transition-all duration-1000"
-                                  style={{ backgroundColor: color, width: stage === 'plan' ? '45%' : '85%' }}
-                                />
-                              </div>
-                              <span className="text-[8px] font-semibold text-gray-400">
-                                {stage === 'plan' ? '...' : '→'}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      ) : isDone ? (
-                        <div
-                          className="rounded-xl border px-2.5 py-2 flex items-center gap-1.5"
-                          style={{ borderColor: '#BBF7D0', backgroundColor: '#F0FDF4', transform: 'translateZ(5px)' }}
-                        >
-                          <CheckCircle2 size={12} className="text-[#16A34A]" />
-                          <span className="text-[9px] font-bold text-[#16A34A]">{node.label}</span>
-                        </div>
-                      ) : (
-                        <div
-                          className="rounded-xl border px-2.5 py-2 flex items-center justify-center"
-                          style={{ borderColor: '#E5E7EB', backgroundColor: '#F3F4F6', opacity: 0.35, transform: 'translateZ(2px)' }}
-                        >
-                          <span className="text-[9px] font-medium text-[#9CA3AF]">{node.label}</span>
+            return (
+              <div key={node.id} className="relative flex flex-col items-center" style={{ width: slotW }}>
+                <div
+                  className="rounded-xl border-2 flex items-center justify-center transition-all duration-500"
+                  style={{
+                    width: slotW,
+                    height: slotH,
+                    backgroundColor: slotPhase === 'idle' ? '#F9FAFB' : cfg.bg,
+                    borderColor: cfg.color + (slotPhase === 'idle' ? '30' : ''),
+                    borderStyle: slotPhase === 'idle' ? 'dashed' : 'solid',
+                    boxShadow: isActive && slotPhase !== 'idle' ? `0 8px 32px ${cfg.color}20` : 'none',
+                    transform: isActive && (slotPhase === 'placed' || slotPhase === 'working') ? 'translateY(-4px)' : 'none'
+                  }}
+                >
+                  {slotPhase === 'idle' && (
+                    <span className="text-[9px] font-semibold text-[#C0C5CE]">{node.label}</span>
+                  )}
+                  {slotPhase === 'targeting' && (
+                    <span className="text-[9px] font-bold" style={{ color: cfg.color }}>→ {node.label}</span>
+                  )}
+                  {slotPhase === 'flying' && (
+                    <div className="animate-bounce">
+                      <TinyAgent color={currentAgent.color} size={18} flying />
+                    </div>
+                  )}
+                  {(slotPhase === 'placed' || slotPhase === 'working') && (
+                    <div className="flex items-center gap-2">
+                      <TinyAgent color={currentAgent.color} size={20} />
+                      <div className="flex flex-col">
+                        <span className="text-[8px] font-extrabold text-[#111827] leading-tight">{node.label}</span>
+                        <span className="text-[7px] font-semibold" style={{ color: cfg.color }}>
+                          {slotPhase === 'placed' ? 'Activated' : 'Working...'}
+                        </span>
+                      </div>
+                      {slotPhase === 'working' && (
+                        <div className="w-12 h-1 rounded-full bg-gray-100 overflow-hidden">
+                          <div className="h-full rounded-full animate-pulse" style={{ backgroundColor: cfg.color, width: '70%' }} />
                         </div>
                       )}
                     </div>
-
-                    {isActive && !isDone && (
-                      <div
-                        className="absolute -bottom-16 left-1/2 -translate-x-1/2"
-                        style={{ transform: 'translateZ(40px)', pointerEvents: 'none' }}
-                      >
-                        <span
-                          className="inline-block text-[8px] font-bold px-2 py-1 rounded-full whitespace-nowrap"
-                          style={{ backgroundColor: color + '12', color }}
-                        >
-                          {stage === 'confirm' ? '↓ Confirm below ↓' : stage === 'plan' ? 'Agent working...' : 'Almost done...'}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </div>
+                  )}
+                  {slotPhase === 'done' && (
+                    <div className="flex items-center gap-1.5">
+                      <CheckCircle2 size={14} className="text-[#16A34A]" />
+                      <span className="text-[9px] font-bold text-[#16A34A]">{node.label}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
         </div>
 
-        <svg
-          className="absolute pointer-events-none"
-          style={{
-            left: 36,
-            bottom: 60,
-            width: totalW,
-            height: 40,
-          }}
-        >
+        <svg className="absolute w-full h-full pointer-events-none" style={{ top: 0, left: 0, overflow: 'visible' }}>
           {WORKFLOW_NODES.map((_, idx) => {
             if (idx >= WORKFLOW_NODES.length - 1) return null
-            const x1 = idx * (nodeW + gap) + nodeW / 2
-            const x2 = (idx + 1) * (nodeW + gap) + nodeW / 2
+            const cx = `calc(50% - ${(WORKFLOW_NODES.length * (slotW + nodeGap)) / 2}px + ${idx * (slotW + nodeGap) + slotW / 2}px)`
+            const nx = `calc(50% - ${(WORKFLOW_NODES.length * (slotW + nodeGap)) / 2}px + ${(idx + 1) * (slotW + nodeGap) + slotW / 2}px)`
             const isPast = idx < activeIdx
             return (
               <g key={idx}>
-                <line x1={x1} y1={8} x2={x2} y2={8} stroke={isPast ? '#16A34A' : '#E5E7EB'} strokeWidth={2} />
-                {isPast && <circle cx={x2} cy={8} r={2} fill="#16A34A" />}
+                <line
+                  x1={0} y1={0} x2={0} y2={0}
+                  style={{ display: 'none' }}
+                />
               </g>
             )
           })}
         </svg>
-      </div>
 
-      {stage === 'confirm' && (
-        <div className="flex justify-center mt-2" style={{ marginLeft: activeIdx * (nodeW + gap) + nodeW / 2 - 40 }}>
-          <ConfirmButton color={STAGE.confirm.color} onClick={handleConfirm} />
+        <div
+          className="absolute inset-x-0 flex justify-center gap-2"
+          style={{ bottom: 70 }}
+        >
+          {AGENT_BENCH.map((agent, idx) => {
+            const assignedIdx = idx % WORKFLOW_NODES.length
+            const isAssigned = assignedIdx <= activeIdx
+            const isFlying = assignedIdx === activeIdx && (phase === 'flying' || phase === 'placed' || phase === 'working')
+
+            return (
+              <div
+                key={agent.id}
+                className="rounded-xl px-2.5 py-1.5 flex items-center gap-1.5 transition-all duration-500"
+                style={{
+                  backgroundColor: isAssigned ? agent.color + '10' : '#F3F4F6',
+                  border: `1px solid ${isAssigned ? agent.color + '20' : '#E5E7EB'}`,
+                  opacity: isAssigned && !isFlying ? 0.5 : 1
+                }}
+              >
+                <TinyAgent color={agent.color} size={16} />
+                <span
+                  className="text-[9px] font-semibold"
+                  style={{ color: isAssigned ? agent.color : '#9CA3AF' }}
+                >
+                  {agent.label}
+                </span>
+                {isAssigned && !isFlying && <CheckCircle2 size={10} className="text-[#16A34A]" />}
+              </div>
+            )
+          })}
         </div>
-      )}
+
+        {phase === 'flying' && (
+          <div
+            className="absolute font-bold text-[11px]"
+            style={{
+              left: '50%',
+              top: 90,
+              transform: 'translateX(-50%)',
+              color: currentAgent.color,
+              animation: 'fadeSlideUp 0.6s ease-out'
+            }}
+          >
+            Placing {currentAgent.label} into {WORKFLOW_NODES[activeIdx].label}...
+          </div>
+        )}
+        {phase === 'working' && (
+          <div
+            className="absolute font-bold text-[11px]"
+            style={{
+              left: '50%',
+              top: 90,
+              transform: 'translateX(-50%)',
+              color: '#3EAB6E',
+              animation: 'fadeSlideUp 0.6s ease-out'
+            }}
+          >
+            Architecting automated workflow...
+          </div>
+        )}
+      </div>
     </div>
   )
 }
 
 const MeegleHomepage = () => {
   const [mobileMenu, setMobileMenu] = useState(false)
-  const [carouselIndex, setCarouselIndex] = useState(0)
+  const [stackActive, setStackActive] = useState(0)
   const [activeTab, setActiveTab] = useState('planning')
   const heroRef = useRef(null)
-  const carouselRef = useRef(null)
+  const stackSectionRef = useRef(null)
 
-  const slidePrev = useCallback(() => {
-    setCarouselIndex(prev => Math.max(0, prev - 1))
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = stackSectionRef.current
+      if (!el) return
+      const rect = el.getBoundingClientRect()
+      const sectionTop = rect.top
+      const sectionHeight = rect.height
+      const viewportHeight = window.innerHeight
+
+      if (sectionTop > viewportHeight || sectionTop < -sectionHeight) return
+
+      const progress = Math.max(0, (-sectionTop) / (sectionHeight - viewportHeight))
+      const idx = Math.min(STACK_CARDS.length - 1, Math.floor(progress * STACK_CARDS.length))
+      setStackActive(idx)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  const slideNext = useCallback(() => {
-    setCarouselIndex(prev => Math.min(AGENT_CARDS.length - 1, prev + 1))
-  }, [])
-
-  const maxIndex = AGENT_CARDS.length - 1
 
   return (
     <div className="bg-white text-[#1F2329] font-sans overflow-x-hidden">
       <style>{`
-        @keyframes confirmPulse {
-          0%, 100% { box-shadow: 0 0 28px ${STAGE.confirm.color}60, 0 4px 12px rgba(0,0,0,0.1); }
-          50% { box-shadow: 0 0 48px ${STAGE.confirm.color}90, 0 4px 20px rgba(0,0,0,0.15); }
-        }
-        @keyframes dotFloat {
-          0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
-          20% { opacity: 0.6; }
-          80% { opacity: 0.2; }
-          100% { transform: translateY(-30px) translateX(10px); opacity: 0; }
-        }
         @keyframes gradientShift {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -580,16 +683,16 @@ const MeegleHomepage = () => {
                 Introducing Multi-Agent Orchestration
               </div>
 
-              <h1 className="text-[44px] md:text-[60px] leading-[0.96] font-black tracking-[-0.05em] text-[#0A0A14]">
-                Plan. Build. Ship.
+              <h1 className="text-[40px] md:text-[56px] leading-[1.0] font-black tracking-[-0.05em] text-[#0A0A14]">
+                Architect. Ship.
                 <br />
                 <span className="bg-gradient-to-r from-[#5B5FE3] via-[#787BEE] to-[#A78BFA] bg-clip-text text-transparent gradient-shift">
-                  Together with Agents.
+                  Scale&nbsp;Wisdom with Agents.
                 </span>
               </h1>
 
-              <p className="mt-6 max-w-[420px] text-[16px] leading-7 text-[#5B6272]">
-                Meegle unites your teams and AI agents on one platform. Transform every project into reusable organizational wisdom.
+              <p className="mt-6 max-w-[460px] text-[16px] leading-7 text-[#5B6272]">
+                Architect business processes into living workflows. Ship results with unprecedented velocity. Scale wisdom by institutionalizing AI best practices across your enterprise.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -622,75 +725,71 @@ const MeegleHomepage = () => {
         </div>
       </section>
 
-      {/* MULTI-AGENT — Horizontal Carousel */}
-      <section className="relative py-32 md:py-44 bg-[#FBFBFE] overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#5B5FE3]/[0.03] blur-[100px]" />
+      {/* MULTI-AGENT — Sticky Stack Cards */}
+      <section ref={stackSectionRef} className="relative bg-[#FBFBFE]" style={{ height: `${STACK_CARDS.length * 100 + 100}vh` }}>
+        <div className="sticky top-0 h-screen flex flex-col">
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#5B5FE3]/[0.03] blur-[100px]" />
 
-        <div className="max-w-[1340px] mx-auto px-6">
-          <div className="mb-16 max-w-[600px]">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#F4F6FF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-5">
-              <Bot size={14} /> Multi-Agent Orchestration
+          <div className="relative flex-1 w-full max-w-[1340px] mx-auto px-6 flex flex-col justify-center">
+            <div className="mb-10 max-w-[600px]">
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#F4F6FF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-5">
+                <Bot size={14} /> Multi-Agent Orchestration
+              </div>
+              <h2 className="text-[48px] md:text-[56px] leading-[1.06] font-black tracking-[-0.05em] text-[#0A0A14]">
+                One open platform.<br />Unlimited agents.
+              </h2>
             </div>
-            <h2 className="text-[48px] md:text-[56px] leading-[1.06] font-black tracking-[-0.05em] text-[#0A0A14]">
-              One open platform.<br />Unlimited agents.
-            </h2>
-          </div>
 
-          <div className="relative">
-            <div
-              ref={carouselRef}
-              className="flex gap-6 overflow-x-auto carousel-scroll snap-x snap-mandatory pb-4"
-            >
-              {AGENT_CARDS.map((card, idx) => (
+            <div className="relative flex-1">
+              {STACK_CARDS.map((card, idx) => (
                 <div
-                  key={card.title}
-                  className={`flex-shrink-0 w-[340px] md:w-[380px] snap-center rounded-[28px] border border-black/[0.04] bg-white p-8 shadow-[0_12px_48px_rgba(15,23,42,0.04)] transition-all duration-500 ${
-                    idx === carouselIndex ? 'scale-100 opacity-100' : 'scale-[0.96] opacity-60'
-                  }`}
-                  style={{ transitionDelay: `${idx * 0.05}s` }}
+                  key={card.id}
+                  className="absolute inset-0 rounded-[36px] border border-black/[0.04] bg-white overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  style={{
+                    zIndex: STACK_CARDS.length - idx,
+                    transform: `translateY(${Math.max(0, (stackActive === idx ? 0 : stackActive > idx ? -16 : 16))}px) scale(${stackActive === idx ? 1 : 0.97})`,
+                    opacity: Math.abs(stackActive - idx) <= 1 ? 1 : 0,
+                    pointerEvents: stackActive === idx ? 'auto' : 'none',
+                    boxShadow: stackActive === idx
+                      ? `0 24px 80px ${card.color}12, 0 8px 24px rgba(0,0,0,0.06)`
+                      : `0 1px 3px rgba(0,0,0,0.04)`
+                  }}
                 >
-                  <div className={`bg-gradient-to-br ${card.bg} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
-                    {card.icon}
+                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] h-full">
+                    <div className="flex flex-col justify-center px-8 lg:px-14 py-10">
+                      <div className={`bg-gradient-to-br ${card.gradient} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
+                        {card.icon}
+                      </div>
+                      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.subtitle}</div>
+                      <h3 className="text-[28px] lg:text-[36px] font-black text-[#111827] mb-4 leading-[1.1]">{card.title}</h3>
+                      <p className="text-[14px] leading-7 text-[#646A73] mb-5 max-w-[420px]">{card.desc}</p>
+                      <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold w-fit" style={{ backgroundColor: card.colorLight, color: card.color }}>
+                        {card.tag}
+                      </span>
+                    </div>
+
+                    <div className="relative flex items-center justify-center p-4 lg:p-8">
+                      <AgentCardIllustration card={card} isVisible={stackActive === idx} />
+                    </div>
                   </div>
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.sub}</div>
-                  <h3 className="text-[22px] font-black text-[#111827] mb-3">{card.title}</h3>
-                  <p className="text-[14px] leading-7 text-[#646A73] mb-5">{card.desc}</p>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#F4F6FF] px-3 py-1.5 text-[11px] font-semibold text-[#5B5FE3]">
-                    {card.tag}
-                  </span>
                 </div>
               ))}
             </div>
+          </div>
 
-            <div className="mt-8 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                {AGENT_CARDS.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setCarouselIndex(idx)}
-                    className={`h-1.5 rounded-full transition-all duration-500 ${
-                      idx === carouselIndex ? 'w-8 bg-[#5B5FE3]' : 'w-1.5 bg-[#D1D5DB] hover:bg-[#9CA3AF]'
-                    }`}
-                  />
-                ))}
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={slidePrev}
-                  disabled={carouselIndex === 0}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E2E4E9] bg-white disabled:opacity-30 hover:bg-[#F9FAFB] transition-all"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <button
-                  onClick={slideNext}
-                  disabled={carouselIndex === maxIndex}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E2E4E9] bg-white disabled:opacity-30 hover:bg-[#F9FAFB] transition-all"
-                >
-                  <ChevronRight size={18} />
-                </button>
-              </div>
-            </div>
+          <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-3 z-50">
+            {STACK_CARDS.map((card, idx) => (
+              <button
+                key={card.id}
+                onClick={() => setStackActive(idx)}
+                className="rounded-full transition-all duration-500"
+                style={{
+                  width: stackActive === idx ? 32 : 10,
+                  height: 10,
+                  backgroundColor: stackActive === idx ? card.color : '#D1D5DB'
+                }}
+              />
+            ))}
           </div>
         </div>
       </section>
