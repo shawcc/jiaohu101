@@ -197,16 +197,18 @@ const PlatformBase = ({ width, height, color }) => (
   />
 )
 
-const ConfirmPulse = ({ color, onClick }) => (
-  <div className="relative inline-flex items-center gap-1.5 cursor-pointer group" onClick={onClick}>
-    <div
-      className="absolute inset-0 rounded-full animate-ping"
-      style={{ backgroundColor: color + '30' }}
-    />
-    <div className="relative flex items-center gap-1.5 rounded-full px-3 py-1" style={{ backgroundColor: color, boxShadow: `0 0 20px ${color}60` }}>
-      <span className="text-[9px] font-bold text-white">✓ Confirm</span>
-    </div>
-  </div>
+const ConfirmButton = ({ color, onClick }) => (
+  <button
+    onClick={onClick}
+    className="relative inline-flex items-center gap-1.5 cursor-pointer rounded-full px-4 py-2 text-[12px] font-bold text-white transition-all hover:scale-105 active:scale-95 z-30"
+    style={{
+      backgroundColor: color,
+      boxShadow: `0 0 28px ${color}60, 0 4px 12px rgba(0,0,0,0.1)`,
+      animation: 'confirmPulse 1.5s ease-in-out infinite'
+    }}
+  >
+    <span className="relative z-10">✓ Confirm</span>
+  </button>
 )
 
 const FloatingDot = ({ x, y, size, color, delay }) => (
@@ -228,6 +230,7 @@ const WorkflowBoard = () => {
   const [activeIdx, setActiveIdx] = useState(0)
   const [stage, setStage] = useState('plan')
   const confirmingRef = useRef(false)
+  const trackRef = useRef(null)
 
   const advance = useCallback(() => {
     setStage(prev => {
@@ -244,6 +247,15 @@ const WorkflowBoard = () => {
     return () => clearTimeout(t)
   }, [stage, activeIdx, advance])
 
+  useEffect(() => {
+    const el = trackRef.current
+    if (!el) return
+    const nodeCenter = activeIdx * (84 + 24) + 42
+    const containerWidth = el.clientWidth
+    const scrollTarget = Math.max(0, nodeCenter - containerWidth / 2)
+    el.scrollTo({ left: scrollTarget, behavior: 'smooth' })
+  }, [activeIdx])
+
   const handleConfirm = useCallback(() => {
     if (confirmingRef.current) return
     confirmingRef.current = true
@@ -253,34 +265,32 @@ const WorkflowBoard = () => {
   }, [])
 
   const nodeW = 84
-  const gap = 32
+  const gap = 24
   const totalW = WORKFLOW_NODES.length * nodeW + (WORKFLOW_NODES.length - 1) * gap
-  const startX = 28
-  const boardH = 190
 
   const dots = [
-    { x: '15%', y: '22%', size: 4, color: '#5B5FE3', delay: 0 },
-    { x: '62%', y: '15%', size: 3, color: '#3EAB6E', delay: 1.2 },
-    { x: '38%', y: '28%', size: 5, color: '#F59E0B', delay: 0.6 },
-    { x: '80%', y: '24%', size: 3, color: '#5B5FE3', delay: 2.1 },
-    { x: '48%', y: '18%', size: 4, color: '#3EAB6E', delay: 1.6 },
-    { x: '10%', y: '25%', size: 3, color: '#F59E0B', delay: 2.8 },
-    { x: '72%', y: '20%', size: 4, color: '#5B5FE3', delay: 0.9 },
-    { x: '90%', y: '16%', size: 3, color: '#3EAB6E', delay: 1.9 },
+    { x: '10%', y: '18%', size: 4, color: '#5B5FE3', delay: 0 },
+    { x: '55%', y: '12%', size: 3, color: '#3EAB6E', delay: 1.2 },
+    { x: '35%', y: '24%', size: 5, color: '#F59E0B', delay: 0.6 },
+    { x: '75%', y: '14%', size: 3, color: '#5B5FE3', delay: 2.1 },
+    { x: '42%', y: '20%', size: 4, color: '#3EAB6E', delay: 1.6 },
+    { x: '88%', y: '16%', size: 3, color: '#F59E0B', delay: 2.8 },
+    { x: '68%', y: '22%', size: 4, color: '#5B5FE3', delay: 0.9 },
+    { x: '22%', y: '15%', size: 3, color: '#3EAB6E', delay: 1.9 },
   ]
 
   return (
-    <div className="relative w-full max-w-[960px] mx-auto select-none">
+    <div className="relative w-full select-none">
       <div
         className="relative mx-auto"
         style={{
           perspective: '800px',
-          height: 360
+          height: 380
         }}
       >
-        <div className="absolute inset-x-0 flex justify-center" style={{ top: 8 }}>
-          <div className="relative" style={{ width: totalW + 40, height: boardH + 100 }}>
-            <PlatformBase width={totalW} height={boardH} color="#5B5FE3" />
+        <div className="absolute inset-x-0 flex justify-center" style={{ top: 16 }}>
+          <div className="relative" style={{ width: totalW + 40, height: 220 }}>
+            <PlatformBase width={totalW} height={200} color="#5B5FE3" />
           </div>
         </div>
 
@@ -293,140 +303,140 @@ const WorkflowBoard = () => {
           style={{
             transform: 'rotateX(55deg) rotateZ(-5deg)',
             transformStyle: 'preserve-3d',
-            top: 36,
-            height: boardH
+            top: 44,
+            height: 200,
+            pointerEvents: 'none'
           }}
         >
-          <div className="absolute width-full flex" style={{ left: startX, top: 14, gap }}>
-            {WORKFLOW_NODES.map((node, idx) => {
-              const isActive = idx === activeIdx
-              const isDone = idx < activeIdx
-              const color = isActive ? STAGE[stage]?.color : isDone ? '#16A34A' : '#D1D5DB'
+          <div
+            ref={trackRef}
+            className="absolute width-full flex overflow-hidden"
+            style={{ left: 0, top: 18, gap, maxWidth: totalW + 60, paddingLeft: 30, paddingRight: 30 }}
+          >
+            <div className="flex" style={{ gap, width: totalW + 60, flexShrink: 0 }}>
+              {WORKFLOW_NODES.map((node, idx) => {
+                const isActive = idx === activeIdx
+                const isDone = idx < activeIdx
+                const color = isActive ? STAGE[stage]?.color : isDone ? '#16A34A' : '#D1D5DB'
 
-              return (
-                <div key={node.id} style={{ width: nodeW }} className="relative flex justify-center">
-                  <div
-                    className="transition-all duration-500 flex flex-col items-center"
-                    style={{
-                      opacity: isDone ? 0.5 : 1
-                    }}
-                  >
-                    {isActive ? (
-                      <div
-                        className="rounded-2xl bg-white border-2 p-3 flex flex-col items-center gap-2 shadow-2xl"
-                        style={{
-                          width: 98,
-                          borderColor: color,
-                          boxShadow: `0 16px 48px ${color}25, 0 8px 16px rgba(0,0,0,0.06)`,
-                          transform: 'translateZ(30px) translateY(-8px)'
-                        }}
-                      >
-                        <div className="flex items-center gap-2 w-full">
-                          <AgentAvatar color={color} size={26} />
-                          <div className="flex flex-col flex-1">
-                            <span className="text-[9px] font-extrabold uppercase tracking-[0.1em]" style={{ color }}>
-                              {STAGE[stage]?.label}
-                            </span>
-                            <span className="text-[11px] font-black text-[#111827] leading-tight">{node.label}</span>
-                          </div>
-                        </div>
-
-                        <div className="w-full rounded-lg px-2 py-1.5 flex items-center gap-2" style={{ backgroundColor: color + '10' }}>
-                          <span className="text-[9px] font-semibold" style={{ color }}>
-                            {stage === 'plan' ? 'Agent analyzing requirements...' :
-                             stage === 'build' ? 'Agent executing tasks...' :
-                             'Ready for human review'}
-                          </span>
-                        </div>
-
-                        {stage === 'confirm' ? (
-                          <div onClick={handleConfirm}>
-                            <ConfirmPulse color={color} />
-                          </div>
-                        ) : (
+                return (
+                  <div key={node.id} style={{ width: nodeW }} className="relative flex justify-center">
+                    <div
+                      className="transition-all duration-700 flex flex-col items-center"
+                      style={{
+                        opacity: isDone ? 0.5 : 1,
+                        filter: !isActive ? 'grayscale(0.4)' : 'none'
+                      }}
+                    >
+                      {isActive ? (
+                        <div
+                          className="rounded-2xl bg-white border-2 p-3 flex flex-col items-center gap-2 shadow-2xl"
+                          style={{
+                            width: 98,
+                            borderColor: color,
+                            boxShadow: `0 16px 48px ${color}25, 0 8px 16px rgba(0,0,0,0.06)`,
+                            transform: 'translateZ(30px) translateY(-8px)'
+                          }}
+                        >
                           <div className="flex items-center gap-2 w-full">
-                            <div className="flex-1 h-1 rounded-full bg-gray-100 overflow-hidden">
-                              <div
-                                className="h-full rounded-full transition-all duration-1000"
-                                style={{ backgroundColor: color, width: stage === 'plan' ? '45%' : '85%' }}
-                              />
+                            <AgentAvatar color={color} size={26} />
+                            <div className="flex flex-col flex-1">
+                              <span className="text-[9px] font-extrabold uppercase tracking-[0.1em]" style={{ color }}>
+                                {STAGE[stage]?.label}
+                              </span>
+                              <span className="text-[11px] font-black text-[#111827] leading-tight">{node.label}</span>
                             </div>
-                            <span className="text-[8px] font-semibold text-gray-400">
-                              {stage === 'plan' ? '...' : '→'}
+                          </div>
+
+                          <div className="w-full rounded-lg px-2 py-1.5 flex items-center gap-2" style={{ backgroundColor: color + '10' }}>
+                            <span className="text-[9px] font-semibold" style={{ color }}>
+                              {stage === 'plan' ? 'Agent analyzing...' :
+                               stage === 'build' ? 'Agent executing...' :
+                               'Ready for review'}
                             </span>
                           </div>
-                        )}
-                      </div>
-                    ) : isDone ? (
+
+                          {stage !== 'confirm' && (
+                            <div className="flex items-center gap-2 w-full">
+                              <div className="flex-1 h-1 rounded-full bg-gray-100 overflow-hidden">
+                                <div
+                                  className="h-full rounded-full transition-all duration-1000"
+                                  style={{ backgroundColor: color, width: stage === 'plan' ? '45%' : '85%' }}
+                                />
+                              </div>
+                              <span className="text-[8px] font-semibold text-gray-400">
+                                {stage === 'plan' ? '...' : '→'}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      ) : isDone ? (
+                        <div
+                          className="rounded-xl border px-2.5 py-2 flex items-center gap-1.5"
+                          style={{ borderColor: '#BBF7D0', backgroundColor: '#F0FDF4', transform: 'translateZ(5px)' }}
+                        >
+                          <CheckCircle2 size={12} className="text-[#16A34A]" />
+                          <span className="text-[9px] font-bold text-[#16A34A]">{node.label}</span>
+                        </div>
+                      ) : (
+                        <div
+                          className="rounded-xl border px-2.5 py-2 flex items-center justify-center"
+                          style={{ borderColor: '#E5E7EB', backgroundColor: '#F3F4F6', opacity: 0.35, transform: 'translateZ(2px)' }}
+                        >
+                          <span className="text-[9px] font-medium text-[#9CA3AF]">{node.label}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {isActive && !isDone && (
                       <div
-                        className="rounded-xl border px-2.5 py-2 flex items-center gap-1.5"
-                        style={{ borderColor: '#BBF7D0', backgroundColor: '#F0FDF4', transform: 'translateZ(5px)' }}
+                        className="absolute -bottom-16 left-1/2 -translate-x-1/2"
+                        style={{ transform: 'translateZ(40px)', pointerEvents: 'none' }}
                       >
-                        <CheckCircle2 size={12} className="text-[#16A34A]" />
-                        <span className="text-[9px] font-bold text-[#16A34A]">{node.label}</span>
-                      </div>
-                    ) : (
-                      <div
-                        className="rounded-xl border px-2.5 py-2 flex items-center justify-center"
-                        style={{ borderColor: '#E5E7EB', backgroundColor: '#F3F4F6', opacity: 0.35, transform: 'translateZ(2px)' }}
-                      >
-                        <span className="text-[9px] font-medium text-[#9CA3AF]">{node.label}</span>
+                        <span
+                          className="inline-block text-[8px] font-bold px-2 py-1 rounded-full whitespace-nowrap"
+                          style={{ backgroundColor: color + '12', color }}
+                        >
+                          {stage === 'confirm' ? '↓ Confirm below ↓' : stage === 'plan' ? 'Agent working...' : 'Almost done...'}
+                        </span>
                       </div>
                     )}
                   </div>
-
-                  {isActive && (
-                    <div
-                      className="absolute -bottom-16 left-1/2 -translate-x-1/2"
-                      style={{ transform: 'translateZ(40px)' }}
-                    >
-                      <span
-                        className="inline-block text-[8px] font-bold px-2 py-1 rounded-full whitespace-nowrap"
-                        style={{ backgroundColor: color + '12', color }}
-                      >
-                        {stage === 'confirm' ? 'Click to approve →' : stage === 'plan' ? 'Agent is working...' : 'Almost done...'}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         </div>
 
-        <div
-          className="absolute"
+        <svg
+          className="absolute pointer-events-none"
           style={{
-            left: startX + 8,
+            left: 36,
             bottom: 60,
-            width: totalW - 16,
-            overflow: 'hidden'
+            width: totalW,
+            height: 40,
           }}
         >
-          <svg width={totalW - 16} height={40} className="pointer-events-none">
-            {WORKFLOW_NODES.map((_, idx) => {
-              if (idx >= WORKFLOW_NODES.length - 1) return null
-              const x1 = idx * (nodeW + gap) + nodeW / 2
-              const x2 = (idx + 1) * (nodeW + gap) + nodeW / 2
-              const isPast = idx < activeIdx
-
-              return (
-                <g key={idx}>
-                  <line x1={x1} y1={12} x2={x2} y2={12} stroke={isPast ? '#16A34A' : '#E5E7EB'} strokeWidth={2} />
-                  {isPast && (
-                    <circle cx={x2} cy={12} r={2} fill="#16A34A" />
-                  )}
-                  {!isPast && idx === activeIdx - 1 && (
-                    <text x={(x1 + x2) / 2} y={10} textAnchor="middle" fontSize="8" fill="#F59E0B" fontWeight="bold">
-                      ↑ confirm ↑
-                    </text>
-                  )}
-                </g>
-              )
-            })}
-          </svg>
-        </div>
+          {WORKFLOW_NODES.map((_, idx) => {
+            if (idx >= WORKFLOW_NODES.length - 1) return null
+            const x1 = idx * (nodeW + gap) + nodeW / 2
+            const x2 = (idx + 1) * (nodeW + gap) + nodeW / 2
+            const isPast = idx < activeIdx
+            return (
+              <g key={idx}>
+                <line x1={x1} y1={8} x2={x2} y2={8} stroke={isPast ? '#16A34A' : '#E5E7EB'} strokeWidth={2} />
+                {isPast && <circle cx={x2} cy={8} r={2} fill="#16A34A" />}
+              </g>
+            )
+          })}
+        </svg>
       </div>
+
+      {stage === 'confirm' && (
+        <div className="flex justify-center mt-2" style={{ marginLeft: activeIdx * (nodeW + gap) + nodeW / 2 - 40 }}>
+          <ConfirmButton color={STAGE.confirm.color} onClick={handleConfirm} />
+        </div>
+      )}
     </div>
   )
 }
@@ -451,6 +461,10 @@ const MeegleHomepage = () => {
   return (
     <div className="bg-white text-[#1F2329] font-sans overflow-x-hidden">
       <style>{`
+        @keyframes confirmPulse {
+          0%, 100% { box-shadow: 0 0 28px ${STAGE.confirm.color}60, 0 4px 12px rgba(0,0,0,0.1); }
+          50% { box-shadow: 0 0 48px ${STAGE.confirm.color}90, 0 4px 20px rgba(0,0,0,0.15); }
+        }
         @keyframes dotFloat {
           0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
           20% { opacity: 0.6; }
@@ -554,49 +568,50 @@ const MeegleHomepage = () => {
       </nav>
 
       {/* HERO */}
-      <section ref={heroRef} className="relative pt-32 pb-20 bg-gradient-to-b from-[#FAFBFF] via-white to-white overflow-hidden">
-        <div className="absolute top-0 right-[-10%] w-[600px] h-[600px] rounded-full bg-[#5B5FE3]/[0.015] blur-[100px]" />
-        <div className="absolute bottom-[20%] left-[-5%] w-[400px] h-[400px] rounded-full bg-[#F59E0B]/[0.008] blur-[80px]" />
+      <section ref={heroRef} className="relative pt-32 md:pt-40 pb-20 bg-gradient-to-b from-[#FAFBFF] via-white to-white overflow-hidden">
+        <div className="absolute top-0 right-[-5%] w-[600px] h-[600px] rounded-full bg-[#5B5FE3]/[0.015] blur-[100px]" />
+        <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-[#F59E0B]/[0.008] blur-[80px]" />
 
         <div className="relative w-full max-w-[1340px] mx-auto px-6">
-          <div className="animate-fade-slide-up">
-            <WorkflowBoard />
-          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-16 items-center">
+            <div className="animate-fade-slide-up order-2 lg:order-1">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#5B5FE3]/15 bg-white/80 backdrop-blur px-4 py-2 text-[12px] font-semibold text-[#5B5FE3] shadow-sm mb-6">
+                <Sparkles size={14} />
+                Introducing Multi-Agent Orchestration
+              </div>
 
-          <div className="flex flex-col items-center text-center max-w-[800px] mx-auto mt-[-40px]">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#5B5FE3]/15 bg-white/80 backdrop-blur px-4 py-2 text-[12px] font-semibold text-[#5B5FE3] shadow-sm mb-6 animate-fade-slide-up" style={{ animationDelay: '0.1s' }}>
-              <Sparkles size={14} />
-              Introducing Multi-Agent Orchestration
-            </div>
-
-            <h1 className="text-[54px] md:text-[80px] leading-[0.92] font-black tracking-[-0.05em] text-[#0A0A14] animate-fade-slide-up" style={{ animationDelay: '0.15s' }}>
-              Plan. Build. Ship.
-              <br />
-              <span className="bg-gradient-to-r from-[#5B5FE3] via-[#787BEE] to-[#A78BFA] bg-clip-text text-transparent gradient-shift">
-                Together with Agents.
-              </span>
-            </h1>
-
-            <p className="mt-6 max-w-[480px] text-[17px] leading-7 text-[#5B6272] animate-fade-slide-up" style={{ animationDelay: '0.25s' }}>
-              Meegle unites your teams and AI agents on one platform.
-              Transform every project into reusable organizational wisdom.
-            </p>
-
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 animate-fade-slide-up" style={{ animationDelay: '0.35s' }}>
-              <button className="group rounded-2xl bg-[#0A0A14] px-8 py-4 text-[16px] font-bold text-white hover:bg-[#1A1A2E] transition-all shadow-[0_8px_30px_rgba(10,10,20,.2)]">
-                Get Started Free
-                <ArrowRight size={16} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="group flex items-center gap-2.5 rounded-2xl border border-[#E2E4E9] bg-white px-6 py-4 text-[16px] font-semibold text-[#111827] hover:bg-[#F9FAFB] transition-all">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4F6FF] text-[#5B5FE3] group-hover:scale-110 transition-transform">
-                  <Play size={14} fill="#5B5FE3" />
+              <h1 className="text-[44px] md:text-[60px] leading-[0.96] font-black tracking-[-0.05em] text-[#0A0A14]">
+                Plan. Build. Ship.
+                <br />
+                <span className="bg-gradient-to-r from-[#5B5FE3] via-[#787BEE] to-[#A78BFA] bg-clip-text text-transparent gradient-shift">
+                  Together with Agents.
                 </span>
-                Watch Demo 2 min
-              </button>
+              </h1>
+
+              <p className="mt-6 max-w-[420px] text-[16px] leading-7 text-[#5B6272]">
+                Meegle unites your teams and AI agents on one platform. Transform every project into reusable organizational wisdom.
+              </p>
+
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <button className="group rounded-2xl bg-[#0A0A14] px-8 py-4 text-[15px] font-bold text-white hover:bg-[#1A1A2E] transition-all shadow-[0_8px_30px_rgba(10,10,20,.2)]">
+                  Get Started Free
+                  <ArrowRight size={15} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button className="group flex items-center gap-2.5 rounded-2xl border border-[#E2E4E9] bg-white px-6 py-4 text-[15px] font-semibold text-[#111827] hover:bg-[#F9FAFB] transition-all">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4F6FF] text-[#5B5FE3] group-hover:scale-110 transition-transform">
+                    <Play size={13} fill="#5B5FE3" />
+                  </span>
+                  Watch Demo
+                </button>
+              </div>
+            </div>
+
+            <div className="animate-scale-in order-1 lg:order-2" style={{ animationDelay: '0.2s' }}>
+              <WorkflowBoard />
             </div>
           </div>
 
-          <div className="mt-20 text-center animate-fade-slide-up" style={{ animationDelay: '0.5s' }}>
+          <div className="mt-16 text-center animate-fade-slide-up" style={{ animationDelay: '0.5s' }}>
             <div className="text-[11px] uppercase tracking-[0.24em] text-[#8F959E] mb-6">Trusted by leading teams worldwide</div>
             <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-[0.22]">
               {LOGOS.map(logo => (
