@@ -293,179 +293,155 @@ const AnimatedCounter = ({ target, suffix, decimals }) => {
   )
 }
 
+
 const WORKFLOW_PLATFORMS = [
-  { id: 0, label: 'Intake', color: '#5B5FE3', x: 3, y: 50 },
-  { id: 1, label: 'Scope', color: '#3EAB6E', x: 21, y: 42 },
-  { id: 2, label: 'Design', color: '#F59E0B', x: 39, y: 56 },
-  { id: 3, label: 'Review', color: '#8B5CF6', x: 57, y: 40 },
-  { id: 4, label: 'Develop', color: '#EC4899', x: 75, y: 54 },
+  { id: 'intake', label: 'Intake', color: '#5B5FE3', x: 5, y: 50, col: 0 },
+  { id: 'scout', label: 'Scout', color: '#3EAB6E', x: 30, y: 22, col: 1, row: 'top' },
+  { id: 'scope', label: 'Scope', color: '#F59E0B', x: 30, y: 50, col: 1, row: 'mid' },
+  { id: 'spec',  label: 'Spec',  color: '#8B5CF6', x: 30, y: 78, col: 1, row: 'bot' },
+  { id: 'build', label: 'Build', color: '#EC4899', x: 58, y: 50, col: 2 },
+  { id: 'ship',  label: 'Ship',  color: '#06B6D4', x: 82, y: 50, col: 3 },
 ]
 
 const AGENT_BENCH = [
   { id: 'qa', label: 'QA Agent', color: '#5B5FE3' },
   { id: 'code', label: 'Code Agent', color: '#3EAB6E' },
   { id: 'design', label: 'Design Agent', color: '#F59E0B' },
-  { id: 'deploy', label: 'Deploy Agent', color: '#EC4899' },
   { id: 'review', label: 'Review Agent', color: '#8B5CF6' },
+  { id: 'deploy', label: 'Deploy Agent', color: '#EC4899' },
   { id: 'data', label: 'Data Agent', color: '#06B6D4' },
   { id: 'sec', label: 'Security Agent', color: '#EF4444' },
 ]
 
+const PLAT_W = 152
+const PLAT_H = 72
+const PLAT_D = 12
+const SCENE_W = 760
+const SCENE_H = 440
 
-const IsometricPlatform = ({ node, state, agentColor, style, onBuilt }) => {
+const IsometricPlatform = ({ node, state, agentColor, style }) => {
   const c = node.color
-  const w = 120
-  const h = 88
-  const d = 14
-
+  const w = PLAT_W; const h = PLAT_H; const d = PLAT_D
   const isHidden = state === 'hidden'
   const isBuilding = state === 'building'
   const isBuilt = state === 'built'
   const isPopulated = state === 'populated'
-
-  useEffect(() => {
-    if (isBuilding && onBuilt) {
-      const t = setTimeout(onBuilt, 500)
-      return () => clearTimeout(t)
-    }
-  }, [isBuilding, onBuilt])
+  const showChars = isPopulated
 
   const alpha = isHidden ? 0 : 1
-  const scale = isPopulated ? 1.05 : isBuilt ? 1 : isBuilding ? 0.85 : 0
-  const glow = isPopulated ? `0 0 40px ${c}40, 0 8px 30px ${c}20` : 'none'
-  const charAlpha = isPopulated ? 1 : 0
-  const charX = isPopulated ? 0 : -10
+  const scale = isPopulated ? 1.04 : isBuilding ? 0.88 : 1
+  const transition = 'opacity 0.45s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)'
 
   return (
-    <div
-      className="absolute"
-      style={{
-        ...style,
-        opacity: alpha,
-        transform: `scale(${scale})`,
-        transition: 'opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1)'
-      }}
-    >
-      <div style={{ position: 'relative', width: w + d + 4, height: h + d + 4, filter: glow }}>
+    <div className="absolute" style={{ ...style, opacity: alpha, transform: `scale(${scale})`, transition }}>
+      <div style={{ position: 'relative', width: w + d + 4, height: h + d + 4 }}>
         <svg viewBox={`0 0 ${w + d + 4} ${h + d + 4}`} width={w + d + 4} height={h + d + 4} style={{ display: 'block' }}>
-          <path
-            d={`M${w} ${d} L${w + d} ${0} L${w + d} ${h} L${w} ${h + d} Z`}
-            fill={isPopulated ? c + '28' : isBuilt || isBuilding ? c + '15' : '#e8eaed'}
-            stroke={isPopulated ? c + '18' : '#e0e3e7'}
-            strokeWidth="0.5"
-          />
-          <path
-            d={`M${0} ${h} L${d} ${h + d} L${w + d} ${h + d} L${w} ${h} Z`}
-            fill={isPopulated ? c + '20' : isBuilt || isBuilding ? c + '10' : '#e8eaed'}
-            stroke={isPopulated ? c + '15' : '#e0e3e7'}
-            strokeWidth="0.5"
-          />
-          <rect
-            x="0" y="0" width={w} height={h}
-            rx="12"
-            fill={isPopulated ? c + '0F' : isBuilt || isBuilding ? c + '06' : '#f7f8fa'}
-            stroke={isPopulated ? c + '50' : isBuilt || isBuilding ? c + '30' : '#e0e3e7'}
-            strokeWidth={isPopulated ? 2 : 1.2}
-          />
+          {/* Right face */}
+          <path d={`M${w} ${d} L${w + d} ${0} L${w + d} ${h} L${w} ${h + d} Z`}
+            fill={isPopulated ? c + '22' : isBuilding ? c + '12' : '#eef0f3'}
+            stroke={isPopulated ? c + '15' : '#e2e5ea'} strokeWidth="0.5" />
+          {/* Front face */}
+          <path d={`M${0} ${h} L${d} ${h + d} L${w + d} ${h + d} L${w} ${h} Z`}
+            fill={isPopulated ? c + '16' : isBuilding ? c + '08' : '#eef0f3'}
+            stroke={isPopulated ? c + '12' : '#e2e5ea'} strokeWidth="0.5" />
+          {/* Top face */}
+          <rect x="0" y="0" width={w} height={h} rx="10"
+            fill={isPopulated ? c + '08' : isBuilding ? c + '04' : '#f9fafb'}
+            stroke={isPopulated ? c + '45' : isBuilding ? c + '30' : '#e2e5ea'}
+            strokeWidth={isPopulated ? 1.8 : 1} />
 
+          {/* Building grid */}
           {isBuilding && (
             <g>
-              <line x1="20" y1="0" x2="20" y2={h} stroke={c + '08'} strokeWidth="0.3" strokeDasharray="3 6" />
-              <line x1={w - 20} y1="0" x2={w - 20} y2={h} stroke={c + '08'} strokeWidth="0.3" strokeDasharray="3 6" />
-              <line x1="0" y1="20" x2={w} y2="20" stroke={c + '08'} strokeWidth="0.3" strokeDasharray="3 6" />
-              <line x1="0" y1={h - 20} x2={w} y2={h - 20} stroke={c + '08'} strokeWidth="0.3" strokeDasharray="3 6" />
+              <line x1="24" y1="0" x2="24" y2={h} stroke={c + '07'} strokeWidth="0.3" strokeDasharray="3 8" />
+              <line x1={w - 24} y1="0" x2={w - 24} y2={h} stroke={c + '07'} strokeWidth="0.3" strokeDasharray="3 8" />
+              <line x1="0" y1="16" x2={w} y2="16" stroke={c + '07'} strokeWidth="0.3" strokeDasharray="3 8" />
+              <line x1="0" y1={h - 16} x2={w} y2={h - 16} stroke={c + '07'} strokeWidth="0.3" strokeDasharray="3 8" />
+              <circle cx={w * 0.72} cy={h * 0.35} r="2.5" fill={c} opacity="0.35">
+                <animate attributeName="opacity" values="0.35;0.08;0.35" dur="0.7s" repeatCount="indefinite" />
+                <animate attributeName="r" values="2.5;4;2.5" dur="0.7s" repeatCount="indefinite" />
+              </circle>
             </g>
           )}
 
-          <text x={w / 2} y={h / 2 + 4} textAnchor="middle" dominantBaseline="central"
-            fontWeight="700" fontSize="11"
-            fill={isPopulated ? c : isBuilt ? c + '80' : isBuilding ? c + '50' : '#c0c5ce'}
-            fontFamily="system-ui, -apple-system, sans-serif"
-            letterSpacing="0.02em"
-          >
+          {/* Label */}
+          <text x={w / 2} y={h / 2 + 3} textAnchor="middle" dominantBaseline="central"
+            fontWeight="700" fontSize="12"
+            fill={isPopulated ? c : isBuilt ? c + '80' : isBuilding ? c + '40' : '#c8cdd4'}
+            fontFamily="system-ui, -apple-system, sans-serif" letterSpacing="0.02em">
             {node.label}
           </text>
 
-          <g transform={`translate(${w / 2 - 30 + charX}, ${h / 2 - 22})`} opacity={charAlpha}
-            style={{ transition: 'opacity 0.6s ease-out 0.3s' }}>
-            <circle cx="0" cy="0" r="7" fill={agentColor || c} opacity="0.85" />
-            <rect x="-2.5" y="2.5" width="2" height="3.5" rx="1" fill={agentColor || c} opacity="0.5" />
-            <rect x="1" y="2.5" width="2" height="3.5" rx="1" fill={agentColor || c} opacity="0.5" />
-            <rect x="-5" y="5" width="10" height="7" rx="3.5" fill={agentColor || c} opacity="0.65" />
-            <circle cx="-2" cy="-1" r="1" fill="white" />
-            <circle cx="2" cy="-1" r="1" fill="white" />
-            <circle cx="-2" cy="-1" r="0.5" fill="#111" />
-            <circle cx="2" cy="-1" r="0.5" fill="#111" />
-          </g>
+          {/* Agent — slides in from right when populated */}
+          {showChars && (
+            <g transform={`translate(${w / 2 - 34}, ${h / 2 - 18})`} opacity="1"
+              className="char-fly-in char-fly-in-a">
+              <circle cx="0" cy="0" r="6.5" fill={agentColor || c} opacity="0.85" />
+              <rect x="-2.2" y="2.2" width="1.8" height="3" rx="0.9" fill={agentColor || c} opacity="0.5" />
+              <rect x="0.8" y="2.2" width="1.8" height="3" rx="0.9" fill={agentColor || c} opacity="0.5" />
+              <rect x="-4.5" y="4.5" width="9" height="6" rx="3" fill={agentColor || c} opacity="0.65" />
+              <circle cx="-1.8" cy="-0.8" r="0.9" fill="white" />
+              <circle cx="1.8" cy="-0.8" r="0.9" fill="white" />
+              <circle cx="-1.8" cy="-0.8" r="0.45" fill="#111" />
+              <circle cx="1.8" cy="-0.8" r="0.45" fill="#111" />
+            </g>
+          )}
 
-          <g transform={`translate(${w / 2 + 16 + charX}, ${h / 2 - 20})`} opacity={charAlpha}
-            style={{ transition: 'opacity 0.6s ease-out 0.45s' }}>
-            <circle cx="0" cy="-4" r="4.5" fill={isPopulated ? '#374151' : '#9ca3af'} />
-            <path d="M-5 5c0-2.8 2.2-5 5-5s5 2.2 5 5" fill={isPopulated ? '#374151' : '#9ca3af'} opacity="0.7" />
-          </g>
-
-          {isBuilding && (
-            <g>
-              <circle cx={w * 0.65} cy={h * 0.35} r="2" fill={c} opacity="0.4">
-                <animate attributeName="opacity" values="0.4;0.1;0.4" dur="0.6s" repeatCount="indefinite" />
-                <animate attributeName="r" values="2;3;2" dur="0.6s" repeatCount="indefinite" />
-              </circle>
+          {/* Human — slides in from bottom-right when populated */}
+          {showChars && (
+            <g transform={`translate(${w / 2 + 18}, ${h / 2 - 18})`} opacity="1"
+              className="char-fly-in char-fly-in-h">
+              <circle cx="0" cy="-4" r="4" fill="#374151" />
+              <path d="M-4.5 4.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5"
+                fill="#374151" opacity="0.7" />
             </g>
           )}
         </svg>
 
+        {/* Glow ring */}
         {isPopulated && (
-          <div
-            className="absolute rounded-xl animate-pulse"
-            style={{
-              inset: -4,
-              border: `2px solid ${c}30`,
-              borderRadius: 16,
-              pointerEvents: 'none',
-              animation: 'scaleIn 1.5s ease-in-out infinite'
-            }}
-          />
+          <div className="absolute rounded-xl" style={{
+            inset: -5, border: `2px solid ${c}25`, borderRadius: 14,
+            pointerEvents: 'none', animation: 'scaleIn 1.5s ease-in-out infinite'
+          }} />
         )}
       </div>
     </div>
   )
 }
 
-const ConnectorBridge = ({ from, to, color, active = false, building = false }) => {
-  const fx = from.left + from.width / 2
-  const fy = from.top + from.height / 2
-  const tx = to.left + to.width / 2
-  const ty = to.top + to.height / 2
+const ConnectorBridge = ({ from, to, color, active, building, hidden }) => {
+  if (hidden) return null
+  const fx = from.x; const fy = from.y
+  const tx = to.x; const ty = to.y
   const midX = (fx + tx) / 2
-  const midY = Math.min(fy, ty) - 30
+  const midY = Math.min(fy, ty) - 24
+  const svgId = `bg-${from.id}-${to.id}`
 
   return (
-    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+    <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" style={{ zIndex: 0 }}>
       {active && (
         <defs>
-          <linearGradient id={`bga-${from.id}-${to.id}`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor={color} stopOpacity="0.6" />
-            <stop offset="100%" stopColor={to.color} stopOpacity="0.6" />
+          <linearGradient id={svgId} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor={color} stopOpacity="0.55" />
+            <stop offset="100%" stopColor={to.color} stopOpacity="0.55" />
           </linearGradient>
         </defs>
       )}
       <path
         d={`M${fx} ${fy} Q${midX} ${midY} ${tx} ${ty}`}
         fill="none"
-        stroke={active ? `url(#bga-${from.id}-${to.id})` : color + '40'}
-        strokeWidth={active ? 2.5 : 1.5}
-        strokeDasharray={building ? '6 3' : active ? 'none' : '4 4'}
-        opacity={building ? 0.6 : active ? 1 : 0.5}
+        stroke={active ? `url(#${svgId})` : color + '30'}
+        strokeWidth={active ? 2.2 : 1.4}
+        strokeDasharray={building ? '6 3' : 'none'}
+        opacity={building ? 0.7 : active ? 1 : 0.45}
+        strokeLinecap="round"
       >
-        {building && (
-          <animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.6s" repeatCount="indefinite" />
-        )}
+        {building && <animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.5s" repeatCount="indefinite" />}
       </path>
       <polygon
-        points={`${tx - 6},${ty - 4} ${tx},${ty} ${tx - 6},${ty + 4}`}
-        fill={active ? to.color : color + '50'}
-        opacity={active ? 0.8 : 0.4}
-      />
+        points={`${tx - 5},${ty - 3.5} ${tx},${ty} ${tx - 5},${ty + 3.5}`}
+        fill={active ? to.color : color + '45'} opacity={active ? 0.7 : 0.35} />
     </svg>
   )
 }
@@ -475,6 +451,7 @@ const WorkflowBoard = () => {
   const [step, setStep] = useState(0)
   const phaseRef = useRef('building')
   const stepRef = useRef(0)
+  const [charTrigger, setCharTrigger] = useState(0)
 
   const totalPlatforms = WORKFLOW_PLATFORMS.length
 
@@ -482,103 +459,128 @@ const WorkflowBoard = () => {
     if (phaseRef.current === 'building') {
       if (stepRef.current >= totalPlatforms - 1) {
         phaseRef.current = 'populating'
-        stepRef.current = 0
-        setBuildPhase('populating')
-        setStep(0)
+        stepRef.current = 0; setBuildPhase('populating'); setStep(0)
+        setCharTrigger(c => c + 1)
       } else {
-        stepRef.current += 1
-        setStep(s => s + 1)
+        stepRef.current += 1; setStep(s => s + 1)
       }
     } else {
       if (stepRef.current >= totalPlatforms) return
-      stepRef.current += 1
-      setStep(s => s + 1)
+      stepRef.current += 1; setStep(s => s + 1)
+      setCharTrigger(c => c + 1)
     }
   }, [totalPlatforms])
 
   useEffect(() => {
     if (buildPhase === 'populating' && step >= totalPlatforms) {
       const t = setTimeout(() => {
-        phaseRef.current = 'building'
-        stepRef.current = 0
-        setBuildPhase('building')
-        setStep(0)
-      }, 2500)
+        phaseRef.current = 'building'; stepRef.current = 0
+        setBuildPhase('building'); setStep(0)
+      }, 2800)
       return () => clearTimeout(t)
     }
   }, [buildPhase, step, totalPlatforms])
 
   useEffect(() => {
-    const dur = buildPhase === 'building' ? 650 : 750
+    const dur = buildPhase === 'building' ? 580 : 800
     if (buildPhase === 'populating' && step >= totalPlatforms) return
     const t = setTimeout(advance, dur)
     return () => clearTimeout(t)
-  }, [step, buildPhase, advance, totalPlatforms])
+  }, [step, buildPhase, advance, totalPlatforms, charTrigger])
 
-  const platW = 134
-  const platH = 106
-  const sceneW = 700
-  const sceneH = 380
-
-  const positions = WORKFLOW_PLATFORMS.map((p) => ({
+  const positions = WORKFLOW_PLATFORMS.map(p => ({
     id: p.id,
-    left: (p.x / 100) * sceneW,
-    top: (p.y / 100) * (sceneH - 60) + 20,
-    width: platW,
-    height: platH,
-    color: p.color
+    color: p.color,
+    cx: ((p.x / 100) * SCENE_W) + PLAT_W / 2,  // platform center X
+    cy: ((p.y / 100) * SCENE_H) + PLAT_H / 2,    // platform center Y
+    left: (p.x / 100) * SCENE_W,
+    top: (p.y / 100) * SCENE_H,
   }))
 
-  const getState = (i) => {
-    if (buildPhase === 'building') {
-      if (i < step) return 'built'
-      if (i === step) return 'building'
-      return 'hidden'
-    }
-    if (i < step) return 'populated'
-    if (i === step) return 'built'
-    return 'built'
-  }
+  // Connectors: Intake→branch3, branch3→Build, Build→Ship
+  const buildOrder = WORKFLOW_PLATFORMS.map(p => p.id)
+  const builtSoFar = buildPhase === 'building' ? step + 1 : totalPlatforms
+
+  const bridges = []
+  const branchIds = ['scout', 'scope', 'spec']
+
+  // Intake → each branch
+  branchIds.forEach(bid => {
+    bridges.push({ from: 'intake', to: bid, group: 'spread' })
+  })
+  // each branch → Build
+  branchIds.forEach(bid => {
+    bridges.push({ from: bid, to: 'build', group: 'gather' })
+  })
+  // Build → Ship
+  bridges.push({ from: 'build', to: 'ship', group: 'forward' })
+
+  const isBuilt = id => buildOrder.indexOf(id) < builtSoFar
+  const bridgeVisible = (from, to) => isBuilt(from) && isBuilt(to)
 
   return (
-    <div className="relative w-full select-none" style={{ height: sceneH }}>
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.05 }}>
+    <div className="relative w-full select-none" style={{ height: SCENE_H + 40 }}>
+      {/* Background grid */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.04 }}>
         <defs>
-          <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
-            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#5B5FE3" strokeWidth="0.3" />
+          <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#5B5FE3" strokeWidth="0.3" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#grid)" />
       </svg>
 
-      {positions.map((pos, i) => {
-        if (i >= positions.length - 1) return null
-        const next = positions[i + 1]
-        const builtSoFar = buildPhase === 'building' ? step + 1 : totalPlatforms
-        if (i + 1 >= builtSoFar) return null
-        const idxInPopulate = buildPhase === 'populating' ? step : -1
-        const isActiveBridge = buildPhase === 'populating' && i + 1 === idxInPopulate
-        const isBuildingBridge = buildPhase === 'building' && i + 1 === step + 1
-        const color = WORKFLOW_PLATFORMS[i + 1].color
+      {/* Connectors */}
+      {bridges.map(({ from, to, group }) => {
+        const fp = positions.find(p => p.id === from)
+        const tp = positions.find(p => p.id === to)
+        if (!fp || !tp) return null
+        if (!bridgeVisible(from, to)) return null
+        const toIdx = buildOrder.indexOf(to)
+        const popStep = buildPhase === 'populating' ? step : -1
+        const color = WORKFLOW_PLATFORMS.find(p => p.id === to).color
+        const isActive = buildPhase === 'populating' && toIdx === popStep
+        const isBuilding = buildPhase === 'building' && toIdx === step + 1
         return (
           <ConnectorBridge
-            key={`bridge-${i}`}
-            from={{ id: i, left: pos.left + 10, top: pos.top + 10, width: pos.width - 20, height: pos.height - 20, color: pos.color }}
-            to={{ id: i + 1, left: next.left + 10, top: next.top + 10, width: next.width - 20, height: next.height - 20, color: next.color }}
+            key={`br-${from}-${to}`}
+            from={{ id: from, x: fp.cx, y: fp.cy, color: fp.color }}
+            to={{ id: to, x: tp.cx, y: tp.cy, color: tp.color }}
             color={color}
-            active={isActiveBridge}
-            building={isBuildingBridge}
+            active={isActive && (group === 'spread' || group === 'forward' || group === 'gather')}
+            building={isBuilding}
+            hidden={false}
           />
         )
       })}
 
-      {positions.map((pos, i) => {
-        const state = getState(i)
-        const agent = AGENT_BENCH[i % AGENT_BENCH.length]
+      {/* Platforms */}
+      {WORKFLOW_PLATFORMS.map((plat, i) => {
+        const id = plat.id
+        const isBuiltPlat = isBuilt(id)
+        const idx = buildOrder.indexOf(id)
+        const popStep = buildPhase === 'populating' ? step : -1
+
+        let state = 'hidden'
+        if (buildPhase === 'building') {
+          if (idx < step) state = 'built'
+          else if (idx === step) state = 'building'
+          else state = 'hidden'
+        } else {
+          if (idx < popStep) state = 'populated'
+          else if (idx === popStep) state = 'building' // about to be populated
+          else state = 'built'
+        }
+
+        // Extra: in populating phase, the current target shows chars flying in
+        // The chars appear only when state === 'populated', meaning step has advanced past it
+        const agent = AGENT_BENCH[idx % AGENT_BENCH.length]
+        const pos = positions.find(p => p.id === id)
+
         return (
           <IsometricPlatform
-            key={pos.id}
-            node={{ id: WORKFLOW_PLATFORMS[i].id, label: WORKFLOW_PLATFORMS[i].label, color: WORKFLOW_PLATFORMS[i].color }}
+            key={id}
+            node={{ id, label: plat.label, color: plat.color }}
             state={state}
             agentColor={agent.color}
             style={{ left: pos.left, top: pos.top }}
@@ -586,29 +588,23 @@ const WorkflowBoard = () => {
         )
       })}
 
+      {/* Status text */}
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
         {buildPhase === 'building' && (
-          <span
-            className="text-[11px] font-semibold"
-            style={{ color: WORKFLOW_PLATFORMS[Math.min(step, totalPlatforms - 1)].color, animation: 'fadeSlideUp 0.5s ease-out' }}
-          >
-            Building the workflow pipeline... Step {step + 1}/{totalPlatforms}
+          <span className="text-[11px] font-semibold"
+            style={{ color: WORKFLOW_PLATFORMS[Math.min(step, totalPlatforms - 1)].color, animation: 'fadeSlideUp 0.5s ease-out' }}>
+            Constructing pipeline... {step + 1}/{totalPlatforms}
           </span>
         )}
         {buildPhase === 'populating' && step < totalPlatforms && (
-          <span
-            className="text-[11px] font-semibold"
-            style={{ color: AGENT_BENCH[step % AGENT_BENCH.length].color, animation: 'fadeSlideUp 0.5s ease-out' }}
-          >
-            Placing {AGENT_BENCH[step % AGENT_BENCH.length].label} + Human into {WORKFLOW_PLATFORMS[step].label}
+          <span className="text-[11px] font-semibold"
+            style={{ color: AGENT_BENCH[step % AGENT_BENCH.length].color, animation: 'fadeSlideUp 0.5s ease-out' }}>
+            Assigning {AGENT_BENCH[step % AGENT_BENCH.length].label} + Human → {WORKFLOW_PLATFORMS[step].label}
           </span>
         )}
         {buildPhase === 'populating' && step >= totalPlatforms && (
-          <span
-            className="text-[11px] font-semibold text-[#3EAB6E]"
-            style={{ animation: 'fadeSlideUp 0.5s ease-out' }}
-          >
-            Workflow pipeline active — Architect. Ship. Scale with Agents.
+          <span className="text-[11px] font-semibold text-[#3EAB6E]" style={{ animation: 'fadeSlideUp 0.5s ease-out' }}>
+            Pipeline fully staffed. Architect. Ship. Scale with Agents.
           </span>
         )}
       </div>
@@ -923,6 +919,14 @@ const MeegleHomepage = () => {
           0% { transform: scale(0.92); opacity: 0; }
           100% { transform: scale(1); opacity: 1; }
         }
+        @keyframes charFlyIn {
+          0% { transform: translate(40px, 28px) scale(0.3); opacity: 0; }
+          55% { transform: translate(-4px, -3px) scale(1.05); opacity: 1; }
+          75% { transform: translate(2px, 1px) scale(0.96); }
+          100% { transform: translate(0, 0) scale(1); opacity: 1; }
+        }
+        .char-fly-in-a { animation: charFlyIn 0.65s cubic-bezier(0.25, 0.1, 0.1, 1) both; }
+        .char-fly-in-h { animation: charFlyIn 0.7s cubic-bezier(0.25, 0.1, 0.1, 1) 0.12s both; }
         @keyframes pulseRing {
           0%, 100% { box-shadow: 0 0 0 0 rgba(91,94,227,.3); }
           50% { box-shadow: 0 0 0 20px rgba(91,94,227,0); }
