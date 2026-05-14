@@ -294,13 +294,14 @@ const AnimatedCounter = ({ target, suffix, decimals }) => {
 }
 
 
+
 const WORKFLOW_PLATFORMS = [
-  { id: 'intake', label: 'Intake', color: '#5B5FE3', x: 5, y: 50, col: 0 },
-  { id: 'scout', label: 'Scout', color: '#3EAB6E', x: 30, y: 22, col: 1, row: 'top' },
-  { id: 'scope', label: 'Scope', color: '#F59E0B', x: 30, y: 50, col: 1, row: 'mid' },
-  { id: 'spec',  label: 'Spec',  color: '#8B5CF6', x: 30, y: 78, col: 1, row: 'bot' },
-  { id: 'build', label: 'Build', color: '#EC4899', x: 58, y: 50, col: 2 },
-  { id: 'ship',  label: 'Ship',  color: '#06B6D4', x: 82, y: 50, col: 3 },
+  { id: 'intake', label: 'Intake', color: '#5B5FE3', x: 6, y: 48, col: 0 },
+  { id: 'scout', label: 'Scout', color: '#3EAB6E', x: 28, y: 20, col: 1, row: 'top' },
+  { id: 'scope', label: 'Scope', color: '#F59E0B', x: 28, y: 48, col: 1, row: 'mid' },
+  { id: 'spec',  label: 'Spec',  color: '#8B5CF6', x: 28, y: 76, col: 1, row: 'bot' },
+  { id: 'build', label: 'Build', color: '#EC4899', x: 55, y: 48, col: 2 },
+  { id: 'ship',  label: 'Ship',  color: '#06B6D4', x: 80, y: 48, col: 3 },
 ]
 
 const AGENT_BENCH = [
@@ -313,109 +314,144 @@ const AGENT_BENCH = [
   { id: 'sec', label: 'Security Agent', color: '#EF4444' },
 ]
 
-const PLAT_W = 152
-const PLAT_H = 72
-const PLAT_D = 12
+const PLAT_W = 150
+const PLAT_H = 68
+const PLAT_D = 16
 const SCENE_W = 760
 const SCENE_H = 440
 
 const IsometricPlatform = ({ node, state, agentColor, style }) => {
   const c = node.color
-  const w = PLAT_W; const h = PLAT_H; const d = PLAT_D
-  const isHidden = state === 'hidden'
-  const isBuilding = state === 'building'
-  const isBuilt = state === 'built'
-  const isPopulated = state === 'populated'
-  const showChars = isPopulated
+  const W = PLAT_W; const H = PLAT_H; const D = PLAT_D
+  const hidden = state === 'hidden'
+  const building = state === 'building'
+  const built = state === 'built' || state === 'popping'
+  const populated = state === 'populated'
 
-  const alpha = isHidden ? 0 : 1
-  const scale = isPopulated ? 1.04 : isBuilding ? 0.88 : 1
-  const transition = 'opacity 0.45s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1)'
+  const alpha = hidden ? 0 : 1
+  const scale = populated ? 1.03 : building ? 0.88 : 1
 
   return (
-    <div className="absolute" style={{ ...style, opacity: alpha, transform: `scale(${scale})`, transition }}>
-      <div style={{ position: 'relative', width: w + d + 4, height: h + d + 4 }}>
-        <svg viewBox={`0 0 ${w + d + 4} ${h + d + 4}`} width={w + d + 4} height={h + d + 4} style={{ display: 'block' }}>
-          {/* Right face */}
-          <path d={`M${w} ${d} L${w + d} ${0} L${w + d} ${h} L${w} ${h + d} Z`}
-            fill={isPopulated ? c + '22' : isBuilding ? c + '12' : '#eef0f3'}
-            stroke={isPopulated ? c + '15' : '#e2e5ea'} strokeWidth="0.5" />
-          {/* Front face */}
-          <path d={`M${0} ${h} L${d} ${h + d} L${w + d} ${h + d} L${w} ${h} Z`}
-            fill={isPopulated ? c + '16' : isBuilding ? c + '08' : '#eef0f3'}
-            stroke={isPopulated ? c + '12' : '#e2e5ea'} strokeWidth="0.5" />
-          {/* Top face */}
-          <rect x="0" y="0" width={w} height={h} rx="10"
-            fill={isPopulated ? c + '08' : isBuilding ? c + '04' : '#f9fafb'}
-            stroke={isPopulated ? c + '45' : isBuilding ? c + '30' : '#e2e5ea'}
-            strokeWidth={isPopulated ? 1.8 : 1} />
+    <div className="absolute" style={{
+      ...style, opacity: alpha,
+      transform: `scale(${scale})`,
+      transition: 'opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.55s cubic-bezier(0.16,1,0.3,1)'
+    }}>
+      <div className="absolute rounded-xl" style={{
+        left: -6, top: D + 6,
+        width: W + 12, height: H + 4,
+        backgroundColor: building ? c + '08' : '#00000008',
+        filter: 'blur(10px)',
+        opacity: hidden ? 0 : 1,
+        transition: 'opacity 0.5s ease'
+      }} />
 
-          {/* Building grid */}
-          {isBuilding && (
-            <g>
-              <line x1="24" y1="0" x2="24" y2={h} stroke={c + '07'} strokeWidth="0.3" strokeDasharray="3 8" />
-              <line x1={w - 24} y1="0" x2={w - 24} y2={h} stroke={c + '07'} strokeWidth="0.3" strokeDasharray="3 8" />
-              <line x1="0" y1="16" x2={w} y2="16" stroke={c + '07'} strokeWidth="0.3" strokeDasharray="3 8" />
-              <line x1="0" y1={h - 16} x2={w} y2={h - 16} stroke={c + '07'} strokeWidth="0.3" strokeDasharray="3 8" />
-              <circle cx={w * 0.72} cy={h * 0.35} r="2.5" fill={c} opacity="0.35">
-                <animate attributeName="opacity" values="0.35;0.08;0.35" dur="0.7s" repeatCount="indefinite" />
-                <animate attributeName="r" values="2.5;4;2.5" dur="0.7s" repeatCount="indefinite" />
-              </circle>
-            </g>
-          )}
+      <svg viewBox={`0 0 ${W + D} ${H + D}`} width={W + D} height={H + D} style={{ display: 'block' }}>
+        <path
+          d={`M${W} ${H * 0.2} L${W + D} ${0} L${W + D} ${H} L${W} ${H + H * 0.2} Z`}
+          fill={populated ? c + '90' : building ? c + '20' : '#dde1e7'}
+          opacity={populated ? 0.18 : building ? 0.12 : 1}
+        />
+        <path
+          d={`M${0} ${H} L${D * 0.6} ${H + H * 0.2} L${W + D} ${H + H * 0.2} L${W} ${H} Z`}
+          fill={populated ? c + '90' : building ? c + '15' : '#dde1e7'}
+          opacity={populated ? 0.14 : building ? 0.08 : 1}
+        />
+        <defs>
+          <linearGradient id={`tp-${node.id}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={populated ? c + '0D' : building ? c + '04' : '#ffffff'} />
+            <stop offset="100%" stopColor={populated ? c + '06' : building ? c + '02' : '#f5f6f8'} />
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width={W} height={H} rx="10"
+          fill={`url(#tp-${node.id})`}
+          stroke={populated ? c + '50' : building ? c + '25' : '#dee2e8'}
+          strokeWidth={populated ? 1.6 : 0.8} />
 
-          {/* Label */}
-          <text x={w / 2} y={h / 2 + 3} textAnchor="middle" dominantBaseline="central"
-            fontWeight="700" fontSize="12"
-            fill={isPopulated ? c : isBuilt ? c + '80' : isBuilding ? c + '40' : '#c8cdd4'}
-            fontFamily="system-ui, -apple-system, sans-serif" letterSpacing="0.02em">
-            {node.label}
-          </text>
-
-          {/* Agent — slides in from right when populated */}
-          {showChars && (
-            <g transform={`translate(${w / 2 - 34}, ${h / 2 - 18})`} opacity="1"
-              className="char-fly-in char-fly-in-a">
-              <circle cx="0" cy="0" r="6.5" fill={agentColor || c} opacity="0.85" />
-              <rect x="-2.2" y="2.2" width="1.8" height="3" rx="0.9" fill={agentColor || c} opacity="0.5" />
-              <rect x="0.8" y="2.2" width="1.8" height="3" rx="0.9" fill={agentColor || c} opacity="0.5" />
-              <rect x="-4.5" y="4.5" width="9" height="6" rx="3" fill={agentColor || c} opacity="0.65" />
-              <circle cx="-1.8" cy="-0.8" r="0.9" fill="white" />
-              <circle cx="1.8" cy="-0.8" r="0.9" fill="white" />
-              <circle cx="-1.8" cy="-0.8" r="0.45" fill="#111" />
-              <circle cx="1.8" cy="-0.8" r="0.45" fill="#111" />
-            </g>
-          )}
-
-          {/* Human — slides in from bottom-right when populated */}
-          {showChars && (
-            <g transform={`translate(${w / 2 + 18}, ${h / 2 - 18})`} opacity="1"
-              className="char-fly-in char-fly-in-h">
-              <circle cx="0" cy="-4" r="4" fill="#374151" />
-              <path d="M-4.5 4.5c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5"
-                fill="#374151" opacity="0.7" />
-            </g>
-          )}
-        </svg>
-
-        {/* Glow ring */}
-        {isPopulated && (
-          <div className="absolute rounded-xl" style={{
-            inset: -5, border: `2px solid ${c}25`, borderRadius: 14,
-            pointerEvents: 'none', animation: 'scaleIn 1.5s ease-in-out infinite'
-          }} />
+        {building && (
+          <g>
+            <line x1="20" y1="0" x2="20" y2={H} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
+            <line x1={W - 20} y1="0" x2={W - 20} y2={H} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
+            <line x1="0" y1={H * 0.3} x2={W} y2={H * 0.3} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
+            <line x1="0" y1={H * 0.7} x2={W} y2={H * 0.7} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
+            <circle cx={W * 0.7} cy={H * 0.35} r="2" fill={c} opacity="0.3">
+              <animate attributeName="opacity" values="0.3;0.05;0.3" dur="0.7s" repeatCount="indefinite" />
+            </circle>
+          </g>
         )}
-      </div>
+
+        <text x={W / 2} y={H / 2 + 3} textAnchor="middle" dominantBaseline="central"
+          fontWeight="680" fontSize="11.5" fontFamily="system-ui, -apple-system, sans-serif" letterSpacing="0.025em"
+          fill={populated ? c : built ? c + '75' : building ? c + '35' : '#c2c8d2'}>
+          {node.label}
+        </text>
+
+        {populated && (
+          <g transform={`translate(${W - 22}, 18)`}>
+            <circle cx="0" cy="0" r="9" fill="#16A34A" opacity="0.12" />
+            <path d="M-3 0L-1 3L4 -2" fill="none" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
+          </g>
+        )}
+      </svg>
+
+      {populated && (
+        <>
+          <div className="absolute char-fly-in char-fly-in-a" style={{
+            left: W * 0.32, top: H * 0.22,
+            width: 28, height: 28,
+            zIndex: 2, pointerEvents: 'none'
+          }}>
+            <svg viewBox="0 0 28 28" width="28" height="28">
+              <circle cx="14" cy="8" r="6.5" fill={agentColor || c} opacity="0.88" />
+              <rect x="11.5" y="10.2" width="1.8" height="2.8" rx="0.9" fill={agentColor || c} opacity="0.5" />
+              <rect x="14.7" y="10.2" width="1.8" height="2.8" rx="0.9" fill={agentColor || c} opacity="0.5" />
+              <rect x="9" y="12.5" width="10" height="7" rx="3.5" fill={agentColor || c} opacity="0.65" />
+              <circle cx="12" cy="7" r="1" fill="white" />
+              <circle cx="16" cy="7" r="1" fill="white" />
+              <circle cx="12" cy="7" r="0.5" fill="#111" />
+              <circle cx="16" cy="7" r="0.5" fill="#111" />
+            </svg>
+          </div>
+          <div className="absolute char-fly-in char-fly-in-h" style={{
+            left: W * 0.55, top: H * 0.18,
+            width: 24, height: 28,
+            zIndex: 2, pointerEvents: 'none'
+          }}>
+            <svg viewBox="0 0 24 28" width="24" height="28">
+              <circle cx="12" cy="5" r="4.5" fill="#4b5563" />
+              <path d="M4.5 16c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" fill="#4b5563" opacity="0.75" />
+            </svg>
+          </div>
+        </>
+      )}
+
+      {populated && (
+        <div className="absolute rounded-xl" style={{
+          inset: -5, border: `2px solid ${c}25`, borderRadius: 14,
+          pointerEvents: 'none', animation: 'scaleIn 1.5s ease-in-out infinite'
+        }} />
+      )}
     </div>
   )
 }
 
-const ConnectorBridge = ({ from, to, color, active, building, hidden }) => {
-  if (hidden) return null
+const ConnectorBridge = ({ from, to, color, state }) => {
+  if (state === 'hidden') return null
+  const active = state === 'active'
+  const building = state === 'building'
+  const built = state === 'built'
+
   const fx = from.x; const fy = from.y
   const tx = to.x; const ty = to.y
-  const midX = (fx + tx) / 2
-  const midY = Math.min(fy, ty) - 24
+
+  const dx = tx - fx
+  const cpf = 0.42
+
+  const cp1x = fx + dx * cpf
+  const cp1y = fy
+  const cp2x = tx - dx * cpf
+  const cp2y = ty
+
   const svgId = `bg-${from.id}-${to.id}`
 
   return (
@@ -423,25 +459,29 @@ const ConnectorBridge = ({ from, to, color, active, building, hidden }) => {
       {active && (
         <defs>
           <linearGradient id={svgId} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor={color} stopOpacity="0.55" />
-            <stop offset="100%" stopColor={to.color} stopOpacity="0.55" />
+            <stop offset="0%" stopColor={from.color} stopOpacity="0.2" />
+            <stop offset="50%" stopColor={color} stopOpacity="0.5" />
+            <stop offset="100%" stopColor={to.color} stopOpacity="0.3" />
           </linearGradient>
         </defs>
       )}
       <path
-        d={`M${fx} ${fy} Q${midX} ${midY} ${tx} ${ty}`}
+        d={`M${fx} ${fy} C${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${tx} ${ty}`}
         fill="none"
-        stroke={active ? `url(#${svgId})` : color + '30'}
-        strokeWidth={active ? 2.2 : 1.4}
-        strokeDasharray={building ? '6 3' : 'none'}
-        opacity={building ? 0.7 : active ? 1 : 0.45}
+        stroke={active ? `url(#${svgId})` : color + '22'}
+        strokeWidth={active ? 2 : built ? 1.2 : 1}
+        strokeDasharray={building ? '5 4' : 'none'}
+        opacity={active ? 1 : built ? 0.45 : 0.3}
         strokeLinecap="round"
       >
-        {building && <animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.5s" repeatCount="indefinite" />}
+        {building && (
+          <animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.5s" repeatCount="indefinite" />
+        )}
       </path>
       <polygon
         points={`${tx - 5},${ty - 3.5} ${tx},${ty} ${tx - 5},${ty + 3.5}`}
-        fill={active ? to.color : color + '45'} opacity={active ? 0.7 : 0.35} />
+        fill={active ? to.color : color + '30'}
+        opacity={active ? 0.7 : built ? 0.35 : 0.2} />
     </svg>
   )
 }
@@ -451,23 +491,22 @@ const WorkflowBoard = () => {
   const [step, setStep] = useState(0)
   const phaseRef = useRef('building')
   const stepRef = useRef(0)
-  const [charTrigger, setCharTrigger] = useState(0)
+  const [popStamp, setPopStamp] = useState(0)
 
   const totalPlatforms = WORKFLOW_PLATFORMS.length
 
   const advance = useCallback(() => {
     if (phaseRef.current === 'building') {
       if (stepRef.current >= totalPlatforms - 1) {
-        phaseRef.current = 'populating'
-        stepRef.current = 0; setBuildPhase('populating'); setStep(0)
-        setCharTrigger(c => c + 1)
+        phaseRef.current = 'populating'; stepRef.current = 0
+        setBuildPhase('populating'); setStep(0)
       } else {
         stepRef.current += 1; setStep(s => s + 1)
       }
     } else {
       if (stepRef.current >= totalPlatforms) return
       stepRef.current += 1; setStep(s => s + 1)
-      setCharTrigger(c => c + 1)
+      setPopStamp(Date.now())
     }
   }, [totalPlatforms])
 
@@ -476,88 +515,75 @@ const WorkflowBoard = () => {
       const t = setTimeout(() => {
         phaseRef.current = 'building'; stepRef.current = 0
         setBuildPhase('building'); setStep(0)
-      }, 2800)
+      }, 2600)
       return () => clearTimeout(t)
     }
   }, [buildPhase, step, totalPlatforms])
 
   useEffect(() => {
-    const dur = buildPhase === 'building' ? 580 : 800
+    const dur = buildPhase === 'building' ? 550 : 850
     if (buildPhase === 'populating' && step >= totalPlatforms) return
     const t = setTimeout(advance, dur)
     return () => clearTimeout(t)
-  }, [step, buildPhase, advance, totalPlatforms, charTrigger])
+  }, [step, buildPhase, advance, totalPlatforms, popStamp])
 
   const positions = WORKFLOW_PLATFORMS.map(p => ({
     id: p.id,
     color: p.color,
-    cx: ((p.x / 100) * SCENE_W) + PLAT_W / 2,  // platform center X
-    cy: ((p.y / 100) * SCENE_H) + PLAT_H / 2,    // platform center Y
     left: (p.x / 100) * SCENE_W,
     top: (p.y / 100) * SCENE_H,
+    cx: (p.x / 100) * SCENE_W + PLAT_W / 2,
+    cy: (p.y / 100) * SCENE_H + PLAT_H / 2,
   }))
 
-  // Connectors: Intake→branch3, branch3→Build, Build→Ship
   const buildOrder = WORKFLOW_PLATFORMS.map(p => p.id)
-  const builtSoFar = buildPhase === 'building' ? step + 1 : totalPlatforms
+  const isBuilt = id => buildOrder.indexOf(id) < (buildPhase === 'building' ? step + 1 : totalPlatforms)
 
-  const bridges = []
-  const branchIds = ['scout', 'scope', 'spec']
-
-  // Intake → each branch
-  branchIds.forEach(bid => {
-    bridges.push({ from: 'intake', to: bid, group: 'spread' })
-  })
-  // each branch → Build
-  branchIds.forEach(bid => {
-    bridges.push({ from: bid, to: 'build', group: 'gather' })
-  })
-  // Build → Ship
-  bridges.push({ from: 'build', to: 'ship', group: 'forward' })
-
-  const isBuilt = id => buildOrder.indexOf(id) < builtSoFar
-  const bridgeVisible = (from, to) => isBuilt(from) && isBuilt(to)
+  const bridges = [
+    { from: 'intake', to: 'scout' },
+    { from: 'intake', to: 'scope' },
+    { from: 'intake', to: 'spec' },
+    { from: 'scout', to: 'build' },
+    { from: 'scope', to: 'build' },
+    { from: 'spec',  to: 'build' },
+    { from: 'build', to: 'ship' },
+  ]
 
   return (
-    <div className="relative w-full select-none" style={{ height: SCENE_H + 40 }}>
-      {/* Background grid */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.04 }}>
+    <div className="relative w-full select-none" style={{ height: SCENE_H + 20 }}>
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.045 }}>
         <defs>
-          <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
-            <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#5B5FE3" strokeWidth="0.3" />
+          <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+            <circle cx="14" cy="14" r="0.6" fill="#5B5FE3" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#grid)" />
       </svg>
 
-      {/* Connectors */}
-      {bridges.map(({ from, to, group }) => {
+      {bridges.map(({ from, to }) => {
         const fp = positions.find(p => p.id === from)
         const tp = positions.find(p => p.id === to)
         if (!fp || !tp) return null
-        if (!bridgeVisible(from, to)) return null
+        if (!isBuilt(from) || !isBuilt(to)) return null
         const toIdx = buildOrder.indexOf(to)
         const popStep = buildPhase === 'populating' ? step : -1
         const color = WORKFLOW_PLATFORMS.find(p => p.id === to).color
-        const isActive = buildPhase === 'populating' && toIdx === popStep
-        const isBuilding = buildPhase === 'building' && toIdx === step + 1
+        let brState = 'built'
+        if (buildPhase === 'building' && toIdx === step + 1) brState = 'building'
+        if (buildPhase === 'populating' && toIdx === popStep) brState = 'active'
         return (
           <ConnectorBridge
             key={`br-${from}-${to}`}
             from={{ id: from, x: fp.cx, y: fp.cy, color: fp.color }}
             to={{ id: to, x: tp.cx, y: tp.cy, color: tp.color }}
             color={color}
-            active={isActive && (group === 'spread' || group === 'forward' || group === 'gather')}
-            building={isBuilding}
-            hidden={false}
+            state={brState}
           />
         )
       })}
 
-      {/* Platforms */}
-      {WORKFLOW_PLATFORMS.map((plat, i) => {
+      {WORKFLOW_PLATFORMS.map((plat) => {
         const id = plat.id
-        const isBuiltPlat = isBuilt(id)
         const idx = buildOrder.indexOf(id)
         const popStep = buildPhase === 'populating' ? step : -1
 
@@ -565,15 +591,12 @@ const WorkflowBoard = () => {
         if (buildPhase === 'building') {
           if (idx < step) state = 'built'
           else if (idx === step) state = 'building'
-          else state = 'hidden'
         } else {
           if (idx < popStep) state = 'populated'
-          else if (idx === popStep) state = 'building' // about to be populated
+          else if (idx === popStep) state = 'popping'
           else state = 'built'
         }
 
-        // Extra: in populating phase, the current target shows chars flying in
-        // The chars appear only when state === 'populated', meaning step has advanced past it
         const agent = AGENT_BENCH[idx % AGENT_BENCH.length]
         const pos = positions.find(p => p.id === id)
 
@@ -588,23 +611,26 @@ const WorkflowBoard = () => {
         )
       })}
 
-      {/* Status text */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
+      <div className="absolute bottom-1 left-1/2 -translate-x-1/2">
         {buildPhase === 'building' && (
-          <span className="text-[11px] font-semibold"
-            style={{ color: WORKFLOW_PLATFORMS[Math.min(step, totalPlatforms - 1)].color, animation: 'fadeSlideUp 0.5s ease-out' }}>
-            Constructing pipeline... {step + 1}/{totalPlatforms}
+          <span className="text-[11px] font-semibold" style={{
+            color: WORKFLOW_PLATFORMS[Math.min(step, totalPlatforms - 1)].color,
+            animation: 'fadeSlideUp 0.5s ease-out'
+          }}>
+            Building the workflow, one platform at a time...
           </span>
         )}
         {buildPhase === 'populating' && step < totalPlatforms && (
-          <span className="text-[11px] font-semibold"
-            style={{ color: AGENT_BENCH[step % AGENT_BENCH.length].color, animation: 'fadeSlideUp 0.5s ease-out' }}>
-            Assigning {AGENT_BENCH[step % AGENT_BENCH.length].label} + Human → {WORKFLOW_PLATFORMS[step].label}
+          <span className="text-[11px] font-semibold" style={{
+            color: AGENT_BENCH[step % AGENT_BENCH.length].color,
+            animation: 'fadeSlideUp 0.5s ease-out'
+          }}>
+            {AGENT_BENCH[step % AGENT_BENCH.length].label} joins {WORKFLOW_PLATFORMS[step].label} with human oversight
           </span>
         )}
         {buildPhase === 'populating' && step >= totalPlatforms && (
           <span className="text-[11px] font-semibold text-[#3EAB6E]" style={{ animation: 'fadeSlideUp 0.5s ease-out' }}>
-            Pipeline fully staffed. Architect. Ship. Scale with Agents.
+            Fully staffed. Architect. Ship. Scale with Agents.
           </span>
         )}
       </div>
@@ -612,81 +638,89 @@ const WorkflowBoard = () => {
   )
 }
 
-const AI_COMMANDS = [
+const AI_CONVERSATIONS = [
   {
-    id: 'sprint-planning',
-    label: 'Smart sprint planning',
+    id: 0,
+    userText: 'Smart sprint planning',
+    aiText: 'I analyzed team velocity and backlog. Here is the optimized sprint plan for the next two weeks.',
+    imageIndex: 0,
     icon: '📋',
-    desc: 'AI analyzes velocity and backlog to auto-generate optimized sprints',
     color: '#5B5FE3',
     gradient: 'from-[#5B5FE3] to-[#787BEE]'
   },
   {
-    id: 'risk-detection',
-    label: 'Proactive risk & bottleneck detection',
+    id: 1,
+    userText: 'Proactive risk & bottleneck detection',
+    aiText: 'Scanning all active projects... I detected 3 potential bottlenecks in the Design Review stage.',
+    imageIndex: 1,
     icon: '⚠️',
-    desc: 'Real-time bottleneck alerts before they escalate into blockers',
     color: '#EF4444',
     gradient: 'from-[#EF4444] to-[#F87171]'
   },
   {
-    id: 'health-monitoring',
-    label: 'Operational health monitoring',
+    id: 2,
+    userText: 'Operational health monitoring',
+    aiText: 'Continuous pulse check complete. All systems healthy. Executive summary is ready for review.',
+    imageIndex: 2,
     icon: '💚',
-    desc: 'Continuous pulse checks with executive-ready summaries',
     color: '#3EAB6E',
     gradient: 'from-[#3EAB6E] to-[#58C98A]'
   },
   {
-    id: 'progress-synthesis',
-    label: 'Executive progress synthesis',
+    id: 3,
+    userText: 'Executive progress synthesis',
+    aiText: 'I generated the Q3 progress report with automated charts and narrative summaries for all stakeholders.',
+    imageIndex: 3,
     icon: '📊',
-    desc: 'Automated charts and narrative summaries for stakeholders',
     color: '#8B5CF6',
     gradient: 'from-[#8B5CF6] to-[#A78BFA]'
   },
   {
-    id: 'charts-generation',
-    label: 'Automated charts generation',
+    id: 4,
+    userText: 'Automated charts generation',
+    aiText: 'Here are the visual dashboards. Velocity trends, burn-down charts, and resource allocation views are ready.',
+    imageIndex: 4,
     icon: '📈',
-    desc: 'Natural language queries generate visual dashboards on demand',
     color: '#F59E0B',
     gradient: 'from-[#F59E0B] to-[#FBBF24]'
   },
   {
-    id: 'requirement-auditing',
-    label: 'Semantic requirement auditing',
+    id: 5,
+    userText: 'Semantic requirement auditing',
+    aiText: 'I reviewed all PRDs for completeness and cross-team consistency. Found 2 gaps that need attention.',
+    imageIndex: 5,
     icon: '🔍',
-    desc: 'AI reviews PRDs for completeness and cross-team consistency',
     color: '#06B6D4',
     gradient: 'from-[#06B6D4] to-[#22D3EE]'
   },
   {
-    id: 'resource-allocation',
-    label: 'Predictive resource allocation',
+    id: 6,
+    userText: 'Predictive resource allocation',
+    aiText: 'Based on current capacity models, I recommend rebalancing 2 engineers from Platform to Design.',
+    imageIndex: 6,
     icon: '👥',
-    desc: 'Predictive models forecast capacity and suggest workload balancing',
     color: '#EC4899',
     gradient: 'from-[#EC4899] to-[#F472B6]'
   },
   {
-    id: 'taxonomy-classification',
-    label: 'Automated taxonomy & classification',
+    id: 7,
+    userText: 'Automated taxonomy & classification',
+    aiText: 'I intelligently tagged all tasks, tickets, and documents. The new taxonomy is now live.',
+    imageIndex: 7,
     icon: '🏷️',
-    desc: 'Intelligent tagging of every task, ticket, and document',
     color: '#6366F1',
     gradient: 'from-[#6366F1] to-[#818CF8]'
   }
 ]
 
 const AIAssistantSection = () => {
-  const [activeCommand, setActiveCommand] = useState(null)
-  const [isTyping, setIsTyping] = useState(false)
-  const [displayText, setDisplayText] = useState('')
+  const [visibleMessages, setVisibleMessages] = useState([])
+  const [typingMsgId, setTypingMsgId] = useState(null)
+  const [activeImage, setActiveImage] = useState(0)
   const sectionRef = useRef(null)
   const cycleRef = useRef(null)
   const started = useRef(false)
-  const commandsRef = useRef(AI_COMMANDS)
+  const convsRef = useRef(AI_CONVERSATIONS)
 
   useEffect(() => {
     const el = sectionRef.current
@@ -694,7 +728,30 @@ const AIAssistantSection = () => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !started.current) {
         started.current = true
-        startCycle()
+        let step = 0
+        const total = convsRef.current.length
+        const playStep = () => {
+          const idx = step % total
+          const conv = convsRef.current[idx]
+          const userMsgId = `${conv.id}-user`
+          const aiMsgId = `${conv.id}-ai`
+
+          setTypingMsgId(userMsgId)
+          setVisibleMessages(prev => [...prev.slice(-6), userMsgId])
+          setTimeout(() => {
+            setTypingMsgId(null)
+            setTypingMsgId(aiMsgId)
+            setVisibleMessages(prev => [...prev, aiMsgId])
+            setTimeout(() => {
+              setActiveImage(idx)
+              setTypingMsgId(null)
+            }, Math.min(conv.aiText.length * 30, 2200))
+          }, 1200)
+
+          step++
+          cycleRef.current = setTimeout(playStep, 4800)
+        }
+        playStep()
       }
     }, { threshold: 0.2 })
     observer.observe(el)
@@ -704,43 +761,17 @@ const AIAssistantSection = () => {
     }
   }, [])
 
-  const startCycle = () => {
-    let idx = 0
-    const run = () => {
-      const cmd = commandsRef.current[idx]
-      setActiveCommand(idx)
-
-      setIsTyping(true)
-      setDisplayText('')
-      let charIdx = 0
-      const fullText = cmd.label
-      const typeInterval = setInterval(() => {
-        charIdx++
-        setDisplayText(fullText.substring(0, charIdx))
-        if (charIdx >= fullText.length) {
-          clearInterval(typeInterval)
-          setIsTyping(false)
-        }
-      }, 60)
-
-      idx = (idx + 1) % commandsRef.current.length
-      cycleRef.current = setTimeout(run, 2800)
-    }
-    run()
-  }
-
   return (
     <section ref={sectionRef} className="relative py-32 md:py-44 bg-[#FAFBFF] overflow-hidden">
       <div className="absolute top-0 right-[-10%] w-[600px] h-[600px] rounded-full bg-[#5B5FE3]/[0.02] blur-[120px]" />
       <div className="absolute bottom-[-5%] left-[-8%] w-[500px] h-[500px] rounded-full bg-[#3EAB6E]/[0.02] blur-[100px]" />
 
       <div className="relative max-w-[1340px] mx-auto px-6">
-        <div className="mb-14 text-center lg:text-left">
+        <div className="mb-14">
           <div className="inline-flex items-center gap-2 rounded-full bg-white border border-[#D8DFFF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-6 shadow-sm">
             <MessageSquare size={14} />
             AI-Native Project Intelligence
           </div>
-
           <h2 className="text-[40px] md:text-[52px] leading-[1.04] font-black tracking-[-0.05em] text-[#0A0A14]">
             Professional Standards.
             <br />
@@ -748,149 +779,134 @@ const AIAssistantSection = () => {
               AI-Native Power.
             </span>
           </h2>
-
-          <p className="mt-5 text-[16px] leading-7 text-[#646A73] max-w-[600px] mx-auto lg:mx-0">
+          <p className="mt-5 text-[16px] leading-7 text-[#646A73] max-w-[600px]">
             Professional project management fundamentals, supercharged by AI. From project planning to resource allocation. Experience native intelligence, ready out-of-the-box.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-14 items-start">
-          {/* Left: Input area + command chips */}
-          <div>
-            <div className="rounded-2xl border border-[#E8EBF0] bg-white shadow-[0_8px_40px_rgba(15,23,42,0.04)] p-5">
-              <div className="relative">
-                <div className="flex items-center gap-3 rounded-xl border-2 border-[#5B5FE3]/20 bg-[#FAFBFF] px-5 py-4 transition-all focus-within:border-[#5B5FE3]/40 focus-within:shadow-[0_0_0_4px_rgba(91,94,227,0.06)]">
-                  <Sparkles size={18} className="text-[#5B5FE3] flex-shrink-0" />
-                  <span className="flex-1 text-[15px] text-[#111827] font-medium min-h-[24px]">
-                    {displayText || (started.current ? '' : 'Ask AI to plan, analyze, or optimize...')}
-                    {isTyping && (
-                      <span className="inline-block w-[2px] h-[18px] bg-[#5B5FE3] ml-0.5 align-middle animate-pulse" />
-                    )}
-                  </span>
-                  <button className="h-9 w-9 rounded-lg bg-[#5B5FE3] flex items-center justify-center hover:bg-[#4A4ED4] transition-all flex-shrink-0 shadow-[0_2px_8px_rgba(91,94,227,0.3)]">
-                    <ArrowRight size={14} className="text-white" />
-                  </button>
+        <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-8 lg:gap-12 items-start">
+          {/* LEFT: Conversation Column */}
+          <div className="rounded-2xl border border-[#EEF0F4] bg-white shadow-[0_4px_24px_rgba(15,23,42,0.03)] overflow-hidden">
+            <div className="px-5 py-3 border-b border-[#F3F4F6] bg-[#FCFCFE] flex items-center gap-2.5">
+              <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center">
+                <Sparkles size={13} className="text-white" />
+              </div>
+              <div>
+                <div className="text-[12px] font-bold text-[#111827]">Meegle AI</div>
+                <div className="text-[9px] text-[#16A34A] font-semibold flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
+                  Online
                 </div>
               </div>
+            </div>
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                {AI_COMMANDS.map((cmd, idx) => (
-                  <button
-                    key={cmd.id}
-                    onClick={() => {
-                      if (cycleRef.current) clearTimeout(cycleRef.current)
-                      setActiveCommand(idx)
-                      setIsTyping(true)
-                      setDisplayText('')
-                      let charIdx = 0
-                      const fullText = cmd.label
-                      const typeInterval = setInterval(() => {
-                        charIdx++
-                        setDisplayText(fullText.substring(0, charIdx))
-                        if (charIdx >= fullText.length) {
-                          clearInterval(typeInterval)
-                          setIsTyping(false)
-                        }
-                      }, 60)
-                    }}
-                    className={`flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-[13px] font-semibold transition-all duration-300 ${
-                      activeCommand === idx
-                        ? 'text-white shadow-md'
-                        : 'bg-white border-[#EEF0F4] text-[#646A73] hover:border-[#D8DFFF] hover:text-[#111827] hover:shadow-sm'
-                    }`}
-                    style={activeCommand === idx
-                      ? { backgroundColor: cmd.color, borderColor: cmd.color }
-                      : {}
-                    }
-                  >
-                    <span className="text-[15px] leading-none">{cmd.icon}</span>
-                    {cmd.label}
-                  </button>
-                ))}
-              </div>
+            <div className="px-4 py-4 space-y-3 min-h-[480px] max-h-[560px] overflow-y-auto bg-[#FBFCFD]">
+              {AI_CONVERSATIONS.map((conv) => {
+                const userMid = `${conv.id}-user`
+                const aiMid = `${conv.id}-ai`
+                const userVisible = visibleMessages.includes(userMid)
+                const aiVisible = visibleMessages.includes(aiMid)
+                const isUserTyping = typingMsgId === userMid
+                const isAiTyping = typingMsgId === aiMid
+
+                return (
+                  <div key={conv.id} className="space-y-3">
+                    {userVisible && (
+                      <div className="flex justify-end animate-fade-slide-up">
+                        <div
+                          className="rounded-2xl rounded-br-md px-3.5 py-2.5 max-w-[85%] transition-colors duration-500"
+                          style={{ backgroundColor: conv.color, color: 'white' }}
+                        >
+                          <div className="text-[10px] font-bold mb-0.5 text-white/60">You</div>
+                          <div className="text-[12px] leading-[1.5]">
+                            {isUserTyping ? (
+                              <span>
+                                {conv.userText.substring(0, Math.max(3, Math.floor(conv.userText.length * 0.6)))}
+                                <span className="inline-flex ml-0.5">
+                                  <span className="animate-pulse">.</span>
+                                  <span className="animate-pulse" style={{ animationDelay: '150ms' }}>.</span>
+                                  <span className="animate-pulse" style={{ animationDelay: '300ms' }}>.</span>
+                                </span>
+                              </span>
+                            ) : conv.userText}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {aiVisible && (
+                      <div className="flex gap-2 animate-fade-slide-up">
+                        <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center flex-shrink-0 shadow-sm">
+                          <Sparkles size={11} className="text-white" />
+                        </div>
+                        <div className="rounded-2xl rounded-bl-md bg-white border border-[#EEF0F4] px-3.5 py-2.5 max-w-[88%] shadow-sm">
+                          <div className="text-[10px] font-bold mb-0.5 text-[#8F959E]">Meegle AI</div>
+                          <div className="text-[12px] leading-[1.65] whitespace-pre-line text-[#374151]">
+                            {isAiTyping ? (
+                              <span>
+                                {conv.aiText.substring(0, Math.max(3, Math.floor(conv.aiText.length * 0.55)))}
+                                <span className="inline-flex ml-0.5">
+                                  <span className="animate-pulse">.</span>
+                                  <span className="animate-pulse" style={{ animationDelay: '150ms' }}>.</span>
+                                  <span className="animate-pulse" style={{ animationDelay: '300ms' }}>.</span>
+                                </span>
+                              </span>
+                            ) : conv.aiText}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            <div className="px-4 py-3.5 border-t border-[#F3F4F6] bg-white flex items-center gap-2.5">
+              <input
+                type="text"
+                placeholder="Ask AI to plan, analyze, or optimize..."
+                className="flex-1 bg-[#F4F6F9] rounded-xl px-3.5 py-2.5 text-[12px] text-[#111827] placeholder-[#B0B8C5] outline-none"
+                readOnly
+              />
+              <button className="h-9 w-9 rounded-lg bg-[#5B5FE3] flex items-center justify-center flex-shrink-0">
+                <ArrowRight size={14} className="text-white" />
+              </button>
             </div>
           </div>
 
-          {/* Right: Result area */}
+          {/* RIGHT: Pure Image Display */}
           <div className="relative">
-            <div className="rounded-[28px] border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.06)] overflow-hidden">
-              <div className="flex items-center gap-1.5 px-5 py-3 border-b border-[#F3F4F6] bg-white">
-                <div className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
-                <div className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
-                <div className="h-2.5 w-2.5 rounded-full bg-[#16A34A]" />
-                <div className="flex-1 text-center">
-                  <span className="text-[10px] font-semibold text-[#8F959E]">
-                    {activeCommand !== null ? AI_COMMANDS[activeCommand].label : 'AI Result'}
-                  </span>
+            {AI_CONVERSATIONS.map((conv, idx) => (
+              <div
+                key={conv.id}
+                className="rounded-2xl overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.06)]"
+                style={{
+                  position: activeImage === idx ? 'relative' : 'absolute',
+                  inset: activeImage === idx ? 'auto' : 0,
+                  opacity: activeImage === idx ? 1 : 0,
+                  transform: `scale(${activeImage === idx ? 1 : 0.98})`,
+                  pointerEvents: activeImage === idx ? 'auto' : 'none',
+                  zIndex: activeImage === idx ? 1 : 0
+                }}
+              >
+                <div className="flex items-center gap-2.5 px-5 py-5 border-b border-[#F3F4F6]">
+                  <div className={`h-7 w-7 rounded-lg bg-gradient-to-br ${conv.gradient} flex items-center justify-center shadow-sm`}>
+                    <span className="text-[13px]">{conv.icon}</span>
+                  </div>
+                  <div>
+                    <div className="text-[12px] font-bold text-[#111827]">{conv.userText}</div>
+                    <div className="text-[10px] text-[#8F959E] truncate max-w-[280px]">{conv.aiText.substring(0, 56)}...</div>
+                  </div>
                 </div>
-                <div className="w-10" />
-              </div>
-
-              <div className="relative min-h-[440px] bg-gradient-to-b from-[#FAFBFF] to-[#F4F6FF]">
-                {activeCommand === null && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-[#B0B8C5] gap-3">
-                    <Sparkles size={36} className="opacity-20" />
-                    <span className="text-[14px] font-medium">Select or type a command to see results</span>
-                  </div>
-                )}
-
-                {AI_COMMANDS.map((cmd, idx) => (
-                  <div
-                    key={cmd.id}
-                    className="absolute inset-0 flex flex-col items-center justify-center p-10 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                    style={{
-                      opacity: activeCommand === idx ? 1 : 0,
-                      transform: `translateY(${activeCommand === idx ? 0 : activeCommand !== null && idx > activeCommand ? 30 : -20}px) scale(${activeCommand === idx ? 1 : 0.96})`,
-                      pointerEvents: activeCommand === idx ? 'auto' : 'none'
-                    }}
-                  >
-                    <div className={`w-full max-w-[380px] aspect-[16/10] rounded-2xl bg-gradient-to-br ${cmd.gradient} opacity-[0.08] mb-6`} />
-                    <div className="text-center max-w-[320px]">
-                      <div className="inline-flex items-center gap-2.5 rounded-xl bg-white border border-[#EEF0F4] px-4 py-3 shadow-sm mb-4">
-                        <div className={`h-6 w-6 rounded-lg bg-gradient-to-br ${cmd.gradient} shadow-sm flex items-center justify-center`}>
-                          <span className="text-[14px]">{cmd.icon}</span>
-                        </div>
-                        <span className="text-[13px] font-bold text-[#374151]">{cmd.label}</span>
-                      </div>
-                      <p className="text-[13px] leading-6 text-[#8F959E] mb-4">{cmd.desc}</p>
-                      <p className="text-[11px] text-[#B0B8C5] font-medium">Replace with product screenshot</p>
+                <div className={`w-full aspect-[16/10] bg-gradient-to-br ${conv.gradient} relative flex items-center justify-center`} style={{ opacity: 0.06 }}>
+                  <div className="text-center p-8">
+                    <div className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${conv.gradient} flex items-center justify-center mx-auto mb-4 shadow-lg`} style={{ opacity: 0.3 }}>
+                      <span className="text-[28px]">{conv.icon}</span>
                     </div>
+                    <p className="text-[12px] font-semibold text-[#B0B8C5]">Replace with product screenshot</p>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
-
-            <div className="mt-4 flex justify-center gap-2">
-              {AI_COMMANDS.map((cmd, idx) => (
-                <button
-                  key={cmd.id}
-                  onClick={() => {
-                    if (cycleRef.current) clearTimeout(cycleRef.current)
-                    setActiveCommand(idx)
-                    setIsTyping(true)
-                    setDisplayText('')
-                    let charIdx = 0
-                    const fullText = cmd.label
-                    const typeInterval = setInterval(() => {
-                      charIdx++
-                      setDisplayText(fullText.substring(0, charIdx))
-                      if (charIdx >= fullText.length) {
-                        clearInterval(typeInterval)
-                        setIsTyping(false)
-                      }
-                    }, 60)
-                  }}
-                  className="rounded-full transition-all duration-500"
-                  style={{
-                    width: activeCommand === idx ? 24 : 8,
-                    height: 8,
-                    backgroundColor: activeCommand === idx ? cmd.color : '#D1D5DB'
-                  }}
-                />
-              ))}
-            </div>
-
-            <div className="absolute -z-10 top-3 left-3 w-full h-full rounded-[28px] bg-[#5B5FE3]/[0.03] border border-[#5B5FE3]/[0.06]" />
+            ))}
           </div>
         </div>
       </div>
@@ -920,13 +936,19 @@ const MeegleHomepage = () => {
           100% { transform: scale(1); opacity: 1; }
         }
         @keyframes charFlyIn {
-          0% { transform: translate(40px, 28px) scale(0.3); opacity: 0; }
-          55% { transform: translate(-4px, -3px) scale(1.05); opacity: 1; }
-          75% { transform: translate(2px, 1px) scale(0.96); }
+          0% { transform: translate(60px, 40px) scale(0.15); opacity: 0; }
+          45% { transform: translate(-6px, -4px) scale(1.08); opacity: 1; }
+          65% { transform: translate(3px, 2px) scale(0.95); }
           100% { transform: translate(0, 0) scale(1); opacity: 1; }
         }
-        .char-fly-in-a { animation: charFlyIn 0.65s cubic-bezier(0.25, 0.1, 0.1, 1) both; }
-        .char-fly-in-h { animation: charFlyIn 0.7s cubic-bezier(0.25, 0.1, 0.1, 1) 0.12s both; }
+        @keyframes charFlyInFromLeft {
+          0% { transform: translate(-50px, 35px) scale(0.15); opacity: 0; }
+          45% { transform: translate(5px, -3px) scale(1.08); opacity: 1; }
+          65% { transform: translate(-2px, 1px) scale(0.95); }
+          100% { transform: translate(0, 0) scale(1); opacity: 1; }
+        }
+        .char-fly-in-a { animation: charFlyIn 0.7s cubic-bezier(0.22, 0.08, 0.08, 1) both; }
+        .char-fly-in-h { animation: charFlyInFromLeft 0.75s cubic-bezier(0.22, 0.08, 0.08, 1) 0.1s both; }
         @keyframes pulseRing {
           0%, 100% { box-shadow: 0 0 0 0 rgba(91,94,227,.3); }
           50% { box-shadow: 0 0 0 20px rgba(91,94,227,0); }
