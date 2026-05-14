@@ -12,10 +12,8 @@ import {
   Menu,
   MessageSquare,
   Play,
-  Send,
   Shield,
   Sparkles,
-  User,
   Workflow,
   X
 } from 'lucide-react'
@@ -531,8 +529,6 @@ const WorkflowBoard = () => {
     color: p.color
   }))
 
-  const builtCount = buildPhase === 'building' ? step + 1 : totalPlatforms
-
   const getState = (i) => {
     if (buildPhase === 'building') {
       if (i < step) return 'built'
@@ -620,49 +616,81 @@ const WorkflowBoard = () => {
   )
 }
 
-const CHAT_MESSAGES = [
+const AI_COMMANDS = [
   {
-    id: 1,
-    sender: 'user',
-    text: 'What\'s the status of our Q3 product launch across all teams?',
-    delay: 0,
-    imageIndex: 0
+    id: 'sprint-planning',
+    label: 'Smart sprint planning',
+    icon: '📋',
+    desc: 'AI analyzes velocity and backlog to auto-generate optimized sprints',
+    color: '#5B5FE3',
+    gradient: 'from-[#5B5FE3] to-[#787BEE]'
   },
   {
-    id: 2,
-    sender: 'ai',
-    text: 'Here\'s the cross-team status dashboard for Q3 launch.\n\n⏱ Sprint Progress: 76% complete\n👥 Resource Load: 82% allocated\n⚠ Risk Items: 3 detected (mitigated)\n\nEngineering is tracking ahead by 2 sprints. However, Design has a minor bottleneck — I recommend rebalancing resources.',
-    delay: 1800,
-    imageIndex: 1
+    id: 'risk-detection',
+    label: 'Proactive risk & bottleneck detection',
+    icon: '⚠️',
+    desc: 'Real-time bottleneck alerts before they escalate into blockers',
+    color: '#EF4444',
+    gradient: 'from-[#EF4444] to-[#F87171]'
   },
   {
-    id: 3,
-    sender: 'user',
-    text: 'Can you draft a resource rebalancing plan for Design?',
-    delay: 5000,
-    imageIndex: 1
+    id: 'health-monitoring',
+    label: 'Operational health monitoring',
+    icon: '💚',
+    desc: 'Continuous pulse checks with executive-ready summaries',
+    color: '#3EAB6E',
+    gradient: 'from-[#3EAB6E] to-[#58C98A]'
   },
   {
-    id: 4,
-    sender: 'ai',
-    text: 'Sure! I\'ve analyzed team capacity and created a draft plan:\n\n📋 Rebalancing Recommendations:\n• Move 2 engineers from Platform to Design Review\n• Extend sprint scope by 3 days to absorb backlog\n• Auto-schedule stakeholder alignment for Thursday\n\nWould you like me to apply these changes to the active sprint?',
-    delay: 7000,
-    imageIndex: 2
+    id: 'progress-synthesis',
+    label: 'Executive progress synthesis',
+    icon: '📊',
+    desc: 'Automated charts and narrative summaries for stakeholders',
+    color: '#8B5CF6',
+    gradient: 'from-[#8B5CF6] to-[#A78BFA]'
+  },
+  {
+    id: 'charts-generation',
+    label: 'Automated charts generation',
+    icon: '📈',
+    desc: 'Natural language queries generate visual dashboards on demand',
+    color: '#F59E0B',
+    gradient: 'from-[#F59E0B] to-[#FBBF24]'
+  },
+  {
+    id: 'requirement-auditing',
+    label: 'Semantic requirement auditing',
+    icon: '🔍',
+    desc: 'AI reviews PRDs for completeness and cross-team consistency',
+    color: '#06B6D4',
+    gradient: 'from-[#06B6D4] to-[#22D3EE]'
+  },
+  {
+    id: 'resource-allocation',
+    label: 'Predictive resource allocation',
+    icon: '👥',
+    desc: 'Predictive models forecast capacity and suggest workload balancing',
+    color: '#EC4899',
+    gradient: 'from-[#EC4899] to-[#F472B6]'
+  },
+  {
+    id: 'taxonomy-classification',
+    label: 'Automated taxonomy & classification',
+    icon: '🏷️',
+    desc: 'Intelligent tagging of every task, ticket, and document',
+    color: '#6366F1',
+    gradient: 'from-[#6366F1] to-[#818CF8]'
   }
 ]
 
-const AI_SCREENSHOTS = [
-  { id: 0, label: 'Dashboard Overview', gradient: 'from-[#5B5FE3] to-[#787BEE]' },
-  { id: 1, label: 'Project Status Detail', gradient: 'from-[#3EAB6E] to-[#58C98A]' },
-  { id: 2, label: 'Resource Rebalancing', gradient: 'from-[#F59E0B] to-[#FBBF24]' }
-]
-
 const AIAssistantSection = () => {
-  const [visibleMessages, setVisibleMessages] = useState([])
-  const [typingMessageId, setTypingMessageId] = useState(null)
-  const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const [activeCommand, setActiveCommand] = useState(null)
+  const [isTyping, setIsTyping] = useState(false)
+  const [displayText, setDisplayText] = useState('')
   const sectionRef = useRef(null)
+  const cycleRef = useRef(null)
   const started = useRef(false)
+  const commandsRef = useRef(AI_COMMANDS)
 
   useEffect(() => {
     const el = sectionRef.current
@@ -670,29 +698,40 @@ const AIAssistantSection = () => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !started.current) {
         started.current = true
-        CHAT_MESSAGES.forEach((msg) => {
-          setTimeout(() => {
-            setVisibleMessages(prev => {
-              if (prev.includes(msg.id)) return prev
-              return [...prev, msg.id]
-            })
-            setTypingMessageId(msg.id)
-            if (msg.sender === 'ai') {
-              setTimeout(() => {
-                setActiveImageIndex(msg.imageIndex)
-              }, 600)
-            }
-            const textLen = msg.text.length
-            setTimeout(() => {
-              setTypingMessageId(null)
-            }, Math.min(textLen * 25, 2000))
-          }, msg.delay)
-        })
+        startCycle()
       }
-    }, { threshold: 0.15 })
+    }, { threshold: 0.2 })
     observer.observe(el)
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      if (cycleRef.current) clearTimeout(cycleRef.current)
+    }
   }, [])
+
+  const startCycle = () => {
+    let idx = 0
+    const run = () => {
+      const cmd = commandsRef.current[idx]
+      setActiveCommand(idx)
+
+      setIsTyping(true)
+      setDisplayText('')
+      let charIdx = 0
+      const fullText = cmd.label
+      const typeInterval = setInterval(() => {
+        charIdx++
+        setDisplayText(fullText.substring(0, charIdx))
+        if (charIdx >= fullText.length) {
+          clearInterval(typeInterval)
+          setIsTyping(false)
+        }
+      }, 60)
+
+      idx = (idx + 1) % commandsRef.current.length
+      cycleRef.current = setTimeout(run, 2800)
+    }
+    run()
+  }
 
   return (
     <section ref={sectionRef} className="relative py-32 md:py-44 bg-[#FAFBFF] overflow-hidden">
@@ -700,7 +739,7 @@ const AIAssistantSection = () => {
       <div className="absolute bottom-[-5%] left-[-8%] w-[500px] h-[500px] rounded-full bg-[#3EAB6E]/[0.02] blur-[100px]" />
 
       <div className="relative max-w-[1340px] mx-auto px-6">
-        <div className="mb-14">
+        <div className="mb-14 text-center lg:text-left">
           <div className="inline-flex items-center gap-2 rounded-full bg-white border border-[#D8DFFF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-6 shadow-sm">
             <MessageSquare size={14} />
             AI-Native Project Intelligence
@@ -714,104 +753,69 @@ const AIAssistantSection = () => {
             </span>
           </h2>
 
-          <p className="mt-5 text-[16px] leading-7 text-[#646A73] max-w-[560px]">
+          <p className="mt-5 text-[16px] leading-7 text-[#646A73] max-w-[600px] mx-auto lg:mx-0">
             Professional project management fundamentals, supercharged by AI. From project planning to resource allocation. Experience native intelligence, ready out-of-the-box.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-14 items-start">
-          {/* Left: Chat */}
-          <div className="rounded-[28px] border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.04)] overflow-hidden">
-            <div className="flex items-center gap-2.5 px-5 py-3.5 border-b border-[#F3F4F6] bg-white">
-              <div className="flex items-center gap-1.5">
-                <div className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
-                <div className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
-                <div className="h-2.5 w-2.5 rounded-full bg-[#16A34A]" />
-              </div>
-              <div className="ml-3 flex items-center gap-2">
-                <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center shadow-[0_2px_8px_rgba(91,94,227,0.3)]">
-                  <Sparkles size={12} className="text-white" />
-                </div>
-                <div>
-                  <div className="text-[11px] font-bold text-[#111827]">Meegle AI</div>
-                  <div className="text-[9px] text-[#16A34A] font-semibold flex items-center gap-1">
-                    <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
-                    Online
-                  </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 lg:gap-14 items-start">
+          {/* Left: Input area + command chips */}
+          <div>
+            <div className="rounded-2xl border border-[#E8EBF0] bg-white shadow-[0_8px_40px_rgba(15,23,42,0.04)] p-5">
+              <div className="relative">
+                <div className="flex items-center gap-3 rounded-xl border-2 border-[#5B5FE3]/20 bg-[#FAFBFF] px-5 py-4 transition-all focus-within:border-[#5B5FE3]/40 focus-within:shadow-[0_0_0_4px_rgba(91,94,227,0.06)]">
+                  <Sparkles size={18} className="text-[#5B5FE3] flex-shrink-0" />
+                  <span className="flex-1 text-[15px] text-[#111827] font-medium min-h-[24px]">
+                    {displayText || (started.current ? '' : 'Ask AI to plan, analyze, or optimize...')}
+                    {isTyping && (
+                      <span className="inline-block w-[2px] h-[18px] bg-[#5B5FE3] ml-0.5 align-middle animate-pulse" />
+                    )}
+                  </span>
+                  <button className="h-9 w-9 rounded-lg bg-[#5B5FE3] flex items-center justify-center hover:bg-[#4A4ED4] transition-all flex-shrink-0 shadow-[0_2px_8px_rgba(91,94,227,0.3)]">
+                    <ArrowRight size={14} className="text-white" />
+                  </button>
                 </div>
               </div>
-            </div>
 
-            <div className="px-4 py-4 space-y-3.5 min-h-[420px] bg-[#FBFCFD]">
-              {visibleMessages.length === 0 && (
-                <div className="flex items-center justify-center h-full text-[13px] text-[#B0B8C5]">
-                  Waiting for conversation...
-                </div>
-              )}
-              {CHAT_MESSAGES.map((msg) => {
-                if (!visibleMessages.includes(msg.id)) return null
-                const isTyping = typingMessageId === msg.id
-                const isUser = msg.sender === 'user'
-
-                return (
-                  <div
-                    key={msg.id}
-                    className={`flex gap-2.5 animate-fade-slide-up ${isUser ? 'justify-end' : ''}`}
+              <div className="mt-5 flex flex-wrap gap-2">
+                {AI_COMMANDS.map((cmd, idx) => (
+                  <button
+                    key={cmd.id}
+                    onClick={() => {
+                      if (cycleRef.current) clearTimeout(cycleRef.current)
+                      setActiveCommand(idx)
+                      setIsTyping(true)
+                      setDisplayText('')
+                      let charIdx = 0
+                      const fullText = cmd.label
+                      const typeInterval = setInterval(() => {
+                        charIdx++
+                        setDisplayText(fullText.substring(0, charIdx))
+                        if (charIdx >= fullText.length) {
+                          clearInterval(typeInterval)
+                          setIsTyping(false)
+                        }
+                      }, 60)
+                    }}
+                    className={`flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-[13px] font-semibold transition-all duration-300 ${
+                      activeCommand === idx
+                        ? 'text-white shadow-md'
+                        : 'bg-white border-[#EEF0F4] text-[#646A73] hover:border-[#D8DFFF] hover:text-[#111827] hover:shadow-sm'
+                    }`}
+                    style={activeCommand === idx
+                      ? { backgroundColor: cmd.color, borderColor: cmd.color }
+                      : {}
+                    }
                   >
-                    {!isUser && (
-                      <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center flex-shrink-0 shadow-sm mt-0.5">
-                        <Sparkles size={11} className="text-white" />
-                      </div>
-                    )}
-                    <div
-                      className={`rounded-2xl px-3.5 py-2.5 max-w-[85%] ${
-                        isUser
-                          ? 'bg-[#5B5FE3] text-white rounded-br-md'
-                          : 'bg-white border border-[#EEF0F4] text-[#111827] rounded-bl-md shadow-sm'
-                      }`}
-                    >
-                      <div className={`text-[10px] font-bold mb-1 ${isUser ? 'text-white/60' : 'text-[#8F959E]'}`}>
-                        {isUser ? 'You' : 'Meegle AI'}
-                      </div>
-                      <div className={`text-[12px] leading-[1.65] whitespace-pre-line ${isUser ? 'text-white' : 'text-[#374151]'}`}>
-                        {isTyping ? (
-                          <span>
-                            {msg.text.substring(0, Math.floor(msg.text.length * 0.65))}
-                            <span className="inline-flex ml-0.5">
-                              <span className="animate-pulse" style={{ animationDelay: '0ms' }}>.</span>
-                              <span className="animate-pulse" style={{ animationDelay: '150ms' }}>.</span>
-                              <span className="animate-pulse" style={{ animationDelay: '300ms' }}>.</span>
-                            </span>
-                          </span>
-                        ) : (
-                          msg.text
-                        )}
-                      </div>
-                    </div>
-                    {isUser && (
-                      <div className="h-7 w-7 rounded-lg bg-[#F4F6F9] flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <User size={12} className="text-[#8F959E]" />
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-
-            <div className="px-4 py-3.5 border-t border-[#F3F4F6] bg-white flex items-center gap-2.5">
-              <input
-                type="text"
-                placeholder="Ask Meegle AI anything about your projects..."
-                className="flex-1 bg-[#F4F6F9] rounded-xl px-3.5 py-2.5 text-[12px] text-[#111827] placeholder-[#B0B8C5] outline-none focus:ring-2 focus:ring-[#5B5FE3]/20 transition-all"
-                readOnly
-              />
-              <button className="h-9 w-9 rounded-xl bg-[#5B5FE3] flex items-center justify-center hover:bg-[#4A4ED4] transition-all shadow-[0_2px_8px_rgba(91,94,227,0.3)] flex-shrink-0">
-                <Send size={13} className="text-white" />
-              </button>
+                    <span className="text-[15px] leading-none">{cmd.icon}</span>
+                    {cmd.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Right: Screenshot area */}
+          {/* Right: Result area */}
           <div className="relative">
             <div className="rounded-[28px] border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.06)] overflow-hidden">
               <div className="flex items-center gap-1.5 px-5 py-3 border-b border-[#F3F4F6] bg-white">
@@ -819,29 +823,41 @@ const AIAssistantSection = () => {
                 <div className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
                 <div className="h-2.5 w-2.5 rounded-full bg-[#16A34A]" />
                 <div className="flex-1 text-center">
-                  <span className="text-[10px] font-semibold text-[#8F959E]">{AI_SCREENSHOTS[activeImageIndex]?.label || 'Dashboard'}</span>
+                  <span className="text-[10px] font-semibold text-[#8F959E]">
+                    {activeCommand !== null ? AI_COMMANDS[activeCommand].label : 'AI Result'}
+                  </span>
                 </div>
                 <div className="w-10" />
               </div>
 
-              <div className="relative min-h-[480px] bg-gradient-to-b from-[#FAFBFF] to-[#F4F6FF]">
-                {AI_SCREENSHOTS.map((shot, idx) => (
+              <div className="relative min-h-[440px] bg-gradient-to-b from-[#FAFBFF] to-[#F4F6FF]">
+                {activeCommand === null && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-[#B0B8C5] gap-3">
+                    <Sparkles size={36} className="opacity-20" />
+                    <span className="text-[14px] font-medium">Select or type a command to see results</span>
+                  </div>
+                )}
+
+                {AI_COMMANDS.map((cmd, idx) => (
                   <div
-                    key={shot.id}
-                    className="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                    key={cmd.id}
+                    className="absolute inset-0 flex flex-col items-center justify-center p-10 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
                     style={{
-                      opacity: activeImageIndex === idx ? 1 : 0,
-                      transform: `translateX(${activeImageIndex === idx ? 0 : idx > activeImageIndex ? 40 : -40}px)`,
-                      pointerEvents: activeImageIndex === idx ? 'auto' : 'none'
+                      opacity: activeCommand === idx ? 1 : 0,
+                      transform: `translateY(${activeCommand === idx ? 0 : activeCommand !== null && idx > activeCommand ? 30 : -20}px) scale(${activeCommand === idx ? 1 : 0.96})`,
+                      pointerEvents: activeCommand === idx ? 'auto' : 'none'
                     }}
                   >
-                    <div className={`w-full max-w-[360px] aspect-[4/3] rounded-2xl bg-gradient-to-br ${shot.gradient} opacity-10 mb-4`} />
-                    <div className="text-center">
-                      <div className="inline-flex items-center gap-2 rounded-xl bg-white border border-[#EEF0F4] px-4 py-2.5 shadow-sm mb-3">
-                        <div className={`h-5 w-5 rounded-md bg-gradient-to-br ${shot.gradient} shadow-sm`} />
-                        <span className="text-[12px] font-bold text-[#8F959E]">{shot.label}</span>
+                    <div className={`w-full max-w-[380px] aspect-[16/10] rounded-2xl bg-gradient-to-br ${cmd.gradient} opacity-[0.08] mb-6`} />
+                    <div className="text-center max-w-[320px]">
+                      <div className="inline-flex items-center gap-2.5 rounded-xl bg-white border border-[#EEF0F4] px-4 py-3 shadow-sm mb-4">
+                        <div className={`h-6 w-6 rounded-lg bg-gradient-to-br ${cmd.gradient} shadow-sm flex items-center justify-center`}>
+                          <span className="text-[14px]">{cmd.icon}</span>
+                        </div>
+                        <span className="text-[13px] font-bold text-[#374151]">{cmd.label}</span>
                       </div>
-                      <p className="text-[11px] text-[#B0B8C5]">Replace with product screenshot</p>
+                      <p className="text-[13px] leading-6 text-[#8F959E] mb-4">{cmd.desc}</p>
+                      <p className="text-[11px] text-[#B0B8C5] font-medium">Replace with product screenshot</p>
                     </div>
                   </div>
                 ))}
@@ -849,15 +865,30 @@ const AIAssistantSection = () => {
             </div>
 
             <div className="mt-4 flex justify-center gap-2">
-              {AI_SCREENSHOTS.map((shot, idx) => (
+              {AI_COMMANDS.map((cmd, idx) => (
                 <button
-                  key={shot.id}
-                  onClick={() => setActiveImageIndex(idx)}
+                  key={cmd.id}
+                  onClick={() => {
+                    if (cycleRef.current) clearTimeout(cycleRef.current)
+                    setActiveCommand(idx)
+                    setIsTyping(true)
+                    setDisplayText('')
+                    let charIdx = 0
+                    const fullText = cmd.label
+                    const typeInterval = setInterval(() => {
+                      charIdx++
+                      setDisplayText(fullText.substring(0, charIdx))
+                      if (charIdx >= fullText.length) {
+                        clearInterval(typeInterval)
+                        setIsTyping(false)
+                      }
+                    }, 60)
+                  }}
                   className="rounded-full transition-all duration-500"
                   style={{
-                    width: activeImageIndex === idx ? 24 : 8,
+                    width: activeCommand === idx ? 24 : 8,
                     height: 8,
-                    backgroundColor: activeImageIndex === idx ? '#5B5FE3' : '#D1D5DB'
+                    backgroundColor: activeCommand === idx ? cmd.color : '#D1D5DB'
                   }}
                 />
               ))}
@@ -873,30 +904,8 @@ const AIAssistantSection = () => {
 
 const MeegleHomepage = () => {
   const [mobileMenu, setMobileMenu] = useState(false)
-  const [stackActive, setStackActive] = useState(0)
   const [activeTab, setActiveTab] = useState('planning')
   const heroRef = useRef(null)
-  const stackSectionRef = useRef(null)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const el = stackSectionRef.current
-      if (!el) return
-      const rect = el.getBoundingClientRect()
-      const sectionTop = rect.top
-      const sectionHeight = rect.height
-      const viewportHeight = window.innerHeight
-
-      if (sectionTop > viewportHeight || sectionTop < -sectionHeight) return
-
-      const progress = Math.max(0, (-sectionTop) / (sectionHeight - viewportHeight))
-      const idx = Math.min(STACK_CARDS.length - 1, Math.floor(progress * STACK_CARDS.length))
-      setStackActive(idx)
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   return (
     <div className="bg-white text-[#1F2329] font-sans overflow-x-hidden">
@@ -1037,74 +1046,43 @@ const MeegleHomepage = () => {
         </div>
       </section>
 
-      {/* MULTI-AGENT — Sticky Stack Cards */}
-      <section ref={stackSectionRef} className="relative bg-[#FBFBFE]" style={{ height: `${STACK_CARDS.length * 100 + 100}vh` }}>
-        <div className="sticky top-0 h-screen flex flex-col">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#5B5FE3]/[0.03] blur-[100px]" />
+      {/* MULTI-AGENT — Cascade Stacking */}
+      <div className="relative" style={{ height: `${(STACK_CARDS.length + 1) * 100}vh` }}>
+        {STACK_CARDS.map((card, idx) => (
+          <section
+            key={card.id}
+            className="sticky top-0 h-screen flex items-center justify-center overflow-hidden"
+            style={{
+              zIndex: idx + 1,
+              backgroundColor: idx === 0 ? '#FBFBFE' : idx === 1 ? '#F5F7FB' : '#F0F4FA',
+            }}
+          >
+            <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full blur-[120px]" style={{ backgroundColor: card.color + '06' }} />
 
-          <div className="relative flex-1 w-full max-w-[1340px] mx-auto px-6 flex flex-col justify-center">
-            <div className="mb-10 max-w-[600px]">
-              <div className="inline-flex items-center gap-2 rounded-full bg-[#F4F6FF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-5">
-                <Bot size={14} /> Multi-Agent Orchestration
-              </div>
-              <h2 className="text-[48px] md:text-[56px] leading-[1.06] font-black tracking-[-0.05em] text-[#0A0A14]">
-                One open platform.<br />Unlimited agents.
-              </h2>
-            </div>
+            <div className="relative w-full max-w-[1340px] mx-auto px-6 py-10">
+              <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-16 items-center">
+                <div className="animate-fade-slide-up">
+                  <div className={`bg-gradient-to-br ${card.gradient} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
+                    {card.icon}
+                  </div>
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.subtitle}</div>
+                  <h3 className="text-[32px] md:text-[44px] font-black text-[#0A0A14] mb-4 leading-[1.08] tracking-[-0.04em]">{card.title}</h3>
+                  <p className="text-[16px] leading-7 text-[#646A73] mb-5 max-w-[480px]">{card.desc}</p>
+                  <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold w-fit" style={{ backgroundColor: card.colorLight, color: card.color }}>
+                    {card.tag}
+                  </span>
+                </div>
 
-            <div className="relative flex-1">
-              {STACK_CARDS.map((card, idx) => (
-                <div
-                  key={card.id}
-                  className="absolute inset-0 rounded-[36px] border border-black/[0.04] bg-white overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                  style={{
-                    zIndex: STACK_CARDS.length - idx,
-                    transform: `translateY(${Math.max(0, (stackActive === idx ? 0 : stackActive > idx ? -16 : 16))}px) scale(${stackActive === idx ? 1 : 0.97})`,
-                    opacity: Math.abs(stackActive - idx) <= 1 ? 1 : 0,
-                    pointerEvents: stackActive === idx ? 'auto' : 'none',
-                    boxShadow: stackActive === idx
-                      ? `0 24px 80px ${card.color}12, 0 8px 24px rgba(0,0,0,0.06)`
-                      : `0 1px 3px rgba(0,0,0,0.04)`
-                  }}
-                >
-                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] h-full">
-                    <div className="flex flex-col justify-center px-8 lg:px-14 py-10">
-                      <div className={`bg-gradient-to-br ${card.gradient} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
-                        {card.icon}
-                      </div>
-                      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.subtitle}</div>
-                      <h3 className="text-[28px] lg:text-[36px] font-black text-[#111827] mb-4 leading-[1.1]">{card.title}</h3>
-                      <p className="text-[14px] leading-7 text-[#646A73] mb-5 max-w-[420px]">{card.desc}</p>
-                      <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold w-fit" style={{ backgroundColor: card.colorLight, color: card.color }}>
-                        {card.tag}
-                      </span>
-                    </div>
-
-                    <div className="relative flex items-center justify-center p-4 lg:p-8">
-                      <AgentCardIllustration card={card} isVisible={stackActive === idx} />
-                    </div>
+                <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[440px]">
+                  <div className="rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]">
+                    <AgentCardIllustration card={card} isVisible={true} />
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-
-          <div className="absolute bottom-8 left-0 right-0 flex items-center justify-center gap-3 z-50">
-            {STACK_CARDS.map((card, idx) => (
-              <button
-                key={card.id}
-                onClick={() => setStackActive(idx)}
-                className="rounded-full transition-all duration-500"
-                style={{
-                  width: stackActive === idx ? 32 : 10,
-                  height: 10,
-                  backgroundColor: stackActive === idx ? card.color : '#D1D5DB'
-                }}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
+          </section>
+        ))}
+      </div>
 
       {/* AI CAPABILITIES — Tab Switching */}
       <section className="relative py-32 md:py-44 bg-white">
