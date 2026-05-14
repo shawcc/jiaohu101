@@ -10,9 +10,12 @@ import {
   LineChart,
   Lock,
   Menu,
+  MessageSquare,
   Play,
+  Send,
   Shield,
   Sparkles,
+  User,
   Workflow,
   X
 } from 'lucide-react'
@@ -292,23 +295,13 @@ const AnimatedCounter = ({ target, suffix, decimals }) => {
   )
 }
 
-const WORKFLOW_NODES = [
-  { id: 0, label: 'Intake' },
-  { id: 1, label: 'Scope' },
-  { id: 2, label: 'Design' },
-  { id: 3, label: 'Review' },
-  { id: 4, label: 'Develop' },
-  { id: 5, label: 'Test' },
-  { id: 6, label: 'Release' }
+const WORKFLOW_PLATFORMS = [
+  { id: 0, label: 'Intake', color: '#5B5FE3', x: 3, y: 50 },
+  { id: 1, label: 'Scope', color: '#3EAB6E', x: 21, y: 42 },
+  { id: 2, label: 'Design', color: '#F59E0B', x: 39, y: 56 },
+  { id: 3, label: 'Review', color: '#8B5CF6', x: 57, y: 40 },
+  { id: 4, label: 'Develop', color: '#EC4899', x: 75, y: 54 },
 ]
-
-const STAGE_CONFIG = {
-  idle: { label: 'Empty', color: '#D1D5DB', bg: '#F3F4F6' },
-  targeting: { label: 'Targeting', color: '#F59E0B', bg: '#FFFBF0' },
-  placing: { label: 'Placing', color: '#5B5FE3', bg: '#F4F6FF' },
-  working: { label: 'Working', color: '#3EAB6E', bg: '#EDF7F0' },
-  done: { label: 'Done', color: '#16A34A', bg: '#F0FDF4' }
-}
 
 const AGENT_BENCH = [
   { id: 'qa', label: 'QA Agent', color: '#5B5FE3' },
@@ -320,33 +313,135 @@ const AGENT_BENCH = [
   { id: 'sec', label: 'Security Agent', color: '#EF4444' },
 ]
 
-const TinyAgent = ({ color, size = 20, flying = false }) => (
-  <div
-    className="transition-all duration-500"
-    style={{
-      width: size,
-      height: size,
-      filter: flying ? `drop-shadow(0 0 10px ${color}60)` : 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))'
-    }}
-  >
-    <svg viewBox="0 0 40 40" width={size} height={size}>
+const IsometricPlatform = ({ node, isActive, isDone, isPending, agentColor, style }) => {
+  const c = node.color
+  const w = 120
+  const h = 88
+  const d = 14
+  const alpha = isPending ? 0.35 : isDone ? 0.55 : 1
+  const glow = isActive ? `0 0 40px ${c}40, 0 8px 30px ${c}20` : isDone ? `0 2px 10px ${c}10` : 'none'
+  const scale = isActive ? 1.08 : isDone ? 0.96 : 0.92
+
+  return (
+    <div className="absolute transition-all duration-700" style={{ ...style, transform: `scale(${scale})`, opacity: alpha }}>
+      <div style={{ position: 'relative', width: w + d + 4, height: h + d + 4, filter: glow ? `drop-shadow(${glow})` : undefined }}>
+        <svg viewBox={`0 0 ${w + d + 4} ${h + d + 4}`} width={w + d + 4} height={h + d + 4} style={{ display: 'block' }}>
+          {/* Right face (3D side) */}
+          <path
+            d={`M${w} ${d} L${w + d} ${0} L${w + d} ${h} L${w} ${h + d} Z`}
+            fill={isActive ? c + '28' : isDone ? c + '18' : '#e8eaed'}
+            stroke={isActive ? c + '18' : '#e0e3e7'}
+            strokeWidth="0.5"
+          />
+          {/* Front face (3D side) */}
+          <path
+            d={`M${0} ${h} L${d} ${h + d} L${w + d} ${h + d} L${w} ${h} Z`}
+            fill={isActive ? c + '20' : isDone ? c + '14' : '#e8eaed'}
+            stroke={isActive ? c + '15' : '#e0e3e7'}
+            strokeWidth="0.5"
+          />
+          {/* Top face */}
+          <rect
+            x="0" y="0" width={w} height={h}
+            rx="12"
+            fill={isActive ? c + '0F' : isDone ? c + '08' : '#f7f8fa'}
+            stroke={isActive ? c + '50' : isDone ? c + '25' : '#e0e3e7'}
+            strokeWidth={isActive ? 2 : 1}
+          />
+
+          {/* Label */}
+          <text x={w / 2} y={h / 2 + 2} textAnchor="middle" dominantBaseline="central"
+            fontWeight="700" fontSize="11"
+            fill={isActive ? c : isDone ? c + '70' : '#9ca3af'}
+            fontFamily="system-ui, -apple-system, sans-serif"
+            letterSpacing="0.02em"
+          >
+            {node.label}
+          </text>
+
+          {/* Agent avatar on platform */}
+          <g transform={`translate(${w / 2 - 28}, ${h / 2 - 20})`}>
+            <circle cx="0" cy="0" r="8" fill={agentColor || c} opacity="0.85" />
+            <rect x="-3" y="3" width="2.5" height="4" rx="1.2" fill={agentColor || c} opacity="0.5" />
+            <rect x="1" y="3" width="2.5" height="4" rx="1.2" fill={agentColor || c} opacity="0.5" />
+            <rect x="-6" y="6" width="12" height="8" rx="4" fill={agentColor || c} opacity="0.65" />
+            <circle cx="-2.5" cy="-1" r="1.2" fill="white" />
+            <circle cx="2.5" cy="-1" r="1.2" fill="white" />
+            <circle cx="-2.5" cy="-1" r="0.6" fill="#111" />
+            <circle cx="2.5" cy="-1" r="0.6" fill="#111" />
+          </g>
+
+          {/* Human avatar on platform */}
+          <g transform={`translate(${w / 2 + 16}, ${h / 2 - 18})`}>
+            <circle cx="0" cy="-5" r="5" fill={isActive ? '#374151' : '#9ca3af'} />
+            <path d="M-6 6c0-3.3 2.7-6 6-6s6 2.7 6 6" fill={isActive ? '#374151' : '#9ca3af'} opacity="0.7" />
+          </g>
+        </svg>
+
+        {/* Active pulse ring */}
+        {isActive && (
+          <div
+            className="absolute rounded-xl animate-pulse"
+            style={{
+              inset: -4,
+              border: `2px solid ${c}30`,
+              borderRadius: 16,
+              pointerEvents: 'none',
+              animation: 'scaleIn 1.5s ease-in-out infinite'
+            }}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
+
+const ConnectorBridge = ({ from, to, color = '#d1d5db', active = false }) => {
+  const fx = from.left + from.width / 2
+  const fy = from.top + from.height / 2
+  const tx = to.left + to.width / 2
+  const ty = to.top + to.height / 2
+  const midX = (fx + tx) / 2
+  const midY = Math.min(fy, ty) - 30
+
+  return (
+    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
       <defs>
-        <linearGradient id={`ta-${color?.replace('#','')}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor={color} />
-          <stop offset="100%" stopColor={color} stopOpacity="0.7" />
+        <linearGradient id={`bridge-${from.id}-${to.id}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor={color} stopOpacity={active ? 0.6 : 0.2} />
+          <stop offset="100%" stopColor={to.color} stopOpacity={active ? 0.6 : 0.2} />
         </linearGradient>
       </defs>
-      <circle cx="20" cy="12" r="9" fill={`url(#ta-${color?.replace('#','')})`} />
-      <rect x="15" y="16" width="4" height="5" rx="2" fill={color} opacity="0.5" />
-      <rect x="21" y="16" width="4" height="5" rx="2" fill={color} opacity="0.5" />
-      <rect x="11" y="20" width="18" height="11" rx="5" fill={`url(#ta-${color?.replace('#','')})`} />
-      <circle cx="17" cy="12" r="1.5" fill="white" />
-      <circle cx="23" cy="12" r="1.5" fill="white" />
-      <circle cx="17" cy="12" r="0.8" fill="#111" />
-      <circle cx="23" cy="12" r="0.8" fill="#111" />
+      <path
+        d={`M${fx} ${fy} Q${midX} ${midY} ${tx} ${ty}`}
+        fill="none"
+        stroke={active ? `url(#bridge-${from.id}-${to.id})` : '#e5e7eb'}
+        strokeWidth={active ? 2.5 : 1.5}
+        strokeDasharray={active ? '6 3' : '4 4'}
+        opacity={active ? 1 : 0.5}
+      >
+        {active && (
+          <animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.8s" repeatCount="indefinite" />
+        )}
+      </path>
+      {/* Arrow head */}
+      {active && (
+        <polygon
+          points={`${tx - 6},${ty - 4} ${tx},${ty} ${tx - 6},${ty + 4}`}
+          fill={to.color}
+          opacity="0.7"
+        />
+      )}
+      {!active && (
+        <polygon
+          points={`${tx - 4},${ty - 3} ${tx},${ty} ${tx - 4},${ty + 3}`}
+          fill="#d1d5db"
+          opacity="0.4"
+        />
+      )}
     </svg>
-  </div>
-)
+  )
+}
 
 const WorkflowBoard = () => {
   const [activeIdx, setActiveIdx] = useState(0)
@@ -354,193 +449,321 @@ const WorkflowBoard = () => {
   const phaseRef = useRef('targeting')
 
   const advance = useCallback(() => {
-    if (phaseRef.current === 'targeting') { phaseRef.current = 'flying'; setPhase('flying') }
-    else if (phaseRef.current === 'flying') { phaseRef.current = 'placed'; setPhase('placed') }
-    else if (phaseRef.current === 'placed') { phaseRef.current = 'working'; setPhase('working') }
+    if (phaseRef.current === 'targeting') { phaseRef.current = 'placing'; setPhase('placing') }
+    else if (phaseRef.current === 'placing') { phaseRef.current = 'working'; setPhase('working') }
     else if (phaseRef.current === 'working') { phaseRef.current = 'done'; setPhase('done') }
     else if (phaseRef.current === 'done') {
-      setActiveIdx(p => (p + 1) % WORKFLOW_NODES.length)
+      setActiveIdx(p => (p + 1) % WORKFLOW_PLATFORMS.length)
       phaseRef.current = 'targeting'
       setPhase('targeting')
     }
   }, [])
 
   useEffect(() => {
-    const durations = { targeting: 800, flying: 600, placed: 400, working: 1600, done: 1000 }
+    const durations = { targeting: 700, placing: 500, working: 2000, done: 1200 }
     const t = setTimeout(advance, durations[phase] || 1000)
     return () => clearTimeout(t)
   }, [phase, activeIdx, advance])
 
   const currentAgent = AGENT_BENCH[activeIdx % AGENT_BENCH.length]
-  const nodeGap = 20
-  const nodeW = 80
-  const slotW = 72
-  const slotH = 44
+
+  const platW = 134
+  const platH = 106
+  const sceneW = 700
+  const sceneH = 360
+
+  const positions = WORKFLOW_PLATFORMS.map((p) => ({
+    id: p.id,
+    left: (p.x / 100) * sceneW,
+    top: (p.y / 100) * (sceneH - 60) + 20,
+    width: platW,
+    height: platH,
+    color: p.color
+  }))
 
   return (
-    <div className="relative w-full select-none">
-      <div className="relative" style={{ perspective: '800px', height: 400 }}>
-        <div className="absolute inset-x-0 flex justify-center" style={{ top: 24 }}>
-          <div
-            className="rounded-3xl"
-            style={{
-              width: WORKFLOW_NODES.length * (slotW + nodeGap) + 80,
-              height: 240,
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(245,246,250,0.6) 100%)',
-              border: '1px solid rgba(0,0,0,0.04)',
-              boxShadow: '0 24px 80px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.02)',
-              transform: 'rotateX(55deg) rotateZ(-5deg)'
-            }}
+    <div className="relative w-full select-none" style={{ height: sceneH }}>
+      {/* Background grid */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.06 }}>
+        <defs>
+          <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#5B5FE3" strokeWidth="0.3" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#grid)" />
+      </svg>
+
+      {/* Connector bridges */}
+      {positions.map((pos, i) => {
+        if (i >= positions.length - 1) return null
+        const next = positions[i + 1]
+        const isActiveBridge = i === activeIdx && (phase === 'placing' || phase === 'working')
+        const isDoneBridge = i < activeIdx
+        const bridgeColor = isDoneBridge ? WORKFLOW_PLATFORMS[i].color : WORKFLOW_PLATFORMS[i + 1].color
+        return (
+          <ConnectorBridge
+            key={`bridge-${i}`}
+            from={{ id: i, left: pos.left + 10, top: pos.top + 10, width: pos.width - 20, height: pos.height - 20, color: pos.color }}
+            to={{ id: i + 1, left: next.left + 10, top: next.top + 10, width: next.width - 20, height: next.height - 20, color: next.color }}
+            color={bridgeColor}
+            active={isActiveBridge}
           />
-        </div>
+        )
+      })}
 
-        <div
-          className="absolute inset-x-0 flex items-center justify-center"
-          style={{
-            transform: 'rotateX(55deg) rotateZ(-5deg)',
-            top: 60,
-            gap: nodeGap,
-            pointerEvents: 'none'
-          }}
-        >
-          {WORKFLOW_NODES.map((node, idx) => {
-            const isActive = idx === activeIdx
-            const isDone = idx < activeIdx
-            const slotPhase = isActive ? phase : isDone ? 'done' : 'idle'
-            const cfg = STAGE_CONFIG[slotPhase]
+      {/* Platforms */}
+      {positions.map((pos, i) => {
+        const isActive = i === activeIdx
+        const isDone = i < activeIdx
+        const isPending = i > activeIdx
+        const agent = AGENT_BENCH[i % AGENT_BENCH.length]
+        return (
+          <IsometricPlatform
+            key={pos.id}
+            node={{ id: WORKFLOW_PLATFORMS[i].id, label: WORKFLOW_PLATFORMS[i].label, color: WORKFLOW_PLATFORMS[i].color }}
+            isActive={isActive}
+            isDone={isDone}
+            isPending={isPending}
+            agentColor={agent.color}
+            style={{ left: pos.left, top: pos.top }}
+          />
+        )
+      })}
 
-            return (
-              <div key={node.id} className="relative flex flex-col items-center" style={{ width: slotW }}>
-                <div
-                  className="rounded-xl border-2 flex items-center justify-center transition-all duration-500"
-                  style={{
-                    width: slotW,
-                    height: slotH,
-                    backgroundColor: slotPhase === 'idle' ? '#F9FAFB' : cfg.bg,
-                    borderColor: cfg.color + (slotPhase === 'idle' ? '30' : ''),
-                    borderStyle: slotPhase === 'idle' ? 'dashed' : 'solid',
-                    boxShadow: isActive && slotPhase !== 'idle' ? `0 8px 32px ${cfg.color}20` : 'none',
-                    transform: isActive && (slotPhase === 'placed' || slotPhase === 'working') ? 'translateY(-4px)' : 'none'
-                  }}
-                >
-                  {slotPhase === 'idle' && (
-                    <span className="text-[9px] font-semibold text-[#C0C5CE]">{node.label}</span>
-                  )}
-                  {slotPhase === 'targeting' && (
-                    <span className="text-[9px] font-bold" style={{ color: cfg.color }}>→ {node.label}</span>
-                  )}
-                  {slotPhase === 'flying' && (
-                    <div className="animate-bounce">
-                      <TinyAgent color={currentAgent.color} size={18} flying />
-                    </div>
-                  )}
-                  {(slotPhase === 'placed' || slotPhase === 'working') && (
-                    <div className="flex items-center gap-2">
-                      <TinyAgent color={currentAgent.color} size={20} />
-                      <div className="flex flex-col">
-                        <span className="text-[8px] font-extrabold text-[#111827] leading-tight">{node.label}</span>
-                        <span className="text-[7px] font-semibold" style={{ color: cfg.color }}>
-                          {slotPhase === 'placed' ? 'Activated' : 'Working...'}
-                        </span>
-                      </div>
-                      {slotPhase === 'working' && (
-                        <div className="w-12 h-1 rounded-full bg-gray-100 overflow-hidden">
-                          <div className="h-full rounded-full animate-pulse" style={{ backgroundColor: cfg.color, width: '70%' }} />
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  {slotPhase === 'done' && (
-                    <div className="flex items-center gap-1.5">
-                      <CheckCircle2 size={14} className="text-[#16A34A]" />
-                      <span className="text-[9px] font-bold text-[#16A34A]">{node.label}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        <svg className="absolute w-full h-full pointer-events-none" style={{ top: 0, left: 0, overflow: 'visible' }}>
-          {WORKFLOW_NODES.map((_, idx) => {
-            if (idx >= WORKFLOW_NODES.length - 1) return null
-            const cx = `calc(50% - ${(WORKFLOW_NODES.length * (slotW + nodeGap)) / 2}px + ${idx * (slotW + nodeGap) + slotW / 2}px)`
-            const nx = `calc(50% - ${(WORKFLOW_NODES.length * (slotW + nodeGap)) / 2}px + ${(idx + 1) * (slotW + nodeGap) + slotW / 2}px)`
-            const isPast = idx < activeIdx
-            return (
-              <g key={idx}>
-                <line
-                  x1={0} y1={0} x2={0} y2={0}
-                  style={{ display: 'none' }}
-                />
-              </g>
-            )
-          })}
-        </svg>
-
-        <div
-          className="absolute inset-x-0 flex justify-center gap-2"
-          style={{ bottom: 70 }}
-        >
-          {AGENT_BENCH.map((agent, idx) => {
-            const assignedIdx = idx % WORKFLOW_NODES.length
-            const isAssigned = assignedIdx <= activeIdx
-            const isFlying = assignedIdx === activeIdx && (phase === 'flying' || phase === 'placed' || phase === 'working')
-
-            return (
-              <div
-                key={agent.id}
-                className="rounded-xl px-2.5 py-1.5 flex items-center gap-1.5 transition-all duration-500"
-                style={{
-                  backgroundColor: isAssigned ? agent.color + '10' : '#F3F4F6',
-                  border: `1px solid ${isAssigned ? agent.color + '20' : '#E5E7EB'}`,
-                  opacity: isAssigned && !isFlying ? 0.5 : 1
-                }}
-              >
-                <TinyAgent color={agent.color} size={16} />
-                <span
-                  className="text-[9px] font-semibold"
-                  style={{ color: isAssigned ? agent.color : '#9CA3AF' }}
-                >
-                  {agent.label}
-                </span>
-                {isAssigned && !isFlying && <CheckCircle2 size={10} className="text-[#16A34A]" />}
-              </div>
-            )
-          })}
-        </div>
-
-        {phase === 'flying' && (
-          <div
-            className="absolute font-bold text-[11px]"
-            style={{
-              left: '50%',
-              top: 90,
-              transform: 'translateX(-50%)',
-              color: currentAgent.color,
-              animation: 'fadeSlideUp 0.6s ease-out'
-            }}
-          >
-            Placing {currentAgent.label} into {WORKFLOW_NODES[activeIdx].label}...
-          </div>
+      {/* Status indicator */}
+      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2">
+        {phase === 'targeting' && (
+          <span className="text-[11px] font-semibold" style={{ color: currentAgent.color, animation: 'fadeSlideUp 0.5s ease-out' }}>
+            Assigning {currentAgent.label} to {WORKFLOW_PLATFORMS[activeIdx].label}...
+          </span>
+        )}
+        {phase === 'placing' && (
+          <span className="text-[11px] font-semibold" style={{ color: WORKFLOW_PLATFORMS[activeIdx].color, animation: 'fadeSlideUp 0.5s ease-out' }}>
+            {currentAgent.label} + Human collaborating on {WORKFLOW_PLATFORMS[activeIdx].label}
+          </span>
         )}
         {phase === 'working' && (
-          <div
-            className="absolute font-bold text-[11px]"
-            style={{
-              left: '50%',
-              top: 90,
-              transform: 'translateX(-50%)',
-              color: '#3EAB6E',
-              animation: 'fadeSlideUp 0.6s ease-out'
-            }}
-          >
-            Architecting automated workflow...
-          </div>
+          <span className="text-[11px] font-semibold text-[#3EAB6E]" style={{ animation: 'fadeSlideUp 0.5s ease-out' }}>
+            Building the workflow pipeline...
+          </span>
+        )}
+        {phase === 'done' && (
+          <span className="text-[11px] font-semibold text-[#16A34A]" style={{ animation: 'fadeSlideUp 0.5s ease-out' }}>
+            {WORKFLOW_PLATFORMS[activeIdx].label} complete — flowing to next →
+          </span>
         )}
       </div>
     </div>
+  )
+}
+
+const CHAT_MESSAGES = [
+  {
+    id: 1,
+    sender: 'user',
+    avatar: 'U',
+    text: 'What\'s the status of our Q3 product launch across all teams?',
+    delay: 0
+  },
+  {
+    id: 2,
+    sender: 'ai',
+    avatar: 'M',
+    text: 'Here\'s the cross-team status dashboard for Q3 launch.\n\n⏱ Sprint Progress: 76% complete\n👥 Resource Load: 82% allocated\n⚠ Risk Items: 3 detected (mitigated)\n\nEngineering is tracking ahead by 2 sprints. However, Design has a minor bottleneck — I recommend rebalancing resources.',
+    delay: 1800
+  },
+  {
+    id: 3,
+    sender: 'user',
+    avatar: 'U',
+    text: 'Can you draft a resource rebalancing plan for Design?',
+    delay: 4200
+  },
+  {
+    id: 4,
+    sender: 'ai',
+    avatar: 'M',
+    text: 'Sure! I\'ve analyzed team capacity and created a draft plan:\n\n📋 Rebalancing Recommendations:\n• Move 2 engineers from Platform to Design Review\n• Extend sprint scope by 3 days to absorb backlog\n• Auto-schedule stakeholder alignment for Thursday\n\nWould you like me to apply these changes to the active sprint?',
+    delay: 6000
+  }
+]
+
+const AI_PROJECT_CARDS = [
+  { label: 'Sprint Progress', value: '76%', color: '#5B5FE3', trend: '+8%' },
+  { label: 'Resource Load', value: '82%', color: '#3EAB6E', trend: 'Balanced' },
+  { label: 'Risk Items', value: '3', color: '#F59E0B', trend: 'Mitigated' },
+  { label: 'On Track', value: '5/7', color: '#16A34A', trend: 'Teams' }
+]
+
+const AIAssistantSection = () => {
+  const [visibleMessages, setVisibleMessages] = useState([])
+  const [typingMessageId, setTypingMessageId] = useState(null)
+  const sectionRef = useRef(null)
+  const started = useRef(false)
+
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true
+        CHAT_MESSAGES.forEach((msg) => {
+          setTimeout(() => {
+            setVisibleMessages(prev => [...prev, msg.id])
+            setTypingMessageId(msg.id)
+            const textLen = msg.text.length
+            setTimeout(() => {
+              setTypingMessageId(null)
+            }, Math.min(textLen * 25, 2000))
+          }, msg.delay)
+        })
+      }
+    }, { threshold: 0.2 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <section ref={sectionRef} className="relative py-32 md:py-44 bg-[#FAFBFF] overflow-hidden">
+      <div className="absolute top-0 right-[-10%] w-[600px] h-[600px] rounded-full bg-[#5B5FE3]/[0.02] blur-[120px]" />
+      <div className="absolute bottom-[-5%] left-[-8%] w-[500px] h-[500px] rounded-full bg-[#3EAB6E]/[0.02] blur-[100px]" />
+
+      <div className="relative max-w-[1340px] mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-20 items-center">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white border border-[#D8DFFF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-6 shadow-sm">
+              <MessageSquare size={14} />
+              AI-Native Project Intelligence
+            </div>
+
+            <h2 className="text-[40px] md:text-[52px] leading-[1.04] font-black tracking-[-0.05em] text-[#0A0A14]">
+              Professional Standards.
+              <br />
+              <span className="bg-gradient-to-r from-[#5B5FE3] via-[#787BEE] to-[#A78BFA] bg-clip-text text-transparent gradient-shift">
+                AI-Native Power.
+              </span>
+            </h2>
+
+            <p className="mt-5 text-[16px] leading-7 text-[#646A73] max-w-[460px]">
+              Professional project management fundamentals, supercharged by AI. From project planning to resource allocation. Experience native intelligence, ready out-of-the-box.
+            </p>
+
+            <div className="mt-10 grid grid-cols-2 gap-3">
+              {AI_PROJECT_CARDS.map((card) => (
+                <div
+                  key={card.label}
+                  className="rounded-2xl border border-black/[0.04] bg-white p-5 hover:shadow-[0_16px_48px_rgba(91,94,227,0.06)] hover:border-[#D8DFFF] transition-all duration-500"
+                >
+                  <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#8F959E] mb-2">{card.label}</div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-[28px] font-black tracking-[-0.04em] text-[#111827]">{card.value}</span>
+                    <span className="text-[12px] font-bold" style={{ color: card.color }}>{card.trend}</span>
+                  </div>
+                  <div className="mt-3 h-1 rounded-full bg-[#F3F4F6] overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-1000"
+                      style={{
+                        width: card.value.endsWith('%') ? card.value : card.value.includes('/') ? `${(parseInt(card.value) / parseInt(card.value.split('/')[1]) * 100).toFixed(0)}%` : '0%',
+                        background: `linear-gradient(90deg, ${card.color}, ${card.color}88)`
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="rounded-[32px] border border-black/[0.04] bg-white shadow-[0_24px_80px_rgba(15,23,42,0.06)] overflow-hidden">
+              <div className="flex items-center gap-2.5 px-6 py-4 border-b border-[#F3F4F6] bg-[#FAFBFF]">
+                <div className="flex items-center gap-1.5">
+                  <div className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-[#16A34A]" />
+                </div>
+                <div className="ml-3 flex items-center gap-2">
+                  <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center shadow-[0_4px_12px_rgba(91,94,227,0.3)]">
+                    <Sparkles size={14} className="text-white" />
+                  </div>
+                  <div>
+                    <div className="text-[12px] font-bold text-[#111827]">Meegle AI</div>
+                    <div className="text-[10px] text-[#16A34A] font-semibold flex items-center gap-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A] animate-pulse" />
+                      Online
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-5 py-5 space-y-4 min-h-[380px] bg-[#FBFCFD]">
+                {CHAT_MESSAGES.map((msg) => {
+                  if (!visibleMessages.includes(msg.id)) return null
+                  const isTyping = typingMessageId === msg.id
+                  const isUser = msg.sender === 'user'
+
+                  return (
+                    <div
+                      key={msg.id}
+                      className={`flex gap-3 animate-fade-slide-up ${isUser ? 'justify-end' : ''}`}
+                    >
+                      {!isUser && (
+                        <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center flex-shrink-0 shadow-sm">
+                          <Sparkles size={14} className="text-white" />
+                        </div>
+                      )}
+                      <div
+                        className={`rounded-2xl px-4 py-3 max-w-[80%] ${
+                          isUser
+                            ? 'bg-[#5B5FE3] text-white rounded-br-md'
+                            : 'bg-white border border-[#EEF0F4] text-[#111827] rounded-bl-md shadow-sm'
+                        }`}
+                      >
+                        <div className={`text-[11px] font-bold mb-1 ${isUser ? 'text-white/60' : 'text-[#8F959E]'}`}>
+                          {isUser ? 'You' : 'Meegle AI'}
+                        </div>
+                        <div className={`text-[13px] leading-6 whitespace-pre-line ${isUser ? 'text-white' : 'text-[#374151]'}`}>
+                          {isTyping ? (
+                            <span>
+                              {msg.text.substring(0, Math.floor(msg.text.length * 0.7))}
+                              <span className="inline-flex ml-1">
+                                <span className="animate-pulse" style={{ animationDelay: '0ms' }}>.</span>
+                                <span className="animate-pulse" style={{ animationDelay: '150ms' }}>.</span>
+                                <span className="animate-pulse" style={{ animationDelay: '300ms' }}>.</span>
+                              </span>
+                            </span>
+                          ) : (
+                            msg.text
+                          )}
+                        </div>
+                      </div>
+                      {isUser && (
+                        <div className="h-8 w-8 rounded-xl bg-[#F4F6F9] flex items-center justify-center flex-shrink-0">
+                          <User size={14} className="text-[#8F959E]" />
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+
+              <div className="px-5 py-4 border-t border-[#F3F4F6] bg-white flex items-center gap-3">
+                <input
+                  type="text"
+                  placeholder="Ask Meegle AI anything about your projects..."
+                  className="flex-1 bg-[#F4F6F9] rounded-xl px-4 py-2.5 text-[13px] text-[#111827] placeholder-[#B0B8C5] outline-none focus:ring-2 focus:ring-[#5B5FE3]/20 transition-all"
+                  readOnly
+                />
+                <button className="h-10 w-10 rounded-xl bg-[#5B5FE3] flex items-center justify-center hover:bg-[#4A4ED4] transition-all shadow-[0_4px_12px_rgba(91,94,227,0.3)] flex-shrink-0">
+                  <Send size={15} className="text-white" />
+                </button>
+              </div>
+            </div>
+
+            <div className="absolute -z-10 top-4 left-4 w-full h-full rounded-[32px] bg-[#5B5FE3]/[0.04] border border-[#5B5FE3]/[0.06]" />
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 
@@ -604,21 +827,6 @@ const MeegleHomepage = () => {
         .pulse-ring {
           animation: pulseRing 2.4s ease-out infinite;
         }
-        .scroll-reveal {
-          opacity: 0;
-          transform: translateY(40px);
-          transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .scroll-reveal.visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        .carousel-scroll {
-          scroll-behavior: smooth;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-        }
-        .carousel-scroll::-webkit-scrollbar { display: none; }
       `}</style>
 
       {/* NAV */}
@@ -847,6 +1055,9 @@ const MeegleHomepage = () => {
         </div>
       </section>
 
+      {/* AI ASSISTANT — Animated Chat Interface */}
+      <AIAssistantSection />
+
       {/* METRICS STRIP — Animated Counters */}
       <section className="relative py-20 overflow-hidden bg-[#0A0A14]">
         <div className="absolute inset-0 bg-gradient-to-r from-[#5B5FE3]/10 via-transparent to-[#787BEE]/10" />
@@ -854,7 +1065,7 @@ const MeegleHomepage = () => {
 
         <div className="relative max-w-[1340px] mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-20 text-center">
-            {METRICS.map((m, idx) => (
+            {METRICS.map((m) => (
               <div key={m.label} className="space-y-3">
                 <div className="text-[56px] md:text-[72px] font-black tracking-[-0.06em] text-white tabular-nums">
                   <AnimatedCounter target={m.value} suffix={m.suffix} decimals={m.decimals} />
