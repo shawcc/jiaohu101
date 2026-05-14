@@ -6,24 +6,15 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Code,
-  Eye,
-  FileText,
   GitBranch,
   Globe,
   Layers,
   LineChart,
-  ListChecks,
   Lock,
   Menu,
-  Monitor,
-  Package,
   Play,
-  Rocket,
-  Search,
   Shield,
   Sparkles,
-  UserRound,
   Workflow,
   X
 } from 'lucide-react'
@@ -147,255 +138,228 @@ const AnimatedCounter = ({ target, suffix, decimals }) => {
 }
 
 const WORKFLOW_NODES = [
-  { id: 0, label: 'Intake', icon: <FileText size={14} />, row: 0, col: 0 },
-  { id: 1, label: 'Scoping', icon: <Search size={14} />, row: 0, col: 1 },
-  { id: 2, label: 'Design', icon: <Eye size={14} />, row: 0, col: 2 },
-  { id: 3, label: 'Review', icon: <ListChecks size={14} />, row: 0, col: 3 },
-  { id: 4, label: 'Prototype', icon: <Monitor size={14} />, row: 1, col: 3 },
-  { id: 5, label: 'Develop', icon: <Code size={14} />, row: 1, col: 2 },
-  { id: 6, label: 'Test', icon: <Play size={14} />, row: 1, col: 1 },
-  { id: 7, label: 'QA', icon: <Shield size={14} />, row: 1, col: 0 },
-  { id: 8, label: 'Staging', icon: <Package size={14} />, row: 2, col: 0 },
-  { id: 9, label: 'Release', icon: <Rocket size={14} />, row: 2, col: 1 },
-  { id: 10, label: 'Monitor', icon: <LineChart size={14} />, row: 2, col: 2 },
-  { id: 11, label: 'Iterate', icon: <GitBranch size={14} />, row: 2, col: 3 }
+  { id: 0, label: 'Intake' },
+  { id: 1, label: 'Scope' },
+  { id: 2, label: 'Design' },
+  { id: 3, label: 'Review' },
+  { id: 4, label: 'Develop' },
+  { id: 5, label: 'Test' },
+  { id: 6, label: 'Release' }
 ]
 
-const STAGE_CONFIG = {
-  plan: {
-    label: 'Plan',
-    color: '#5B5FE3',
-    bg: '#F4F6FF',
-    glow: 'rgba(91,94,227,0.22)',
-    desc: 'Agent drafts plan',
-    action: 'Human reviews',
-    duration: 1000
-  },
-  build: {
-    label: 'Build',
-    color: '#3EAB6E',
-    bg: '#EDF7F0',
-    glow: 'rgba(62,171,110,0.18)',
-    desc: 'Agent executes',
-    action: 'Human approves',
-    duration: 1400
-  },
-  ship: {
-    label: 'Ship',
-    color: '#F59E0B',
-    bg: '#FFFBF0',
-    glow: 'rgba(245,158,11,0.2)',
-    desc: 'Shipping to next',
-    action: 'Handoff complete',
-    duration: 600
-  }
+const STAGE = {
+  plan: { label: 'Plan', color: '#5B5FE3', emoji: '📋' },
+  build: { label: 'Build', color: '#3EAB6E', emoji: '🔧' },
+  ship: { label: 'Ship', color: '#F59E0B', emoji: '🚀' }
 }
 
-const WorkflowNode = ({ node, state, stage, x, y }) => {
-  const isActive = state === 'active'
-  const isDone = state === 'done'
-
-  return (
+const AgentAvatar = ({ color, size = 40 }) => (
+  <div
+    className="relative flex items-center justify-center transition-all duration-300"
+    style={{ width: size, height: size }}
+  >
     <div
-      className="absolute transition-all duration-500 ease-out"
-      style={{
-        left: x,
-        top: y,
-        transform: isActive ? 'scale(1.0)' : 'scale(1.0)',
-        opacity: 1,
-        zIndex: isActive ? 20 : 1
-      }}
-    >
-      {isActive ? (
-        <div
-          className="rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-sm transition-all duration-500 flex flex-col items-center gap-2"
-          style={{
-            borderColor: STAGE_CONFIG[stage]?.color + '40',
-            backgroundColor: STAGE_CONFIG[stage]?.bg,
-            boxShadow: `0 12px 40px ${STAGE_CONFIG[stage]?.glow}`,
-            minWidth: '140px'
-          }}
-        >
-          <div className="flex items-center gap-3 w-full">
-            <div
-              className="flex items-center justify-center rounded-xl w-9 h-9"
-              style={{ backgroundColor: STAGE_CONFIG[stage]?.color, color: 'white' }}
-            >
-              {isDone ? <CheckCircle2 size={16} /> : node.icon}
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-extrabold text-[#111827] leading-tight">{node.label}</span>
-              <span className="text-[10px] font-bold" style={{ color: STAGE_CONFIG[stage]?.color }}>
-                {STAGE_CONFIG[stage]?.label}
-              </span>
-            </div>
-          </div>
+      className="absolute inset-0 rounded-full animate-pulse"
+      style={{ backgroundColor: color + '20' }}
+    />
+    <svg viewBox="0 0 40 40" width={size} height={size} className="relative drop-shadow-lg">
+      <defs>
+        <linearGradient id={`ag-${color.replace('#','')}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={color} />
+          <stop offset="100%" stopColor={color} stopOpacity="0.7" />
+        </linearGradient>
+      </defs>
+      <circle cx="20" cy="14" r="10" fill={`url(#ag-${color.replace('#','')})`} />
+      <rect x="14" y="18" width="5" height="6" rx="2" fill={color} opacity="0.6" />
+      <rect x="21" y="18" width="5" height="6" rx="2" fill={color} opacity="0.6" />
+      <rect x="10" y="22" width="20" height="12" rx="6" fill={`url(#ag-${color.replace('#','')})`} />
+      <circle cx="16" cy="14" r="2" fill="white" />
+      <circle cx="24" cy="14" r="2" fill="white" />
+      <circle cx="16" cy="14" r="1" fill="#111" />
+      <circle cx="24" cy="14" r="1" fill="#111" />
+    </svg>
+  </div>
+)
 
-          <div className="w-full rounded-xl bg-white/50 px-3 py-2 flex items-center gap-3">
-            <span className="text-[10px] font-semibold" style={{ color: STAGE_CONFIG[stage]?.color }}>
-              {STAGE_CONFIG[stage]?.desc}
-            </span>
-            <div
-              className="h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: STAGE_CONFIG[stage]?.color }}
-            >
-              <Bot size={9} className="text-white" />
-            </div>
-          </div>
+const HumanAvatar = ({ size = 36 }) => (
+  <div
+    className="relative flex items-center justify-center"
+    style={{ width: size, height: size }}
+  >
+    <svg viewBox="0 0 40 40" width={size} height={size} className="drop-shadow">
+      <circle cx="20" cy="14" r="10" fill="#374151" />
+      <ellipse cx="20" cy="34" rx="14" ry="8" fill="#374151" />
+    </svg>
+  </div>
+)
 
-          <div className="w-full rounded-xl bg-white/50 px-3 py-2 flex items-center gap-3">
-            <span className="text-[10px] font-semibold text-[#111827]">
-              {STAGE_CONFIG[stage]?.action}
-            </span>
-            <div className="h-5 w-5 rounded-full bg-[#111827] flex items-center justify-center flex-shrink-0">
-              <UserRound size={9} className="text-white" />
-            </div>
-          </div>
-
-          {stage === 'ship' && (
-            <div className="flex items-center gap-1.5">
-              <span
-                className="h-1.5 w-1.5 rounded-full animate-pulse"
-                style={{ backgroundColor: STAGE_CONFIG.ship.color }}
-              />
-              <span className="text-[9px] font-bold" style={{ color: STAGE_CONFIG.ship.color }}>Flowing →</span>
-            </div>
-          )}
-        </div>
-      ) : isDone ? (
-        <div className="rounded-xl border border-[#D1D5DB]/40 bg-white px-3 py-2 flex items-center gap-2 shadow-sm">
-          <span className="text-[#16A34A]">
-            <CheckCircle2 size={13} />
-          </span>
-          <span className="text-[10px] font-bold text-[#16A34A] leading-tight">{node.label}</span>
-        </div>
-      ) : (
-        <div className="rounded-xl border border-[#D1D5DB]/30 bg-white/60 px-3 py-2 flex items-center gap-2 shadow-sm backdrop-blur-sm">
-          <span style={{ color: '#9CA3AF' }}>{node.icon}</span>
-          <span className="text-[10px] font-semibold text-[#374151] leading-tight">{node.label}</span>
-        </div>
-      )}
-    </div>
-  )
-}
-
-const FlowBeam = ({ x1, y1, x2, y2, color }) => {
-  const dx = x2 - x1
-  const dy = y2 - y1
-  const length = Math.sqrt(dx * dx + dy * dy)
-  const angle = Math.atan2(dy, dx) * (180 / Math.PI)
-
-  return (
-    <div
-      className="absolute pointer-events-none"
-      style={{
-        left: x1,
-        top: y1,
-        width: length,
-        height: 2,
-        transformOrigin: 'left center',
-        transform: `rotate(${angle}deg)`,
-        overflow: 'hidden'
-      }}
-    >
-      <div className="absolute inset-y-0 left-0 right-0 rounded-full" style={{ backgroundColor: color + '30' }} />
-      <div
-        className="absolute inset-y-0 w-16 rounded-full"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${color}80, transparent)`,
-          animation: 'flowParticle 1s linear infinite'
-        }}
-      />
-    </div>
-  )
-}
-
-const WorkflowBackground = () => {
-  const [activeNodeId, setActiveNodeId] = useState(0)
+const WorkflowBoard = () => {
+  const [activeIdx, setActiveIdx] = useState(0)
   const [stage, setStage] = useState('plan')
-  const totalNodes = WORKFLOW_NODES.length
-
-  const colSpacing = 150
-  const rowSpacing = 110
-  const startX = 60
-  const startY = 50
-
-  const getNodePos = useCallback((node) => {
-    const x = startX + node.col * colSpacing
-    const y = startY + node.row * rowSpacing
-    return { x, y }
-  }, [])
 
   useEffect(() => {
-    let timeout
-
-    const advance = () => {
+    const dur = stage === 'plan' ? 1200 : stage === 'build' ? 1600 : 800
+    const t = setTimeout(() => {
       setStage(prev => {
         if (prev === 'plan') return 'build'
         if (prev === 'build') return 'ship'
-        if (prev === 'ship') {
-          setActiveNodeId(prevId => (prevId + 1) % totalNodes)
-          return 'plan'
-        }
-        return prev
+        setActiveIdx(p => (p + 1) % WORKFLOW_NODES.length)
+        return 'plan'
       })
-    }
+    }, dur)
+    return () => clearTimeout(t)
+  }, [stage, activeIdx])
 
-    const dur = stage === 'plan' ? 1000 : stage === 'build' ? 1400 : 600
-    timeout = setTimeout(advance, dur)
-
-    return () => clearTimeout(timeout)
-  }, [stage, activeNodeId, totalNodes])
+  const nodeW = 88
+  const gap = 36
+  const totalW = WORKFLOW_NODES.length * nodeW + (WORKFLOW_NODES.length - 1) * gap
+  const startX = 24
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
-      <div className="absolute inset-0 bg-[#FAFBFF]/70" />
+    <div className="relative w-full max-w-[900px] mx-auto select-none">
+      <div
+        className="relative mx-auto"
+        style={{
+          perspective: '600px',
+          height: 220
+        }}
+      >
+        <div
+          className="absolute inset-x-0"
+          style={{
+            transform: 'rotateX(55deg) rotateZ(-5deg)',
+            transformStyle: 'preserve-3d',
+            top: 20,
+            height: 180
+          }}
+        >
+          <svg
+            className="absolute"
+            style={{
+              top: 36,
+              left: startX + 12,
+              width: totalW - 30,
+              height: 4,
+              overflow: 'visible'
+            }}
+          >
+            <line
+              x1="0" y1="2" x2={totalW - 30} y2="2"
+              stroke="#E5E7EB" strokeWidth="3" strokeLinecap="round"
+            />
+            {(() => {
+              const doneW = activeIdx * (nodeW + gap)
+              return doneW > 0 ? (
+                <line
+                  x1="0" y1="2" x2={doneW} y2="2"
+                  stroke="#16A34A" strokeWidth="3" strokeLinecap="round"
+                />
+              ) : null
+            })()}
+            {activeIdx > 0 && (
+              <>
+                <circle
+                  cx={activeIdx * (nodeW + gap)} cy="2" r="6"
+                  fill={STAGE[stage]?.color} opacity="0.3"
+                >
+                  <animate attributeName="r" from="4" to="14" dur="1.2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" repeatCount="indefinite" />
+                </circle>
+                <circle
+                  cx={activeIdx * (nodeW + gap)} cy="2" r="3"
+                  fill={STAGE[stage]?.color}
+                >
+                  <animate attributeName="opacity" from="1" to="0.4" dur="0.6s" repeatCount="indefinite" />
+                </circle>
+              </>
+            )}
+          </svg>
 
-      {WORKFLOW_NODES.map((node, idx) => {
-        const { x, y } = getNodePos(node)
+          <div className="absolute flex" style={{ left: startX, top: 16, gap }}>
+            {WORKFLOW_NODES.map((node, idx) => {
+              const isActive = idx === activeIdx
+              const isDone = idx < activeIdx
+              const color = isActive ? STAGE[stage]?.color : isDone ? '#16A34A' : '#D1D5DB'
 
-        let state = 'waiting'
-        if (idx < activeNodeId) {
-          state = 'done'
-        } else if (idx === activeNodeId) {
-          state = 'active'
-        }
+              return (
+                <div key={node.id} style={{ width: nodeW }} className="relative">
+                  <div
+                    className="mx-auto transition-all duration-500"
+                    style={{
+                      width: isActive ? 84 : 64,
+                      marginTop: isActive ? 0 : 12,
+                      opacity: isDone ? 0.55 : isActive ? 1 : 0.35
+                    }}
+                  >
+                    {isActive ? (
+                      <div
+                        className="rounded-2xl bg-white border-2 p-3 flex flex-col items-center gap-2.5 shadow-2xl transition-all duration-300"
+                        style={{
+                          borderColor: color,
+                          boxShadow: `0 12px 36px ${color}30, 0 4px 12px rgba(0,0,0,0.06)`,
+                          transform: 'translateZ(20px)'
+                        }}
+                      >
+                        <div
+                          className="text-[9px] font-extrabold uppercase tracking-[0.14em] px-2 py-0.5 rounded-full"
+                          style={{ backgroundColor: color + '15', color }}
+                        >
+                          {STAGE[stage]?.label}
+                        </div>
 
-        return (
-          <WorkflowNode
-            key={node.id}
-            node={node}
-            state={state}
-            stage={state === 'active' ? stage : 'plan'}
-            x={x}
-            y={y}
-          />
-        )
-      })}
+                        <div className="text-[11px] font-black text-[#111827]">{node.label}</div>
 
-      {WORKFLOW_NODES.map((node, idx) => {
-        if (idx >= totalNodes - 1) return null
-        const next = WORKFLOW_NODES[idx + 1]
-        const from = getNodePos(node)
-        const to = getNodePos(next)
+                        <div className="flex items-center gap-3">
+                          <AgentAvatar color={color} size={28} />
+                          <svg width="16" height="16" viewBox="0 0 16 16" className="text-gray-300">
+                            <path d="M4 8h8M8 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                          </svg>
+                          <HumanAvatar size={28} />
+                        </div>
 
-        const isCompletedEdge = idx < activeNodeId
-        const isActiveEdge = idx === activeNodeId - 1
+                        <div className="text-[9px] font-semibold text-gray-400">
+                          {stage === 'plan' ? 'Agent drafts → Human reviews' :
+                           stage === 'build' ? 'Agent builds → Human approves' :
+                           'Human confirms → Next node'}
+                        </div>
+                      </div>
+                    ) : isDone ? (
+                      <div
+                        className="rounded-lg border px-2 py-1.5 flex items-center justify-center gap-1"
+                        style={{ borderColor: '#BBF7D0', backgroundColor: '#F0FDF4' }}
+                      >
+                        <CheckCircle2 size={11} className="text-[#16A34A]" />
+                        <span className="text-[9px] font-bold text-[#16A34A]">{node.label}</span>
+                      </div>
+                    ) : (
+                      <div
+                        className="rounded-lg border px-2 py-1.5 flex items-center justify-center"
+                        style={{ borderColor: '#E5E7EB', backgroundColor: '#F3F4F6' }}
+                      >
+                        <span className="text-[9px] font-medium text-[#9CA3AF]">{node.label}</span>
+                      </div>
+                    )}
+                  </div>
 
-        return (
-          <FlowBeam
-            key={`edge-${idx}`}
-            x1={from.x + 60}
-            y1={from.y + 20}
-            x2={to.x + 60}
-            y2={to.y + 20}
-            color={
-              isActiveEdge ? STAGE_CONFIG.ship.color :
-              isCompletedEdge ? '#16A34A' : '#D1D5DB'
-            }
-          />
-        )
-      })}
+                  {isActive && (
+                    <div
+                      className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-center"
+                      style={{ transform: 'translateZ(30px)' }}
+                    >
+                      <span
+                        className="inline-block text-[9px] font-bold px-2 py-0.5 rounded-full"
+                        style={{ backgroundColor: color + '15', color }}
+                      >
+                        {STAGE[stage]?.emoji} {STAGE[stage]?.label}ing...
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -420,11 +384,6 @@ const MeegleHomepage = () => {
   return (
     <div className="bg-white text-[#1F2329] font-sans overflow-x-hidden">
       <style>{`
-        @keyframes flowParticle {
-          0% { transform: translateX(-100%); opacity: 0; }
-          20% { opacity: 1; }
-          100% { transform: translateX(calc(100% + 60px)); opacity: 0; }
-        }
         @keyframes gradientShift {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -521,22 +480,13 @@ const MeegleHomepage = () => {
         )}
       </nav>
 
-      {/* HERO — Workflow Background */}
-      <section ref={heroRef} className="relative min-h-screen overflow-hidden bg-[#F8F9FC]">
-        <div className="absolute inset-0 opacity-[0.06]">
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'radial-gradient(circle at 25% 25%, #5B5FE3 1px, transparent 1px), radial-gradient(circle at 75% 75%, #787BEE 1px, transparent 1px)',
-            backgroundSize: '60px 60px'
-          }} />
-        </div>
-        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full bg-[#5B5FE3]/[0.025] blur-[100px]" />
-        <div className="absolute bottom-[-15%] left-[-5%] w-[500px] h-[500px] rounded-full bg-[#F59E0B]/[0.02] blur-[100px]" />
+      {/* HERO */}
+      <section ref={heroRef} className="relative pt-32 pb-20 bg-gradient-to-b from-[#FAFBFF] via-white to-white overflow-hidden">
+        <div className="absolute top-0 right-[-10%] w-[500px] h-[500px] rounded-full bg-[#5B5FE3]/[0.02] blur-[100px]" />
 
-        <WorkflowBackground />
-
-        <div className="relative z-10 flex flex-col justify-center min-h-screen w-full max-w-[1340px] mx-auto px-6 pt-32 pb-24">
+        <div className="relative w-full max-w-[1340px] mx-auto px-6">
           <div className="flex flex-col items-center text-center max-w-[800px] mx-auto">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#5B5FE3]/15 bg-white/70 px-4 py-2 text-[12px] font-semibold text-[#5B5FE3] shadow-sm mb-8 backdrop-blur animate-fade-slide-up">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#5B5FE3]/15 bg-white px-4 py-2 text-[12px] font-semibold text-[#5B5FE3] shadow-sm mb-8 animate-fade-slide-up">
               <Sparkles size={14} />
               Introducing Multi-Agent Orchestration
             </div>
@@ -559,7 +509,7 @@ const MeegleHomepage = () => {
                 Get Started Free
                 <ArrowRight size={16} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="group flex items-center gap-2.5 rounded-2xl border border-[#E2E4E9] bg-white/80 backdrop-blur px-6 py-4 text-[16px] font-semibold text-[#111827] hover:bg-white transition-all">
+              <button className="group flex items-center gap-2.5 rounded-2xl border border-[#E2E4E9] bg-white px-6 py-4 text-[16px] font-semibold text-[#111827] hover:bg-[#F9FAFB] transition-all">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4F6FF] text-[#5B5FE3] group-hover:scale-110 transition-transform">
                   <Play size={14} fill="#5B5FE3" />
                 </span>
@@ -568,7 +518,11 @@ const MeegleHomepage = () => {
             </div>
           </div>
 
-          <div className="mt-20 text-center animate-fade-slide-up" style={{ animationDelay: '0.5s' }}>
+          <div className="mt-16 animate-fade-slide-up" style={{ animationDelay: '0.45s' }}>
+            <WorkflowBoard />
+          </div>
+
+          <div className="mt-16 text-center animate-fade-slide-up" style={{ animationDelay: '0.5s' }}>
             <div className="text-[11px] uppercase tracking-[0.24em] text-[#8F959E] mb-6">Trusted by leading teams worldwide</div>
             <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-[0.22]">
               {LOGOS.map(logo => (
