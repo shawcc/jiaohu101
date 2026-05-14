@@ -295,13 +295,14 @@ const AnimatedCounter = ({ target, suffix, decimals }) => {
 
 
 
+
 const WORKFLOW_PLATFORMS = [
-  { id: 'intake', label: 'Intake', color: '#5B5FE3', x: 6, y: 48, col: 0 },
-  { id: 'scout', label: 'Scout', color: '#3EAB6E', x: 28, y: 20, col: 1, row: 'top' },
-  { id: 'scope', label: 'Scope', color: '#F59E0B', x: 28, y: 48, col: 1, row: 'mid' },
-  { id: 'spec',  label: 'Spec',  color: '#8B5CF6', x: 28, y: 76, col: 1, row: 'bot' },
-  { id: 'build', label: 'Build', color: '#EC4899', x: 55, y: 48, col: 2 },
-  { id: 'ship',  label: 'Ship',  color: '#06B6D4', x: 80, y: 48, col: 3 },
+  { id: 'intake', label: 'Intake', color: '#5B5FE3', x: 6, y: 44, col: 0 },
+  { id: 'scout', label: 'Scout', color: '#3EAB6E', x: 28, y: 16, col: 1, row: 'top' },
+  { id: 'scope', label: 'Scope', color: '#F59E0B', x: 28, y: 44, col: 1, row: 'mid' },
+  { id: 'spec',  label: 'Spec',  color: '#8B5CF6', x: 28, y: 72, col: 1, row: 'bot' },
+  { id: 'build', label: 'Build', color: '#EC4899', x: 55, y: 44, col: 2 },
+  { id: 'ship',  label: 'Ship',  color: '#06B6D4', x: 80, y: 44, col: 3 },
 ]
 
 const AGENT_BENCH = [
@@ -317,15 +318,84 @@ const AGENT_BENCH = [
 const PLAT_W = 150
 const PLAT_H = 68
 const PLAT_D = 16
-const SCENE_W = 760
-const SCENE_H = 440
+const SCENE_W = 780
+const MAIN_H = 350
+const BENCH_H = 70
 
-const IsometricPlatform = ({ node, state, agentColor, style }) => {
+/* ---------- Bench character (small card) ---------- */
+const BenchCard = ({ item, color, isAgent, isAssigned, isFlyingOut }) => (
+  <div className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 transition-all duration-400"
+    style={{
+      backgroundColor: isFlyingOut ? (color || '#5B5FE3') + '15' : isAssigned ? '#f3f4f6' : '#fafbfc',
+      border: `1px solid ${isFlyingOut ? (color || '#5B5FE3') + '25' : isAssigned ? '#e5e7eb' : '#eff0f3'}`,
+      opacity: isAssigned ? 0.45 : 1,
+      transform: isFlyingOut ? 'translateY(-4px)' : 'none'
+    }}>
+    <svg viewBox="0 0 28 28" width="20" height="20">
+      {isAgent ? (
+        <>
+          <circle cx="14" cy="8" r="6.5" fill={color || '#5B5FE3'} opacity="0.88" />
+          <rect x="11.5" y="10.2" width="1.8" height="2.8" rx="0.9" fill={color || '#5B5FE3'} opacity="0.5" />
+          <rect x="14.7" y="10.2" width="1.8" height="2.8" rx="0.9" fill={color || '#5B5FE3'} opacity="0.5" />
+          <rect x="9" y="12.5" width="10" height="7" rx="3.5" fill={color || '#5B5FE3'} opacity="0.65" />
+          <circle cx="12" cy="7" r="1" fill="white" />
+          <circle cx="16" cy="7" r="1" fill="white" />
+          <circle cx="12" cy="7" r="0.5" fill="#111" />
+          <circle cx="16" cy="7" r="0.5" fill="#111" />
+        </>
+      ) : (
+        <>
+          <circle cx="14" cy="6" r="4.5" fill="#4b5563" opacity="0.75" />
+          <path d="M6.5 16c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" fill="#4b5563" opacity="0.6" />
+        </>
+      )}
+    </svg>
+    <span className="text-[9px] font-semibold" style={{ color: isAssigned ? '#9ca3af' : '#4b5563' }}>
+      {isAgent ? item.label : 'Human'}
+    </span>
+  </div>
+)
+
+/* ---------- Flying character (animated from bench to platform) ---------- */
+const FlyingCharacter = ({ left, top, isAgent, agentColor, visible }) => (
+  <div className="absolute transition-all pointer-events-none" style={{
+    left, top,
+    width: 28, height: 28,
+    zIndex: 50,
+    opacity: visible ? 1 : 0,
+    transform: visible ? 'scale(1)' : 'scale(0.3)',
+    transition: 'left 0.75s cubic-bezier(0.22, 0.08, 0.08, 1), top 0.75s cubic-bezier(0.22, 0.08, 0.08, 1), opacity 0.3s ease, transform 0.3s ease',
+    filter: visible ? 'drop-shadow(0 4px 12px rgba(0,0,0,0.12))' : 'none'
+  }}>
+    <svg viewBox="0 0 28 28" width="28" height="28">
+      {isAgent ? (
+        <>
+          <circle cx="14" cy="8" r="6.5" fill={agentColor || '#5B5FE3'} opacity="0.9" />
+          <rect x="11.5" y="10.2" width="1.8" height="2.8" rx="0.9" fill={agentColor || '#5B5FE3'} opacity="0.5" />
+          <rect x="14.7" y="10.2" width="1.8" height="2.8" rx="0.9" fill={agentColor || '#5B5FE3'} opacity="0.5" />
+          <rect x="9" y="12.5" width="10" height="7" rx="3.5" fill={agentColor || '#5B5FE3'} opacity="0.65" />
+          <circle cx="12" cy="7" r="1" fill="white" />
+          <circle cx="16" cy="7" r="1" fill="white" />
+          <circle cx="12" cy="7" r="0.5" fill="#111" />
+          <circle cx="16" cy="7" r="0.5" fill="#111" />
+        </>
+      ) : (
+        <>
+          <circle cx="14" cy="6" r="4.5" fill="#4b5563" opacity="0.85" />
+          <path d="M6.5 16c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" fill="#4b5563" opacity="0.7" />
+        </>
+      )}
+    </svg>
+  </div>
+)
+
+/* ---------- Isometric Platform (no character inside) ---------- */
+const IsometricPlatform = ({ node, state, style }) => {
   const c = node.color
   const W = PLAT_W; const H = PLAT_H; const D = PLAT_D
   const hidden = state === 'hidden'
   const building = state === 'building'
-  const built = state === 'built' || state === 'popping'
+  const built = state === 'built' || state === 'popping' || state === 'landing'
   const populated = state === 'populated'
 
   const alpha = hidden ? 0 : 1
@@ -345,86 +415,68 @@ const IsometricPlatform = ({ node, state, agentColor, style }) => {
         opacity: hidden ? 0 : 1,
         transition: 'opacity 0.5s ease'
       }} />
-
       <svg viewBox={`0 0 ${W + D} ${H + D}`} width={W + D} height={H + D} style={{ display: 'block' }}>
-        <path
-          d={`M${W} ${H * 0.2} L${W + D} ${0} L${W + D} ${H} L${W} ${H + H * 0.2} Z`}
+        <path d={`M${W} ${H*0.2} L${W+D} ${0} L${W+D} ${H} L${W} ${H+H*0.2} Z`}
           fill={populated ? c + '90' : building ? c + '20' : '#dde1e7'}
-          opacity={populated ? 0.18 : building ? 0.12 : 1}
-        />
-        <path
-          d={`M${0} ${H} L${D * 0.6} ${H + H * 0.2} L${W + D} ${H + H * 0.2} L${W} ${H} Z`}
+          opacity={populated ? 0.18 : building ? 0.12 : 1} />
+        <path d={`M${0} ${H} L${D*0.6} ${H+H*0.2} L${W+D} ${H+H*0.2} L${W} ${H} Z`}
           fill={populated ? c + '90' : building ? c + '15' : '#dde1e7'}
-          opacity={populated ? 0.14 : building ? 0.08 : 1}
-        />
+          opacity={populated ? 0.14 : building ? 0.08 : 1} />
         <defs>
           <linearGradient id={`tp-${node.id}`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={populated ? c + '0D' : building ? c + '04' : '#ffffff'} />
             <stop offset="100%" stopColor={populated ? c + '06' : building ? c + '02' : '#f5f6f8'} />
           </linearGradient>
         </defs>
-        <rect x="0" y="0" width={W} height={H} rx="10"
-          fill={`url(#tp-${node.id})`}
-          stroke={populated ? c + '50' : building ? c + '25' : '#dee2e8'}
-          strokeWidth={populated ? 1.6 : 0.8} />
-
+        <rect x="0" y="0" width={W} height={H} rx="10" fill={`url(#tp-${node.id})`}
+          stroke={populated ? c + '50' : building ? c + '25' : '#dee2e8'} strokeWidth={populated ? 1.6 : 0.8} />
         {building && (
           <g>
             <line x1="20" y1="0" x2="20" y2={H} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
             <line x1={W - 20} y1="0" x2={W - 20} y2={H} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
-            <line x1="0" y1={H * 0.3} x2={W} y2={H * 0.3} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
-            <line x1="0" y1={H * 0.7} x2={W} y2={H * 0.7} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
-            <circle cx={W * 0.7} cy={H * 0.35} r="2" fill={c} opacity="0.3">
+            <line x1="0" y1={H*0.3} x2={W} y2={H*0.3} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
+            <line x1="0" y1={H*0.7} x2={W} y2={H*0.7} stroke={c + '10'} strokeWidth="0.3" strokeDasharray="3 10" />
+            <circle cx={W*0.7} cy={H*0.35} r="2" fill={c} opacity="0.3">
               <animate attributeName="opacity" values="0.3;0.05;0.3" dur="0.7s" repeatCount="indefinite" />
             </circle>
           </g>
         )}
-
-        <text x={W / 2} y={H / 2 + 3} textAnchor="middle" dominantBaseline="central"
-          fontWeight="680" fontSize="11.5" fontFamily="system-ui, -apple-system, sans-serif" letterSpacing="0.025em"
+        <text x={W/2} y={H/2+3} textAnchor="middle" dominantBaseline="central"
+          fontWeight="680" fontSize="11.5" fontFamily="system-ui, sans-serif" letterSpacing="0.025em"
           fill={populated ? c : built ? c + '75' : building ? c + '35' : '#c2c8d2'}>
           {node.label}
         </text>
-
         {populated && (
-          <g transform={`translate(${W - 22}, 18)`}>
+          <g transform={`translate(${W-22}, 18)`}>
             <circle cx="0" cy="0" r="9" fill="#16A34A" opacity="0.12" />
             <path d="M-3 0L-1 3L4 -2" fill="none" stroke="#16A34A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.9" />
           </g>
         )}
       </svg>
 
+      {/* Characters on platform (fade in AFTER landing) */}
       {populated && (
-        <>
-          <div className="absolute char-fly-in char-fly-in-a" style={{
-            left: W * 0.32, top: H * 0.22,
-            width: 28, height: 28,
-            zIndex: 2, pointerEvents: 'none'
-          }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ animation: 'fadeSlideUp 0.5s ease-out 0.2s both' }}>
+          <div className="absolute" style={{ left: W * 0.32, top: H * 0.22, width: 28, height: 28 }}>
             <svg viewBox="0 0 28 28" width="28" height="28">
-              <circle cx="14" cy="8" r="6.5" fill={agentColor || c} opacity="0.88" />
-              <rect x="11.5" y="10.2" width="1.8" height="2.8" rx="0.9" fill={agentColor || c} opacity="0.5" />
-              <rect x="14.7" y="10.2" width="1.8" height="2.8" rx="0.9" fill={agentColor || c} opacity="0.5" />
-              <rect x="9" y="12.5" width="10" height="7" rx="3.5" fill={agentColor || c} opacity="0.65" />
+              <circle cx="14" cy="8" r="6.5" fill={node.agentColor || c} opacity="0.88" />
+              <rect x="11.5" y="10.2" width="1.8" height="2.8" rx="0.9" fill={node.agentColor || c} opacity="0.5" />
+              <rect x="14.7" y="10.2" width="1.8" height="2.8" rx="0.9" fill={node.agentColor || c} opacity="0.5" />
+              <rect x="9" y="12.5" width="10" height="7" rx="3.5" fill={node.agentColor || c} opacity="0.65" />
               <circle cx="12" cy="7" r="1" fill="white" />
               <circle cx="16" cy="7" r="1" fill="white" />
               <circle cx="12" cy="7" r="0.5" fill="#111" />
               <circle cx="16" cy="7" r="0.5" fill="#111" />
             </svg>
           </div>
-          <div className="absolute char-fly-in char-fly-in-h" style={{
-            left: W * 0.55, top: H * 0.18,
-            width: 24, height: 28,
-            zIndex: 2, pointerEvents: 'none'
-          }}>
+          <div className="absolute" style={{ left: W * 0.55, top: H * 0.18, width: 24, height: 28 }}>
             <svg viewBox="0 0 24 28" width="24" height="28">
               <circle cx="12" cy="5" r="4.5" fill="#4b5563" />
               <path d="M4.5 16c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" fill="#4b5563" opacity="0.75" />
             </svg>
           </div>
-        </>
+        </div>
       )}
-
       {populated && (
         <div className="absolute rounded-xl" style={{
           inset: -5, border: `2px solid ${c}25`, borderRadius: 14,
@@ -435,25 +487,19 @@ const IsometricPlatform = ({ node, state, agentColor, style }) => {
   )
 }
 
+/* ---------- Connector ---------- */
 const ConnectorBridge = ({ from, to, color, state }) => {
   if (state === 'hidden') return null
   const active = state === 'active'
   const building = state === 'building'
   const built = state === 'built'
-
   const fx = from.x; const fy = from.y
   const tx = to.x; const ty = to.y
-
   const dx = tx - fx
   const cpf = 0.42
-
-  const cp1x = fx + dx * cpf
-  const cp1y = fy
-  const cp2x = tx - dx * cpf
-  const cp2y = ty
-
+  const cp1x = fx + dx * cpf; const cp1y = fy
+  const cp2x = tx - dx * cpf; const cp2y = ty
   const svgId = `bg-${from.id}-${to.id}`
-
   return (
     <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" style={{ zIndex: 0 }}>
       {active && (
@@ -465,33 +511,30 @@ const ConnectorBridge = ({ from, to, color, state }) => {
           </linearGradient>
         </defs>
       )}
-      <path
-        d={`M${fx} ${fy} C${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${tx} ${ty}`}
-        fill="none"
+      <path d={`M${fx} ${fy} C${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${tx} ${ty}`}
+        fill="none" strokeLinecap="round"
         stroke={active ? `url(#${svgId})` : color + '22'}
         strokeWidth={active ? 2 : built ? 1.2 : 1}
         strokeDasharray={building ? '5 4' : 'none'}
-        opacity={active ? 1 : built ? 0.45 : 0.3}
-        strokeLinecap="round"
-      >
-        {building && (
-          <animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.5s" repeatCount="indefinite" />
-        )}
+        opacity={active ? 1 : built ? 0.45 : 0.3}>
+        {building && <animate attributeName="stroke-dashoffset" from="18" to="0" dur="0.5s" repeatCount="indefinite" />}
       </path>
-      <polygon
-        points={`${tx - 5},${ty - 3.5} ${tx},${ty} ${tx - 5},${ty + 3.5}`}
-        fill={active ? to.color : color + '30'}
-        opacity={active ? 0.7 : built ? 0.35 : 0.2} />
+      <polygon points={`${tx-5},${ty-3.5} ${tx},${ty} ${tx-5},${ty+3.5}`}
+        fill={active ? to.color : color + '30'} opacity={active ? 0.7 : built ? 0.35 : 0.2} />
     </svg>
   )
 }
 
+/* ---------- Workflow Board ---------- */
 const WorkflowBoard = () => {
   const [buildPhase, setBuildPhase] = useState('building')
   const [step, setStep] = useState(0)
   const phaseRef = useRef('building')
   const stepRef = useRef(0)
-  const [popStamp, setPopStamp] = useState(0)
+
+  // Flying animation: { type:'agent'|'human', from:{x,y}, to:{x,y}, color }
+  const [flyA, setFlyA] = useState(null)
+  const flyRef = useRef(null)
 
   const totalPlatforms = WORKFLOW_PLATFORMS.length
 
@@ -500,58 +543,96 @@ const WorkflowBoard = () => {
       if (stepRef.current >= totalPlatforms - 1) {
         phaseRef.current = 'populating'; stepRef.current = 0
         setBuildPhase('populating'); setStep(0)
+        // trigger first flight
+        setTimeout(() => triggerFlight(0), 200)
       } else {
         stepRef.current += 1; setStep(s => s + 1)
       }
     } else {
       if (stepRef.current >= totalPlatforms) return
-      stepRef.current += 1; setStep(s => s + 1)
-      setPopStamp(Date.now())
+      triggerFlight(stepRef.current)
     }
   }, [totalPlatforms])
+
+  const triggerFlight = useCallback((targetStep) => {
+    const benchBaseY = MAIN_H + 12
+    const benchCardW = 90
+    const benchStartX = 40
+    const benchGap = 8
+
+    const agent = AGENT_BENCH[targetStep % AGENT_BENCH.length]
+    const plat = WORKFLOW_PLATFORMS[targetStep]
+    const pos = { left: (plat.x / 100) * SCENE_W, top: (plat.y / 100) * MAIN_H }
+
+    const benchAgentX = benchStartX + targetStep * (benchCardW + benchGap) + 8
+    const benchHumanX = benchStartX + targetStep * (benchCardW + benchGap) + benchCardW + 8
+
+    // Agent flies first
+    setFlyA({ type: 'agent', fromX: benchAgentX, fromY: benchBaseY, toX: pos.left + PLAT_W * 0.32, toY: pos.top + PLAT_H * 0.22, color: agent.color, landed: false })
+
+    // Human flies after 0.2s
+    setTimeout(() => {
+      setFlyA(prev => prev ? { ...prev, type: 'human', fromX: benchHumanX, fromY: benchBaseY + 4, toX: pos.left + PLAT_W * 0.55, toY: pos.top + PLAT_H * 0.18, color: '#4b5563', landed: false } : null)
+    }, 250)
+
+    // Land after flight duration
+    setTimeout(() => {
+      setFlyA(prev => prev ? { ...prev, landed: true } : null)
+    }, 800)
+
+    // Complete step
+    setTimeout(() => {
+      stepRef.current += 1; setStep(s => s + 1)
+      setFlyA(null)
+    }, 1000)
+  }, [])
 
   useEffect(() => {
     if (buildPhase === 'populating' && step >= totalPlatforms) {
       const t = setTimeout(() => {
         phaseRef.current = 'building'; stepRef.current = 0
         setBuildPhase('building'); setStep(0)
-      }, 2600)
+        setFlyA(null)
+      }, 2200)
       return () => clearTimeout(t)
     }
   }, [buildPhase, step, totalPlatforms])
 
   useEffect(() => {
-    const dur = buildPhase === 'building' ? 550 : 850
+    const dur = buildPhase === 'building' ? 550 : 50 // advance immediately triggers triggerFlight
     if (buildPhase === 'populating' && step >= totalPlatforms) return
+    if (buildPhase === 'populating' && step > 0) {
+      // Don't auto-advance; triggerFlight handles it
+      return
+    }
     const t = setTimeout(advance, dur)
     return () => clearTimeout(t)
-  }, [step, buildPhase, advance, totalPlatforms, popStamp])
+  }, [step, buildPhase, advance, totalPlatforms])
 
   const positions = WORKFLOW_PLATFORMS.map(p => ({
     id: p.id,
     color: p.color,
     left: (p.x / 100) * SCENE_W,
-    top: (p.y / 100) * SCENE_H,
+    top: (p.y / 100) * MAIN_H,
     cx: (p.x / 100) * SCENE_W + PLAT_W / 2,
-    cy: (p.y / 100) * SCENE_H + PLAT_H / 2,
+    cy: (p.y / 100) * MAIN_H + PLAT_H / 2,
   }))
 
   const buildOrder = WORKFLOW_PLATFORMS.map(p => p.id)
   const isBuilt = id => buildOrder.indexOf(id) < (buildPhase === 'building' ? step + 1 : totalPlatforms)
 
   const bridges = [
-    { from: 'intake', to: 'scout' },
-    { from: 'intake', to: 'scope' },
-    { from: 'intake', to: 'spec' },
-    { from: 'scout', to: 'build' },
-    { from: 'scope', to: 'build' },
-    { from: 'spec',  to: 'build' },
+    { from: 'intake', to: 'scout' }, { from: 'intake', to: 'scope' }, { from: 'intake', to: 'spec' },
+    { from: 'scout', to: 'build' }, { from: 'scope', to: 'build' }, { from: 'spec', to: 'build' },
     { from: 'build', to: 'ship' },
   ]
 
+  const totalH = MAIN_H + BENCH_H
+
   return (
-    <div className="relative w-full select-none" style={{ height: SCENE_H + 20 }}>
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.045 }}>
+    <div className="relative w-full select-none" style={{ height: totalH }}>
+      {/* Dot grid */}
+      <svg className="absolute inset-0 w-full pointer-events-none" style={{ height: MAIN_H, opacity: 0.045 }}>
         <defs>
           <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
             <circle cx="14" cy="14" r="0.6" fill="#5B5FE3" />
@@ -560,6 +641,7 @@ const WorkflowBoard = () => {
         <rect width="100%" height="100%" fill="url(#grid)" />
       </svg>
 
+      {/* Bridges */}
       {bridges.map(({ from, to }) => {
         const fp = positions.find(p => p.id === from)
         const tp = positions.find(p => p.id === to)
@@ -568,25 +650,18 @@ const WorkflowBoard = () => {
         const toIdx = buildOrder.indexOf(to)
         const popStep = buildPhase === 'populating' ? step : -1
         const color = WORKFLOW_PLATFORMS.find(p => p.id === to).color
-        let brState = 'built'
-        if (buildPhase === 'building' && toIdx === step + 1) brState = 'building'
-        if (buildPhase === 'populating' && toIdx === popStep) brState = 'active'
-        return (
-          <ConnectorBridge
-            key={`br-${from}-${to}`}
-            from={{ id: from, x: fp.cx, y: fp.cy, color: fp.color }}
-            to={{ id: to, x: tp.cx, y: tp.cy, color: tp.color }}
-            color={color}
-            state={brState}
-          />
-        )
+        let br = 'built'
+        if (buildPhase === 'building' && toIdx === step + 1) br = 'building'
+        if (buildPhase === 'populating' && toIdx === popStep) br = 'active'
+        return <ConnectorBridge key={`br-${from}-${to}`}
+          from={{ id: from, x: fp.cx, y: fp.cy, color: fp.color }}
+          to={{ id: to, x: tp.cx, y: tp.cy, color: tp.color }} color={color} state={br} />
       })}
 
-      {WORKFLOW_PLATFORMS.map((plat) => {
-        const id = plat.id
-        const idx = buildOrder.indexOf(id)
+      {/* Platforms */}
+      {WORKFLOW_PLATFORMS.map(plat => {
+        const id = plat.id; const idx = buildOrder.indexOf(id)
         const popStep = buildPhase === 'populating' ? step : -1
-
         let state = 'hidden'
         if (buildPhase === 'building') {
           if (idx < step) state = 'built'
@@ -596,22 +671,42 @@ const WorkflowBoard = () => {
           else if (idx === popStep) state = 'popping'
           else state = 'built'
         }
-
         const agent = AGENT_BENCH[idx % AGENT_BENCH.length]
         const pos = positions.find(p => p.id === id)
-
-        return (
-          <IsometricPlatform
-            key={id}
-            node={{ id, label: plat.label, color: plat.color }}
-            state={state}
-            agentColor={agent.color}
-            style={{ left: pos.left, top: pos.top }}
-          />
-        )
+        return <IsometricPlatform key={id} node={{ id, label: plat.label, color: plat.color, agentColor: agent.color }}
+          state={state} style={{ left: pos.left, top: pos.top }} />
       })}
 
-      <div className="absolute bottom-1 left-1/2 -translate-x-1/2">
+      {/* Flying character */}
+      {flyA && (
+        <FlyingCharacter
+          left={flyA.landed ? flyA.toX : flyA.fromX}
+          top={flyA.landed ? flyA.toY : flyA.fromY}
+          isAgent={flyA.type === 'agent'}
+          agentColor={flyA.color}
+          visible={true}
+        />
+      )}
+
+      {/* Agent bench — bottom row */}
+      <div className="absolute left-0 right-0 flex items-center justify-center" style={{ top: MAIN_H + 8, height: BENCH_H - 8 }}>
+        <div className="rounded-2xl px-5 py-2 flex items-center gap-2.5"
+          style={{ backgroundColor: '#f8f9fc', border: '1px solid #eef0f5', boxShadow: '0 2px 12px rgba(0,0,0,0.03)' }}>
+          <span className="text-[10px] font-semibold text-[#9ca3af] mr-1">Available</span>
+          {AGENT_BENCH.map((a, i) => {
+            const isAssigned = buildPhase === 'populating' && i < step
+            const isFlyingOut = buildPhase === 'populating' && i === step
+            return <BenchCard key={a.id} item={a} color={a.color} isAgent isAssigned={isAssigned} isFlyingOut={isFlyingOut} />
+          })}
+          <span className="text-[10px] text-[#d1d5db] mx-0.5">|</span>
+          <BenchCard item={{ label: 'Human' }} color="#4b5563" isAgent={false}
+            isAssigned={buildPhase === 'populating' && step > 0 ? buildPhase === 'populating' && step <= totalPlatforms : false}
+            isFlyingOut={false} />
+        </div>
+      </div>
+
+      {/* Status */}
+      <div className="absolute left-1/2 -translate-x-1/2" style={{ bottom: BENCH_H - 12 }}>
         {buildPhase === 'building' && (
           <span className="text-[11px] font-semibold" style={{
             color: WORKFLOW_PLATFORMS[Math.min(step, totalPlatforms - 1)].color,
@@ -625,7 +720,7 @@ const WorkflowBoard = () => {
             color: AGENT_BENCH[step % AGENT_BENCH.length].color,
             animation: 'fadeSlideUp 0.5s ease-out'
           }}>
-            {AGENT_BENCH[step % AGENT_BENCH.length].label} joins {WORKFLOW_PLATFORMS[step].label} with human oversight
+            Drag {AGENT_BENCH[step % AGENT_BENCH.length].label} onto {WORKFLOW_PLATFORMS[step].label}
           </span>
         )}
         {buildPhase === 'populating' && step >= totalPlatforms && (
@@ -638,75 +733,75 @@ const WorkflowBoard = () => {
   )
 }
 
-const AI_CONVERSATIONS = [
+const AI_ASSISTANT_SCENES = [
   {
-    id: 0,
-    userText: 'Smart sprint planning',
-    aiText: 'I analyzed team velocity and backlog. Here is the optimized sprint plan for the next two weeks.',
-    imageIndex: 0,
+    id: 'sprint-planning',
+    label: 'Smart sprint planning',
+    prompt: 'Plan my next sprint based on team velocity and backlog',
+    desc: 'AI analyzes velocity and backlog to auto-generate optimized sprints',
     icon: '📋',
     color: '#5B5FE3',
     gradient: 'from-[#5B5FE3] to-[#787BEE]'
   },
   {
-    id: 1,
-    userText: 'Proactive risk & bottleneck detection',
-    aiText: 'Scanning all active projects... I detected 3 potential bottlenecks in the Design Review stage.',
-    imageIndex: 1,
+    id: 'risk-detection',
+    label: 'Proactive risk & bottleneck detection',
+    prompt: 'Scan all projects for risks and bottlenecks',
+    desc: 'Real-time bottleneck alerts before they escalate into blockers',
     icon: '⚠️',
     color: '#EF4444',
     gradient: 'from-[#EF4444] to-[#F87171]'
   },
   {
-    id: 2,
-    userText: 'Operational health monitoring',
-    aiText: 'Continuous pulse check complete. All systems healthy. Executive summary is ready for review.',
-    imageIndex: 2,
+    id: 'health-monitoring',
+    label: 'Operational health monitoring',
+    prompt: 'Run an operational health check across all teams',
+    desc: 'Continuous pulse checks with executive-ready summaries',
     icon: '💚',
     color: '#3EAB6E',
     gradient: 'from-[#3EAB6E] to-[#58C98A]'
   },
   {
-    id: 3,
-    userText: 'Executive progress synthesis',
-    aiText: 'I generated the Q3 progress report with automated charts and narrative summaries for all stakeholders.',
-    imageIndex: 3,
+    id: 'progress-synthesis',
+    label: 'Executive progress synthesis',
+    prompt: 'Generate an executive progress report for Q3',
+    desc: 'Automated charts and narrative summaries for stakeholders',
     icon: '📊',
     color: '#8B5CF6',
     gradient: 'from-[#8B5CF6] to-[#A78BFA]'
   },
   {
-    id: 4,
-    userText: 'Automated charts generation',
-    aiText: 'Here are the visual dashboards. Velocity trends, burn-down charts, and resource allocation views are ready.',
-    imageIndex: 4,
+    id: 'charts-generation',
+    label: 'Automated charts generation',
+    prompt: 'Create visual dashboards from the latest project data',
+    desc: 'Natural language queries generate visual dashboards on demand',
     icon: '📈',
     color: '#F59E0B',
     gradient: 'from-[#F59E0B] to-[#FBBF24]'
   },
   {
-    id: 5,
-    userText: 'Semantic requirement auditing',
-    aiText: 'I reviewed all PRDs for completeness and cross-team consistency. Found 2 gaps that need attention.',
-    imageIndex: 5,
+    id: 'requirement-auditing',
+    label: 'Semantic requirement auditing',
+    prompt: 'Audit all PRDs for completeness and consistency',
+    desc: 'AI reviews PRDs for completeness and cross-team consistency',
     icon: '🔍',
     color: '#06B6D4',
     gradient: 'from-[#06B6D4] to-[#22D3EE]'
   },
   {
-    id: 6,
-    userText: 'Predictive resource allocation',
-    aiText: 'Based on current capacity models, I recommend rebalancing 2 engineers from Platform to Design.',
-    imageIndex: 6,
+    id: 'resource-allocation',
+    label: 'Predictive resource allocation',
+    prompt: 'Rebalance team resources based on capacity forecasts',
+    desc: 'Predictive models forecast capacity and suggest workload balancing',
     icon: '👥',
     color: '#EC4899',
     gradient: 'from-[#EC4899] to-[#F472B6]'
   },
   {
-    id: 7,
-    userText: 'Automated taxonomy & classification',
-    aiText: 'I intelligently tagged all tasks, tickets, and documents. The new taxonomy is now live.',
-    imageIndex: 7,
+    id: 'taxonomy-classification',
+    label: 'Automated taxonomy & classification',
+    prompt: 'Auto-tag all tasks and documents with smart taxonomy',
+    desc: 'Intelligent tagging of every task, ticket, and document',
     icon: '🏷️',
     color: '#6366F1',
     gradient: 'from-[#6366F1] to-[#818CF8]'
@@ -714,13 +809,34 @@ const AI_CONVERSATIONS = [
 ]
 
 const AIAssistantSection = () => {
-  const [visibleMessages, setVisibleMessages] = useState([])
-  const [typingMsgId, setTypingMsgId] = useState(null)
-  const [activeImage, setActiveImage] = useState(0)
+  const [activeIdx, setActiveIdx] = useState(0)
+  const [typedPrompt, setTypedPrompt] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const [showResult, setShowResult] = useState(false)
   const sectionRef = useRef(null)
   const cycleRef = useRef(null)
   const started = useRef(false)
-  const convsRef = useRef(AI_CONVERSATIONS)
+  const scenesRef = useRef(AI_ASSISTANT_SCENES)
+
+  const runScene = useCallback((idx) => {
+    if (cycleRef.current) clearTimeout(cycleRef.current)
+    const scene = scenesRef.current[idx]
+    setActiveIdx(idx)
+    setShowResult(false)
+    setIsTyping(true)
+    setTypedPrompt('')
+    let ci = 0
+    const full = scene.prompt
+    const iv = setInterval(() => {
+      ci++
+      setTypedPrompt(full.substring(0, ci))
+      if (ci >= full.length) {
+        clearInterval(iv)
+        setIsTyping(false)
+        setTimeout(() => setShowResult(true), 400)
+      }
+    }, 45)
+  }, [])
 
   useEffect(() => {
     const el = sectionRef.current
@@ -729,37 +845,24 @@ const AIAssistantSection = () => {
       if (entry.isIntersecting && !started.current) {
         started.current = true
         let step = 0
-        const total = convsRef.current.length
-        const playStep = () => {
+        const total = scenesRef.current.length
+        const play = () => {
           const idx = step % total
-          const conv = convsRef.current[idx]
-          const userMsgId = `${conv.id}-user`
-          const aiMsgId = `${conv.id}-ai`
-
-          setTypingMsgId(userMsgId)
-          setVisibleMessages(prev => [...prev.slice(-6), userMsgId])
-          setTimeout(() => {
-            setTypingMsgId(null)
-            setTypingMsgId(aiMsgId)
-            setVisibleMessages(prev => [...prev, aiMsgId])
-            setTimeout(() => {
-              setActiveImage(idx)
-              setTypingMsgId(null)
-            }, Math.min(conv.aiText.length * 30, 2200))
-          }, 1200)
-
+          runScene(idx)
           step++
-          cycleRef.current = setTimeout(playStep, 4800)
+          cycleRef.current = setTimeout(play, 4000)
         }
-        playStep()
+        play()
       }
-    }, { threshold: 0.2 })
+    }, { threshold: 0.15 })
     observer.observe(el)
     return () => {
       observer.disconnect()
       if (cycleRef.current) clearTimeout(cycleRef.current)
     }
-  }, [])
+  }, [runScene])
+
+  const activeScene = AI_ASSISTANT_SCENES[activeIdx]
 
   return (
     <section ref={sectionRef} className="relative py-32 md:py-44 bg-[#FAFBFF] overflow-hidden">
@@ -784,123 +887,95 @@ const AIAssistantSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-8 lg:gap-12 items-start">
-          {/* LEFT: Conversation Column */}
-          <div className="rounded-2xl border border-[#EEF0F4] bg-white shadow-[0_4px_24px_rgba(15,23,42,0.03)] overflow-hidden">
-            <div className="px-5 py-3 border-b border-[#F3F4F6] bg-[#FCFCFE] flex items-center gap-2.5">
-              <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center">
-                <Sparkles size={13} className="text-white" />
-              </div>
-              <div>
-                <div className="text-[12px] font-bold text-[#111827]">Meegle AI</div>
-                <div className="text-[9px] text-[#16A34A] font-semibold flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#16A34A]" />
-                  Online
+        <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-8 lg:gap-10 items-start">
+          <div className="rounded-[24px] border border-[#EEF0F4] bg-white shadow-[0_8px_40px_rgba(15,23,42,0.04)] overflow-hidden">
+            <div className="p-5 md:p-7">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center">
+                  <Sparkles size={13} className="text-white" />
                 </div>
+                <span className="text-[13px] font-bold text-[#111827]">Meegle AI</span>
               </div>
-            </div>
+              <p className="text-[14px] text-[#8F959E] mb-5">Hi, what are we working on today?</p>
 
-            <div className="px-4 py-4 space-y-3 min-h-[480px] max-h-[560px] overflow-y-auto bg-[#FBFCFD]">
-              {AI_CONVERSATIONS.map((conv) => {
-                const userMid = `${conv.id}-user`
-                const aiMid = `${conv.id}-ai`
-                const userVisible = visibleMessages.includes(userMid)
-                const aiVisible = visibleMessages.includes(aiMid)
-                const isUserTyping = typingMsgId === userMid
-                const isAiTyping = typingMsgId === aiMid
+              <div className="relative mb-5">
+                <div className="flex items-center gap-3 rounded-xl border-2 border-[#E8EBF0] bg-[#FAFBFF] px-4 py-3.5 transition-all focus-within:border-[#5B5FE3]/40 focus-within:shadow-[0_0_0_4px_rgba(91,94,227,0.06)]">
+                  <Sparkles size={16} className="text-[#5B5FE3] flex-shrink-0" />
+                  <span className="flex-1 text-[14px] text-[#111827] font-medium min-h-[22px] select-none">
+                    {typedPrompt || 'Ask AI to plan, analyze, or optimize...'}
+                    {isTyping && (
+                      <span className="inline-block w-[2px] h-[17px] bg-[#5B5FE3] ml-0.5 align-middle animate-pulse" />
+                    )}
+                  </span>
+                  <button className="h-8 w-8 rounded-lg bg-[#5B5FE3] flex items-center justify-center flex-shrink-0" style={{ opacity: showResult ? 1 : 0 }}>
+                    <ArrowRight size={13} className="text-white" />
+                  </button>
+                </div>
 
-                return (
-                  <div key={conv.id} className="space-y-3">
-                    {userVisible && (
-                      <div className="flex justify-end animate-fade-slide-up">
-                        <div
-                          className="rounded-2xl rounded-br-md px-3.5 py-2.5 max-w-[85%] transition-colors duration-500"
-                          style={{ backgroundColor: conv.color, color: 'white' }}
-                        >
-                          <div className="text-[10px] font-bold mb-0.5 text-white/60">You</div>
-                          <div className="text-[12px] leading-[1.5]">
-                            {isUserTyping ? (
-                              <span>
-                                {conv.userText.substring(0, Math.max(3, Math.floor(conv.userText.length * 0.6)))}
-                                <span className="inline-flex ml-0.5">
-                                  <span className="animate-pulse">.</span>
-                                  <span className="animate-pulse" style={{ animationDelay: '150ms' }}>.</span>
-                                  <span className="animate-pulse" style={{ animationDelay: '300ms' }}>.</span>
-                                </span>
-                              </span>
-                            ) : conv.userText}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                    {aiVisible && (
-                      <div className="flex gap-2 animate-fade-slide-up">
-                        <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center flex-shrink-0 shadow-sm">
-                          <Sparkles size={11} className="text-white" />
-                        </div>
-                        <div className="rounded-2xl rounded-bl-md bg-white border border-[#EEF0F4] px-3.5 py-2.5 max-w-[88%] shadow-sm">
-                          <div className="text-[10px] font-bold mb-0.5 text-[#8F959E]">Meegle AI</div>
-                          <div className="text-[12px] leading-[1.65] whitespace-pre-line text-[#374151]">
-                            {isAiTyping ? (
-                              <span>
-                                {conv.aiText.substring(0, Math.max(3, Math.floor(conv.aiText.length * 0.55)))}
-                                <span className="inline-flex ml-0.5">
-                                  <span className="animate-pulse">.</span>
-                                  <span className="animate-pulse" style={{ animationDelay: '150ms' }}>.</span>
-                                  <span className="animate-pulse" style={{ animationDelay: '300ms' }}>.</span>
-                                </span>
-                              </span>
-                            ) : conv.aiText}
-                          </div>
-                        </div>
-                      </div>
-                    )}
+                {showResult && (
+                  <div
+                    className="mt-4 flex items-center gap-3 rounded-xl px-4 py-3.5 transition-all duration-300"
+                    style={{
+                      backgroundColor: activeScene.color + '08',
+                      borderWidth: 1,
+                      borderStyle: 'solid',
+                      borderColor: activeScene.color + '20'
+                    }}
+                  >
+                    <div className={"h-7 w-7 rounded-lg bg-gradient-to-br " + activeScene.gradient + " flex items-center justify-center flex-shrink-0 shadow-sm"}>
+                      <span className="text-[12px]">{activeScene.icon}</span>
+                    </div>
+                    <div>
+                      <div className="text-[12px] font-bold text-[#111827]">{activeScene.label}</div>
+                      <div className="text-[11px] text-[#8F959E]">{activeScene.desc}</div>
+                    </div>
                   </div>
-                )
-              })}
-            </div>
+                )}
+              </div>
 
-            <div className="px-4 py-3.5 border-t border-[#F3F4F6] bg-white flex items-center gap-2.5">
-              <input
-                type="text"
-                placeholder="Ask AI to plan, analyze, or optimize..."
-                className="flex-1 bg-[#F4F6F9] rounded-xl px-3.5 py-2.5 text-[12px] text-[#111827] placeholder-[#B0B8C5] outline-none"
-                readOnly
-              />
-              <button className="h-9 w-9 rounded-lg bg-[#5B5FE3] flex items-center justify-center flex-shrink-0">
-                <ArrowRight size={14} className="text-white" />
-              </button>
+              <div className="flex flex-wrap gap-2">
+                {AI_ASSISTANT_SCENES.map((scene, idx) => (
+                  <button
+                    key={scene.id}
+                    onClick={() => runScene(idx)}
+                    className={"flex items-center gap-2 rounded-xl border px-3 py-2 text-[12px] font-semibold transition-all duration-300 " + (activeIdx === idx ? 'text-white shadow-md' : 'bg-white border-[#EEF0F4] text-[#646A73] hover:border-[#D8DFFF] hover:text-[#111827] hover:shadow-sm')}
+                    style={activeIdx === idx ? { backgroundColor: scene.color, borderColor: scene.color } : {}}
+                  >
+                    <span className="text-[14px] leading-none">{scene.icon}</span>
+                    {scene.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* RIGHT: Pure Image Display */}
           <div className="relative">
-            {AI_CONVERSATIONS.map((conv, idx) => (
+            {AI_ASSISTANT_SCENES.map((scene, idx) => (
               <div
-                key={conv.id}
-                className="rounded-2xl overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.06)]"
+                key={scene.id}
+                className="rounded-[24px] overflow-hidden transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.06)]"
                 style={{
-                  position: activeImage === idx ? 'relative' : 'absolute',
-                  inset: activeImage === idx ? 'auto' : 0,
-                  opacity: activeImage === idx ? 1 : 0,
-                  transform: `scale(${activeImage === idx ? 1 : 0.98})`,
-                  pointerEvents: activeImage === idx ? 'auto' : 'none',
-                  zIndex: activeImage === idx ? 1 : 0
+                  position: activeIdx === idx && showResult ? 'relative' : 'absolute',
+                  inset: activeIdx === idx && showResult ? 'auto' : 0,
+                  opacity: activeIdx === idx && showResult ? 1 : 0,
+                  transform: "scale(" + (activeIdx === idx && showResult ? 1 : 0.97) + ")",
+                  pointerEvents: activeIdx === idx && showResult ? 'auto' : 'none',
+                  zIndex: activeIdx === idx && showResult ? 1 : 0
                 }}
               >
-                <div className="flex items-center gap-2.5 px-5 py-5 border-b border-[#F3F4F6]">
-                  <div className={`h-7 w-7 rounded-lg bg-gradient-to-br ${conv.gradient} flex items-center justify-center shadow-sm`}>
-                    <span className="text-[13px]">{conv.icon}</span>
+                <div className="flex items-center gap-2.5 px-5 py-4 border-b border-[#F3F4F6]">
+                  <div className={"h-7 w-7 rounded-lg bg-gradient-to-br " + scene.gradient + " flex items-center justify-center shadow-sm"}>
+                    <span className="text-[13px]">{scene.icon}</span>
                   </div>
                   <div>
-                    <div className="text-[12px] font-bold text-[#111827]">{conv.userText}</div>
-                    <div className="text-[10px] text-[#8F959E] truncate max-w-[280px]">{conv.aiText.substring(0, 56)}...</div>
+                    <div className="text-[12px] font-bold text-[#111827]">{scene.label}</div>
+                    <div className="text-[10px] text-[#8F959E] truncate max-w-[260px]">{scene.prompt.substring(0, 48)}...</div>
                   </div>
                 </div>
-                <div className={`w-full aspect-[16/10] bg-gradient-to-br ${conv.gradient} relative flex items-center justify-center`} style={{ opacity: 0.06 }}>
-                  <div className="text-center p-8">
-                    <div className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${conv.gradient} flex items-center justify-center mx-auto mb-4 shadow-lg`} style={{ opacity: 0.3 }}>
-                      <span className="text-[28px]">{conv.icon}</span>
+                <div className={"w-full aspect-[16/10] bg-gradient-to-br " + scene.gradient + " flex items-center justify-center"} style={{ opacity: 0.06 }}>
+                  <div className="text-center">
+                    <div className={"h-16 w-16 rounded-2xl bg-gradient-to-br " + scene.gradient + " flex items-center justify-center mx-auto mb-4 shadow-lg"} style={{ opacity: 0.3 }}>
+                      <span className="text-[28px]">{scene.icon}</span>
                     </div>
                     <p className="text-[12px] font-semibold text-[#B0B8C5]">Replace with product screenshot</p>
                   </div>
@@ -935,20 +1010,6 @@ const MeegleHomepage = () => {
           0% { transform: scale(0.92); opacity: 0; }
           100% { transform: scale(1); opacity: 1; }
         }
-        @keyframes charFlyIn {
-          0% { transform: translate(60px, 40px) scale(0.15); opacity: 0; }
-          45% { transform: translate(-6px, -4px) scale(1.08); opacity: 1; }
-          65% { transform: translate(3px, 2px) scale(0.95); }
-          100% { transform: translate(0, 0) scale(1); opacity: 1; }
-        }
-        @keyframes charFlyInFromLeft {
-          0% { transform: translate(-50px, 35px) scale(0.15); opacity: 0; }
-          45% { transform: translate(5px, -3px) scale(1.08); opacity: 1; }
-          65% { transform: translate(-2px, 1px) scale(0.95); }
-          100% { transform: translate(0, 0) scale(1); opacity: 1; }
-        }
-        .char-fly-in-a { animation: charFlyIn 0.7s cubic-bezier(0.22, 0.08, 0.08, 1) both; }
-        .char-fly-in-h { animation: charFlyInFromLeft 0.75s cubic-bezier(0.22, 0.08, 0.08, 1) 0.1s both; }
         @keyframes pulseRing {
           0%, 100% { box-shadow: 0 0 0 0 rgba(91,94,227,.3); }
           50% { box-shadow: 0 0 0 20px rgba(91,94,227,0); }
