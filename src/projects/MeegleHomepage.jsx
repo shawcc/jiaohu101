@@ -150,7 +150,7 @@ const WORKFLOW_NODES = [
 const STAGE = {
   plan: { label: 'Plan', color: '#5B5FE3', emoji: '📋' },
   build: { label: 'Build', color: '#3EAB6E', emoji: '🔧' },
-  ship: { label: 'Ship', color: '#F59E0B', emoji: '🚀' }
+  confirm: { label: 'Confirm', color: '#F59E0B', emoji: '✨' }
 }
 
 const AgentAvatar = ({ color, size = 40 }) => (
@@ -162,7 +162,7 @@ const AgentAvatar = ({ color, size = 40 }) => (
       className="absolute inset-0 rounded-full animate-pulse"
       style={{ backgroundColor: color + '20' }}
     />
-    <svg viewBox="0 0 40 40" width={size} height={size} className="relative drop-shadow-lg">
+    <svg viewBox="0 0 40 40" width={size} height={size} className="relative" style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.15))' }}>
       <defs>
         <linearGradient id={`ag-${color.replace('#','')}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={color} />
@@ -181,160 +181,194 @@ const AgentAvatar = ({ color, size = 40 }) => (
   </div>
 )
 
-const HumanAvatar = ({ size = 36 }) => (
+const PlatformBase = ({ width, height, color }) => (
   <div
-    className="relative flex items-center justify-center"
-    style={{ width: size, height: size }}
-  >
-    <svg viewBox="0 0 40 40" width={size} height={size} className="drop-shadow">
-      <circle cx="20" cy="14" r="10" fill="#374151" />
-      <ellipse cx="20" cy="34" rx="14" ry="8" fill="#374151" />
-    </svg>
+    className="absolute rounded-2xl"
+    style={{
+      width: width + 40,
+      height: height + 30,
+      left: -20,
+      top: height - 20,
+      background: `linear-gradient(180deg, white 0%, ${color}06 100%)`,
+      border: `1px solid ${color}10`,
+      boxShadow: `0 20px 60px ${color}10, 0 4px 16px rgba(0,0,0,0.04)`,
+      transform: 'rotateX(55deg) rotateZ(-5deg) translateZ(-10px)'
+    }}
+  />
+)
+
+const ConfirmPulse = ({ color, onClick }) => (
+  <div className="relative inline-flex items-center gap-1.5 cursor-pointer group" onClick={onClick}>
+    <div
+      className="absolute inset-0 rounded-full animate-ping"
+      style={{ backgroundColor: color + '30' }}
+    />
+    <div className="relative flex items-center gap-1.5 rounded-full px-3 py-1" style={{ backgroundColor: color, boxShadow: `0 0 20px ${color}60` }}>
+      <span className="text-[9px] font-bold text-white">✓ Confirm</span>
+    </div>
   </div>
+)
+
+const FloatingDot = ({ x, y, size, color, delay }) => (
+  <div
+    className="absolute rounded-full"
+    style={{
+      left: x,
+      top: y,
+      width: size,
+      height: size,
+      backgroundColor: color,
+      opacity: 0,
+      animation: `dotFloat 3s ease-in-out ${delay}s infinite`
+    }}
+  />
 )
 
 const WorkflowBoard = () => {
   const [activeIdx, setActiveIdx] = useState(0)
   const [stage, setStage] = useState('plan')
+  const confirmingRef = useRef(false)
+
+  const advance = useCallback(() => {
+    setStage(prev => {
+      if (prev === 'plan') return 'build'
+      if (prev === 'build') return 'confirm'
+      return prev
+    })
+  }, [])
 
   useEffect(() => {
-    const dur = stage === 'plan' ? 1200 : stage === 'build' ? 1600 : 800
-    const t = setTimeout(() => {
-      setStage(prev => {
-        if (prev === 'plan') return 'build'
-        if (prev === 'build') return 'ship'
-        setActiveIdx(p => (p + 1) % WORKFLOW_NODES.length)
-        return 'plan'
-      })
-    }, dur)
+    if (stage === 'confirm') return
+    const dur = stage === 'plan' ? 1400 : 1600
+    const t = setTimeout(advance, dur)
     return () => clearTimeout(t)
-  }, [stage, activeIdx])
+  }, [stage, activeIdx, advance])
 
-  const nodeW = 88
-  const gap = 36
+  const handleConfirm = useCallback(() => {
+    if (confirmingRef.current) return
+    confirmingRef.current = true
+    setActiveIdx(p => (p + 1) % WORKFLOW_NODES.length)
+    setStage('plan')
+    setTimeout(() => { confirmingRef.current = false }, 400)
+  }, [])
+
+  const nodeW = 84
+  const gap = 32
   const totalW = WORKFLOW_NODES.length * nodeW + (WORKFLOW_NODES.length - 1) * gap
-  const startX = 24
+  const startX = 28
+  const boardH = 190
+
+  const dots = [
+    { x: '15%', y: '22%', size: 4, color: '#5B5FE3', delay: 0 },
+    { x: '62%', y: '15%', size: 3, color: '#3EAB6E', delay: 1.2 },
+    { x: '38%', y: '28%', size: 5, color: '#F59E0B', delay: 0.6 },
+    { x: '80%', y: '24%', size: 3, color: '#5B5FE3', delay: 2.1 },
+    { x: '48%', y: '18%', size: 4, color: '#3EAB6E', delay: 1.6 },
+    { x: '10%', y: '25%', size: 3, color: '#F59E0B', delay: 2.8 },
+    { x: '72%', y: '20%', size: 4, color: '#5B5FE3', delay: 0.9 },
+    { x: '90%', y: '16%', size: 3, color: '#3EAB6E', delay: 1.9 },
+  ]
 
   return (
-    <div className="relative w-full max-w-[900px] mx-auto select-none">
+    <div className="relative w-full max-w-[960px] mx-auto select-none">
       <div
         className="relative mx-auto"
         style={{
-          perspective: '600px',
-          height: 220
+          perspective: '800px',
+          height: 360
         }}
       >
+        <div className="absolute inset-x-0 flex justify-center" style={{ top: 8 }}>
+          <div className="relative" style={{ width: totalW + 40, height: boardH + 100 }}>
+            <PlatformBase width={totalW} height={boardH} color="#5B5FE3" />
+          </div>
+        </div>
+
+        {dots.map((d, i) => (
+          <FloatingDot key={i} {...d} />
+        ))}
+
         <div
           className="absolute inset-x-0"
           style={{
             transform: 'rotateX(55deg) rotateZ(-5deg)',
             transformStyle: 'preserve-3d',
-            top: 20,
-            height: 180
+            top: 36,
+            height: boardH
           }}
         >
-          <svg
-            className="absolute"
-            style={{
-              top: 36,
-              left: startX + 12,
-              width: totalW - 30,
-              height: 4,
-              overflow: 'visible'
-            }}
-          >
-            <line
-              x1="0" y1="2" x2={totalW - 30} y2="2"
-              stroke="#E5E7EB" strokeWidth="3" strokeLinecap="round"
-            />
-            {(() => {
-              const doneW = activeIdx * (nodeW + gap)
-              return doneW > 0 ? (
-                <line
-                  x1="0" y1="2" x2={doneW} y2="2"
-                  stroke="#16A34A" strokeWidth="3" strokeLinecap="round"
-                />
-              ) : null
-            })()}
-            {activeIdx > 0 && (
-              <>
-                <circle
-                  cx={activeIdx * (nodeW + gap)} cy="2" r="6"
-                  fill={STAGE[stage]?.color} opacity="0.3"
-                >
-                  <animate attributeName="r" from="4" to="14" dur="1.2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" from="0.5" to="0" dur="1.2s" repeatCount="indefinite" />
-                </circle>
-                <circle
-                  cx={activeIdx * (nodeW + gap)} cy="2" r="3"
-                  fill={STAGE[stage]?.color}
-                >
-                  <animate attributeName="opacity" from="1" to="0.4" dur="0.6s" repeatCount="indefinite" />
-                </circle>
-              </>
-            )}
-          </svg>
-
-          <div className="absolute flex" style={{ left: startX, top: 16, gap }}>
+          <div className="absolute width-full flex" style={{ left: startX, top: 14, gap }}>
             {WORKFLOW_NODES.map((node, idx) => {
               const isActive = idx === activeIdx
               const isDone = idx < activeIdx
               const color = isActive ? STAGE[stage]?.color : isDone ? '#16A34A' : '#D1D5DB'
 
               return (
-                <div key={node.id} style={{ width: nodeW }} className="relative">
+                <div key={node.id} style={{ width: nodeW }} className="relative flex justify-center">
                   <div
-                    className="mx-auto transition-all duration-500"
+                    className="transition-all duration-500 flex flex-col items-center"
                     style={{
-                      width: isActive ? 84 : 64,
-                      marginTop: isActive ? 0 : 12,
-                      opacity: isDone ? 0.55 : isActive ? 1 : 0.35
+                      opacity: isDone ? 0.5 : 1
                     }}
                   >
                     {isActive ? (
                       <div
-                        className="rounded-2xl bg-white border-2 p-3 flex flex-col items-center gap-2.5 shadow-2xl transition-all duration-300"
+                        className="rounded-2xl bg-white border-2 p-3 flex flex-col items-center gap-2 shadow-2xl"
                         style={{
+                          width: 98,
                           borderColor: color,
-                          boxShadow: `0 12px 36px ${color}30, 0 4px 12px rgba(0,0,0,0.06)`,
-                          transform: 'translateZ(20px)'
+                          boxShadow: `0 16px 48px ${color}25, 0 8px 16px rgba(0,0,0,0.06)`,
+                          transform: 'translateZ(30px) translateY(-8px)'
                         }}
                       >
-                        <div
-                          className="text-[9px] font-extrabold uppercase tracking-[0.14em] px-2 py-0.5 rounded-full"
-                          style={{ backgroundColor: color + '15', color }}
-                        >
-                          {STAGE[stage]?.label}
+                        <div className="flex items-center gap-2 w-full">
+                          <AgentAvatar color={color} size={26} />
+                          <div className="flex flex-col flex-1">
+                            <span className="text-[9px] font-extrabold uppercase tracking-[0.1em]" style={{ color }}>
+                              {STAGE[stage]?.label}
+                            </span>
+                            <span className="text-[11px] font-black text-[#111827] leading-tight">{node.label}</span>
+                          </div>
                         </div>
 
-                        <div className="text-[11px] font-black text-[#111827]">{node.label}</div>
-
-                        <div className="flex items-center gap-3">
-                          <AgentAvatar color={color} size={28} />
-                          <svg width="16" height="16" viewBox="0 0 16 16" className="text-gray-300">
-                            <path d="M4 8h8M8 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                          </svg>
-                          <HumanAvatar size={28} />
+                        <div className="w-full rounded-lg px-2 py-1.5 flex items-center gap-2" style={{ backgroundColor: color + '10' }}>
+                          <span className="text-[9px] font-semibold" style={{ color }}>
+                            {stage === 'plan' ? 'Agent analyzing requirements...' :
+                             stage === 'build' ? 'Agent executing tasks...' :
+                             'Ready for human review'}
+                          </span>
                         </div>
 
-                        <div className="text-[9px] font-semibold text-gray-400">
-                          {stage === 'plan' ? 'Agent drafts → Human reviews' :
-                           stage === 'build' ? 'Agent builds → Human approves' :
-                           'Human confirms → Next node'}
-                        </div>
+                        {stage === 'confirm' ? (
+                          <div onClick={handleConfirm}>
+                            <ConfirmPulse color={color} />
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 w-full">
+                            <div className="flex-1 h-1 rounded-full bg-gray-100 overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all duration-1000"
+                                style={{ backgroundColor: color, width: stage === 'plan' ? '45%' : '85%' }}
+                              />
+                            </div>
+                            <span className="text-[8px] font-semibold text-gray-400">
+                              {stage === 'plan' ? '...' : '→'}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     ) : isDone ? (
                       <div
-                        className="rounded-lg border px-2 py-1.5 flex items-center justify-center gap-1"
-                        style={{ borderColor: '#BBF7D0', backgroundColor: '#F0FDF4' }}
+                        className="rounded-xl border px-2.5 py-2 flex items-center gap-1.5"
+                        style={{ borderColor: '#BBF7D0', backgroundColor: '#F0FDF4', transform: 'translateZ(5px)' }}
                       >
-                        <CheckCircle2 size={11} className="text-[#16A34A]" />
+                        <CheckCircle2 size={12} className="text-[#16A34A]" />
                         <span className="text-[9px] font-bold text-[#16A34A]">{node.label}</span>
                       </div>
                     ) : (
                       <div
-                        className="rounded-lg border px-2 py-1.5 flex items-center justify-center"
-                        style={{ borderColor: '#E5E7EB', backgroundColor: '#F3F4F6' }}
+                        className="rounded-xl border px-2.5 py-2 flex items-center justify-center"
+                        style={{ borderColor: '#E5E7EB', backgroundColor: '#F3F4F6', opacity: 0.35, transform: 'translateZ(2px)' }}
                       >
                         <span className="text-[9px] font-medium text-[#9CA3AF]">{node.label}</span>
                       </div>
@@ -343,14 +377,14 @@ const WorkflowBoard = () => {
 
                   {isActive && (
                     <div
-                      className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-center"
-                      style={{ transform: 'translateZ(30px)' }}
+                      className="absolute -bottom-16 left-1/2 -translate-x-1/2"
+                      style={{ transform: 'translateZ(40px)' }}
                     >
                       <span
-                        className="inline-block text-[9px] font-bold px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: color + '15', color }}
+                        className="inline-block text-[8px] font-bold px-2 py-1 rounded-full whitespace-nowrap"
+                        style={{ backgroundColor: color + '12', color }}
                       >
-                        {STAGE[stage]?.emoji} {STAGE[stage]?.label}ing...
+                        {stage === 'confirm' ? 'Click to approve →' : stage === 'plan' ? 'Agent is working...' : 'Almost done...'}
                       </span>
                     </div>
                   )}
@@ -358,6 +392,39 @@ const WorkflowBoard = () => {
               )
             })}
           </div>
+        </div>
+
+        <div
+          className="absolute"
+          style={{
+            left: startX + 8,
+            bottom: 60,
+            width: totalW - 16,
+            overflow: 'hidden'
+          }}
+        >
+          <svg width={totalW - 16} height={40} className="pointer-events-none">
+            {WORKFLOW_NODES.map((_, idx) => {
+              if (idx >= WORKFLOW_NODES.length - 1) return null
+              const x1 = idx * (nodeW + gap) + nodeW / 2
+              const x2 = (idx + 1) * (nodeW + gap) + nodeW / 2
+              const isPast = idx < activeIdx
+
+              return (
+                <g key={idx}>
+                  <line x1={x1} y1={12} x2={x2} y2={12} stroke={isPast ? '#16A34A' : '#E5E7EB'} strokeWidth={2} />
+                  {isPast && (
+                    <circle cx={x2} cy={12} r={2} fill="#16A34A" />
+                  )}
+                  {!isPast && idx === activeIdx - 1 && (
+                    <text x={(x1 + x2) / 2} y={10} textAnchor="middle" fontSize="8" fill="#F59E0B" fontWeight="bold">
+                      ↑ confirm ↑
+                    </text>
+                  )}
+                </g>
+              )
+            })}
+          </svg>
         </div>
       </div>
     </div>
@@ -384,6 +451,12 @@ const MeegleHomepage = () => {
   return (
     <div className="bg-white text-[#1F2329] font-sans overflow-x-hidden">
       <style>{`
+        @keyframes dotFloat {
+          0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+          20% { opacity: 0.6; }
+          80% { opacity: 0.2; }
+          100% { transform: translateY(-30px) translateX(10px); opacity: 0; }
+        }
         @keyframes gradientShift {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -482,16 +555,21 @@ const MeegleHomepage = () => {
 
       {/* HERO */}
       <section ref={heroRef} className="relative pt-32 pb-20 bg-gradient-to-b from-[#FAFBFF] via-white to-white overflow-hidden">
-        <div className="absolute top-0 right-[-10%] w-[500px] h-[500px] rounded-full bg-[#5B5FE3]/[0.02] blur-[100px]" />
+        <div className="absolute top-0 right-[-10%] w-[600px] h-[600px] rounded-full bg-[#5B5FE3]/[0.015] blur-[100px]" />
+        <div className="absolute bottom-[20%] left-[-5%] w-[400px] h-[400px] rounded-full bg-[#F59E0B]/[0.008] blur-[80px]" />
 
         <div className="relative w-full max-w-[1340px] mx-auto px-6">
-          <div className="flex flex-col items-center text-center max-w-[800px] mx-auto">
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#5B5FE3]/15 bg-white px-4 py-2 text-[12px] font-semibold text-[#5B5FE3] shadow-sm mb-8 animate-fade-slide-up">
+          <div className="animate-fade-slide-up">
+            <WorkflowBoard />
+          </div>
+
+          <div className="flex flex-col items-center text-center max-w-[800px] mx-auto mt-[-40px]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#5B5FE3]/15 bg-white/80 backdrop-blur px-4 py-2 text-[12px] font-semibold text-[#5B5FE3] shadow-sm mb-6 animate-fade-slide-up" style={{ animationDelay: '0.1s' }}>
               <Sparkles size={14} />
               Introducing Multi-Agent Orchestration
             </div>
 
-            <h1 className="text-[54px] md:text-[80px] leading-[0.92] font-black tracking-[-0.05em] text-[#0A0A14] animate-fade-slide-up" style={{ animationDelay: '0.1s' }}>
+            <h1 className="text-[54px] md:text-[80px] leading-[0.92] font-black tracking-[-0.05em] text-[#0A0A14] animate-fade-slide-up" style={{ animationDelay: '0.15s' }}>
               Plan. Build. Ship.
               <br />
               <span className="bg-gradient-to-r from-[#5B5FE3] via-[#787BEE] to-[#A78BFA] bg-clip-text text-transparent gradient-shift">
@@ -499,12 +577,12 @@ const MeegleHomepage = () => {
               </span>
             </h1>
 
-            <p className="mt-8 max-w-[560px] text-[18px] leading-8 text-[#5B6272] animate-fade-slide-up" style={{ animationDelay: '0.25s' }}>
+            <p className="mt-6 max-w-[480px] text-[17px] leading-7 text-[#5B6272] animate-fade-slide-up" style={{ animationDelay: '0.25s' }}>
               Meegle unites your teams and AI agents on one platform.
               Transform every project into reusable organizational wisdom.
             </p>
 
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4 animate-fade-slide-up" style={{ animationDelay: '0.35s' }}>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 animate-fade-slide-up" style={{ animationDelay: '0.35s' }}>
               <button className="group rounded-2xl bg-[#0A0A14] px-8 py-4 text-[16px] font-bold text-white hover:bg-[#1A1A2E] transition-all shadow-[0_8px_30px_rgba(10,10,20,.2)]">
                 Get Started Free
                 <ArrowRight size={16} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
@@ -518,11 +596,7 @@ const MeegleHomepage = () => {
             </div>
           </div>
 
-          <div className="mt-16 animate-fade-slide-up" style={{ animationDelay: '0.45s' }}>
-            <WorkflowBoard />
-          </div>
-
-          <div className="mt-16 text-center animate-fade-slide-up" style={{ animationDelay: '0.5s' }}>
+          <div className="mt-20 text-center animate-fade-slide-up" style={{ animationDelay: '0.5s' }}>
             <div className="text-[11px] uppercase tracking-[0.24em] text-[#8F959E] mb-6">Trusted by leading teams worldwide</div>
             <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-[0.22]">
               {LOGOS.map(logo => (
