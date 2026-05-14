@@ -162,98 +162,124 @@ const WORKFLOW_NODES = [
 ]
 
 const STAGE_CONFIG = {
-  plan: { label: 'Plan', color: '#5B5FE3', bg: '#F4F6FF', duration: 2400 },
-  build: { label: 'Build', color: '#3EAB6E', bg: '#EDF7F0', duration: 2800 },
-  ship: { label: 'Ship', color: '#F59E0B', bg: '#FFFBF0', duration: 1600 }
+  plan: {
+    label: 'Plan',
+    color: '#5B5FE3',
+    bg: '#F4F6FF',
+    glow: 'rgba(91,94,227,0.22)',
+    desc: 'Agent drafts plan',
+    action: 'Human reviews',
+    duration: 1000
+  },
+  build: {
+    label: 'Build',
+    color: '#3EAB6E',
+    bg: '#EDF7F0',
+    glow: 'rgba(62,171,110,0.18)',
+    desc: 'Agent executes',
+    action: 'Human approves',
+    duration: 1400
+  },
+  ship: {
+    label: 'Ship',
+    color: '#F59E0B',
+    bg: '#FFFBF0',
+    glow: 'rgba(245,158,11,0.2)',
+    desc: 'Shipping to next',
+    action: 'Handoff complete',
+    duration: 600
+  }
 }
 
-const WorkflowNode = ({ node, state, stage, delay, x, y }) => {
+const WorkflowNode = ({ node, state, stage, x, y }) => {
   const isActive = state === 'active'
-  const isShip = isActive && stage === 'ship'
   const isDone = state === 'done'
-  const isWaiting = state === 'waiting'
 
   return (
     <div
-      className="absolute transition-all duration-700 ease-out"
+      className="absolute transition-all duration-500 ease-out"
       style={{
         left: x,
         top: y,
-        transform: isActive ? 'scale(1.25)' : isDone ? 'scale(0.85)' : 'scale(0.78)',
-        opacity: isWaiting ? 0.35 : isDone ? 0.7 : 1,
-        transitionDelay: `${delay}ms`,
+        transform: isActive ? 'scale(1.0)' : 'scale(1.0)',
+        opacity: 1,
         zIndex: isActive ? 20 : 1
       }}
     >
-      <div
-        className={`flex items-center gap-2 rounded-2xl border px-3.5 py-2 transition-all duration-700 ${
-          isActive
-            ? stage === 'ship'
-              ? 'border-[#F59E0B]/40 bg-[#FFFBF0] shadow-[0_8px_30px_rgba(245,158,11,0.2)]'
-              : stage === 'build'
-              ? 'border-[#3EAB6E]/30 bg-[#EDF7F0] shadow-[0_8px_30px_rgba(62,171,110,0.18)]'
-              : 'border-[#5B5FE3]/30 bg-[#F4F6FF] shadow-[0_8px_30px_rgba(91,94,227,0.22)]'
-            : isDone
-            ? 'border-[#D1D5DB]/30 bg-white'
-            : 'border-[#E2E4E9]/20 bg-white'
-        }`}
-      >
+      {isActive ? (
         <div
-          className={`flex items-center justify-center rounded-lg transition-all duration-700 ${
-            isActive ? 'w-8 h-8' : 'w-6 h-6'
-          }`}
-          style={{ backgroundColor: isActive ? STAGE_CONFIG[stage]?.bg || '#F4F6FF' : 'transparent' }}
+          className="rounded-2xl border px-4 py-3 shadow-lg backdrop-blur-sm transition-all duration-500 flex flex-col items-center gap-2"
+          style={{
+            borderColor: STAGE_CONFIG[stage]?.color + '40',
+            backgroundColor: STAGE_CONFIG[stage]?.bg,
+            boxShadow: `0 12px 40px ${STAGE_CONFIG[stage]?.glow}`,
+            minWidth: '140px'
+          }}
         >
-          <span style={{ color: isActive ? STAGE_CONFIG[stage]?.color : isDone ? '#16A34A' : '#D1D5DB' }}>
-            {isDone ? <CheckCircle2 size={isActive ? 16 : 13} /> : node.icon}
-          </span>
-        </div>
-
-        {isActive && (
-          <>
+          <div className="flex items-center gap-3 w-full">
+            <div
+              className="flex items-center justify-center rounded-xl w-9 h-9"
+              style={{ backgroundColor: STAGE_CONFIG[stage]?.color, color: 'white' }}
+            >
+              {isDone ? <CheckCircle2 size={16} /> : node.icon}
+            </div>
             <div className="flex flex-col">
-              <span className="text-[10px] font-bold text-[#111827] leading-tight">{node.label}</span>
-              <span className="text-[8px] font-semibold" style={{ color: STAGE_CONFIG[stage]?.color }}>
+              <span className="text-[12px] font-extrabold text-[#111827] leading-tight">{node.label}</span>
+              <span className="text-[10px] font-bold" style={{ color: STAGE_CONFIG[stage]?.color }}>
                 {STAGE_CONFIG[stage]?.label}
               </span>
             </div>
+          </div>
 
-            <div className="flex -space-x-1 ml-1">
-              <div className="h-5 w-5 rounded-full border border-white bg-white flex items-center justify-center">
-                <UserRound size={9} className="text-[#111827]" />
-              </div>
-              <div
-                className="h-5 w-5 rounded-full border border-white flex items-center justify-center"
-                style={{ backgroundColor: STAGE_CONFIG[stage]?.color || '#5B5FE3' }}
-              >
-                <Bot size={9} className="text-white" />
-              </div>
+          <div className="w-full rounded-xl bg-white/50 px-3 py-2 flex items-center gap-3">
+            <span className="text-[10px] font-semibold" style={{ color: STAGE_CONFIG[stage]?.color }}>
+              {STAGE_CONFIG[stage]?.desc}
+            </span>
+            <div
+              className="h-5 w-5 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: STAGE_CONFIG[stage]?.color }}
+            >
+              <Bot size={9} className="text-white" />
             </div>
-          </>
-        )}
+          </div>
 
-        {isDone && (
-          <span className="text-[9px] font-semibold text-[#16A34A] leading-tight">{node.label}</span>
-        )}
+          <div className="w-full rounded-xl bg-white/50 px-3 py-2 flex items-center gap-3">
+            <span className="text-[10px] font-semibold text-[#111827]">
+              {STAGE_CONFIG[stage]?.action}
+            </span>
+            <div className="h-5 w-5 rounded-full bg-[#111827] flex items-center justify-center flex-shrink-0">
+              <UserRound size={9} className="text-white" />
+            </div>
+          </div>
 
-        {isWaiting && (
-          <span className="text-[9px] font-medium text-[#D1D5DB] leading-tight">{node.label}</span>
-        )}
-      </div>
-
-      {isShip && (
-        <div
-          className="absolute -inset-1 rounded-2xl pointer-events-none animate-pulse"
-          style={{ backgroundColor: `${STAGE_CONFIG.ship.color}10` }}
-        />
+          {stage === 'ship' && (
+            <div className="flex items-center gap-1.5">
+              <span
+                className="h-1.5 w-1.5 rounded-full animate-pulse"
+                style={{ backgroundColor: STAGE_CONFIG.ship.color }}
+              />
+              <span className="text-[9px] font-bold" style={{ color: STAGE_CONFIG.ship.color }}>Flowing →</span>
+            </div>
+          )}
+        </div>
+      ) : isDone ? (
+        <div className="rounded-xl border border-[#D1D5DB]/40 bg-white px-3 py-2 flex items-center gap-2 shadow-sm">
+          <span className="text-[#16A34A]">
+            <CheckCircle2 size={13} />
+          </span>
+          <span className="text-[10px] font-bold text-[#16A34A] leading-tight">{node.label}</span>
+        </div>
+      ) : (
+        <div className="rounded-xl border border-[#D1D5DB]/30 bg-white/60 px-3 py-2 flex items-center gap-2 shadow-sm backdrop-blur-sm">
+          <span style={{ color: '#9CA3AF' }}>{node.icon}</span>
+          <span className="text-[10px] font-semibold text-[#374151] leading-tight">{node.label}</span>
+        </div>
       )}
     </div>
   )
 }
 
-const FlowBeam = ({ x1, y1, x2, y2, active, color }) => {
-  if (!active) return null
-
+const FlowBeam = ({ x1, y1, x2, y2, color }) => {
   const dx = x2 - x1
   const dy = y2 - y1
   const length = Math.sqrt(dx * dx + dy * dy)
@@ -272,11 +298,12 @@ const FlowBeam = ({ x1, y1, x2, y2, active, color }) => {
         overflow: 'hidden'
       }}
     >
+      <div className="absolute inset-y-0 left-0 right-0 rounded-full" style={{ backgroundColor: color + '30' }} />
       <div
-        className="absolute inset-y-0 w-12 rounded-full"
+        className="absolute inset-y-0 w-16 rounded-full"
         style={{
-          background: `linear-gradient(90deg, transparent, ${color}60, ${color}, transparent)`,
-          animation: 'flowParticle 0.8s linear infinite'
+          background: `linear-gradient(90deg, transparent, ${color}80, transparent)`,
+          animation: 'flowParticle 1s linear infinite'
         }}
       />
     </div>
@@ -286,13 +313,12 @@ const FlowBeam = ({ x1, y1, x2, y2, active, color }) => {
 const WorkflowBackground = () => {
   const [activeNodeId, setActiveNodeId] = useState(0)
   const [stage, setStage] = useState('plan')
-  const [flowIndex, setFlowIndex] = useState(0)
   const totalNodes = WORKFLOW_NODES.length
 
-  const colSpacing = 120
-  const rowSpacing = 84
-  const startX = 40
-  const startY = 30
+  const colSpacing = 150
+  const rowSpacing = 110
+  const startX = 60
+  const startY = 50
 
   const getNodePos = useCallback((node) => {
     const x = startX + node.col * colSpacing
@@ -303,41 +329,33 @@ const WorkflowBackground = () => {
   useEffect(() => {
     let timeout
 
-    const advanceStage = () => {
+    const advance = () => {
       setStage(prev => {
         if (prev === 'plan') return 'build'
         if (prev === 'build') return 'ship'
         if (prev === 'ship') {
-          setActiveNodeId(prevId => {
-            const next = (prevId + 1) % totalNodes
-            return next
-          })
+          setActiveNodeId(prevId => (prevId + 1) % totalNodes)
           return 'plan'
         }
         return prev
       })
     }
 
-    const duration = stage === 'plan' ? 2400 : stage === 'build' ? 2800 : 1600
-    timeout = setTimeout(advanceStage, duration)
+    const dur = stage === 'plan' ? 1000 : stage === 'build' ? 1400 : 600
+    timeout = setTimeout(advance, dur)
 
     return () => clearTimeout(timeout)
   }, [stage, activeNodeId, totalNodes])
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFlowIndex(prev => (prev + 1) % 8)
-    }, 300)
-    return () => clearInterval(interval)
-  }, [])
-
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+      <div className="absolute inset-0 bg-[#FAFBFF]/70" />
+
       {WORKFLOW_NODES.map((node, idx) => {
         const { x, y } = getNodePos(node)
 
         let state = 'waiting'
-        if (idx < activeNodeId || (activeNodeId === 0 && idx === totalNodes - 1 && stage === 'ship')) {
+        if (idx < activeNodeId) {
           state = 'done'
         } else if (idx === activeNodeId) {
           state = 'active'
@@ -349,9 +367,8 @@ const WorkflowBackground = () => {
             node={node}
             state={state}
             stage={state === 'active' ? stage : 'plan'}
-            delay={0}
-            x={x + 16}
-            y={y + 16}
+            x={x}
+            y={y}
           />
         )
       })}
@@ -361,17 +378,21 @@ const WorkflowBackground = () => {
         const next = WORKFLOW_NODES[idx + 1]
         const from = getNodePos(node)
         const to = getNodePos(next)
-        const isActiveEdge = idx === activeNodeId - 1 || (activeNodeId === 0 && idx === totalNodes - 2)
+
+        const isCompletedEdge = idx < activeNodeId
+        const isActiveEdge = idx === activeNodeId - 1
 
         return (
           <FlowBeam
             key={`edge-${idx}`}
-            x1={from.x + 64}
-            y1={from.y + 32}
-            x2={to.x + 64}
-            y2={to.y + 32}
-            active={true}
-            color={isActiveEdge ? STAGE_CONFIG.ship.color : '#E2E4E9'}
+            x1={from.x + 60}
+            y1={from.y + 20}
+            x2={to.x + 60}
+            y2={to.y + 20}
+            color={
+              isActiveEdge ? STAGE_CONFIG.ship.color :
+              isCompletedEdge ? '#16A34A' : '#D1D5DB'
+            }
           />
         )
       })}
