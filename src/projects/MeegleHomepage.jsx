@@ -933,15 +933,15 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               <div className="mb-2 flex items-center gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#3EAB6E] text-[13px] font-black shadow-[0_10px_22px_rgba(62,171,110,0.32)]">M</div>
                 <div>
-                  <div className="text-[12px] font-black">Agent Hub</div>
-                  <div className="text-[8px] font-bold uppercase tracking-[0.16em] text-white/[0.42]">Orchestrator</div>
+                  <div className="text-[12px] font-black">Meegle</div>
+                  <div className="text-[8px] font-bold uppercase tracking-[0.16em] text-white/[0.42]">Agent Orchestration</div>
                 </div>
               </div>
-              <div className="text-[10px] leading-4 text-white/[0.62]">Route any agent into workflows, systems, and human checkpoints.</div>
+              <div className="text-[10px] leading-4 text-white/[0.62]">Connect ready-made, purchased, and custom agents into workflows.</div>
             </div>
             <div className="relative grid grid-cols-3 gap-1.5">
               {agentSources.map((source, idx) => (
-                <div key={`hub-${source.label}`} className={`rounded-lg px-1.5 py-1 text-center text-[8px] font-black transition-all duration-300 ${activeAgentLane === idx ? 'bg-white text-[#102119]' : 'bg-white/[0.08] text-white/50'}`}>
+                <div key={`orchestration-${source.label}`} className={`rounded-lg px-1.5 py-1 text-center text-[8px] font-black transition-all duration-300 ${activeAgentLane === idx ? 'bg-white text-[#102119]' : 'bg-white/[0.08] text-white/50'}`}>
                   {source.label}
                 </div>
               ))}
