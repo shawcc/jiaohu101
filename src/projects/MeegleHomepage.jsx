@@ -840,145 +840,115 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
   }
 
   if (card.id === 'orchestrate') {
-    const agentSources = [
-      { label: 'Use', title: 'Ready agents', desc: 'Native copilots', color: '#3EAB6E', count: '80+' },
-      { label: 'Buy', title: 'Marketplace', desc: 'Partner agents', color: '#5B5FE3', count: '240+' },
-      { label: 'Build', title: 'Custom lab', desc: 'Private agents', color: '#F59E0B', count: '∞' },
+    const agentPeople = [
+      { name: 'Code Agent', role: 'Engineering', origin: 'Create', action: 'Create custom agent', desc: 'Built by your team for code review, implementation tasks, and release checks.', color: '#5B5FE3', initials: 'CA', left: '17%', top: '18%', size: 78 },
+      { name: 'Research Agent', role: 'GTM research', origin: 'Bring', action: 'Bring external agent', desc: 'Connect an agent your team already uses for market scans and account research.', color: '#3EAB6E', initials: 'RA', left: '36%', top: '10%', size: 68 },
+      { name: 'CRM Agent', role: 'Sales ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'A ready-to-use assistant for lead enrichment, qualification, and CRM hygiene.', color: '#34D399', initials: 'CRM', left: '53%', top: '23%', size: 82 },
+      { name: 'Design Agent', role: 'Creative ops', origin: 'Bring', action: 'Bring external agent', desc: 'Plug in a specialist agent for creative ideation, asset review, and brand checks.', color: '#A78BFA', initials: 'DA', left: '20%', top: '48%', size: 70 },
+      { name: 'Data Agent', role: 'Analytics', origin: 'Ready', action: 'Use ready-made agent', desc: 'Analyze dashboards, explain metric changes, and turn insights into next actions.', color: '#0EA5E9', initials: 'BI', left: '40%', top: '43%', size: 86 },
+      { name: 'Ops Agent', role: 'Internal tools', origin: 'Create', action: 'Create custom agent', desc: 'Create a private agent for IT requests, approvals, permissions, and internal tasks.', color: '#F59E0B', initials: 'OA', left: '60%', top: '56%', size: 74 },
+      { name: 'Legal Agent', role: 'Risk review', origin: 'Bring', action: 'Bring external agent', desc: 'Bring an existing review agent into approval flows and compliance checkpoints.', color: '#EF4444', initials: 'LA', left: '30%', top: '70%', size: 60 },
+      { name: 'PM Agent', role: 'Product', origin: 'Create', action: 'Create custom agent', desc: 'Build a product agent that understands specs, roadmap context, and release rituals.', color: '#787BEE', initials: 'PM', left: '8%', top: '67%', size: 58 },
     ]
-    const agentCards = [
-      { name: 'Code Agent', role: 'Dev tasks', icon: '⌘', source: 2, color: '#5B5FE3', x: 'left-[8%]', y: 'top-[17%]' },
-      { name: 'Research Agent', role: 'Market scan', icon: 'R', source: 1, color: '#3EAB6E', x: 'left-[58%]', y: 'top-[10%]' },
-      { name: 'CRM Agent', role: 'Sales ops', icon: 'C', source: 0, color: '#34D399', x: 'left-[70%]', y: 'top-[39%]' },
-      { name: 'Design Agent', role: 'Creative work', icon: 'D', source: 1, color: '#A78BFA', x: 'left-[10%]', y: 'top-[53%]' },
-      { name: 'Data Agent', role: 'BI insight', icon: 'B', source: 0, color: '#0EA5E9', x: 'left-[44%]', y: 'top-[68%]' },
-      { name: 'Ops Agent', role: 'Internal tools', icon: 'O', source: 2, color: '#F59E0B', x: 'left-[73%]', y: 'top-[73%]' },
-    ]
+    const activePerson = agentPeople[activeAgentLane] || agentPeople[0]
+    const originStyles = {
+      Ready: { color: '#3EAB6E', label: 'Ready-made' },
+      Bring: { color: '#5B5FE3', label: 'Bring your agent' },
+      Create: { color: '#F59E0B', label: 'Create your agent' },
+    }
+    const activeOrigin = originStyles[activePerson.origin]
 
     return (
       <div className="relative w-full h-full min-h-[440px] overflow-hidden px-4 py-5">
         <style>{`
-          @keyframes agentFloat {
+          @keyframes agentCrowdFloat {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            50% { transform: translateY(-7px); }
           }
-          @keyframes agentOrbit {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+          @keyframes agentSpotlight {
+            0%, 100% { opacity: 0.12; transform: scale(0.96); }
+            50% { opacity: 0.24; transform: scale(1.04); }
           }
-          @keyframes agentPulseLine {
-            0% { stroke-dashoffset: 70; opacity: 0.12; }
-            45% { opacity: 0.42; }
-            100% { stroke-dashoffset: 0; opacity: 0.12; }
-          }
-          @keyframes agentScan {
-            0% { transform: translateX(-120%); opacity: 0; }
-            22% { opacity: 0.55; }
-            100% { transform: translateX(120%); opacity: 0; }
-          }
-          .agent-orbit-ring { animation: agentOrbit 22s linear infinite; transform-origin: center; }
-          .agent-flow-line { animation: agentPulseLine 2.8s ease-in-out infinite; }
-          .agent-card-float { animation: agentFloat 5s ease-in-out infinite; }
-          .agent-scan-line { animation: agentScan 3.6s ease-in-out infinite; }
+          .agent-person-float { animation: agentCrowdFloat 5.6s ease-in-out infinite; }
+          .agent-spotlight { animation: agentSpotlight 3.2s ease-in-out infinite; }
         `}</style>
 
-        <div className="absolute inset-0 opacity-80" style={{ backgroundImage: 'radial-gradient(circle at 50% 48%, rgba(62,171,110,0.13), transparent 34%), radial-gradient(circle at 76% 18%, rgba(91,95,227,0.10), transparent 28%), radial-gradient(circle at 18% 78%, rgba(245,158,11,0.10), transparent 30%)' }} />
-        <div className="absolute inset-x-6 top-6 h-px bg-gradient-to-r from-transparent via-[#D8F2E2] to-transparent" />
-        <div className="absolute inset-x-6 bottom-6 h-px bg-gradient-to-r from-transparent via-[#D8F2E2] to-transparent" />
+        <div className="absolute inset-0 opacity-90" style={{ backgroundImage: 'radial-gradient(circle at 33% 42%, rgba(91,95,227,0.09), transparent 34%), radial-gradient(circle at 58% 66%, rgba(62,171,110,0.10), transparent 32%), radial-gradient(circle at 82% 20%, rgba(245,158,11,0.08), transparent 24%)' }} />
+        <div className="absolute left-6 top-5 z-20 rounded-full border border-white/80 bg-white/[0.72] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-[#3EAB6E] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
+          Create or bring your agent
+        </div>
+        <div className="absolute bottom-6 left-8 h-24 w-[64%] rounded-[50%] bg-[#202842]/[0.06] blur-2xl" />
 
-        <svg viewBox="0 0 640 420" className="absolute inset-0 h-full w-full">
-          <defs>
-            <linearGradient id="agent-line-green" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#3EAB6E" stopOpacity="0" />
-              <stop offset="45%" stopColor="#3EAB6E" stopOpacity="0.72" />
-              <stop offset="100%" stopColor="#5B5FE3" stopOpacity="0" />
-            </linearGradient>
-            <linearGradient id="agent-line-blue" x1="1" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#5B5FE3" stopOpacity="0" />
-              <stop offset="45%" stopColor="#5B5FE3" stopOpacity="0.68" />
-              <stop offset="100%" stopColor="#3EAB6E" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          <path className="agent-flow-line" d="M92 116 C178 92, 250 128, 312 210" fill="none" stroke="url(#agent-line-blue)" strokeWidth="2.2" strokeDasharray="10 12" />
-          <path className="agent-flow-line" d="M512 92 C424 96, 370 132, 318 210" fill="none" stroke="url(#agent-line-green)" strokeWidth="2.2" strokeDasharray="10 12" style={{ animationDelay: '0.45s' }} />
-          <path className="agent-flow-line" d="M552 292 C470 278, 395 260, 326 218" fill="none" stroke="url(#agent-line-blue)" strokeWidth="2.2" strokeDasharray="10 12" style={{ animationDelay: '0.75s' }} />
-          <path className="agent-flow-line" d="M96 304 C178 276, 234 262, 314 222" fill="none" stroke="url(#agent-line-green)" strokeWidth="2.2" strokeDasharray="10 12" style={{ animationDelay: '1.05s' }} />
-          <path className="agent-flow-line" d="M320 346 C312 300, 310 260, 318 224" fill="none" stroke="url(#agent-line-green)" strokeWidth="2" strokeDasharray="8 12" style={{ animationDelay: '1.35s' }} />
+        <svg viewBox="0 0 640 420" className="pointer-events-none absolute inset-0 h-full w-full">
+          <path d="M390 204 C452 204, 475 208, 515 224" fill="none" stroke={activePerson.color} strokeWidth="2" strokeDasharray="6 8" strokeOpacity="0.34" />
+          <circle cx="515" cy="224" r="4" fill={activePerson.color} opacity="0.7" />
         </svg>
 
-        <div className="absolute left-4 top-6 z-20 flex w-[128px] flex-col gap-2">
-          {agentSources.map((source, idx) => (
-            <button
-              key={source.label}
-              type="button"
-              onMouseEnter={() => setActiveAgentLane(idx)}
-              onFocus={() => setActiveAgentLane(idx)}
-              className={`group rounded-2xl border px-3 py-2.5 text-left transition-all duration-300 ${activeAgentLane === idx ? 'border-white bg-white shadow-[0_16px_36px_rgba(38,45,64,0.12)]' : 'border-white/70 bg-white/[0.58] hover:bg-white/[0.90]'}`}
-            >
-              <div className="mb-1 flex items-center justify-between">
-                <span className="text-[10px] font-black uppercase tracking-[0.14em]" style={{ color: source.color }}>{source.label}</span>
-                <span className="rounded-full px-1.5 py-0.5 text-[8px] font-black" style={{ color: source.color, backgroundColor: `${source.color}14` }}>{source.count}</span>
-              </div>
-              <div className="text-[11px] font-black text-[#111827]">{source.title}</div>
-              <div className="text-[9px] font-semibold text-[#8F959E]">{source.desc}</div>
-            </button>
-          ))}
+        <div className="absolute inset-y-10 left-3 right-[210px] z-10">
+          {agentPeople.map((person, idx) => {
+            const active = activeAgentLane === idx
+            return (
+              <button
+                key={person.name}
+                type="button"
+                onMouseEnter={() => setActiveAgentLane(idx)}
+                onFocus={() => setActiveAgentLane(idx)}
+                className={`${active ? '' : 'agent-person-float'} absolute text-left transition-all duration-300`}
+                style={{
+                  left: person.left,
+                  top: person.top,
+                  width: person.size,
+                  height: person.size + 42,
+                  animationDelay: `${idx * 0.32}s`,
+                  zIndex: active ? 30 : 10 + idx,
+                  transform: active ? 'translateY(-4px) scale(1.08)' : undefined,
+                }}
+              >
+                <div className="relative mx-auto" style={{ width: person.size, height: person.size }}>
+                  {active && <div className="agent-spotlight absolute inset-[-12px] rounded-full" style={{ backgroundColor: person.color }} />}
+                  <div className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border bg-white shadow-[0_16px_38px_rgba(38,45,64,0.12)] transition-all duration-300 ${active ? 'border-white' : 'border-white/70'}`}>
+                    <div className="absolute inset-x-0 bottom-0 h-[42%]" style={{ backgroundColor: person.color, opacity: active ? 0.18 : 0.10 }} />
+                    <div className="absolute top-[18%] h-[32%] w-[32%] rounded-full" style={{ backgroundColor: person.color, opacity: active ? 0.22 : 0.13 }} />
+                    <div className="absolute top-[30%] h-[18%] w-[18%] rounded-full bg-white" />
+                    <div className="absolute top-[57%] h-[34%] w-[56%] rounded-t-full" style={{ backgroundColor: person.color }} />
+                    <span className="absolute bottom-[16%] text-[10px] font-black text-white">{person.initials}</span>
+                  </div>
+                  <span className="absolute -right-1 top-2 rounded-full border border-white bg-white px-1.5 py-0.5 text-[8px] font-black shadow-sm" style={{ color: originStyles[person.origin].color }}>
+                    {person.origin}
+                  </span>
+                </div>
+                <div className={`mt-1 text-center transition-all duration-300 ${active ? 'opacity-100' : 'opacity-70'}`}>
+                  <div className="text-[10px] font-black text-[#111827]">{person.name}</div>
+                  <div className="text-[8px] font-semibold text-[#8F959E]">{person.role}</div>
+                </div>
+              </button>
+            )
+          })}
         </div>
 
-        <div className="absolute left-1/2 top-1/2 z-10 h-[168px] w-[168px] -translate-x-1/2 -translate-y-1/2 rounded-[36px] border border-white/80 bg-white/[0.88] p-4 shadow-[0_24px_70px_rgba(38,45,64,0.14)] backdrop-blur-xl">
-          <div className="agent-orbit-ring absolute inset-[-18px] rounded-[48px] border border-dashed border-[#3EAB6E]/25" />
-          <div className="agent-orbit-ring absolute inset-[-34px] rounded-[62px] border border-dashed border-[#5B5FE3]/15" style={{ animationDuration: '32s', animationDirection: 'reverse' }} />
-          <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[24px] bg-gradient-to-br from-[#182319] via-[#102119] to-[#162A20] p-4 text-white">
-            <div className="agent-scan-line absolute inset-y-0 w-16 rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-            <div className="relative">
-              <div className="mb-2 flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#3EAB6E] text-[13px] font-black shadow-[0_10px_22px_rgba(62,171,110,0.32)]">M</div>
-                <div>
-                  <div className="text-[12px] font-black">Meegle</div>
-                  <div className="text-[8px] font-bold uppercase tracking-[0.16em] text-white/[0.42]">Agent Orchestration</div>
-                </div>
-              </div>
-              <div className="text-[10px] leading-4 text-white/[0.62]">Connect ready-made, purchased, and custom agents into workflows.</div>
-            </div>
-            <div className="relative grid grid-cols-3 gap-1.5">
-              {agentSources.map((source, idx) => (
-                <div key={`orchestration-${source.label}`} className={`rounded-lg px-1.5 py-1 text-center text-[8px] font-black transition-all duration-300 ${activeAgentLane === idx ? 'bg-white text-[#102119]' : 'bg-white/[0.08] text-white/50'}`}>
-                  {source.label}
-                </div>
-              ))}
-            </div>
+        <div className="absolute right-4 top-1/2 z-30 w-[210px] -translate-y-1/2 rounded-[28px] border border-white/80 bg-white/[0.90] p-4 shadow-[0_24px_70px_rgba(38,45,64,0.14)] backdrop-blur-xl">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.12em]" style={{ color: activeOrigin.color, backgroundColor: `${activeOrigin.color}14` }}>
+              {activeOrigin.label}
+            </span>
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: activePerson.color }} />
+          </div>
+          <div className="mb-1 text-[16px] font-black tracking-[-0.03em] text-[#111827]">{activePerson.name}</div>
+          <div className="mb-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8F959E]">{activePerson.role}</div>
+          <p className="mb-4 text-[11px] leading-5 text-[#646A73]">{activePerson.desc}</p>
+          <div className="rounded-2xl border border-[#EEF0F4] bg-[#FBFCFF] p-3">
+            <div className="mb-2 text-[9px] font-black uppercase tracking-[0.14em] text-[#8F959E]">Action</div>
+            <div className="text-[12px] font-black text-[#111827]">{activePerson.action}</div>
+          </div>
+          <div className="mt-3 flex items-center gap-1.5">
+            {['Ready', 'Bring', 'Create'].map((origin) => (
+              <span key={origin} className="h-1.5 flex-1 rounded-full transition-all duration-300" style={{ backgroundColor: originStyles[origin].color, opacity: activePerson.origin === origin ? 0.62 : 0.14 }} />
+            ))}
           </div>
         </div>
 
-        {agentCards.map((agent, idx) => {
-          const active = activeAgentLane === agent.source
-          return (
-            <button
-              key={agent.name}
-              type="button"
-              onMouseEnter={() => setActiveAgentLane(agent.source)}
-              onFocus={() => setActiveAgentLane(agent.source)}
-              className={`agent-card-float absolute z-20 w-[150px] rounded-[22px] border bg-white p-3 text-left transition-all duration-300 ${agent.x} ${agent.y} ${active ? 'scale-[1.04] border-white shadow-[0_20px_42px_rgba(38,45,64,0.16)]' : 'border-white/70 shadow-[0_12px_30px_rgba(38,45,64,0.08)] opacity-[0.82]'}`}
-              style={{ animationDelay: `${idx * 0.38}s` }}
-            >
-              <div className="mb-2 flex items-start justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-2xl text-[13px] font-black text-white" style={{ backgroundColor: agent.color }}>{agent.icon}</div>
-                <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.08em]" style={{ color: agentSources[agent.source].color, backgroundColor: `${agentSources[agent.source].color}14` }}>{agentSources[agent.source].label}</span>
-              </div>
-              <div className="text-[12px] font-black text-[#111827]">{agent.name}</div>
-              <div className="mt-0.5 text-[9px] font-semibold text-[#8F959E]">{agent.role}</div>
-              <div className="mt-2 flex items-center gap-1">
-                <span className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: agent.color, opacity: active ? 0.5 : 0.18 }} />
-                <span className="h-1.5 w-4 rounded-full" style={{ backgroundColor: agent.color, opacity: active ? 0.36 : 0.12 }} />
-              </div>
-            </button>
-          )
-        })}
-
-        <div className="absolute bottom-7 left-4 z-20 rounded-full border border-white/80 bg-white/[0.72] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-[#3EAB6E] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
-          Use · Buy · Build
-        </div>
-        <div className="absolute bottom-7 right-4 z-20 rounded-full border border-white/80 bg-white/[0.72] px-3 py-1.5 text-[9px] font-bold text-[#8F959E] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
-          hover sources to orchestrate
+        <div className="absolute bottom-7 right-[238px] z-20 rounded-full border border-white/80 bg-white/[0.74] px-3 py-1.5 text-[9px] font-bold text-[#8F959E] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
+          hover an agent to inspect
         </div>
       </div>
     )
