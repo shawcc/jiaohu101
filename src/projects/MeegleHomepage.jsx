@@ -2219,8 +2219,8 @@ const MeegleHomepage = () => {
 
 /* ============ GAME VERSION — 2.5D Sequential Workflow ============ */
 
-const FLOW_BOARD_W = 980
-const FLOW_BOARD_H = 420
+const FLOW_BOARD_W = 1040
+const FLOW_BOARD_H = 460
 const FLOW_STEPS = [
   { id: 'build', label: 'Build Workflow' },
   { id: 'assign', label: 'Assign Agents' },
@@ -2228,56 +2228,72 @@ const FLOW_STEPS = [
 ]
 
 const FLOW_NODES = [
-  { id: 'start', label: 'Trigger', color: '#3EAB6E', x: 18, y: 154, w: 86, h: 38 },
-  { id: 'solution', label: 'Node Alpha', color: '#5B5FE3', x: 136, y: 140, w: 132, h: 46 },
-  { id: 'fe', label: 'Node Beta', color: '#F59E0B', x: 314, y: 140, w: 126, h: 46 },
-  { id: 'debug', label: 'Node Gamma', color: '#8B5CF6', x: 486, y: 140, w: 138, h: 46 },
-  { id: 'internal', label: 'Path Delta', color: '#06B6D4', x: 680, y: 82, w: 136, h: 46, branch: 'top' },
-  { id: 'external', label: 'Path Epsilon', color: '#EC4899', x: 680, y: 198, w: 150, h: 46, branch: 'bottom' },
-  { id: 'launch', label: 'Outcome', color: '#10B981', x: 906, y: 140, w: 116, h: 46 },
+  { id: 'start', color: '#3EAB6E', x: 24, y: 154, w: 82, h: 40 },
+  { id: 'intake', color: '#5B5FE3', x: 150, y: 90, w: 108, h: 44 },
+  { id: 'context', color: '#06B6D4', x: 150, y: 218, w: 108, h: 44 },
+  { id: 'plan', color: '#F59E0B', x: 310, y: 86, w: 118, h: 46 },
+  { id: 'route', color: '#8B5CF6', x: 310, y: 218, w: 118, h: 46 },
+  { id: 'agentA', color: '#5B5FE3', x: 480, y: 36, w: 112, h: 46 },
+  { id: 'agentB', color: '#10B981', x: 480, y: 140, w: 112, h: 46 },
+  { id: 'agentC', color: '#EC4899', x: 480, y: 246, w: 112, h: 46 },
+  { id: 'reviewA', color: '#F97316', x: 652, y: 74, w: 118, h: 46 },
+  { id: 'reviewB', color: '#06B6D4', x: 652, y: 214, w: 118, h: 46 },
+  { id: 'merge', color: '#8B5CF6', x: 830, y: 142, w: 116, h: 48 },
+  { id: 'outcome', color: '#10B981', x: 990, y: 142, w: 112, h: 48 },
 ]
 
 const FLOW_EDGES = [
-  { from: 'start', to: 'solution' },
-  { from: 'solution', to: 'fe' },
-  { from: 'fe', to: 'debug' },
-  { from: 'debug', to: 'internal' },
-  { from: 'debug', to: 'external' },
-  { from: 'internal', to: 'launch' },
-  { from: 'external', to: 'launch' },
+  { from: 'start', to: 'intake' },
+  { from: 'start', to: 'context' },
+  { from: 'intake', to: 'plan' },
+  { from: 'context', to: 'route' },
+  { from: 'plan', to: 'agentA' },
+  { from: 'plan', to: 'agentB' },
+  { from: 'route', to: 'agentB' },
+  { from: 'route', to: 'agentC' },
+  { from: 'agentA', to: 'reviewA' },
+  { from: 'agentB', to: 'reviewA' },
+  { from: 'agentB', to: 'reviewB' },
+  { from: 'agentC', to: 'reviewB' },
+  { from: 'reviewA', to: 'merge' },
+  { from: 'reviewB', to: 'merge' },
+  { from: 'merge', to: 'outcome' },
 ]
 
 const HUMAN_PALETTE = ['#FDE68A', '#BFDBFE', '#FBCFE8', '#BBF7D0']
 
 const getFlowNode = (id) => FLOW_NODES.find(node => node.id === id)
 
-const PersonAvatar = ({ color = '#FDE68A', size = 30 }) => (
-  <svg viewBox="0 0 36 36" width={size} height={size} aria-hidden="true">
-    <ellipse cx="18" cy="30" rx="12" ry="4.2" fill="#172033" opacity="0.08" />
-    <rect x="7" y="4.5" width="22" height="25" rx="11" fill="#fff" />
-    <path d="M9.2 28.8c1.4-5.8 4.4-8.7 8.8-8.7s7.4 2.9 8.8 8.7" fill={color} />
-    <path d="M11.2 15.4c0-5.1 3-8.6 7.2-8.6 3.6 0 6.4 2.4 6.4 6.2 0 4.6-2.9 8.4-6.9 8.4-3.8 0-6.7-2.5-6.7-6z" fill="#FFD8B8" />
-    <path d="M10.2 14.2c.4-5.8 3.7-9.1 8.6-9.1 3.7 0 6.7 2.1 7.6 5.4-4.3.1-7.7-.8-10.1-2.4-1.2 2.7-3.2 4.8-6.1 6.1z" fill="#2A2F45" />
-    <circle cx="15.5" cy="15.5" r="0.9" fill="#172033" />
-    <circle cx="21.2" cy="15.5" r="0.9" fill="#172033" />
-    <path d="M16.2 18.5c1.3 1 2.7 1 4 0" fill="none" stroke="#172033" strokeWidth="1.1" strokeLinecap="round" opacity="0.55" />
-    <circle cx="9.2" cy="8.6" r="2.2" fill={color} opacity="0.85" />
+const PersonAvatar = ({ color = '#FDE68A', size = 44 }) => (
+  <svg viewBox="0 0 52 58" width={size} height={size} aria-hidden="true">
+    <ellipse cx="26" cy="53" rx="16" ry="4.2" fill="#172033" opacity="0.08" />
+    <path d="M15 52c1.3-8.4 5-12.6 11-12.6S35.8 43.6 37 52H15z" fill={color} />
+    <path d="M17 43.5c-3.4-1.1-5.4-3-6.1-5.8" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
+    <path d="M35 43.5c3.4-1.1 5.4-3 6.1-5.8" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
+    <path d="M17 23c0-9.4 5.3-15.2 13-15.2 6.1 0 10.7 4.3 10.7 11.1 0 9.4-5.6 16.7-13.1 16.7C21.3 35.6 17 30.6 17 23z" fill="#FFD9BF" />
+    <path d="M15.2 22.4C16 12.5 21.3 6.2 30.1 6.2c6.8 0 11.4 4 12.5 9.6-6.8.4-12.4-1-16.5-4.1-2 4.8-5.6 8.4-10.9 10.7z" fill="#252A3D" />
+    <circle cx="24.5" cy="23.8" r="1.2" fill="#172033" />
+    <circle cx="33.5" cy="23.8" r="1.2" fill="#172033" />
+    <path d="M26.3 29c2 1.4 4.2 1.4 6.2 0" fill="none" stroke="#172033" strokeWidth="1.4" strokeLinecap="round" opacity="0.6" />
+    <circle cx="15.2" cy="11.4" r="3" fill={color} opacity="0.9" />
   </svg>
 )
 
-const AgentAvatar = ({ color = '#5B5FE3', size = 30 }) => (
-  <svg viewBox="0 0 36 36" width={size} height={size} aria-hidden="true">
-    <ellipse cx="18" cy="30" rx="12.5" ry="4.2" fill="#172033" opacity="0.08" />
-    <rect x="6.5" y="6.5" width="23" height="22" rx="9" fill="#fff" />
-    <rect x="9.5" y="9.5" width="17" height="13.5" rx="6.8" fill={color} />
-    <path d="M13 25.4h10" stroke={color} strokeWidth="3.2" strokeLinecap="round" opacity="0.56" />
-    <path d="M18 9.5V5.8" stroke={color} strokeWidth="2.2" strokeLinecap="round" />
-    <circle cx="18" cy="5.2" r="1.8" fill="#FF5A8A" />
-    <circle cx="15" cy="16.1" r="1.15" fill="#fff" />
-    <circle cx="21" cy="16.1" r="1.15" fill="#fff" />
-    <path d="M15.9 19c1.2.9 3 .9 4.2 0" fill="none" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" opacity="0.9" />
-    <path d="M26.2 8.2l.8-1.7.9 1.7 1.8.7-1.8.8-.9 1.8-.8-1.8-1.8-.8 1.8-.7z" fill="#10B981" />
-    <path d="M7.4 11.7l.6-1.2.6 1.2 1.2.5-1.2.6-.6 1.2-.6-1.2-1.2-.6 1.2-.5z" fill="#F59E0B" />
+const AgentAvatar = ({ color = '#5B5FE3', size = 44 }) => (
+  <svg viewBox="0 0 52 58" width={size} height={size} aria-hidden="true">
+    <ellipse cx="26" cy="53" rx="17" ry="4.4" fill="#172033" opacity="0.08" />
+    <path d="M16 51c1-8 4.3-12 10-12s9 4 10 12H16z" fill={color} opacity="0.7" />
+    <path d="M17 42c-3.4-1-5.5-3.1-6.2-6.2" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" opacity="0.75" />
+    <path d="M35 42c3.4-1 5.5-3.1 6.2-6.2" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" opacity="0.75" />
+    <rect x="12" y="12" width="28" height="25" rx="11" fill="#fff" />
+    <rect x="16" y="16" width="20" height="15" rx="7.5" fill={color} />
+    <path d="M26 12V7" stroke={color} strokeWidth="2.6" strokeLinecap="round" />
+    <circle cx="26" cy="6" r="2.2" fill="#FF5A8A" />
+    <circle cx="22" cy="23" r="1.4" fill="#fff" />
+    <circle cx="30" cy="23" r="1.4" fill="#fff" />
+    <path d="M22.6 27c2 1.3 4.8 1.3 6.8 0" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M40 12.8l1-2.1 1 2.1 2.1.8-2.1 1-1 2.1-1-2.1-2.1-1 2.1-.8z" fill="#10B981" />
+    <path d="M9.4 20l.8-1.6.8 1.6 1.6.7-1.6.8-.8 1.6-.8-1.6-1.6-.8 1.6-.7z" fill="#F59E0B" />
   </svg>
 )
 
@@ -2289,8 +2305,8 @@ const FlowNodeCard = ({ node, index, visible, active, assigned, completeState, s
     height: node.h,
     opacity: visible ? 1 : 0,
     transform: visible
-      ? `translateY(0) translateZ(${active ? 24 : completeState === 'confirmed' ? 18 : 10}px) scale(${active ? 1.04 : 1})`
-      : 'translateY(24px) translateZ(-8px) scale(0.88)',
+      ? `translateY(0) scale(${active ? 1.03 : 1})`
+      : 'translateY(18px) scale(0.9)',
     transition: 'opacity 0.5s ease, transform 0.55s cubic-bezier(0.16,1,0.3,1)',
     zIndex: 10 + index,
   }}>
@@ -2332,16 +2348,16 @@ const FlowNodeCard = ({ node, index, visible, active, assigned, completeState, s
       )}
     </div>
     {assigned && (
-      <div className="absolute -top-8 left-1/2 flex -translate-x-1/2 items-center -space-x-2" style={{ animation: 'bounceIn 0.45s cubic-bezier(0.16,1,0.3,1) both' }}>
-        <AgentAvatar color={AGENT_BENCH[index % AGENT_BENCH.length].color} size={32} />
+      <div className="absolute -top-11 left-1/2 flex -translate-x-1/2 items-end" style={{ animation: 'bounceIn 0.45s cubic-bezier(0.16,1,0.3,1) both' }}>
+        <AgentAvatar color={AGENT_BENCH[index % AGENT_BENCH.length].color} size={46} />
       </div>
     )}
     {showHuman && (
       <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/80 bg-white/85 px-1.5 py-1 shadow-[0_12px_28px_rgba(38,45,64,0.14)] backdrop-blur" style={{
-        top: node.h + 12,
-        transform: 'translateX(-50%) translateZ(42px)',
+        top: node.h + 10,
+        transform: 'translateX(-50%)',
       }}>
-        <PersonAvatar color={HUMAN_PALETTE[index % HUMAN_PALETTE.length]} size={24} />
+        <PersonAvatar color={HUMAN_PALETTE[index % HUMAN_PALETTE.length]} size={36} />
         {confirming && (
           <span className="rounded-full bg-[#10b981] px-2 py-0.5 text-[9px] font-black text-white">Confirm</span>
         )}
@@ -2350,7 +2366,7 @@ const FlowNodeCard = ({ node, index, visible, active, assigned, completeState, s
   </div>
 )
 
-const FlowConnection = ({ edge, visible, active, completed, index }) => {
+const FlowConnection = ({ edge, visible, active, completed }) => {
   const from = getFlowNode(edge.from)
   const to = getFlowNode(edge.to)
   if (!from || !to || !visible) return null
@@ -2389,36 +2405,7 @@ const FlowConnection = ({ edge, visible, active, completed, index }) => {
           <animate attributeName="stroke-dashoffset" from="32" to="0" dur="0.9s" repeatCount="indefinite" />
         </path>
       )}
-      {completed && (
-        <circle r="4" fill="#2563EB" opacity="0.9">
-          <animateMotion dur={`${1.8 + index * 0.08}s`} repeatCount="indefinite" path={d} />
-          <animate attributeName="opacity" values="0;1;0" dur={`${1.8 + index * 0.08}s`} repeatCount="indefinite" />
-        </circle>
-      )}
     </g>
-  )
-}
-
-const ConfirmationLayer = ({ frame, active }) => {
-  if (!active) return null
-  const targetIndex = Math.min(Math.floor(frame / 2), FLOW_NODES.length - 1)
-  const target = FLOW_NODES[targetIndex]
-  const agentDone = frame % 2 === 0
-
-  return (
-    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 70 }}>
-      {agentDone && (
-        <div className="absolute flex items-center gap-1.5 rounded-full border border-white/80 bg-white/85 px-2 py-1 shadow-[0_12px_28px_rgba(38,45,64,0.14)] backdrop-blur" style={{
-        left: target.x + target.w / 2 - 46,
-        top: target.y - 46,
-        transform: 'translateZ(44px)',
-        transition: 'left 0.5s cubic-bezier(0.16,1,0.3,1), top 0.5s cubic-bezier(0.16,1,0.3,1)',
-      }}>
-          <AgentAvatar color={AGENT_BENCH[targetIndex % AGENT_BENCH.length].color} size={24} />
-          <span className="text-[9px] font-black text-[#2563EB]">Agent done</span>
-        </div>
-      )}
-    </div>
   )
 }
 
@@ -2471,14 +2458,13 @@ const GameWorkflowBoard = () => {
   const completed = activeStep === 2
 
   return (
-    <div className="relative w-full select-none overflow-visible" style={{ height: FLOW_BOARD_H, perspective: '1100px', perspectiveOrigin: '50% 12%' }}>
-      <div className="absolute left-1/2 top-[43%]" style={{
+    <div className="relative w-full select-none overflow-visible" style={{ height: FLOW_BOARD_H }}>
+      <div className="absolute left-1/2 top-[45%]" style={{
         width: FLOW_BOARD_W,
-        height: 300,
-        transform: 'translate(-50%, -50%) rotateX(48deg) rotateZ(-3deg) scale(0.72)',
-        transformStyle: 'preserve-3d',
+        height: 330,
+        transform: 'translate(-50%, -50%) scale(0.68)',
       }}>
-        <svg className="absolute inset-0 overflow-visible" viewBox={`0 0 ${FLOW_BOARD_W + 160} 300`} width={FLOW_BOARD_W + 160} height="300">
+        <svg className="absolute inset-0 overflow-visible" viewBox={`0 0 ${FLOW_BOARD_W + 100} 330`} width={FLOW_BOARD_W + 100} height="330">
           {FLOW_EDGES.map((edge, idx) => {
             const fromIdx = FLOW_NODES.findIndex(node => node.id === edge.from)
             const toIdx = FLOW_NODES.findIndex(node => node.id === edge.to)
@@ -2488,7 +2474,7 @@ const GameWorkflowBoard = () => {
               ? toIdx === frame
               : activeStep === 2 && toIdx === Math.max(1, deliverIndex)
             const edgeCompleted = activeStep === 2 && toIdx < confirmedNodeCount
-            return <FlowConnection key={`${edge.from}-${edge.to}`} edge={edge} visible={visible} active={active} completed={edgeCompleted} index={idx} />
+            return <FlowConnection key={`${edge.from}-${edge.to}`} edge={edge} visible={visible} active={active} completed={edgeCompleted} />
           })}
         </svg>
 
@@ -2505,8 +2491,6 @@ const GameWorkflowBoard = () => {
             confirming={idx === confirmingNodeIndex}
           />
         ))}
-
-        <ConfirmationLayer frame={frame} active={completed} />
       </div>
 
       <StepProgress activeStep={activeStep} />
