@@ -638,7 +638,6 @@ const WorkflowBoard = () => {
   )
 }
 
-
 const AI_ASSISTANT_SCENES = [
   {
     id: 'sprint-planning',
@@ -898,10 +897,11 @@ const AIAssistantSection = () => {
 const MeegleHomepage = () => {
   const [mobileMenu, setMobileMenu] = useState(false)
   const [activeTab, setActiveTab] = useState('planning')
+  const [cascadeVariant, setCascadeVariant] = useState('fullbleed')
   const heroRef = useRef(null)
 
   return (
-    <div className="bg-white text-[#1F2329] font-sans overflow-x-hidden">
+    <div className="bg-white text-[#1F2329] font-sans" style={{ overflowX: 'clip', overflowY: 'visible' }}>
       <style>{`
         @keyframes gradientShift {
           0% { background-position: 0% 50%; }
@@ -946,6 +946,31 @@ const MeegleHomepage = () => {
         }
         .pulse-ring {
           animation: pulseRing 2.4s ease-out infinite;
+        }
+        @keyframes hopJumpArc {
+          0% { transform: translate(var(--hx0), var(--hy0)) scale(0.3); opacity: 0; }
+          30% { opacity: 1; }
+          60% { transform: translate(calc((var(--hx0) + var(--hx1)) / 2), calc(min(var(--hy0), var(--hy1)) - 40px)) scale(1.1); }
+          100% { transform: translate(var(--hx1), var(--hy1)) scale(1); opacity: 1; }
+        }
+        @keyframes hopIdle {
+          0%, 100% { transform: translateY(0); }
+          30% { transform: translateY(-3px); }
+          60% { transform: translateY(0); }
+        }
+        @keyframes hopJump {
+          0% { transform: translateY(0) scale(0.7); opacity: 0; }
+          40% { transform: translateY(-6px) scale(1.15); opacity: 1; }
+          100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        @keyframes bounceIn {
+          0% { transform: scale(0.3); opacity: 0; }
+          60% { transform: scale(1.08); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes trailFade {
+          0% { transform: scale(1) translateY(0); opacity: 0.5; }
+          100% { transform: scale(0.3) translateY(-12px); opacity: 0; }
         }
       `}</style>
 
@@ -1006,11 +1031,6 @@ const MeegleHomepage = () => {
         <div className="relative w-full max-w-[1340px] mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-16 items-center">
             <div className="animate-fade-slide-up order-2 lg:order-1">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#5B5FE3]/15 bg-white/80 backdrop-blur px-4 py-2 text-[12px] font-semibold text-[#5B5FE3] shadow-sm mb-6">
-                <Sparkles size={14} />
-                Introducing Multi-Agent Orchestration
-              </div>
-
               <h1 className="text-[40px] md:text-[56px] leading-[1.0] font-black tracking-[-0.05em] text-[#0A0A14]">
                 Architect. Ship.
                 <br />
@@ -1038,7 +1058,7 @@ const MeegleHomepage = () => {
             </div>
 
             <div className="animate-scale-in order-1 lg:order-2" style={{ animationDelay: '0.2s' }}>
-              <WorkflowBoard />
+              <GameWorkflowBoard />
             </div>
           </div>
 
@@ -1055,10 +1075,36 @@ const MeegleHomepage = () => {
 
       {/* MULTI-AGENT — Cascade Stacking */}
       <div className="relative" style={{ height: `${(STACK_CARDS.length + 1) * 100}vh` }}>
+        <div className="fixed top-20 right-6 z-[100] flex items-center gap-1.5 rounded-xl bg-white/90 backdrop-blur border border-[#E2E4E9] p-1 shadow-[0_4px_20px_rgba(15,23,42,0.08)]">
+          <button
+            onClick={() => setCascadeVariant('centered')}
+            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
+              cascadeVariant === 'centered'
+                ? 'bg-[#5B5FE3] text-white shadow-sm'
+                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
+            }`}
+          >
+            居中版
+          </button>
+          <button
+            onClick={() => setCascadeVariant('fullbleed')}
+            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
+              cascadeVariant === 'fullbleed'
+                ? 'bg-[#5B5FE3] text-white shadow-sm'
+                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
+            }`}
+          >
+            顶天版
+          </button>
+        </div>
+
         {STACK_CARDS.map((card, idx) => (
           <section
             key={card.id}
-            className="sticky top-0 h-screen overflow-hidden"
+            className={cascadeVariant === 'centered'
+              ? 'sticky top-0 h-screen flex items-center justify-center overflow-hidden'
+              : 'sticky top-0 h-screen overflow-hidden'
+            }
             style={{
               zIndex: idx + 1,
               backgroundColor: idx === 0 ? '#FBFBFE' : idx === 1 ? '#F5F7FB' : '#F0F4FA',
@@ -1066,24 +1112,50 @@ const MeegleHomepage = () => {
           >
             <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full blur-[120px]" style={{ backgroundColor: card.color + '06' }} />
 
-            <div className="relative w-full max-w-[1340px] mx-auto px-6 h-full grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-16 items-center">
-              <div className="animate-fade-slide-up">
-                <div className={`bg-gradient-to-br ${card.gradient} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
-                  {card.icon}
-                </div>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.subtitle}</div>
-                <h3 className="text-[32px] md:text-[44px] font-black text-[#0A0A14] mb-4 leading-[1.08] tracking-[-0.04em]">{card.title}</h3>
-                <p className="text-[16px] leading-7 text-[#646A73] mb-5 max-w-[480px]">{card.desc}</p>
-                <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold w-fit" style={{ backgroundColor: card.colorLight, color: card.color }}>
-                  {card.tag}
-                </span>
-              </div>
+            <div className={`relative w-full max-w-[1340px] mx-auto px-6 ${cascadeVariant === 'centered' ? 'py-10' : 'h-full'} ${cascadeVariant === 'centered' ? '' : 'grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-16 items-center'}`}>
+              {cascadeVariant === 'centered' && (
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-16 items-center">
+                  <div className="animate-fade-slide-up">
+                    <div className={`bg-gradient-to-br ${card.gradient} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
+                      {card.icon}
+                    </div>
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.subtitle}</div>
+                    <h3 className="text-[32px] md:text-[44px] font-black text-[#0A0A14] mb-4 leading-[1.08] tracking-[-0.04em]">{card.title}</h3>
+                    <p className="text-[16px] leading-7 text-[#646A73] mb-5 max-w-[480px]">{card.desc}</p>
+                    <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold w-fit" style={{ backgroundColor: card.colorLight, color: card.color }}>
+                      {card.tag}
+                    </span>
+                  </div>
 
-              <div className="relative h-full py-4 lg:py-6">
-                <div className="rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]">
-                  <AgentCardIllustration card={card} isVisible={true} />
+                  <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[440px]">
+                    <div className="rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]">
+                      <AgentCardIllustration card={card} isVisible={true} />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {cascadeVariant === 'fullbleed' && (
+                <>
+                  <div className="animate-fade-slide-up">
+                    <div className={`bg-gradient-to-br ${card.gradient} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
+                      {card.icon}
+                    </div>
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.subtitle}</div>
+                    <h3 className="text-[32px] md:text-[44px] font-black text-[#0A0A14] mb-4 leading-[1.08] tracking-[-0.04em]">{card.title}</h3>
+                    <p className="text-[16px] leading-7 text-[#646A73] mb-5 max-w-[480px]">{card.desc}</p>
+                    <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold w-fit" style={{ backgroundColor: card.colorLight, color: card.color }}>
+                      {card.tag}
+                    </span>
+                  </div>
+
+                  <div className="relative h-full py-4 lg:py-6">
+                    <div className="rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]">
+                      <AgentCardIllustration card={card} isVisible={true} />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </section>
         ))}
@@ -1362,6 +1434,366 @@ const MeegleHomepage = () => {
           </div>
         </div>
       </footer>
+    </div>
+  )
+}
+
+
+/* ============ GAME VERSION — Hopscotch Board with Jumping Agents ============ */
+
+const HOP_BOARD_W = 660
+const HOP_BOARD_H = 350
+const HOP_BLOCK_W = 96
+const HOP_BLOCK_H = 44
+
+const HOP_BLOCKS = [
+  { id: 'intake', label: 'Intake', color: '#5B5FE3', x: 28,  y: 170, num: 1 },
+  { id: 'scout',  label: 'Scout',  color: '#3EAB6E', x: 158, y: 80,  num: 2 },
+  { id: 'scope',  label: 'Scope',  color: '#F59E0B', x: 158, y: 170, num: 3 },
+  { id: 'spec',   label: 'Spec',   color: '#8B5CF6', x: 158, y: 260, num: 4 },
+  { id: 'build',  label: 'Build',  color: '#EC4899', x: 320, y: 170, num: 5 },
+  { id: 'ship',   label: 'Ship',   color: '#06B6D4', x: 480, y: 170, num: 6 },
+]
+
+const HopBlock = ({ block, state, agentColor }) => {
+  const c = block.color
+  const bw = HOP_BLOCK_W; const bh = HOP_BLOCK_H
+  const hidden = state === 'hidden'
+  const emerging = state === 'building'
+  const built = state === 'built'
+  const populated = state === 'populated' || state === 'jumping'
+  const jumpPhase = state === 'jumping'
+
+  if (hidden) return null
+
+  return (
+    <div className="absolute" style={{
+      left: block.x, top: block.y,
+      width: bw, height: bh,
+      transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease',
+      transform: emerging
+        ? 'translateY(60px) scale(0.7)'
+        : jumpPhase
+          ? 'scale(1.12)'
+          : populated
+            ? 'scale(1.05)'
+            : 'translateY(0) scale(1)',
+      opacity: emerging ? 0.5 : 1,
+      zIndex: jumpPhase ? 25 : populated ? 10 : 1
+    }}>
+      {/* Shadow */}
+      <div className="absolute rounded-2xl" style={{
+        left: -4, top: bh + 8,
+        width: bw + 8, height: 12,
+        backgroundColor: c + '15',
+        filter: 'blur(8px)',
+        opacity: emerging ? 0.1 : populated ? 0.5 : 0.25
+      }} />
+
+      {/* Block body */}
+      <div className="absolute inset-0 rounded-2xl flex items-center justify-center"
+        style={{
+          background: populated
+            ? `linear-gradient(135deg, ${c}18 0%, ${c}06 100%)`
+            : emerging
+              ? `linear-gradient(135deg, ${c}08 0%, ${c}02 100%)`
+              : 'linear-gradient(135deg, #ffffff 0%, #f7f8fa 100%)',
+          border: `2px solid ${populated ? c + '55' : emerging ? c + '25' : '#e5e8ed'}`,
+          boxShadow: populated
+            ? `0 0 20px ${c}1A, 0 4px 12px rgba(0,0,0,0.05)`
+            : emerging
+              ? '0 2px 6px rgba(0,0,0,0.03)'
+              : '0 2px 8px rgba(0,0,0,0.04)'
+        }}>
+        {/* Hopscotch number */}
+        <span className="absolute left-2.5 top-1 text-[9px] font-black opacity-15" style={{ color: c }}>
+          {block.num}
+        </span>
+        {/* Label */}
+        <span className="text-[12px] font-bold tracking-tight" style={{
+          color: populated ? c : emerging ? c + '40' : '#9aa0ab'
+        }}>
+          {block.label}
+        </span>
+      </div>
+
+      {/* Characters on populated block */}
+      {populated && !jumpPhase && (
+        <div className="absolute -top-7 left-0 right-0 flex justify-center gap-3 pointer-events-none"
+          style={{ animation: 'bounceIn 0.4s cubic-bezier(0.16,1,0.3,1) both' }}>
+          {/* Agent */}
+          <div style={{ animation: 'hopIdle 1.2s ease-in-out infinite' }}>
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <circle cx="12" cy="7" r="5.5" fill={agentColor || c} opacity="0.9" />
+              <rect x="10" y="8.8" width="1.5" height="2.2" rx="0.7" fill={agentColor || c} opacity="0.5" />
+              <rect x="12.5" y="8.8" width="1.5" height="2.2" rx="0.7" fill={agentColor || c} opacity="0.5" />
+              <rect x="7.5" y="10.5" width="9" height="6" rx="3" fill={agentColor || c} opacity="0.65" />
+              <circle cx="10.5" cy="6" r="0.8" fill="white" />
+              <circle cx="13.5" cy="6" r="0.8" fill="white" />
+              <circle cx="10.5" cy="6" r="0.4" fill="#111" />
+              <circle cx="13.5" cy="6" r="0.4" fill="#111" />
+            </svg>
+          </div>
+          {/* Human */}
+          <div style={{ animation: 'hopIdle 1.2s ease-in-out 0.15s infinite' }}>
+            <svg viewBox="0 0 18 22" width="16" height="20">
+              <circle cx="9" cy="4.5" r="3.5" fill="#9ca3af" />
+              <path d="M3 14c0-3.3 2.7-6 6-6s6 2.7 6 6" fill="#9ca3af" opacity="0.65" />
+            </svg>
+          </div>
+        </div>
+      )}
+
+      {/* Jumping character (appears on block during jumpPhase) */}
+      {jumpPhase && (
+        <div className="absolute -top-8 left-1/2 -translate-x-1/2" style={{ animation: 'hopJump 0.35s cubic-bezier(0.16,1,0.3,1) both' }}>
+          <svg viewBox="0 0 24 24" width="26" height="26">
+            <circle cx="12" cy="7" r="5.5" fill={agentColor || c} opacity="0.9" />
+            <rect x="10" y="8.8" width="1.5" height="2.2" rx="0.7" fill={agentColor || c} opacity="0.5" />
+            <rect x="12.5" y="8.8" width="1.5" height="2.2" rx="0.7" fill={agentColor || c} opacity="0.5" />
+            <rect x="7.5" y="10.5" width="9" height="6" rx="3" fill={agentColor || c} opacity="0.65" />
+            <circle cx="10.5" cy="6" r="0.8" fill="white" />
+            <circle cx="13.5" cy="6" r="0.8" fill="white" />
+            <circle cx="10.5" cy="6" r="0.4" fill="#111" />
+            <circle cx="13.5" cy="6" r="0.4" fill="#111" />
+          </svg>
+        </div>
+      )}
+
+      {/* Construction ripple */}
+      {emerging && (
+        <div className="absolute inset-0 rounded-2xl overflow-hidden" style={{ opacity: 0.4 }}>
+          <div className="absolute inset-0" style={{
+            background: `repeating-linear-gradient(45deg, transparent, transparent 4px, ${c}08 4px, ${c}08 8px)`
+          }} />
+        </div>
+      )}
+
+      {/* Done check */}
+      {populated && !jumpPhase && (
+        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center"
+          style={{ backgroundColor: c, boxShadow: `0 2px 6px ${c}30` }}>
+          <svg viewBox="0 0 10 10" width="9" height="9">
+            <path d="M2 5l2 2L8 3" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </div>
+      )}
+    </div>
+  )
+}
+
+const HopDots = ({ from, to, state }) => {
+  if (state === 'hidden') return null
+  const active = state === 'active'
+  const building = state === 'building'
+  const bw2 = HOP_BLOCK_W / 2; const bh2 = HOP_BLOCK_H / 2
+  const fx = from.x + bw2; const fy = from.y + bh2
+  const tx = to.x + bw2; const ty = to.y + bh2
+  const dx = tx - fx; const dy = ty - fy
+  const steps = Math.max(4, Math.floor(Math.sqrt(dx*dx + dy*dy) / 22))
+  const dots = Array.from({ length: steps }, (_, i) => {
+    const t = (i + 1) / (steps + 1)
+    return { x: fx + dx * t, y: fy + dy * t }
+  })
+
+  return (
+    <svg className="absolute inset-0 pointer-events-none overflow-visible" style={{ zIndex: 0 }}>
+      {dots.map((d, i) => (
+        <circle key={i} cx={d.x} cy={d.y} r={active ? 2.5 : 1.5}
+          fill={active ? '#fbbf24' : building ? from.color + '40' : '#d1d5db'}
+          opacity={active ? 1 : building ? 0.6 : 0.35}>
+          {building && <animate attributeName="opacity" values="0.6;0.15;0.6" dur="0.6s" begin={i * 0.04 + 's'} repeatCount="indefinite" />}
+        </circle>
+      ))}
+      {/* Arrow tip */}
+      <polygon points={`${tx-6},${ty-4} ${tx},${ty} ${tx-6},${ty+4}`}
+        fill={active ? '#fbbf24' : '#d1d5db'} opacity={active ? 0.8 : 0.4} />
+    </svg>
+  )
+}
+
+/* Flying Agent from one block to next */
+const HopJumper = ({ fromBlock, toBlock, color }) => {
+  if (!fromBlock || !toBlock) return null
+  const startX = fromBlock.x + HOP_BLOCK_W / 2 - 13
+  const startY = fromBlock.y - 20
+  const endX = toBlock.x + HOP_BLOCK_W / 2 - 13
+  const endY = toBlock.y - 20
+
+  return (
+    <div className="absolute pointer-events-none" style={{
+      zIndex: 30,
+      animation: `hopJumpArc 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both`,
+      '--hx0': `${startX}px`, '--hy0': `${startY}px`,
+      '--hx1': `${endX}px`, '--hy1': `${endY}px`,
+    }}>
+      <svg viewBox="0 0 24 24" width="26" height="26">
+        <circle cx="12" cy="7" r="5.5" fill={color} opacity="0.9" />
+        <rect x="10" y="8.8" width="1.5" height="2.2" rx="0.7" fill={color} opacity="0.5" />
+        <rect x="12.5" y="8.8" width="1.5" height="2.2" rx="0.7" fill={color} opacity="0.5" />
+        <rect x="7.5" y="10.5" width="9" height="6" rx="3" fill={color} opacity="0.65" />
+        <circle cx="10.5" cy="6" r="0.8" fill="white" />
+        <circle cx="13.5" cy="6" r="0.8" fill="white" />
+        <circle cx="10.5" cy="6" r="0.4" fill="#111" />
+        <circle cx="13.5" cy="6" r="0.4" fill="#111" />
+      </svg>
+      {/* Trail particles */}
+      <div className="absolute top-full left-1/2 -translate-x-1/2" style={{ marginTop: -4 }}>
+        {[0, 1, 2].map(i => (
+          <div key={i} className="absolute rounded-full" style={{
+            left: -5 + i * 4, top: -4 + i * 3,
+            width: 3, height: 3,
+            backgroundColor: color,
+            opacity: 0.5 - i * 0.15,
+            animation: `trailFade 0.5s ease-out ${i * 0.05}s both`
+          }} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const GameWorkflowBoard = () => {
+  const [buildPhase, setBuildPhase] = useState('building')
+  const [step, setStep] = useState(0)
+  const phaseRef = useRef('building')
+  const stepRef = useRef(0)
+  const [jumpActive, setJumpActive] = useState(false)
+  const [jumpFrom, setJumpFrom] = useState(null)
+
+  const total = HOP_BLOCKS.length
+
+  const advance = useCallback(() => {
+    if (phaseRef.current === 'building') {
+      if (stepRef.current >= total - 1) {
+        phaseRef.current = 'populating'; stepRef.current = 0
+        setBuildPhase('populating'); setStep(0)
+        setTimeout(() => setJumpActive(true), 350)
+        setTimeout(() => setJumpActive(false), 1100)
+      } else {
+        stepRef.current += 1; setStep(s => s + 1)
+      }
+    } else {
+      if (stepRef.current >= total) return
+      const prev = stepRef.current > 0 ? HOP_BLOCKS[stepRef.current - 1] : null
+      setJumpFrom(prev)
+      setJumpActive(true)
+      setTimeout(() => {
+        setJumpActive(false)
+        stepRef.current += 1; setStep(s => s + 1)
+      }, 800)
+    }
+  }, [total])
+
+  useEffect(() => {
+    if (buildPhase === 'populating' && step >= total) {
+      const t = setTimeout(() => {
+        phaseRef.current = 'building'; stepRef.current = 0
+        setBuildPhase('building'); setStep(0); setJumpActive(false); setJumpFrom(null)
+      }, 2800)
+      return () => clearTimeout(t)
+    }
+  }, [buildPhase, step, total])
+
+  useEffect(() => {
+    const dur = buildPhase === 'building' ? 550 : 1400
+    if (buildPhase === 'populating' && step >= total) return
+    const t = setTimeout(advance, dur)
+    return () => clearTimeout(t)
+  }, [step, buildPhase, advance, total])
+
+  const buildOrder = HOP_BLOCKS.map(b => b.id)
+  const targetBlock = buildPhase === 'populating' && step < total ? HOP_BLOCKS[step] : null
+  const prevBlock = step > 0 ? HOP_BLOCKS[Math.min(step - 1, total - 1)] : null
+
+  return (
+    <div className="relative w-full select-none rounded-2xl overflow-hidden"
+      style={{ height: HOP_BOARD_H, backgroundColor: '#fafbfe' }}>
+      {/* Playful dot background */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.06 }}>
+        <defs>
+          <pattern id="hopdots" width="24" height="24" patternUnits="userSpaceOnUse">
+            <circle cx="12" cy="12" r="1" fill="#5B5FE3" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#hopdots)" />
+      </svg>
+
+      {/* Subtle ground line */}
+      <div className="absolute left-0 right-0" style={{ top: HOP_BOARD_H - 8, height: 8, background: 'linear-gradient(0deg, #f0f2f8 0%, transparent 100%)' }} />
+
+      {/* Connection dots between blocks */}
+      {(() => {
+        const paths = [
+          { from: 'intake', to: 'scout' }, { from: 'intake', to: 'scope' },
+          { from: 'intake', to: 'spec' }, { from: 'scout', to: 'build' },
+          { from: 'scope', to: 'build' }, { from: 'spec', to: 'build' },
+          { from: 'build', to: 'ship' },
+        ]
+        return paths.map(({ from, to }) => {
+          const fb = HOP_BLOCKS.find(b => b.id === from)
+          const tb = HOP_BLOCKS.find(b => b.id === to)
+          if (!fb || !tb) return null
+          const fi = buildOrder.indexOf(from)
+          const ti = buildOrder.indexOf(to)
+          const built = fi < (buildPhase === 'building' ? step + 1 : total)
+          const tBuilt = ti < (buildPhase === 'building' ? step + 1 : total)
+          if (!built || !tBuilt) return null
+
+          let state = 'built'
+          if (buildPhase === 'building' && ti === step + 1) state = 'building'
+          if (buildPhase === 'populating' && ti === step) state = 'active'
+
+          return <HopDots key={`hd-${from}-${to}`} from={fb} to={tb} state={state} />
+        })
+      })()}
+
+      {/* Jumping agent */}
+      {jumpActive && buildPhase === 'populating' && step < total && (
+        <HopJumper
+          fromBlock={jumpFrom || HOP_BLOCKS[0]}
+          toBlock={HOP_BLOCKS[step]}
+          color={AGENT_BENCH[step % AGENT_BENCH.length].color} />
+      )}
+
+      {/* Blocks */}
+      {HOP_BLOCKS.map((block, idx) => {
+        const id = block.id
+        const bi = buildOrder.indexOf(id)
+        const popStep = buildPhase === 'populating' ? step : -1
+
+        let state = 'hidden'
+        if (buildPhase === 'building') {
+          if (bi < step) state = 'built'
+          else if (bi === step) state = 'building'
+        } else {
+          if (bi < popStep) state = 'populated'
+          else if (bi === popStep) state = jumpActive ? 'jumping' : 'built'
+          else state = 'built'
+        }
+
+        const agent = AGENT_BENCH[bi % AGENT_BENCH.length]
+        return <HopBlock key={id} block={block} state={state} agentColor={agent.color} />
+      })}
+
+      {/* Status text */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2" style={{ zIndex: 20 }}>
+        {buildPhase === 'building' && (
+          <span className="text-[11px] font-semibold text-[#8f959e]">
+            Building the hopscotch... {step + 1}/{total}
+          </span>
+        )}
+        {buildPhase === 'populating' && step < total && (
+          <span className="text-[11px] font-semibold" style={{ color: targetBlock?.color }}>
+            {jumpActive ? `${AGENT_BENCH[step % AGENT_BENCH.length].label} hopping to ${targetBlock?.label} !` : '...'}
+          </span>
+        )}
+        {buildPhase === 'populating' && step >= total && (
+          <span className="text-[11px] font-semibold text-[#3EAB6E]">
+            All agents deployed — hop complete!
+          </span>
+        )}
+      </div>
     </div>
   )
 }
