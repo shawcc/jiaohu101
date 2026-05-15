@@ -1939,241 +1939,208 @@ const MeegleHomepage = () => {
 }
 
 
-/* ============ GAME VERSION — 2.5D Concept Workflow Orchestration ============ */
+/* ============ GAME VERSION — 2.5D Sequential Workflow ============ */
 
-const FLOW_BOARD_W = 760
-const FLOW_BOARD_H = 440
-const FLOW_NODE_W = 112
-const FLOW_NODE_H = 70
-
+const FLOW_BOARD_W = 980
+const FLOW_BOARD_H = 420
 const FLOW_STEPS = [
   { id: 'build', label: 'Build workflow', desc: '构建流程' },
   { id: 'assign', label: 'Assign agents & humans', desc: '分配 Agent 和人' },
   { id: 'deliver', label: 'Collaborate to deliver', desc: '协作完成任务' },
 ]
 
-const FLOW_HUB = { x: 470, y: 186, w: 210, h: 96 }
-
 const FLOW_NODES = [
-  { id: 'brief', label: 'Brief', icon: '✦', color: '#5B5FE3', x: 34,  y: 162, side: 'left' },
-  { id: 'research', label: 'Research', icon: '⌕', color: '#F59E0B', x: 194, y: 42, side: 'top' },
-  { id: 'design', label: 'Design', icon: '◆', color: '#8B5CF6', x: 264, y: 150, side: 'mid' },
-  { id: 'build', label: 'Build', icon: '▰', color: '#3EAB6E', x: 184, y: 280, side: 'bottom' },
-  { id: 'review', label: 'Review', icon: '✓', color: '#EC4899', x: 344, y: 70, side: 'top' },
+  { id: 'start', label: 'Start', color: '#3EAB6E', x: 18, y: 154, w: 76, h: 38 },
+  { id: 'solution', label: 'Technical Solution Review', color: '#5B5FE3', x: 126, y: 140, w: 184, h: 46 },
+  { id: 'fe', label: 'FE Development', color: '#F59E0B', x: 350, y: 140, w: 150, h: 46, tag: '延期' },
+  { id: 'debug', label: 'Joint debugging', color: '#8B5CF6', x: 552, y: 140, w: 150, h: 46 },
+  { id: 'internal', label: 'Internal deployment prep', color: '#06B6D4', x: 748, y: 82, w: 176, h: 46, branch: 'top' },
+  { id: 'external', label: 'External deployment prep', color: '#EC4899', x: 748, y: 198, w: 176, h: 46, branch: 'bottom' },
+  { id: 'launch', label: 'Full Launch', color: '#10B981', x: 970, y: 140, w: 116, h: 46 },
 ]
 
-const HUMAN_PALETTE = ['#E5E7EB', '#FDE68A', '#BFDBFE', '#FBCFE8', '#BBF7D0']
+const FLOW_EDGES = [
+  { from: 'start', to: 'solution' },
+  { from: 'solution', to: 'fe' },
+  { from: 'fe', to: 'debug' },
+  { from: 'debug', to: 'internal' },
+  { from: 'debug', to: 'external' },
+  { from: 'internal', to: 'launch' },
+  { from: 'external', to: 'launch' },
+]
 
-const BoardAgentIcon = ({ color, type = 'agent', size = 20 }) => (
-  <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">
-    {type === 'human' ? (
-      <>
-        <circle cx="12" cy="7" r="4.5" fill={color} />
-        <path d="M5.5 20c.8-4 3.2-6 6.5-6s5.7 2 6.5 6" fill={color} opacity="0.75" />
-        <circle cx="10.5" cy="6.6" r="0.65" fill="#0A0A14" />
-        <circle cx="13.5" cy="6.6" r="0.65" fill="#0A0A14" />
-      </>
-    ) : (
-      <>
-        <rect x="6" y="5" width="12" height="10" rx="5" fill={color} opacity="0.92" />
-        <path d="M12 5V2.5" stroke={color} strokeWidth="1.7" strokeLinecap="round" />
-        <circle cx="12" cy="2.2" r="1.2" fill={color} />
-        <rect x="8" y="14" width="8" height="5" rx="2.5" fill={color} opacity="0.62" />
-        <circle cx="10" cy="9" r="0.8" fill="white" />
-        <circle cx="14" cy="9" r="0.8" fill="white" />
-      </>
-    )}
+const HUMAN_PALETTE = ['#FDE68A', '#BFDBFE', '#FBCFE8', '#BBF7D0']
+
+const getFlowNode = (id) => FLOW_NODES.find(node => node.id === id)
+
+const PersonAvatar = ({ color = '#FDE68A', size = 30 }) => (
+  <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true">
+    <circle cx="16" cy="16" r="15" fill="#fff" opacity="0.95" />
+    <circle cx="16" cy="12" r="5.2" fill={color} />
+    <path d="M7.5 27c1.2-7 4.2-10.5 8.5-10.5S23.3 20 24.5 27" fill={color} opacity="0.78" />
+    <circle cx="14.2" cy="11.6" r="0.75" fill="#111827" />
+    <circle cx="17.8" cy="11.6" r="0.75" fill="#111827" />
   </svg>
 )
 
-const ConceptNode = ({ node, idx, activeStep }) => {
-  const assigned = activeStep >= 1
-  const completed = activeStep === 2
-  const agent = AGENT_BENCH[idx % AGENT_BENCH.length]
-  const humanColor = HUMAN_PALETTE[idx % HUMAN_PALETTE.length]
+const AgentAvatar = ({ color = '#5B5FE3', size = 30 }) => (
+  <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true">
+    <circle cx="16" cy="16" r="15" fill="#fff" opacity="0.95" />
+    <rect x="8.5" y="9" width="15" height="11" rx="5.5" fill={color} />
+    <path d="M16 9V5.5" stroke={color} strokeWidth="2" strokeLinecap="round" />
+    <circle cx="16" cy="5" r="1.6" fill={color} />
+    <rect x="11" y="19" width="10" height="5" rx="2.5" fill={color} opacity="0.62" />
+    <circle cx="13.4" cy="14.2" r="1" fill="white" />
+    <circle cx="18.6" cy="14.2" r="1" fill="white" />
+  </svg>
+)
 
-  return (
-    <div className="absolute" style={{
-      left: node.x,
-      top: node.y,
-      width: FLOW_NODE_W,
-      height: FLOW_NODE_H,
-      transform: activeStep === 0 ? `translateZ(${idx * 2}px)` : activeStep === 1 ? 'translateZ(14px)' : 'translateZ(18px)',
-      transition: 'transform 0.55s cubic-bezier(0.16,1,0.3,1), opacity 0.45s ease',
-      opacity: activeStep === 0 ? 0.86 + idx * 0.025 : 1,
-      zIndex: 5 + idx,
+const FlowNodeCard = ({ node, index, visible, active, assigned, completed }) => (
+  <div className="absolute" style={{
+    left: node.x,
+    top: node.y,
+    width: node.w,
+    height: node.h,
+    opacity: visible ? 1 : 0,
+    transform: visible
+      ? `translateY(0) translateZ(${active ? 22 : completed ? 16 : 10}px) scale(${active ? 1.04 : 1})`
+      : 'translateY(24px) translateZ(-8px) scale(0.88)',
+    transition: 'opacity 0.5s ease, transform 0.55s cubic-bezier(0.16,1,0.3,1)',
+    zIndex: 10 + index,
+  }}>
+    <div style={{
+      position: 'absolute',
+      left: 10,
+      top: node.h + 8,
+      width: node.w - 8,
+      height: 14,
+      borderRadius: '50%',
+      background: node.color,
+      opacity: completed ? 0.22 : active ? 0.18 : 0.1,
+      filter: 'blur(12px)',
+      transform: 'translate(10px, 4px)',
+    }} />
+    <div className="relative flex h-full items-center gap-2 rounded-[14px] border bg-white/85 px-3 shadow-[10px_18px_34px_rgba(38,45,64,0.13)] backdrop-blur" style={{
+      borderColor: active ? `${node.color}88` : completed ? '#10b98166' : 'rgba(148,163,184,0.35)',
+      boxShadow: active
+        ? `0 0 0 3px ${node.color}16, 12px 20px 38px rgba(38,45,64,0.16)`
+        : completed
+          ? '0 0 0 3px rgba(16,185,129,0.10), 12px 20px 38px rgba(38,45,64,0.13)'
+          : '10px 18px 34px rgba(38,45,64,0.12)',
     }}>
-      <div style={{
-        position: 'absolute',
-        left: 12,
-        top: FLOW_NODE_H + 8,
-        width: FLOW_NODE_W - 14,
-        height: 18,
-        borderRadius: '50%',
-        background: node.color,
-        opacity: completed ? 0.28 : assigned ? 0.2 : 0.12,
-        filter: 'blur(13px)',
-        transform: 'translate(8px, 4px)',
-      }} />
-
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        borderRadius: 14,
-        overflow: 'hidden',
-        background: completed
-          ? `linear-gradient(180deg, ${node.color}22 0%, #10151a 100%)`
-          : 'linear-gradient(180deg, #1b1d26 0%, #101118 100%)',
-        border: `1px solid ${completed ? '#34d39966' : `${node.color}55`}`,
-        boxShadow: completed
-          ? `0 0 22px ${node.color}22, 10px 18px 34px rgba(0,0,0,0.55)`
-          : `8px 14px 28px rgba(0,0,0,0.52), inset 0 1px 0 rgba(255,255,255,0.08)`,
-      }}>
-        <div style={{ height: 5, background: `linear-gradient(90deg, ${node.color}, ${node.color}aa)` }} />
-        <div className="flex h-[65px] items-center gap-2.5 px-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-[15px] font-black" style={{
-            color: node.color,
-            background: `${node.color}18`,
-            boxShadow: `inset 0 0 0 1px ${node.color}22`,
-          }}>
-            {node.icon}
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="truncate text-[12px] font-bold text-white/90">{node.label}</div>
-            <div className="mt-0.5 text-[9px] font-semibold text-white/28">
-              {completed ? 'Done' : assigned ? 'Agent + Human' : 'Workflow node'}
-            </div>
-          </div>
-          {completed && (
-            <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10b981] shadow-[0_0_12px_rgba(16,185,129,0.35)]">
-              <svg viewBox="0 0 10 10" width="9" height="9">
-                <path d="M2 5l2 2L8 3" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {assigned && (
-        <div className="absolute -right-2 -top-5 flex items-center gap-1.5 rounded-full border border-white/10 bg-[#0b0c12]/90 px-1.5 py-1 shadow-[0_8px_18px_rgba(0,0,0,0.35)]" style={{
-          animation: 'bounceIn 0.45s cubic-bezier(0.16,1,0.3,1) both',
-          animationDelay: `${idx * 0.06}s`,
-        }}>
-          <BoardAgentIcon color={agent.color} size={17} />
-          <BoardAgentIcon color={humanColor} type="human" size={16} />
-        </div>
+      <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: completed ? '#10b981' : node.color }} />
+      <span className="min-w-0 flex-1 truncate text-[12px] font-bold text-[#172033]">{node.label}</span>
+      {node.tag && (
+        <span className="rounded-md border border-[#E5E7EB] bg-[#F8FAFC] px-1.5 py-0.5 text-[9px] font-semibold text-[#8F959E]">{node.tag}</span>
+      )}
+      {completed && (
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10b981]">
+          <svg viewBox="0 0 10 10" width="9" height="9">
+            <path d="M2 5l2 2L8 3" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
       )}
     </div>
-  )
-}
-
-const HubCard = ({ activeStep }) => {
-  const completed = activeStep === 2
-  return (
-    <div className="absolute" style={{
-      left: FLOW_HUB.x,
-      top: FLOW_HUB.y,
-      width: FLOW_HUB.w,
-      height: FLOW_HUB.h,
-      transform: completed ? 'translateZ(26px)' : 'translateZ(16px)',
-      zIndex: 30,
-      transition: 'transform 0.55s cubic-bezier(0.16,1,0.3,1)',
-    }}>
-      <div style={{
-        position: 'absolute',
-        left: 18,
-        top: FLOW_HUB.h + 10,
-        width: FLOW_HUB.w - 20,
-        height: 24,
-        borderRadius: '50%',
-        background: completed ? '#10b981' : '#5B5FE3',
-        opacity: completed ? 0.24 : 0.18,
-        filter: 'blur(18px)',
-        transform: 'translate(16px, 4px)',
-      }} />
-      <div className="relative h-full overflow-hidden rounded-[18px] border bg-[#151520] px-6 py-5" style={{
-        borderColor: completed ? '#34d39977' : '#8B5CF688',
-        boxShadow: completed
-          ? '0 0 34px rgba(16,185,129,0.18), 14px 24px 42px rgba(0,0,0,0.62), inset 0 1px 0 rgba(255,255,255,0.1)'
-          : '14px 24px 42px rgba(0,0,0,0.58), inset 0 1px 0 rgba(255,255,255,0.1)',
-      }}>
-        <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#5B5FE3] via-[#8B5CF6] to-[#06B6D4]" />
-        <div className="flex h-full items-center gap-4">
-          <div className="grid grid-cols-2 gap-1.5">
-            {['#5B5FE3', '#06B6D4', '#8B5CF6', '#3EAB6E'].map((c, i) => (
-              <span key={c} className="block h-4 w-7 rounded-[5px]" style={{ background: c, opacity: completed || i < activeStep + 2 ? 0.95 : 0.35 }} />
-            ))}
-          </div>
-          <div>
-            <div className="text-[24px] font-semibold tracking-[-0.04em] text-white">Meegle</div>
-            <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/30">
-              Orchestrated delivery
-            </div>
-          </div>
-        </div>
+    {assigned && (
+      <div className="absolute -top-8 left-1/2 flex -translate-x-1/2 items-center -space-x-2" style={{ animation: 'bounceIn 0.45s cubic-bezier(0.16,1,0.3,1) both' }}>
+        <AgentAvatar color={AGENT_BENCH[index % AGENT_BENCH.length].color} size={30} />
+        <PersonAvatar color={HUMAN_PALETTE[index % HUMAN_PALETTE.length]} size={30} />
       </div>
-    </div>
-  )
-}
+    )}
+  </div>
+)
 
-const WorkflowArc = ({ node, idx, activeStep }) => {
-  const sx = node.x + FLOW_NODE_W
-  const sy = node.y + FLOW_NODE_H / 2
-  const ex = FLOW_HUB.x + 30
-  const ey = FLOW_HUB.y + FLOW_HUB.h / 2
-  const curve = node.side === 'top' ? -70 : node.side === 'bottom' ? 70 : 0
-  const midX = sx + (ex - sx) * 0.48
-  const d = `M ${sx} ${sy} C ${midX} ${sy + curve}, ${midX + 20} ${ey + curve}, ${ex} ${ey}`
-  const bright = activeStep >= 1 || activeStep === 2
-  const pulse = activeStep === 2
-  const color = bright ? '#3B82F6' : 'rgba(59,130,246,0.38)'
+const FlowConnection = ({ edge, visible, active, completed, index }) => {
+  const from = getFlowNode(edge.from)
+  const to = getFlowNode(edge.to)
+  if (!from || !to || !visible) return null
+
+  const sx = from.x + from.w
+  const sy = from.y + from.h / 2
+  const ex = to.x
+  const ey = to.y + to.h / 2
+  const curve = Math.max(36, Math.abs(ex - sx) * 0.35)
+  const d = `M ${sx} ${sy} C ${sx + curve} ${sy}, ${ex - curve} ${ey}, ${ex} ${ey}`
+  const stroke = completed ? '#2563EB' : active ? '#3B82F6' : '#CBD5E1'
 
   return (
-    <g opacity={activeStep === 0 ? 0.55 : 1}>
+    <g>
       <path
         d={d}
         fill="none"
-        stroke={color}
-        strokeWidth={bright ? 2.6 : 1.6}
+        stroke={stroke}
+        strokeWidth={active || completed ? 2.2 : 1.2}
         strokeLinecap="round"
-        strokeDasharray={activeStep === 0 ? '7 7' : 'none'}
-        opacity={bright ? 0.95 : 0.5}
+        opacity={active || completed ? 0.92 : 0.5}
+        strokeDasharray={active && !completed ? '8 8' : 'none'}
       />
-      {activeStep === 0 && (
-        <path d={d} fill="none" stroke="#60A5FA" strokeWidth="1.4" strokeLinecap="round" strokeDasharray="7 7" opacity="0.7">
-          <animate attributeName="stroke-dashoffset" from="28" to="0" dur="1s" repeatCount="indefinite" />
+      {active && !completed && (
+        <path d={d} fill="none" stroke="#60A5FA" strokeWidth="1.8" strokeLinecap="round" strokeDasharray="8 8" opacity="0.75">
+          <animate attributeName="stroke-dashoffset" from="32" to="0" dur="0.9s" repeatCount="indefinite" />
         </path>
       )}
-      {pulse && (
-        <circle r="4" fill="#93C5FD">
-          <animateMotion dur={`${1.2 + idx * 0.08}s`} repeatCount="indefinite" path={d} />
-          <animate attributeName="opacity" values="0;1;0" dur={`${1.2 + idx * 0.08}s`} repeatCount="indefinite" />
+      {completed && (
+        <circle r="4" fill="#2563EB" opacity="0.9">
+          <animateMotion dur={`${1.8 + index * 0.08}s`} repeatCount="indefinite" path={d} />
+          <animate attributeName="opacity" values="0;1;0" dur={`${1.8 + index * 0.08}s`} repeatCount="indefinite" />
         </circle>
       )}
-      <circle cx={sx} cy={sy} r="4.5" fill="#93C5FD" stroke="#0b0c12" strokeWidth="2" />
-      <circle cx={ex} cy={ey} r="5" fill="#93C5FD" stroke="#0b0c12" strokeWidth="2" />
     </g>
   )
 }
 
+const CollaborationLayer = ({ frame, active }) => {
+  if (!active) return null
+  const people = [
+    { x: 404, y: 58, color: '#FDE68A', label: 'PM' },
+    { x: 520, y: 224, color: '#BFDBFE', label: 'Eng' },
+    { x: 716, y: 32, color: '#FBCFE8', label: 'QA' },
+  ]
+
+  return (
+    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 50 }}>
+      {people.map((p, idx) => (
+        <div key={p.label} className="absolute flex items-center gap-1.5 rounded-full border border-white/70 bg-white/80 px-2 py-1 shadow-[0_10px_24px_rgba(38,45,64,0.12)] backdrop-blur" style={{
+          left: p.x,
+          top: p.y,
+          transform: `translateZ(${34 + idx * 4}px)`,
+          animation: 'bounceIn 0.45s cubic-bezier(0.16,1,0.3,1) both',
+          animationDelay: `${idx * 0.12}s`,
+        }}>
+          <PersonAvatar color={p.color} size={24} />
+          <span className="text-[9px] font-black text-[#172033]">{p.label}</span>
+        </div>
+      ))}
+      <div className="absolute rounded-full bg-[#2563EB] shadow-[0_0_18px_rgba(37,99,235,0.55)]" style={{
+        left: 44 + Math.min(frame, 3) * 265,
+        top: frame < 2 ? 122 : 156,
+        width: 10,
+        height: 10,
+        transform: 'translateZ(40px)',
+        transition: 'left 0.65s cubic-bezier(0.16,1,0.3,1), top 0.65s cubic-bezier(0.16,1,0.3,1)',
+      }} />
+    </div>
+  )
+}
+
 const StepProgress = ({ activeStep }) => (
-  <div className="absolute bottom-4 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-2xl border border-white/10 bg-[#090a10]/80 px-3 py-2 shadow-[0_12px_30px_rgba(0,0,0,0.35)] backdrop-blur">
+  <div className="absolute bottom-2 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-2xl border border-[#E5E7EB]/70 bg-white/70 px-3 py-2 shadow-[0_12px_30px_rgba(38,45,64,0.08)] backdrop-blur">
     {FLOW_STEPS.map((step, idx) => {
       const active = idx === activeStep
       const done = idx < activeStep
       return (
         <div key={step.id} className="flex items-center gap-2">
           <div className="flex items-center gap-2 rounded-xl px-2.5 py-1.5" style={{
-            background: active ? 'rgba(91,95,227,0.18)' : done ? 'rgba(16,185,129,0.12)' : 'transparent',
-            color: active ? '#C4B5FD' : done ? '#6EE7B7' : 'rgba(255,255,255,0.34)',
+            background: active ? 'rgba(91,95,227,0.10)' : done ? 'rgba(16,185,129,0.10)' : 'transparent',
+            color: active ? '#5B5FE3' : done ? '#059669' : '#8F959E',
           }}>
             <span className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-black" style={{
-              background: active ? '#5B5FE3' : done ? '#10b981' : 'rgba(255,255,255,0.08)',
-              color: '#fff',
+              background: active ? '#5B5FE3' : done ? '#10b981' : '#E5E7EB',
+              color: active || done ? '#fff' : '#8F959E',
             }}>{idx + 1}</span>
             <span className="hidden text-[10px] font-bold sm:inline">{step.desc}</span>
           </div>
-          {idx < FLOW_STEPS.length - 1 && <span className="h-px w-5 bg-white/10" />}
+          {idx < FLOW_STEPS.length - 1 && <span className="h-px w-5 bg-[#CBD5E1]" />}
         </div>
       )
     })}
@@ -2182,36 +2149,62 @@ const StepProgress = ({ activeStep }) => (
 
 const GameWorkflowBoard = () => {
   const [activeStep, setActiveStep] = useState(0)
+  const [frame, setFrame] = useState(0)
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setActiveStep(step => (step + 1) % FLOW_STEPS.length)
-    }, 2600)
+      setFrame(current => {
+        const maxFrame = activeStep === 0 ? FLOW_NODES.length - 1 : activeStep === 1 ? FLOW_NODES.length - 1 : 3
+        if (current < maxFrame) return current + 1
+        setActiveStep(step => (step + 1) % FLOW_STEPS.length)
+        return 0
+      })
+    }, activeStep === 2 ? 900 : 720)
     return () => clearInterval(timer)
-  }, [])
+  }, [activeStep])
+
+  const visibleNodeCount = activeStep === 0 ? frame + 1 : FLOW_NODES.length
+  const assignedNodeCount = activeStep === 1 ? frame + 1 : activeStep === 2 ? FLOW_NODES.length : 0
+  const completed = activeStep === 2
 
   return (
-    <div className="relative w-full select-none overflow-hidden rounded-[28px] border border-white/5 bg-[#030306]" style={{ height: FLOW_BOARD_H, perspective: '1100px', perspectiveOrigin: '58% 18%' }}>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_62%_46%,rgba(91,95,227,0.16),transparent_34%),radial-gradient(circle_at_26%_70%,rgba(59,130,246,0.10),transparent_30%)]" />
-      <div className="absolute inset-0 opacity-70" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.055) 1px, transparent 1px)', backgroundSize: '26px 26px' }} />
+    <div className="relative w-full select-none overflow-visible" style={{ height: FLOW_BOARD_H, perspective: '1100px', perspectiveOrigin: '50% 12%' }}>
+      <div className="absolute inset-0 opacity-40" style={{ background: 'radial-gradient(ellipse at 48% 50%, rgba(91,95,227,0.08) 0%, transparent 62%)' }} />
 
-      <div className="absolute left-1/2 top-[42%]" style={{
+      <div className="absolute left-1/2 top-[43%]" style={{
         width: FLOW_BOARD_W,
-        height: 360,
-        transform: 'translate(-50%, -50%) rotateX(52deg) rotateZ(-8deg) scale(0.88)',
+        height: 300,
+        transform: 'translate(-50%, -50%) rotateX(48deg) rotateZ(-3deg) scale(0.72)',
         transformStyle: 'preserve-3d',
       }}>
-        <div className="absolute inset-x-10 top-12 bottom-4 rounded-[40px] bg-white/[0.025] blur-[1px]" />
-        <svg className="absolute inset-0 overflow-visible" viewBox={`0 0 ${FLOW_BOARD_W} 360`} width={FLOW_BOARD_W} height="360">
-          {FLOW_NODES.map((node, idx) => <WorkflowArc key={node.id} node={node} idx={idx} activeStep={activeStep} />)}
+        <svg className="absolute inset-0 overflow-visible" viewBox={`0 0 ${FLOW_BOARD_W + 160} 300`} width={FLOW_BOARD_W + 160} height="300">
+          {FLOW_EDGES.map((edge, idx) => {
+            const fromIdx = FLOW_NODES.findIndex(node => node.id === edge.from)
+            const toIdx = FLOW_NODES.findIndex(node => node.id === edge.to)
+            const visible = activeStep === 0 ? toIdx < visibleNodeCount && fromIdx < visibleNodeCount : true
+            const active = activeStep === 0 ? toIdx === frame : activeStep === 2
+            return <FlowConnection key={`${edge.from}-${edge.to}`} edge={edge} visible={visible} active={active} completed={completed} index={idx} />
+          })}
         </svg>
-        {FLOW_NODES.map((node, idx) => <ConceptNode key={node.id} node={node} idx={idx} activeStep={activeStep} />)}
-        <HubCard activeStep={activeStep} />
+
+        {FLOW_NODES.map((node, idx) => (
+          <FlowNodeCard
+            key={node.id}
+            node={node}
+            index={idx}
+            visible={idx < visibleNodeCount}
+            active={(activeStep === 0 || activeStep === 1) && idx === frame}
+            assigned={idx < assignedNodeCount}
+            completed={completed}
+          />
+        ))}
+
+        <CollaborationLayer frame={frame} active={completed} />
       </div>
 
-      <div className="absolute left-6 top-5 z-40 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 backdrop-blur">
-        <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/30">Concept flow</div>
-        <div className="mt-1 text-[13px] font-bold text-white/80">{FLOW_STEPS[activeStep].label}</div>
+      <div className="absolute left-2 top-4 z-40 rounded-2xl border border-[#E5E7EB]/60 bg-white/55 px-4 py-3 shadow-[0_12px_30px_rgba(38,45,64,0.06)] backdrop-blur">
+        <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#8F959E]">Concept flow</div>
+        <div className="mt-1 text-[13px] font-bold text-[#172033]">{FLOW_STEPS[activeStep].label}</div>
       </div>
 
       <StepProgress activeStep={activeStep} />
