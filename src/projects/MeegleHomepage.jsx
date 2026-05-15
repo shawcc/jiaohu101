@@ -74,111 +74,216 @@ const AgentCardIllustration = ({ card, isVisible }) => {
         <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#F4F6FF] to-[#E8EBFF]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
         <svg viewBox="0 0 600 420" className="relative w-full max-w-[600px] h-auto drop-shadow-2xl" style={{ filter: 'drop-shadow(0 20px 40px rgba(91,94,227,0.10))' }}>
           <defs>
-            <linearGradient id="wf-grad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#5B5FE3" />
-              <stop offset="100%" stopColor="#787BEE" />
+            <linearGradient id="wf-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0D0E23" />
+              <stop offset="50%" stopColor="#131530" />
+              <stop offset="100%" stopColor="#101223" />
             </linearGradient>
-            <marker id="wf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-              <path d="M0,0 L10,5 L0,10 Z" fill="#5B5FE3" opacity="0.45" />
-            </marker>
-            <marker id="wf-arrow-dim" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-              <path d="M0,0 L10,5 L0,10 Z" fill="#DEE0E3" opacity="0.6" />
-            </marker>
-            <pattern id="wf-grid" width="28" height="28" patternUnits="userSpaceOnUse">
-              <path d="M 28 0 L 0 0 L 0 28" fill="none" stroke="#5B5FE3" strokeWidth="0.25" opacity="0.06" />
+            <radialGradient id="wf-aura1" cx="25%" cy="20%" r="55%">
+              <stop offset="0%" stopColor="#5B5FE3" stopOpacity="0.14" />
+              <stop offset="100%" stopColor="#5B5FE3" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="wf-aura2" cx="75%" cy="70%" r="45%">
+              <stop offset="0%" stopColor="#787BEE" stopOpacity="0.10" />
+              <stop offset="100%" stopColor="#787BEE" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="wf-aura3" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.06" />
+              <stop offset="100%" stopColor="#A78BFA" stopOpacity="0" />
+            </radialGradient>
+            <linearGradient id="wf-line1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#5B5FE3" stopOpacity="0.15" />
+              <stop offset="50%" stopColor="#5B5FE3" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="#5B5FE3" stopOpacity="0.25" />
+            </linearGradient>
+            <linearGradient id="wf-line2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#787BEE" stopOpacity="0.12" />
+              <stop offset="40%" stopColor="#787BEE" stopOpacity="0.50" />
+              <stop offset="100%" stopColor="#787BEE" stopOpacity="0.20" />
+            </linearGradient>
+            <linearGradient id="wf-line3" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.10" />
+              <stop offset="30%" stopColor="#A78BFA" stopOpacity="0.45" />
+              <stop offset="100%" stopColor="#A78BFA" stopOpacity="0.18" />
+            </linearGradient>
+            <linearGradient id="wf-node" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#2E3060" />
+              <stop offset="100%" stopColor="#1E204A" />
+            </linearGradient>
+            <linearGradient id="wf-node-active" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#4A4CD0" />
+              <stop offset="100%" stopColor="#5B5FE3" />
+            </linearGradient>
+            <linearGradient id="wf-node-agent" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#353880" />
+              <stop offset="100%" stopColor="#292C70" />
+            </linearGradient>
+            <filter id="wf-glow">
+              <feGaussianBlur stdDeviation="8" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="wf-soft-shadow">
+              <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#000" floodOpacity="0.3" />
+            </filter>
+            <pattern id="wf-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+              <circle cx="10" cy="10" r="0.4" fill="#FFFFFF" opacity="0.035" />
             </pattern>
-            <filter id="wf-card-shadow">
-              <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#5B5FE3" floodOpacity="0.10" />
-            </filter>
-            <filter id="wf-active-glow">
-              <feDropShadow dx="0" dy="3" stdDeviation="8" floodColor="#5B5FE3" floodOpacity="0.22" />
-            </filter>
+            <marker id="wf-marker" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="4" markerHeight="4" orient="auto">
+              <path d="M0,0 L8,4 L0,8 Z" fill="#5B5FE3" opacity="0.5" />
+            </marker>
           </defs>
 
-          {/* Blueprint grid */}
-          <rect x="0" y="0" width="600" height="420" rx="28" fill="url(#wf-grid)" />
-          <rect x="0" y="0" width="600" height="420" rx="28" fill="none" stroke="#5B5FE3" strokeWidth="0.5" opacity="0.08" />
+          {/* Background */}
+          <rect width="600" height="420" rx="24" fill="url(#wf-bg)" />
+          <rect width="600" height="420" rx="24" fill="url(#wf-aura1)" />
+          <rect width="600" height="420" rx="24" fill="url(#wf-aura2)" />
+          <rect width="600" height="420" rx="24" fill="url(#wf-aura3)" />
+          <rect width="600" height="420" rx="24" fill="url(#wf-dots)" />
 
-          {/* ======= Track 1: R&D (5 nodes) ======= */}
+          {/* Blueprint inner border */}
+          <rect x="14" y="14" width="572" height="392" rx="18" fill="none" stroke="#FFFFFF" strokeOpacity="0.04" strokeWidth="0.5" />
+          <rect x="20" y="20" width="560" height="380" rx="14" fill="none" stroke="#FFFFFF" strokeOpacity="0.025" strokeWidth="0.3" />
+
+          {/* Corner guides */}
+          {[[30,30],[570,30],[30,390],[570,390]].map(([cx, cy]) => (
+            <g key={`c-${cx}`} opacity="0.06">
+              <line x1={cx} y1={cy} x2={cx + 24} y2={cy} stroke="#FFFFFF" strokeWidth="0.6" />
+              <line x1={cx} y1={cy} x2={cx} y2={cy + 24} stroke="#FFFFFF" strokeWidth="0.6" />
+            </g>
+          ))}
+
+          {/* ===== Flow 1: R&D — Upper arc ===== */}
           <g>
+            {/* Connecting curves */}
+            <path d="M130 84 C170 70, 210 70, 250 82" fill="none" stroke="url(#wf-line1)" strokeWidth="2" strokeDasharray="4,6" />
+            <path d="M250 82 C290 94, 310 94, 350 82" fill="none" stroke="url(#wf-line1)" strokeWidth="2" />
+            <path d="M350 82 C390 70, 430 70, 470 84" fill="none" stroke="url(#wf-line1)" strokeWidth="2" strokeDasharray="4,6" />
+            <line x1="470" y1="84" x2="518" y2="84" stroke="url(#wf-line1)" strokeWidth="1.5" strokeDasharray="3,8" />
+
+            {/* Nodes */}
             {[
-              { x: 64, label: '需求', color: '#787BEE' },
-              { x: 164, label: '方案', color: '#646BE6' },
-              { x: 264, label: '开发', color: '#5B5FE3', active: true },
-              { x: 364, label: '审查', color: '#646BE6' },
-              { x: 464, label: '发布', color: '#787BEE' },
-            ].map((node, i) => (
-              <g key={`wf1-${i}`} filter={node.active ? 'url(#wf-active-glow)' : 'url(#wf-card-shadow)'}>
-                <rect x={node.x} y="60" width="72" height="38" rx="10" fill="white"
-                  stroke={node.active ? '#5B5FE3' : '#E8EBF0'} strokeWidth={node.active ? 2 : 1}
-                  strokeDasharray={node.active ? '5,3' : 'none'} />
-                <text x={node.x + 36} y="84" textAnchor="middle" fill={node.active ? '#5B5FE3' : '#646A73'} fontSize="13" fontWeight="700" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
-                {node.active && (
-                  <circle cx={node.x + 64} cy="70" r="5" fill="#5B5FE3" opacity="0.9">
-                    <animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.6s" repeatCount="indefinite" />
-                  </circle>
+              { x: 90, w: 72, label: '需求' },
+              { x: 212, w: 72, label: '方案' },
+              { x: 340, w: 84, label: '开发', active: true },
+              { x: 420, w: 72, label: '审查' },
+              { x: 494, w: 72, label: '发布' },
+            ].map((n) => (
+              <g key={`wf1-${n.label}`} filter="url(#wf-soft-shadow)">
+                {n.active && (
+                  <rect x={n.x - 5} y="63" width={n.w + 10} height="38" rx="12" fill="none" stroke="#5B5FE3" strokeWidth="1.8" strokeOpacity="0.35" strokeDasharray="5,4">
+                    <animate attributeName="strokeOpacity" values="0.35;0.1;0.35" dur="2s" repeatCount="indefinite" />
+                  </rect>
                 )}
-                {/* Arrow between nodes */}
-                {i < 4 && (
-                  <line x1={node.x + 72} y1="79" x2={node.x + 100} y2="79" stroke="#5B5FE3" strokeOpacity="0.35" strokeWidth="2" markerEnd="url(#wf-arrow)" />
+                <rect x={n.x} y="68" width={n.w} height={n.active ? 32 : 28} rx={n.active ? 16 : 10}
+                  fill={n.active ? 'url(#wf-node-active)' : 'url(#wf-node)'}
+                  stroke={n.active ? '#5B5FE3' : '#FFFFFF'} strokeWidth={n.active ? 1.2 : 0.4} strokeOpacity={n.active ? 0.6 : 0.08} />
+                <text x={n.x + n.w / 2} y={n.label === '开发' ? 88 : 87} textAnchor="middle"
+                  fill={n.active ? '#E8EAFF' : '#8F92B0'} fontSize={n.active ? 13 : 11.5} fontWeight={n.active ? '700' : '600'}
+                  fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="0.5">{n.label}</text>
+                {n.active && (
+                  <>
+                    <circle cx={n.x + n.w - 6} cy="76" r="4" fill="#A78BFA" opacity="0.7">
+                      <animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.6s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx={n.x + n.w - 6} cy="76" r="2.5" fill="#FFFFFF" opacity="0.9" />
+                  </>
                 )}
               </g>
             ))}
-            {/* Track label */}
-            <rect x="12" y="62" width="40" height="34" rx="8" fill="#F4F6FF" stroke="#E8EBFF" strokeWidth="1" />
-            <text x="32" y="85" textAnchor="middle" fill="#5B5FE3" fontSize="10" fontWeight="700">R&D</text>
+
+            {/* Stream labels */}
+            <rect x="22" y="68" width="48" height="26" rx="8" fill="#5B5FE3" opacity="0.1" />
+            <text x="46" y="86" textAnchor="middle" fill="#5B5FE3" fontSize="9.5" fontWeight="600" opacity="0.5">R&D</text>
           </g>
 
-          {/* ======= Track 2: GTM Marketing (4 nodes) ======= */}
+          {/* ===== Flow 2: GTM — Center ===== */}
           <g>
+            {/* Connecting curves */}
+            <path d="M175 190 C230 178, 280 168, 330 180" fill="none" stroke="url(#wf-line2)" strokeWidth="2" />
+            <path d="M330 180 C380 168, 420 168, 460 183" fill="none" stroke="url(#wf-line2)" strokeWidth="2" strokeDasharray="4,7" />
+            <line x1="460" y1="183" x2="510" y2="183" fill="none" stroke="url(#wf-line2)" strokeWidth="1.5" strokeDasharray="3,5" />
+
+            {/* Nodes */}
             {[
-              { x: 90, label: '策略' },
-              { x: 204, label: '执行', agent: true },
-              { x: 318, label: '分析' },
-              { x: 432, label: '迭代' },
-            ].map((node, i) => (
-              <g key={`wf2-${i}`} filter="url(#wf-card-shadow)">
-                <rect x={node.x} y="172" width="78" height="42" rx="10" fill="white" stroke="#E8EBF0" strokeWidth="1" />
-                <text x={node.x + 39} y="198" textAnchor="middle" fill="#646A73" fontSize="13" fontWeight="700" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
-                {node.agent && (
-                  <g transform={`translate(${node.x + 58}, 175)`}>
-                    <rect x="0" y="0" width="24" height="14" rx="7" fill="#F4F6FF" stroke="#5B5FE3" strokeWidth="0.8" opacity="0.7" />
-                    <text x="12" y="10.5" textAnchor="middle" fill="#5B5FE3" fontSize="8" fontWeight="700">🤖</text>
-                  </g>
+              { x: 120, w: 80, label: '策略' },
+              { x: 276, w: 88, label: '执行', agent: true },
+              { x: 372, w: 72, label: '监控' },
+              { x: 470, w: 72, label: '迭代' },
+            ].map((n) => (
+              <g key={`wf2-${n.label}`} filter="url(#wf-soft-shadow)">
+                {n.agent && (
+                  <rect x={n.x - 3} y="166" width={n.w + 6} height="42" rx="12" fill="none" stroke="#787BEE" strokeWidth="1" strokeOpacity="0.2" strokeDasharray="3,3" />
                 )}
-                {i < 3 && (
-                  <line x1={node.x + 78} y1="193" x2={node.x + 114} y2="193" stroke="#5B5FE3" strokeOpacity="0.3" strokeWidth="2" markerEnd="url(#wf-arrow)" />
+                <rect x={n.x} y="172" width={n.w} height={n.agent ? 32 : 28} rx={n.agent ? 16 : 10}
+                  fill={n.agent ? 'url(#wf-node-agent)' : 'url(#wf-node)'}
+                  stroke={n.agent ? '#787BEE' : '#FFFFFF'} strokeWidth={n.agent ? 1 : 0.4} strokeOpacity={n.agent ? 0.5 : 0.08} />
+                <text x={n.x + n.w / 2} y={n.agent ? 193 : 191} textAnchor="middle"
+                  fill={n.agent ? '#C8CCFF' : '#8F92B0'} fontSize={n.agent ? 13 : 11.5} fontWeight={n.agent ? '700' : '600'}
+                  fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="0.5">{n.label}</text>
+                {n.agent && (
+                  <rect x={n.x + n.w - 22} y="175" width="18" height="14" rx="7" fill="#5B5FE3" opacity="0.25" />
                 )}
               </g>
             ))}
-            {/* Track label */}
-            <rect x="12" y="174" width="48" height="38" rx="8" fill="#F4F6FF" stroke="#E8EBFF" strokeWidth="1" />
-            <text x="36" y="198" textAnchor="middle" fill="#5B5FE3" fontSize="10" fontWeight="700">GTM</text>
+
+            {/* Small agent badge */}
+            <g transform="translate(295, 164)">
+              <rect x="0" y="0" width="20" height="12" rx="6" fill="#5B5FE3" opacity="0.15" />
+              <text x="10" y="9" textAnchor="middle" fontSize="7">🤖</text>
+            </g>
+
+            <rect x="22" y="172" width="54" height="26" rx="8" fill="#787BEE" opacity="0.1" />
+            <text x="49" y="190" textAnchor="middle" fill="#787BEE" fontSize="9.5" fontWeight="600" opacity="0.5">GTM</text>
           </g>
 
-          {/* ======= Track 3: Customer Support (4 nodes) ======= */}
+          {/* ===== Flow 3: Support — Lower ===== */}
           <g>
+            {/* Connecting curves */}
+            <path d="M170 290 C215 278, 255 278, 295 288" fill="none" stroke="url(#wf-line3)" strokeWidth="1.8" strokeDasharray="5,7" />
+            <path d="M295 288 C345 298, 375 298, 420 288" fill="none" stroke="url(#wf-line3)" strokeWidth="1.8" />
+            <line x1="420" y1="288" x2="472" y2="288" fill="none" stroke="url(#wf-line3)" strokeWidth="1.5" />
+
+            {/* Nodes */}
             {[
-              { x: 92, label: '接单' },
-              { x: 208, label: '分派' },
-              { x: 324, label: '处理' },
-              { x: 440, label: '闭环' },
-            ].map((node, i) => (
-              <g key={`wf3-${i}`} filter="url(#wf-card-shadow)">
-                <rect x={node.x} y="288" width="68" height="38" rx="10" fill="white" stroke="#E8EBF0" strokeWidth="1" />
-                <text x={node.x + 34} y="312" textAnchor="middle" fill="#646A73" fontSize="13" fontWeight="700" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
-                {i < 3 && (
-                  <line x1={node.x + 68} y1="307" x2={node.x + 116} y2="307" stroke="#5B5FE3" strokeOpacity="0.3" strokeWidth="2" markerEnd="url(#wf-arrow)" />
-                )}
+              { x: 108, w: 76, label: '接单' },
+              { x: 250, w: 84, label: '诊断' },
+              { x: 368, w: 72, label: '处理' },
+              { x: 474, w: 78, label: '闭环' },
+            ].map((n) => (
+              <g key={`wf3-${n.label}`} filter="url(#wf-soft-shadow)">
+                <rect x={n.x} y="272" width={n.w} height={28} rx={10}
+                  fill="url(#wf-node)"
+                  stroke="#FFFFFF" strokeWidth="0.4" strokeOpacity="0.06" />
+                <text x={n.x + n.w / 2} y="291" textAnchor="middle"
+                  fill="#8F92B0" fontSize={11.5} fontWeight="600"
+                  fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="0.5">{n.label}</text>
               </g>
             ))}
-            <rect x="12" y="289" width="58" height="36" rx="8" fill="#F4F6FF" stroke="#E8EBFF" strokeWidth="1" />
-            <text x="41" y="312" textAnchor="middle" fill="#5B5FE3" fontSize="10" fontWeight="700">Support</text>
+
+            <rect x="22" y="272" width="62" height="26" rx="8" fill="#A78BFA" opacity="0.1" />
+            <text x="53" y="290" textAnchor="middle" fill="#A78BFA" fontSize="9.5" fontWeight="600" opacity="0.5">Support</text>
           </g>
 
-          {/* Bottom decorative label */}
-          <rect x="200" y="360" width="200" height="30" rx="14" fill="white" stroke="#5B5FE3" strokeWidth="0.5" opacity="0.6" />
-          <text x="300" y="380" textAnchor="middle" fill="#5B5FE3" fontSize="10" fontWeight="600" opacity="0.5" fontFamily="system-ui,-apple-system,sans-serif">各团队流程 · 有序发生</text>
+          {/* Decorative particles */}
+          {[
+            [45, 105], [188, 128], [505, 130], [82, 235], [395, 235], [548, 240],
+            [168, 345], [305, 348], [520, 350], [350, 130], [220, 220], [480, 210],
+          ].map(([px, py], i) => (
+            <circle key={`p-${i}`} cx={px} cy={py} r={i % 3 === 0 ? 2 : 1.2}
+              fill="#FFFFFF" opacity={0.06 + (i % 3) * 0.02}>
+              <animate attributeName="opacity" values={`${0.06 + (i % 3) * 0.02};${0.02 + (i % 3) * 0.01};${0.06 + (i % 3) * 0.02}`} dur={`${2.5 + (i % 3) * 0.8}s`} repeatCount="indefinite" />
+            </circle>
+          ))}
+
+          {/* Bottom annotation */}
+          <g opacity="0.3">
+            <line x1="180" y1="378" x2="420" y2="378" stroke="#5B5FE3" strokeWidth="0.5" strokeOpacity="0.15" />
+            <circle cx="300" cy="378" r="2" fill="#5B5FE3" strokeOpacity="0.3" />
+            <text x="300" y="370" textAnchor="middle" fill="#5B5FE3" fontSize="9" fontWeight="600" opacity="0.4" fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="1">BUILD · DEPLOY · SCALE</text>
+          </g>
         </svg>
       </div>
     )
@@ -1525,18 +1630,18 @@ const MeegleHomepage = () => {
 
 /* ============ GAME VERSION — Flow Canvas with Agent Orchestration ============ */
 
-const FLOW_BOARD_W = 680
-const FLOW_BOARD_H = 400
-const FLOW_NODE_W = 106
-const FLOW_NODE_H = 64
+const FLOW_BOARD_W = 760
+const FLOW_BOARD_H = 420
+const FLOW_NODE_W = 124
+const FLOW_NODE_H = 76
 
 const FLOW_NODES = [
-  { id: 'collect', label: 'Collect', icon: '📥', color: '#5B5FE3', x: 22,  y: 168 },
-  { id: 'analyze', label: 'Analyze', icon: '🔬', color: '#F59E0B', x: 154, y: 76 },
-  { id: 'design',  label: 'Design',  icon: '🎨', color: '#8B5CF6', x: 154, y: 260 },
-  { id: 'build',   label: 'Build',   icon: '⚡',  color: '#3EAB6E', x: 304, y: 168 },
-  { id: 'review',  label: 'Review',  icon: '🔍', color: '#EC4899', x: 444, y: 168 },
-  { id: 'deploy',  label: 'Deploy',  icon: '🚀', color: '#06B6D4', x: 582, y: 168 },
+  { id: 'collect', label: 'Collect', icon: '📥', color: '#5B5FE3', x: 18,  y: 172 },
+  { id: 'analyze', label: 'Analyze', icon: '🔬', color: '#F59E0B', x: 168, y: 60 },
+  { id: 'design',  label: 'Design',  icon: '🎨', color: '#8B5CF6', x: 168, y: 284 },
+  { id: 'build',   label: 'Build',   icon: '⚡',  color: '#3EAB6E', x: 336, y: 172 },
+  { id: 'review',  label: 'Review',  icon: '🔍', color: '#EC4899', x: 486, y: 172 },
+  { id: 'deploy',  label: 'Deploy',  icon: '🚀', color: '#06B6D4', x: 626, y: 172 },
 ]
 
 const FLOW_EDGES = [
@@ -1575,79 +1680,106 @@ const FlowNode = ({ node, state, agentColor }) => {
     <div className="absolute" style={{
       left: node.x, top: node.y, width: w, height: h,
       transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease',
-      transform: building ? 'translateY(36px) scale(0.82)' : assigning ? 'scale(1.08)' : 'translateY(0) scale(1)',
-      opacity: building ? 0.55 : 1,
+      transform: building ? 'translateY(40px) scale(0.85)' : assigning ? 'scale(1.06)' : 'translateY(0) scale(1)',
+      opacity: building ? 0.5 : 1,
       zIndex: assigning ? 20 : complete ? 12 : 1,
     }}>
+      {/* Bottom drop shadow (俯视角阴影) */}
       <div style={{
-        position: 'absolute', left: 8, top: h + 6, width: w - 16, height: 10,
+        position: 'absolute', left: 9, top: h + 4, width: w - 18, height: 14,
         backgroundColor: c + (complete ? '22' : '0e'),
-        borderRadius: '50%', filter: 'blur(8px)',
-        opacity: building ? 0.1 : complete ? 0.45 : 0.22,
+        borderRadius: '50%', filter: 'blur(10px)',
+        opacity: building ? 0.06 : complete ? 0.35 : 0.18,
         transition: 'all 0.5s ease',
       }} />
 
+      {/* Card body */}
       <div style={{
-        position: 'absolute', inset: 0, borderRadius: 12,
+        position: 'absolute', inset: 0, borderRadius: 10,
         background: complete
-          ? `linear-gradient(135deg, ${c}0c, #f0fdf4)`
-          : building ? '#f9fafb' : '#ffffff',
-        border: `1.5px solid ${complete ? '#10b981' : building ? '#e5e7eb' : '#e8ecf0'}`,
+          ? `linear-gradient(180deg, ${c}20 0%, #0d1a12 100%)`
+          : building ? '#111118' : '#16161f',
+        border: `1px solid ${complete ? '#1a3a2a' : building ? '#1e1e2a' : '#222230'}`,
         boxShadow: complete
-          ? `0 0 18px ${c}18, 0 2px 8px rgba(0,0,0,0.03)`
-          : building ? '0 1px 3px rgba(0,0,0,0.02)' : '0 2px 8px rgba(0,0,0,0.04)',
-        display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px',
+          ? `0 0 24px ${c}15, 0 4px 16px rgba(0,0,0,0.4)`
+          : building ? '0 1px 4px rgba(0,0,0,0.2)' : '0 4px 18px rgba(0,0,0,0.35)',
         overflow: 'hidden', transition: 'all 0.5s ease',
       }}>
+        {/* Colored header strip */}
         <div style={{
-          position: 'absolute', left: 0, top: 0, bottom: 0, width: 3,
-          backgroundColor: complete ? '#10b981' : building ? '#d1d5db' : c,
-          borderRadius: '12px 0 0 12px', transition: 'background-color 0.5s ease',
+          position: 'absolute', left: 0, top: 0, right: 0, height: 4,
+          background: complete
+            ? 'linear-gradient(90deg, #10b981, #34d399)'
+            : building
+              ? 'linear-gradient(90deg, #2a2a38, #2a2a38)'
+              : `linear-gradient(90deg, ${c}, ${c}cc)`,
+          transition: 'background 0.5s ease',
+          borderRadius: '10px 10px 0 0',
         }} />
 
+        {/* Content area */}
         <div style={{
-          width: 34, height: 34, borderRadius: 9, flexShrink: 0,
-          background: building ? '#f3f4f6' : `linear-gradient(135deg, ${c}14, ${c}06)`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 15, transition: 'all 0.5s ease',
+          position: 'absolute', left: 0, top: 4, right: 0, bottom: 0,
+          display: 'flex', alignItems: 'center', gap: 10, padding: '0 13px',
         }}>
-          {node.icon}
-        </div>
-
-        <div style={{ flex: 1, minWidth: 0 }}>
+          {/* Icon */}
           <div style={{
-            fontSize: 11, fontWeight: 700,
-            color: building ? '#9ca3af' : complete ? '#065f46' : '#1f2937',
-            transition: 'color 0.4s ease', letterSpacing: '-0.01em',
-          }}>
-            {node.label}
-          </div>
-        </div>
-
-        {complete && (
-          <div style={{
-            position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
-            width: 20, height: 20, borderRadius: '50%', backgroundColor: '#10b981',
+            width: 32, height: 32, borderRadius: 8, flexShrink: 0,
+            background: building
+              ? 'rgba(255,255,255,0.04)'
+              : `linear-gradient(135deg, ${c}1a, ${c}08)`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            animation: 'bounceIn 0.5s cubic-bezier(0.16,1,0.3,1) both',
-            boxShadow: '0 2px 6px rgba(16,185,129,0.3)',
+            fontSize: 15, transition: 'all 0.5s ease',
           }}>
-            <svg viewBox="0 0 10 10" width="9" height="9">
-              <path d="M2 5l2 2L8 3" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            {node.icon}
           </div>
-        )}
 
+          {/* Label */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{
+              fontSize: 12, fontWeight: 700,
+              color: building ? '#3a3a48' : complete ? '#6ee7b7' : '#e8e8f0',
+              transition: 'color 0.4s ease', letterSpacing: '-0.01em',
+              lineHeight: 1.2,
+            }}>
+              {node.label}
+            </div>
+            <div style={{
+              fontSize: 9, fontWeight: 500,
+              color: building ? '#222' : complete ? '#065f46' : '#4a4a58',
+              marginTop: 2, transition: 'color 0.4s ease',
+            }}>
+              {complete ? 'Completed' : building ? 'Building...' : state === 'built' ? 'Ready' : ''}
+            </div>
+          </div>
+
+          {/* Complete checkmark */}
+          {complete && (
+            <div style={{
+              width: 20, height: 20, borderRadius: '50%', backgroundColor: '#10b981',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+              animation: 'bounceIn 0.5s cubic-bezier(0.16,1,0.3,1) both',
+              boxShadow: '0 0 10px rgba(16,185,129,0.35)',
+            }}>
+              <svg viewBox="0 0 10 10" width="9" height="9">
+                <path d="M2 5l2 2L8 3" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          )}
+        </div>
+
+        {/* Building shimmer */}
         {building && (
           <div style={{
-            position: 'absolute', inset: 0, borderRadius: 12,
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%)',
+            position: 'absolute', inset: 0, borderRadius: 10,
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%)',
             backgroundSize: '200% 100%',
             animation: 'shimmerSweep 1.6s ease-in-out infinite',
           }} />
         )}
       </div>
 
+      {/* Agent icon */}
       {assigning && (
         <div style={{
           position: 'absolute', top: -26, left: '50%', transform: 'translateX(-50%)',
@@ -1658,7 +1790,7 @@ const FlowNode = ({ node, state, agentColor }) => {
       )}
       {(state === 'populated' || complete) && !assigning && (
         <div style={{
-          position: 'absolute', top: -18, right: -4,
+          position: 'absolute', top: -18, right: -4, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))',
           animation: 'bounceIn 0.4s cubic-bezier(0.16,1,0.3,1) both',
         }}>
           <AgentIcon color={agentColor} size={17} />
