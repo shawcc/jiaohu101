@@ -91,7 +91,7 @@ const STACK_CARDS = [
 
 const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) => {
   const [waterfallOffset, setWaterfallOffset] = useState(0)
-  const [activeAgentLane, setActiveAgentLane] = useState(1)
+  const [activeAgentLane, setActiveAgentLane] = useState(null)
 
   useEffect(() => {
     if (card.id !== 'workflows' || illustrationVariant !== 'v5') return undefined
@@ -843,52 +843,54 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
     const agentPeople = [
       { name: 'Code Agent', role: 'Engineering', origin: 'Create', action: 'Create custom agent', desc: 'Built by your team for code review, implementation tasks, and release checks.', color: '#5B5FE3', initials: 'CA' },
       { name: 'Research Agent', role: 'GTM research', origin: 'Bring', action: 'Bring external agent', desc: 'Connect an agent your team already uses for market scans and account research.', color: '#3EAB6E', initials: 'RA' },
-      { name: 'CRM Agent', role: 'Sales ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'A ready-to-use assistant for lead enrichment, qualification, and CRM hygiene.', color: '#34D399', initials: 'CRM' },
+      { name: 'CRM Agent', role: 'Sales ops', origin: 'Hire', action: 'Hire ready-made agent', desc: 'A ready-to-use assistant for lead enrichment, qualification, and CRM hygiene.', color: '#34D399', initials: 'CRM' },
       { name: 'Design Agent', role: 'Creative ops', origin: 'Bring', action: 'Bring external agent', desc: 'Plug in a specialist agent for creative ideation, asset review, and brand checks.', color: '#A78BFA', initials: 'DA' },
-      { name: 'Data Agent', role: 'Analytics', origin: 'Ready', action: 'Use ready-made agent', desc: 'Analyze dashboards, explain metric changes, and turn insights into next actions.', color: '#0EA5E9', initials: 'BI' },
+      { name: 'Data Agent', role: 'Analytics', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Analyze dashboards, explain metric changes, and turn insights into next actions.', color: '#0EA5E9', initials: 'BI' },
       { name: 'Ops Agent', role: 'Internal tools', origin: 'Create', action: 'Create custom agent', desc: 'Create a private agent for IT requests, approvals, permissions, and internal tasks.', color: '#F59E0B', initials: 'OA' },
       { name: 'Legal Agent', role: 'Risk review', origin: 'Bring', action: 'Bring external agent', desc: 'Bring an existing review agent into approval flows and compliance checkpoints.', color: '#EF4444', initials: 'LA' },
       { name: 'PM Agent', role: 'Product', origin: 'Create', action: 'Create custom agent', desc: 'Build a product agent that understands specs, roadmap context, and release rituals.', color: '#787BEE', initials: 'PM' },
-      { name: 'QA Agent', role: 'Quality', origin: 'Ready', action: 'Use ready-made agent', desc: 'Run test plans, summarize defects, and keep release quality visible.', color: '#06B6D4', initials: 'QA' },
-      { name: 'Support Agent', role: 'Customer support', origin: 'Ready', action: 'Use ready-made agent', desc: 'Triage tickets, draft replies, and escalate issues with context.', color: '#10B981', initials: 'SA' },
+      { name: 'QA Agent', role: 'Quality', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Run test plans, summarize defects, and keep release quality visible.', color: '#06B6D4', initials: 'QA' },
+      { name: 'Support Agent', role: 'Customer support', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Triage tickets, draft replies, and escalate issues with context.', color: '#10B981', initials: 'SA' },
       { name: 'Security Agent', role: 'Security', origin: 'Bring', action: 'Bring external agent', desc: 'Bring a specialized security agent into review and approval workflows.', color: '#111827', initials: 'SEC' },
       { name: 'Finance Agent', role: 'Finance ops', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent for spend checks, invoice reviews, and approval routing.', color: '#D97706', initials: 'FA' },
-      { name: 'HR Agent', role: 'People ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'Help employees with onboarding, policy lookup, and internal requests.', color: '#EC4899', initials: 'HR' },
+      { name: 'HR Agent', role: 'People ops', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Help employees with onboarding, policy lookup, and internal requests.', color: '#EC4899', initials: 'HR' },
       { name: 'Content Agent', role: 'Marketing', origin: 'Create', action: 'Create custom agent', desc: 'Build a content agent that understands brand voice and campaign playbooks.', color: '#8B5CF6', initials: 'CO' },
       { name: 'Sales Agent', role: 'Revenue', origin: 'Bring', action: 'Bring external agent', desc: 'Connect your existing sales assistant to pipeline and account workflows.', color: '#2563EB', initials: 'SL' },
-      { name: 'Meeting Agent', role: 'Productivity', origin: 'Ready', action: 'Use ready-made agent', desc: 'Capture meeting notes, assign follow-ups, and sync decisions.', color: '#14B8A6', initials: 'MT' },
+      { name: 'Meeting Agent', role: 'Productivity', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Capture meeting notes, assign follow-ups, and sync decisions.', color: '#14B8A6', initials: 'MT' },
       { name: 'SRE Agent', role: 'Operations', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent for incidents, runbooks, and system reliability checks.', color: '#F97316', initials: 'SR' },
-      { name: 'Docs Agent', role: 'Knowledge', origin: 'Ready', action: 'Use ready-made agent', desc: 'Keep specs, decisions, and team knowledge searchable and current.', color: '#64748B', initials: 'DOC' },
+      { name: 'Docs Agent', role: 'Knowledge', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Keep specs, decisions, and team knowledge searchable and current.', color: '#64748B', initials: 'DOC' },
       { name: 'Partner Agent', role: 'Ecosystem', origin: 'Bring', action: 'Bring external agent', desc: 'Bring partner-built agents into your controlled workflow environment.', color: '#7C3AED', initials: 'PA' },
       { name: 'Procurement Agent', role: 'Procurement', origin: 'Create', action: 'Create custom agent', desc: 'Create a private agent for sourcing, vendor checks, and purchase approvals.', color: '#B45309', initials: 'PR' },
-      { name: 'Localization Agent', role: 'Global ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'Translate, localize, and review assets across markets.', color: '#0891B2', initials: 'LO' },
+      { name: 'Localization Agent', role: 'Global ops', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Translate, localize, and review assets across markets.', color: '#0891B2', initials: 'LO' },
       { name: 'Customer Agent', role: 'Customer success', origin: 'Bring', action: 'Bring external agent', desc: 'Connect a customer-facing agent into renewal and onboarding workflows.', color: '#059669', initials: 'CS' },
-      { name: 'Release Agent', role: 'Release ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'Coordinate release checklists, blockers, and launch approvals.', color: '#4F46E5', initials: 'RL' },
+      { name: 'Release Agent', role: 'Release ops', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Coordinate release checklists, blockers, and launch approvals.', color: '#4F46E5', initials: 'RL' },
       { name: 'Insights Agent', role: 'Strategy', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent that turns market, product, and customer signals into decisions.', color: '#9333EA', initials: 'IN' },
     ]
     const emptySeatIndex = 999
+    const hasActiveAgent = activeAgentLane !== null
     const isEmptySeatActive = activeAgentLane === emptySeatIndex
     const emptySeatInfo = {
       name: 'Open seat',
       role: 'Your next agent',
-      action: 'Bring your agent or create one',
-      desc: 'This empty seat is reserved for an existing external agent, or a new private agent created in Meegle.',
+      action: 'Bring, create, or hire an agent',
+      desc: 'This empty seat can be filled by bringing your own agent, creating a private one, or hiring a ready-made agent.',
       color: '#F59E0B',
     }
-    const activePerson = isEmptySeatActive ? emptySeatInfo : (agentPeople[activeAgentLane % agentPeople.length] || agentPeople[0])
+    const activePerson = isEmptySeatActive ? emptySeatInfo : (hasActiveAgent ? agentPeople[activeAgentLane % agentPeople.length] : agentPeople[0])
     const originStyles = {
-      Ready: { color: '#3EAB6E', label: 'Ready-made' },
+      Hire: { color: '#3EAB6E', label: 'Hire an agent' },
       Bring: { color: '#5B5FE3', label: 'Bring your agent' },
       Create: { color: '#F59E0B', label: 'Create your agent' },
     }
-    const activeOrigin = isEmptySeatActive ? { color: '#F59E0B', label: 'Bring or create' } : originStyles[activePerson.origin]
-    const rows = Array.from({ length: 11 }, (_, row) => ({ row, cols: row < 2 ? 11 : row < 6 ? 12 : 13 }))
+    const activeOrigin = isEmptySeatActive ? { color: '#F59E0B', label: 'Bring · Create · Hire' } : originStyles[activePerson.origin]
+    const rows = Array.from({ length: 12 }, (_, row) => ({ row, cols: row < 3 ? 16 : row < 7 ? 17 : 18 }))
     const occupiedSeats = new Map([
-      ['3-5', 0], ['3-6', 1], ['4-3', 2], ['4-8', 3], ['5-5', 4], ['5-6', 5], ['5-9', 6],
-      ['6-2', 7], ['6-4', 8], ['6-7', 9], ['6-10', 10], ['7-3', 11], ['7-6', 12], ['7-8', 13], ['7-11', 14],
-      ['8-1', 15], ['8-4', 16], ['8-6', 17], ['8-9', 18], ['9-2', 19], ['9-5', 20], ['9-8', 21], ['10-1', 22], ['10-4', 23], ['10-10', 24],
+      ['2-7', 0], ['2-8', 1], ['3-5', 2], ['3-9', 3], ['3-12', 4], ['4-3', 5], ['4-7', 6], ['4-10', 7], ['4-14', 8],
+      ['5-2', 9], ['5-5', 10], ['5-8', 11], ['5-11', 12], ['5-15', 13], ['6-4', 14], ['6-7', 15], ['6-10', 16], ['6-13', 17],
+      ['7-1', 18], ['7-4', 19], ['7-8', 20], ['7-12', 21], ['7-15', 22], ['8-3', 23], ['8-6', 0], ['8-9', 1], ['8-13', 2], ['8-16', 3],
+      ['9-1', 4], ['9-5', 5], ['9-8', 6], ['9-11', 7], ['9-14', 8], ['10-2', 9], ['10-6', 10], ['10-9', 11], ['10-13', 12], ['11-4', 13], ['11-8', 14], ['11-12', 15],
     ])
-    const emptySeatKey = '10-11'
+    const emptySeatKey = '10-16'
 
     const renderAgent = (person, active, scale) => (
       <div className="absolute left-1/2 top-[-18px] z-20 -translate-x-1/2" style={{ transform: `translateX(-50%) ${active ? 'translateY(-8px) scale(1.1)' : ''}` }}>
@@ -910,7 +912,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
     )
 
     return (
-      <div className="relative h-full min-h-[440px] w-full overflow-hidden">
+      <div className="relative h-full min-h-[440px] w-full overflow-hidden" onMouseLeave={() => setActiveAgentLane(null)}>
         <style>{`
           @keyframes agentSeatSpotlight {
             0%, 100% { opacity: 0.16; transform: scale(0.88); }
@@ -960,14 +962,14 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
         </svg>
 
         <div className="absolute left-5 top-5 z-40 rounded-full border border-white/15 bg-white/[0.10] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-white/80 shadow-[0_12px_28px_rgba(0,0,0,0.18)] backdrop-blur">
-          Create or bring your agent
+          Bring · Create · Hire
         </div>
 
-        <div className="absolute inset-x-3 bottom-[-10px] top-[118px] z-30">
+        <div className="absolute bottom-[-22px] left-1/2 top-[122px] z-30 w-[124%] -translate-x-1/2">
           {rows.map(({ row, cols }) => {
-            const scale = 0.78 + row * 0.035
+            const scale = 0.84 + row * 0.04
             return (
-              <div key={`front-row-${row}`} className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, marginBottom: row < 7 ? 3 : 5 }}>
+              <div key={`front-row-${row}`} className="grid gap-x-2 gap-y-2" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, marginBottom: row < 8 ? 5 : 7 }}>
                 {Array.from({ length: cols }).map((_, col) => {
                   const key = `${row}-${col}`
                   const empty = key === emptySeatKey
@@ -986,21 +988,21 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                         if (empty) setActiveAgentLane(emptySeatIndex)
                         if (person) setActiveAgentLane(agentIdx)
                       }}
-                      className="relative min-h-[27px] rounded-t-[8px] transition-all duration-300"
+                      className="relative min-h-[38px] rounded-t-[10px] transition-all duration-300"
                       style={{ zIndex: active ? 70 : 10 + row }}
                     >
                       {person && renderAgent(person, active, scale)}
                       {empty && (
                         <div className="absolute left-1/2 top-[-14px] z-20 -translate-x-1/2">
                           {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full bg-[#F59E0B]" />}
-                          <div className={`flex h-9 w-9 items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/60 bg-white/10 text-white/70'}`}>
+                          <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/60 bg-white/10 text-white/70'}`}>
                             <span className="text-[18px] font-black leading-none">+</span>
                           </div>
                         </div>
                       )}
-                      <div className={`relative h-full min-h-[27px] rounded-t-[8px] border border-[#5C0C0D]/60 bg-gradient-to-b from-[#B93425] via-[#8E1D18] to-[#5C0C0D] shadow-[inset_0_3px_0_rgba(255,255,255,0.16),0_7px_12px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'brightness-125 ring-2 ring-white/70' : ''}`}>
-                        <div className="absolute inset-x-1 top-1 h-1.5 rounded-full bg-white/18" />
-                        <div className="absolute bottom-0 left-1/2 h-[32%] w-[84%] -translate-x-1/2 rounded-t-[6px] bg-black/12" />
+                      <div className={`relative h-full min-h-[38px] rounded-t-[10px] border border-[#5C0C0D]/60 bg-gradient-to-b from-[#B93425] via-[#8E1D18] to-[#5C0C0D] shadow-[inset_0_3px_0_rgba(255,255,255,0.16),0_7px_12px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'brightness-125 ring-2 ring-white/70' : ''}`}>
+                        <div className="absolute inset-x-1 top-1 h-2 rounded-full bg-white/18" />
+                        <div className="absolute bottom-0 left-1/2 h-[32%] w-[84%] -translate-x-1/2 rounded-t-[8px] bg-black/12" />
                         {empty && <div className="absolute inset-1 rounded-t-[7px] border border-dashed border-white/55 bg-white/8" />}
                       </div>
                     </button>
@@ -1011,6 +1013,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           })}
         </div>
 
+        {hasActiveAgent && (
         <div className="absolute right-4 top-1/2 z-[90] w-[218px] -translate-y-1/2 rounded-[28px] border border-white/80 bg-white/[0.93] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
           <div className="mb-3 flex items-center justify-between">
             <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.12em]" style={{ color: activeOrigin.color, backgroundColor: `${activeOrigin.color}14` }}>
@@ -1028,18 +1031,21 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           <div className="mt-3 overflow-hidden rounded-2xl border border-[#EEF0F4] bg-white p-3">
             {isEmptySeatActive ? (
               <div>
-                <div className="mb-3 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                <div className="mb-3 grid grid-cols-3 items-center gap-2">
                   <div className="rounded-xl border border-[#E8EAFF] bg-[#F6F7FF] p-2 text-center">
                     <div className="text-[8px] font-black text-[#5B5FE3]">Bring</div>
                     <div className="mt-1 h-6 rounded-md bg-[#5B5FE3]/12" />
                   </div>
-                  <div className="text-[18px] font-black text-[#8F959E]">or</div>
+                  <div className="rounded-xl border border-[#DDF6E8] bg-[#F3FCF7] p-2 text-center">
+                    <div className="text-[8px] font-black text-[#3EAB6E]">Hire</div>
+                    <div className="mt-1 h-6 rounded-md bg-[#3EAB6E]/15" />
+                  </div>
                   <div className="rounded-xl border border-[#FFE8BF] bg-[#FFF8EA] p-2 text-center">
                     <div className="text-[8px] font-black text-[#F59E0B]">Create</div>
                     <div className="mt-1 flex h-6 items-center justify-center rounded-md bg-[#F59E0B] text-white">+</div>
                   </div>
                 </div>
-                <div className="text-[9px] leading-4 text-[#8F959E]">Use the open seat for an external agent, or create a private agent in Meegle.</div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Use the open seat to bring an external agent, create a private one, or hire a ready-made agent.</div>
               </div>
             ) : activePerson.origin === 'Bring' ? (
               <div>
@@ -1086,11 +1092,12 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                     </div>
                   ))}
                 </div>
-                <div className="text-[9px] leading-4 text-[#8F959E]">Pick a ready-made agent and place it directly into a workflow.</div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Hire a ready-made agent and place it directly into a workflow.</div>
               </div>
             )}
           </div>
         </div>
+        )}
       </div>
     )
   }
