@@ -6,14 +6,11 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  GitBranch,
+  Eye,
   Globe,
-  Layers,
-  LineChart,
   Lock,
   Menu,
   MessageSquare,
-  Play,
   Shield,
   Sparkles,
   Workflow,
@@ -31,6 +28,29 @@ const METRICS = [
   { value: 4.2, suffix: 'x', label: 'Faster project delivery', decimals: 1 },
   { value: 67, suffix: '%', label: 'Reduction in manual handoffs', decimals: 0 },
   { value: 99.9, suffix: '%', label: 'Enterprise uptime SLA', decimals: 1 }
+]
+
+const CONTROL_PILLARS = [
+  {
+    title: 'Full Visibility',
+    desc: 'Track every agent action, decision, and output in real time. Nothing your AI does ever happens in the dark.',
+    icon: <Eye size={16} />
+  },
+  {
+    title: 'Granular Permissions',
+    desc: 'Define exactly what each agent can see, touch, and execute. Read, write, or create — nothing beyond what you explicitly allow.',
+    icon: <Lock size={16} />
+  },
+  {
+    title: 'Human in the Loop',
+    desc: 'Simulate before you activate. Validate every agent action before it goes live and keep humans in command at every critical step.',
+    icon: <CheckCircle2 size={16} />
+  },
+  {
+    title: 'Data Sovereignty',
+    desc: 'Your data never trains AI models. Your content stays yours. What happens in your workspace stays in your workspace.',
+    icon: <Shield size={16} />
+  }
 ]
 
 const STACK_CARDS = [
@@ -718,8 +738,8 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             `}</style>
 
 
-            <div className="absolute top-5 left-0 z-20 rounded-full bg-white/88 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
-            <div className="absolute top-5 right-0 z-20 rounded-full bg-white/82 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">scroll to move</div>
+            <div className="absolute top-5 left-0 z-20 px-2 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">SOP waterfall</div>
+            <div className="absolute top-5 right-0 z-20 px-2 py-1 text-[10px] font-bold text-[#8F959E]">scroll to move</div>
 
             <div className="relative z-10 flex h-full gap-4 px-0 pt-16 pb-6">
               {[
@@ -728,6 +748,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                     { title: 'CRM Lead-to-Deal', tag: 'CRM / Sales', color: '#34D399', h: 210, agent: 'Sales Agent', summary: '线索进入后，销售、法务、商务审批按同一 SOP 横向流转。', primary: ['Lead', 'Qualify', 'Demo', 'Proposal', 'Deal'], branch: ['Legal', 'Discount', 'CSM'] },
                     { title: 'Customer Onboarding', tag: 'CSM', color: '#5B5FE3', h: 202, agent: 'CS Agent', summary: '客户签约后，配置、迁移、培训、验收形成标准交付路径。', primary: ['Kickoff', 'Setup', 'Migrate', 'Train', 'Go-live'], branch: ['Risk', 'Support', 'Review'] },
                     { title: 'Renewal Management', tag: 'Revenue', color: '#A78BFA', h: 194, agent: 'RevOps Agent', summary: '续约窗口触发健康度评估、风险处理和商务跟进。', primary: ['Usage', 'Health', 'Risk', 'Exec', 'Renew'], branch: ['Churn', 'Expansion'] },
+                    { title: 'IT Service Request', tag: 'Internal Ops', color: '#5B5FE3', h: 190, agent: 'IT Agent', summary: '员工请求进入审批、权限开通、执行和通知闭环。', primary: ['Request', 'Approve', 'Provision', 'Notify', 'Done'], branch: ['Permission', 'SLA'] },
                   ]
                 },
                 {
@@ -735,6 +756,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                     { title: 'Product Development', tag: 'R&D', color: '#5B5FE3', h: 218, agent: 'PM Agent', summary: '需求、设计、研发、测试、发布都在横向工作流里有序发生。', primary: ['PRD', 'Design', 'Dev', 'QA', 'Release'], branch: ['Tech', 'Docs', 'Monitor'] },
                     { title: 'GTM Campaign Launch', tag: 'GTM', color: '#787BEE', h: 210, agent: 'GTM Agent', summary: '策略、内容、渠道、投放、复盘沉淀为可复用打法。', primary: ['Strategy', 'Content', 'Channel', 'Launch', 'Review'], branch: ['Creative', 'Budget', 'Report'] },
                     { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', h: 198, agent: 'Risk Agent', summary: '合规事项按审批链路流转，例外、审计、归档都有明确节点。', primary: ['Submit', 'Review', 'Approve', 'Audit', 'Archive'], branch: ['Exception', 'Policy'] },
+                    { title: 'Content Production', tag: 'Marketing Ops', color: '#34D399', h: 194, agent: 'Content Agent', summary: '选题、创作、评审、发布形成标准内容生产 SOP。', primary: ['Brief', 'Draft', 'Review', 'Publish', 'Reuse'], branch: ['SEO', 'Design'] },
                   ]
                 },
               ].map((column, columnIdx) => {
@@ -909,39 +931,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
   return null
 }
-
-const AI_TABS = [
-  {
-    id: 'planning',
-    label: 'Smart Planning',
-    icon: <GitBranch size={20} />,
-    items: [
-      { title: 'Sprint Planning', desc: 'AI analyzes velocity and backlog to auto-generate optimized sprints.' },
-      { title: 'Resource Allocation', desc: 'Predictive models forecast capacity and suggest workload balancing.' },
-      { title: 'Risk Detection', desc: 'Real-time bottleneck alerts before they escalate into blockers.' }
-    ]
-  },
-  {
-    id: 'execution',
-    label: 'Intelligent Execution',
-    icon: <Play size={20} />,
-    items: [
-      { title: 'Auto Classification', desc: 'Intelligent tagging of every task, ticket, and document.' },
-      { title: 'Requirement Auditing', desc: 'AI reviews PRDs for completeness and cross-team consistency.' },
-      { title: 'Health Monitoring', desc: 'Continuous pulse checks with executive-ready summaries.' }
-    ]
-  },
-  {
-    id: 'analytics',
-    label: 'Deep Analytics',
-    icon: <LineChart size={20} />,
-    items: [
-      { title: 'Progress Synthesis', desc: 'Automated charts and narrative summaries for stakeholders.' },
-      { title: 'Trend Analysis', desc: 'Pattern recognition across sprints, teams, and quarters.' },
-      { title: 'Custom Reports', desc: 'Natural language queries generate visual dashboards on demand.' }
-    ]
-  }
-]
 
 const AnimatedCounter = ({ target, suffix, decimals }) => {
   const [count, setCount] = useState(0)
@@ -1584,7 +1573,6 @@ const AIAssistantSection = () => {
 
 const MeegleHomepage = () => {
   const [mobileMenu, setMobileMenu] = useState(false)
-  const [activeTab, setActiveTab] = useState('planning')
   const [cascadeVariant, setCascadeVariant] = useState('fullbleed')
   const [illustrationVariant, setIllustrationVariant] = useState('v5')
   const heroRef = useRef(null)
@@ -1898,61 +1886,49 @@ const MeegleHomepage = () => {
         ))}
       </div>
 
-      {/* AI CAPABILITIES — Tab Switching */}
-      <section className="relative py-32 md:py-44 bg-white">
-        <div className="max-w-[1340px] mx-auto px-6">
-          <div className="max-w-[600px] mb-16">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#F4F6FF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-5">
-              <Sparkles size={14} /> AI-Native Capabilities
-            </div>
-            <h2 className="text-[48px] md:text-[56px] leading-[1.06] font-black tracking-[-0.05em] text-[#0A0A14]">
-              Out-of-the-box intelligence.
-            </h2>
-            <p className="mt-4 text-[17px] leading-7 text-[#646A73]">
-              No configuration needed. AI is embedded into every project workflow, ready from day one.
-            </p>
-          </div>
+      {/* AI ASSISTANT — Animated Chat Interface */}
+      <AIAssistantSection />
 
-          <div className="flex items-center gap-2 mb-12 p-1 rounded-2xl bg-[#F4F6F9] w-fit">
-            {AI_TABS.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 rounded-xl px-5 py-3 text-[14px] font-bold transition-all duration-300 ${
-                  activeTab === tab.id
-                    ? 'bg-white text-[#111827] shadow-[0_4px_16px_rgba(15,23,42,0.06)]'
-                    : 'text-[#8F959E] hover:text-[#646A73]'
-                }`}
-              >
-                <span className={activeTab === tab.id ? 'text-[#5B5FE3]' : ''}>{tab.icon}</span>
-                {tab.label}
-              </button>
-            ))}
-          </div>
+      {/* CONTROL — Governance Pillars */}
+      <section className="relative py-32 md:py-44 bg-[#FBFBFE] overflow-hidden">
+        <div className="absolute top-[-8%] left-[-10%] h-[520px] w-[520px] rounded-full bg-[#5B5FE3]/[0.02] blur-[120px]" />
+        <div className="absolute bottom-[-12%] right-[-8%] h-[520px] w-[520px] rounded-full bg-[#A78BFA]/[0.03] blur-[120px]" />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 transition-all duration-500">
-            {AI_TABS.find(t => t.id === activeTab)?.items.map((item, idx) => (
-              <div
-                key={item.title}
-                className="group rounded-[24px] border border-black/[0.04] bg-[#FAFBFC] p-7 hover:bg-white hover:border-[#D8DFFF] hover:shadow-[0_20px_60px_rgba(91,94,227,0.06)] transition-all duration-500 animate-scale-in"
-                style={{ animationDelay: `${idx * 0.1}s` }}
-              >
-                <div className="w-11 h-11 rounded-xl bg-[#F4F6FF] flex items-center justify-center mb-5 group-hover:bg-[#E8EBFF] transition-colors">
-                  <Layers size={20} className="text-[#5B5FE3]" />
-                </div>
-                <h3 className="text-[17px] font-bold text-[#111827] mb-2">{item.title}</h3>
-                <p className="text-[13px] leading-6 text-[#646A73]">{item.desc}</p>
-                <div className="mt-4 flex items-center gap-1 text-[13px] font-bold text-[#5B5FE3] opacity-0 group-hover:opacity-100 transition-opacity">
-                  Learn more <ArrowUpRight size={14} />
-                </div>
+        <div className="relative max-w-[1340px] mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.88fr_1.12fr] gap-16 lg:gap-20 items-start">
+            <div className="max-w-[420px]">
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#F4F6FF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-6">
+                <Shield size={14} />
+                Governance Built In
               </div>
-            ))}
+              <h2 className="text-[48px] md:text-[72px] leading-[0.92] font-black tracking-[-0.07em] text-[#0A0A14]">
+                AI You Can
+                <br />
+                Control.
+              </h2>
+              <p className="mt-8 text-[18px] leading-8 text-[#646A73] max-w-[380px]">
+                Meegle builds governance into every agent, every workflow, and every data boundary from day one.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 gap-y-14 pt-2">
+              {CONTROL_PILLARS.map((item) => (
+                <div key={item.title} className="max-w-[320px]">
+                  <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#F4EFFF] text-[#A26BEE]">
+                    {item.icon}
+                  </div>
+                  <h3 className="text-[24px] font-black tracking-[-0.04em] text-[#111827]">
+                    {item.title}
+                  </h3>
+                  <p className="mt-4 text-[16px] leading-7 text-[#4B5563]">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
-
-      {/* AI ASSISTANT — Animated Chat Interface */}
-      <AIAssistantSection />
 
       {/* METRICS STRIP — Animated Counters */}
       <section className="relative py-20 overflow-hidden bg-[#0A0A14]">
