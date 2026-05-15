@@ -841,94 +841,137 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
   if (card.id === 'orchestrate') {
     const agentPeople = [
-      { name: 'Code Agent', role: 'Engineering', origin: 'Create', action: 'Create custom agent', desc: 'Built by your team for code review, implementation tasks, and release checks.', color: '#5B5FE3', initials: 'CA', left: '17%', top: '18%', size: 78 },
-      { name: 'Research Agent', role: 'GTM research', origin: 'Bring', action: 'Bring external agent', desc: 'Connect an agent your team already uses for market scans and account research.', color: '#3EAB6E', initials: 'RA', left: '36%', top: '10%', size: 68 },
-      { name: 'CRM Agent', role: 'Sales ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'A ready-to-use assistant for lead enrichment, qualification, and CRM hygiene.', color: '#34D399', initials: 'CRM', left: '53%', top: '23%', size: 82 },
-      { name: 'Design Agent', role: 'Creative ops', origin: 'Bring', action: 'Bring external agent', desc: 'Plug in a specialist agent for creative ideation, asset review, and brand checks.', color: '#A78BFA', initials: 'DA', left: '20%', top: '48%', size: 70 },
-      { name: 'Data Agent', role: 'Analytics', origin: 'Ready', action: 'Use ready-made agent', desc: 'Analyze dashboards, explain metric changes, and turn insights into next actions.', color: '#0EA5E9', initials: 'BI', left: '40%', top: '43%', size: 86 },
-      { name: 'Ops Agent', role: 'Internal tools', origin: 'Create', action: 'Create custom agent', desc: 'Create a private agent for IT requests, approvals, permissions, and internal tasks.', color: '#F59E0B', initials: 'OA', left: '60%', top: '56%', size: 74 },
-      { name: 'Legal Agent', role: 'Risk review', origin: 'Bring', action: 'Bring external agent', desc: 'Bring an existing review agent into approval flows and compliance checkpoints.', color: '#EF4444', initials: 'LA', left: '30%', top: '70%', size: 60 },
-      { name: 'PM Agent', role: 'Product', origin: 'Create', action: 'Create custom agent', desc: 'Build a product agent that understands specs, roadmap context, and release rituals.', color: '#787BEE', initials: 'PM', left: '8%', top: '67%', size: 58 },
+      { name: 'Code Agent', role: 'Engineering', origin: 'Create', action: 'Create custom agent', desc: 'Built by your team for code review, implementation tasks, and release checks.', color: '#5B5FE3', initials: 'CA' },
+      { name: 'Research Agent', role: 'GTM research', origin: 'Bring', action: 'Bring external agent', desc: 'Connect an agent your team already uses for market scans and account research.', color: '#3EAB6E', initials: 'RA' },
+      { name: 'CRM Agent', role: 'Sales ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'A ready-to-use assistant for lead enrichment, qualification, and CRM hygiene.', color: '#34D399', initials: 'CRM' },
+      { name: 'Design Agent', role: 'Creative ops', origin: 'Bring', action: 'Bring external agent', desc: 'Plug in a specialist agent for creative ideation, asset review, and brand checks.', color: '#A78BFA', initials: 'DA' },
+      { name: 'Data Agent', role: 'Analytics', origin: 'Ready', action: 'Use ready-made agent', desc: 'Analyze dashboards, explain metric changes, and turn insights into next actions.', color: '#0EA5E9', initials: 'BI' },
+      { name: 'Ops Agent', role: 'Internal tools', origin: 'Create', action: 'Create custom agent', desc: 'Create a private agent for IT requests, approvals, permissions, and internal tasks.', color: '#F59E0B', initials: 'OA' },
+      { name: 'Legal Agent', role: 'Risk review', origin: 'Bring', action: 'Bring external agent', desc: 'Bring an existing review agent into approval flows and compliance checkpoints.', color: '#EF4444', initials: 'LA' },
+      { name: 'PM Agent', role: 'Product', origin: 'Create', action: 'Create custom agent', desc: 'Build a product agent that understands specs, roadmap context, and release rituals.', color: '#787BEE', initials: 'PM' },
+      { name: 'QA Agent', role: 'Quality', origin: 'Ready', action: 'Use ready-made agent', desc: 'Run test plans, summarize defects, and keep release quality visible.', color: '#06B6D4', initials: 'QA' },
+      { name: 'Support Agent', role: 'Customer support', origin: 'Ready', action: 'Use ready-made agent', desc: 'Triage tickets, draft replies, and escalate issues with context.', color: '#10B981', initials: 'SA' },
+      { name: 'Security Agent', role: 'Security', origin: 'Bring', action: 'Bring external agent', desc: 'Bring a specialized security agent into review and approval workflows.', color: '#111827', initials: 'SEC' },
+      { name: 'Finance Agent', role: 'Finance ops', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent for spend checks, invoice reviews, and approval routing.', color: '#D97706', initials: 'FA' },
+      { name: 'HR Agent', role: 'People ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'Help employees with onboarding, policy lookup, and internal requests.', color: '#EC4899', initials: 'HR' },
+      { name: 'Content Agent', role: 'Marketing', origin: 'Create', action: 'Create custom agent', desc: 'Build a content agent that understands brand voice and campaign playbooks.', color: '#8B5CF6', initials: 'CO' },
+      { name: 'Sales Agent', role: 'Revenue', origin: 'Bring', action: 'Bring external agent', desc: 'Connect your existing sales assistant to pipeline and account workflows.', color: '#2563EB', initials: 'SL' },
+      { name: 'Meeting Agent', role: 'Productivity', origin: 'Ready', action: 'Use ready-made agent', desc: 'Capture meeting notes, assign follow-ups, and sync decisions.', color: '#14B8A6', initials: 'MT' },
+      { name: 'SRE Agent', role: 'Operations', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent for incidents, runbooks, and system reliability checks.', color: '#F97316', initials: 'SR' },
+      { name: 'Docs Agent', role: 'Knowledge', origin: 'Ready', action: 'Use ready-made agent', desc: 'Keep specs, decisions, and team knowledge searchable and current.', color: '#64748B', initials: 'DOC' },
+      { name: 'Partner Agent', role: 'Ecosystem', origin: 'Bring', action: 'Bring external agent', desc: 'Bring partner-built agents into your controlled workflow environment.', color: '#7C3AED', initials: 'PA' },
     ]
-    const activePerson = agentPeople[activeAgentLane] || agentPeople[0]
+    const emptySeatIndex = agentPeople.length
+    const isEmptySeatActive = activeAgentLane === emptySeatIndex
+    const emptySeatInfo = {
+      name: 'Open seat',
+      role: 'Your next agent',
+      origin: 'Create',
+      action: 'Bring your agent or create one',
+      desc: 'Reserve this seat for an existing external agent, or create a private agent from your tools, skills, and business context.',
+      color: '#F59E0B',
+      initials: '+',
+    }
+    const activePerson = isEmptySeatActive ? emptySeatInfo : (agentPeople[activeAgentLane] || agentPeople[0])
     const originStyles = {
       Ready: { color: '#3EAB6E', label: 'Ready-made' },
       Bring: { color: '#5B5FE3', label: 'Bring your agent' },
       Create: { color: '#F59E0B', label: 'Create your agent' },
     }
-    const activeOrigin = originStyles[activePerson.origin]
+    const activeOrigin = isEmptySeatActive ? { color: '#F59E0B', label: 'Bring or create' } : originStyles[activePerson.origin]
+    const theaterRows = [
+      { top: 112, seatWidth: 54, seatHeight: 44, head: 18, gap: 11, seats: [0, 1, 2, 3, 4] },
+      { top: 158, seatWidth: 61, seatHeight: 50, head: 21, gap: 10, seats: [5, 6, 7, 8, 9, 10] },
+      { top: 212, seatWidth: 70, seatHeight: 58, head: 25, gap: 10, seats: [11, 12, 13, 14, 15] },
+      { top: 274, seatWidth: 82, seatHeight: 68, head: 30, gap: 12, seats: [16, 17, 18, emptySeatIndex] },
+    ]
+
+    const renderSeatPerson = (person, active, empty = false) => (
+      <div className="relative mx-auto" style={{ width: empty ? 48 : '62%', height: empty ? 48 : undefined }}>
+        {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full" style={{ backgroundColor: person.color }} />}
+        {empty ? (
+          <div className={`relative flex h-12 w-12 items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.20)]' : 'border-[#F59E0B]/35 bg-white/[0.68] text-[#F59E0B]/70'}`}>
+            <span className="text-[24px] font-black leading-none">+</span>
+          </div>
+        ) : (
+          <div className={`relative aspect-square overflow-hidden rounded-full border bg-[#22272E] shadow-[0_12px_26px_rgba(15,23,42,0.18)] transition-all duration-300 ${active ? 'border-white scale-110' : 'border-white/50'}`}>
+            <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 42% 20%, ${person.color}55, transparent 48%)` }} />
+            <div className="absolute left-[29%] top-[18%] h-[42%] w-[42%] rounded-full bg-[#F4C7A5]" />
+            <div className="absolute left-[35%] top-[33%] flex w-[30%] justify-between">
+              <span className="h-1 w-1 rounded-full bg-[#1F2329]/75" />
+              <span className="h-1 w-1 rounded-full bg-[#1F2329]/75" />
+            </div>
+            <div className="absolute left-[41%] top-[47%] h-1 w-[18%] rounded-full bg-[#9A563D]/50" />
+            <div className="absolute bottom-[-8%] left-[18%] h-[38%] w-[64%] rounded-t-full" style={{ backgroundColor: person.color }} />
+          </div>
+        )}
+      </div>
+    )
 
     return (
-      <div className="relative w-full h-full min-h-[440px] overflow-hidden px-4 py-5">
+      <div className="relative h-full min-h-[440px] w-full overflow-hidden px-4 py-5">
         <style>{`
-          @keyframes agentCrowdFloat {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-7px); }
+          @keyframes agentSeatSpotlight {
+            0%, 100% { opacity: 0.18; transform: scale(0.9); }
+            50% { opacity: 0.34; transform: scale(1.12); }
           }
-          @keyframes agentSpotlight {
-            0%, 100% { opacity: 0.12; transform: scale(0.96); }
-            50% { opacity: 0.24; transform: scale(1.04); }
+          @keyframes auditoriumBeam {
+            0%, 100% { opacity: 0.14; }
+            50% { opacity: 0.26; }
           }
-          .agent-person-float { animation: agentCrowdFloat 5.6s ease-in-out infinite; }
-          .agent-spotlight { animation: agentSpotlight 3.2s ease-in-out infinite; }
+          .agent-seat-spotlight { animation: agentSeatSpotlight 2.8s ease-in-out infinite; filter: blur(1px); }
+          .auditorium-beam { animation: auditoriumBeam 3.8s ease-in-out infinite; }
         `}</style>
 
-        <div className="absolute inset-0 opacity-90" style={{ backgroundImage: 'radial-gradient(circle at 33% 42%, rgba(91,95,227,0.09), transparent 34%), radial-gradient(circle at 58% 66%, rgba(62,171,110,0.10), transparent 32%), radial-gradient(circle at 82% 20%, rgba(245,158,11,0.08), transparent 24%)' }} />
-        <div className="absolute left-6 top-5 z-20 rounded-full border border-white/80 bg-white/[0.72] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-[#3EAB6E] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#FCF7EE] via-[#F6E3C8] to-[#F8FBFF]" />
+        <div className="absolute inset-x-8 top-6 h-[102px] rounded-b-[42px] bg-gradient-to-b from-[#B7793F] to-[#D69A58] shadow-[inset_0_-28px_50px_rgba(111,65,24,0.20)]" />
+        <div className="absolute left-10 top-8 h-[132px] w-20 skew-y-[-12deg] bg-gradient-to-b from-[#D2A06A] to-[#B7793F] opacity-45" />
+        <div className="absolute right-10 top-8 h-[132px] w-20 skew-y-[12deg] bg-gradient-to-b from-[#D2A06A] to-[#B7793F] opacity-45" />
+        <div className="absolute left-1/2 top-5 h-4 w-4 -translate-x-1/2 rounded-full bg-white shadow-[0_0_28px_rgba(255,245,218,0.95)]" />
+        <div className="absolute left-[30%] top-14 h-3 w-3 rounded-full bg-white shadow-[0_0_22px_rgba(255,245,218,0.86)]" />
+        <div className="absolute right-[30%] top-14 h-3 w-3 rounded-full bg-white shadow-[0_0_22px_rgba(255,245,218,0.86)]" />
+        <div className="auditorium-beam pointer-events-none absolute left-[18%] top-4 h-[340px] w-[130px] origin-top rotate-[10deg] bg-gradient-to-b from-white/36 to-transparent blur-xl" />
+        <div className="auditorium-beam pointer-events-none absolute right-[18%] top-4 h-[340px] w-[130px] origin-top rotate-[-10deg] bg-gradient-to-b from-white/36 to-transparent blur-xl" />
+
+        <div className="absolute left-6 top-5 z-30 rounded-full border border-white/80 bg-white/[0.72] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
           Create or bring your agent
         </div>
-        <div className="absolute bottom-6 left-8 h-24 w-[64%] rounded-[50%] bg-[#202842]/[0.06] blur-2xl" />
 
-        <svg viewBox="0 0 640 420" className="pointer-events-none absolute inset-0 h-full w-full">
-          <path d="M390 204 C452 204, 475 208, 515 224" fill="none" stroke={activePerson.color} strokeWidth="2" strokeDasharray="6 8" strokeOpacity="0.34" />
-          <circle cx="515" cy="224" r="4" fill={activePerson.color} opacity="0.7" />
-        </svg>
-
-        <div className="absolute inset-y-10 left-3 right-[210px] z-10">
-          {agentPeople.map((person, idx) => {
-            const active = activeAgentLane === idx
+        <div className="absolute inset-x-3 bottom-0 top-[92px] z-10 overflow-hidden rounded-b-[36px]">
+          {theaterRows.map((row, rowIdx) => {
+            const totalWidth = row.seats.length * row.seatWidth + (row.seats.length - 1) * row.gap
             return (
-              <button
-                key={person.name}
-                type="button"
-                onMouseEnter={() => setActiveAgentLane(idx)}
-                onFocus={() => setActiveAgentLane(idx)}
-                className={`${active ? '' : 'agent-person-float'} absolute text-left transition-all duration-300`}
-                style={{
-                  left: person.left,
-                  top: person.top,
-                  width: person.size,
-                  height: person.size + 42,
-                  animationDelay: `${idx * 0.32}s`,
-                  zIndex: active ? 30 : 10 + idx,
-                  transform: active ? 'translateY(-4px) scale(1.08)' : undefined,
-                }}
-              >
-                <div className="relative mx-auto" style={{ width: person.size, height: person.size }}>
-                  {active && <div className="agent-spotlight absolute inset-[-12px] rounded-full" style={{ backgroundColor: person.color }} />}
-                  <div className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border bg-white shadow-[0_16px_38px_rgba(38,45,64,0.12)] transition-all duration-300 ${active ? 'border-white' : 'border-white/70'}`}>
-                    <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 50% 18%, ${person.color}22, transparent 45%)` }} />
-                    <div className="absolute top-[15%] h-[38%] w-[38%] rounded-full" style={{ backgroundColor: person.color, opacity: active ? 0.20 : 0.12 }} />
-                    <div className="absolute top-[27%] h-[30%] w-[30%] rounded-full bg-[#FFE7D6]" />
-                    <div className="absolute top-[36%] flex w-[13%] justify-between">
-                      <span className="h-1 w-1 rounded-full bg-[#1F2329]/70" />
-                      <span className="h-1 w-1 rounded-full bg-[#1F2329]/70" />
-                    </div>
-                    <div className="absolute top-[48%] h-1 w-[10%] rounded-full bg-[#C26B4A]/45" />
-                    <div className="absolute top-[57%] h-[34%] w-[58%] rounded-t-full" style={{ backgroundColor: person.color }} />
-                    <div className="absolute top-[63%] h-[12%] w-[34%] rounded-t-full bg-white/20" />
-                  </div>
-                </div>
-                <div className={`mt-1 text-center transition-all duration-300 ${active ? 'opacity-100' : 'opacity-70'}`}>
-                  <div className="text-[10px] font-black text-[#111827]">{person.name}</div>
-                  <div className="text-[8px] font-semibold text-[#8F959E]">{person.role}</div>
-                </div>
-              </button>
+              <div key={`seat-row-${rowIdx}`} className="absolute left-1/2 flex -translate-x-1/2 items-end" style={{ top: row.top, gap: row.gap, width: totalWidth }}>
+                {row.seats.map((agentIdx) => {
+                  const empty = agentIdx === emptySeatIndex
+                  const person = empty ? emptySeatInfo : agentPeople[agentIdx]
+                  const active = activeAgentLane === agentIdx
+                  return (
+                    <button
+                      key={empty ? 'open-seat' : person.name}
+                      type="button"
+                      onMouseEnter={() => setActiveAgentLane(agentIdx)}
+                      onFocus={() => setActiveAgentLane(agentIdx)}
+                      className="group relative shrink-0 transition-all duration-300"
+                      style={{ width: row.seatWidth, zIndex: active ? 50 : 20 + rowIdx }}
+                    >
+                      <div className={`absolute left-1/2 top-[-${row.head}px] -translate-x-1/2 transition-all duration-300`} style={{ top: -row.head, width: empty ? 48 : row.head * 1.55 }}>
+                        {renderSeatPerson(person, active, empty)}
+                      </div>
+                      <div className={`relative rounded-t-[18px] border border-[#8C4A20]/35 bg-gradient-to-b from-[#CB6E26] to-[#9F4618] shadow-[0_12px_24px_rgba(91,49,19,0.28)] transition-all duration-300 ${active ? 'brightness-110 ring-2 ring-white/80' : ''}`} style={{ height: row.seatHeight }}>
+                        <div className="absolute inset-x-2 top-2 h-2 rounded-full bg-white/18" />
+                        <div className="absolute inset-x-0 bottom-0 h-[34%] rounded-t-[14px] bg-black/10" />
+                        {empty && <div className="absolute inset-1 rounded-t-[16px] border border-dashed border-white/60 bg-white/10" />}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
             )
           })}
         </div>
 
-        <div className="absolute right-4 top-1/2 z-30 w-[210px] -translate-y-1/2 rounded-[28px] border border-white/80 bg-white/[0.90] p-4 shadow-[0_24px_70px_rgba(38,45,64,0.14)] backdrop-blur-xl">
+        <div className="absolute right-4 top-1/2 z-[70] w-[218px] -translate-y-1/2 rounded-[28px] border border-white/80 bg-white/[0.92] p-4 shadow-[0_24px_70px_rgba(38,45,64,0.14)] backdrop-blur-xl">
           <div className="mb-3 flex items-center justify-between">
             <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.12em]" style={{ color: activeOrigin.color, backgroundColor: `${activeOrigin.color}14` }}>
               {activeOrigin.label}
@@ -943,7 +986,22 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <div className="text-[12px] font-black text-[#111827]">{activePerson.action}</div>
           </div>
           <div className="mt-3 overflow-hidden rounded-2xl border border-[#EEF0F4] bg-white p-3">
-            {activePerson.origin === 'Bring' && (
+            {isEmptySeatActive ? (
+              <div>
+                <div className="mb-3 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+                  <div className="rounded-xl border border-[#E8EAFF] bg-[#F6F7FF] p-2 text-center">
+                    <div className="text-[8px] font-black text-[#5B5FE3]">Bring</div>
+                    <div className="mt-1 h-6 rounded-md bg-[#5B5FE3]/12" />
+                  </div>
+                  <div className="text-[18px] font-black text-[#8F959E]">or</div>
+                  <div className="rounded-xl border border-[#FFE8BF] bg-[#FFF8EA] p-2 text-center">
+                    <div className="text-[8px] font-black text-[#F59E0B]">Create</div>
+                    <div className="mt-1 flex h-6 items-center justify-center rounded-md bg-[#F59E0B] text-white">+</div>
+                  </div>
+                </div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Use the open seat for an external agent, or create a private agent in Meegle.</div>
+              </div>
+            ) : activePerson.origin === 'Bring' ? (
               <div>
                 <div className="mb-3 flex items-center justify-between">
                   <div className="rounded-xl border border-[#E8EAFF] bg-[#F6F7FF] px-2.5 py-2">
@@ -962,8 +1020,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                 </div>
                 <div className="text-[9px] leading-4 text-[#8F959E]">Bring an existing agent through MCP, CLI, API, or partner integrations.</div>
               </div>
-            )}
-            {activePerson.origin === 'Create' && (
+            ) : activePerson.origin === 'Create' ? (
               <div>
                 <div className="mb-3 grid grid-cols-[1fr_auto] gap-2">
                   <div className="rounded-xl border border-[#FFE8BF] bg-[#FFF8EA] p-2">
@@ -979,8 +1036,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                 </div>
                 <div className="text-[9px] leading-4 text-[#8F959E]">Create a private agent from templates, skills, tools, and business context.</div>
               </div>
-            )}
-            {activePerson.origin === 'Ready' && (
+            ) : (
               <div>
                 <div className="mb-3 grid grid-cols-3 gap-1.5">
                   {[0, 1, 2].map((item) => (
@@ -994,15 +1050,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               </div>
             )}
           </div>
-          <div className="mt-3 flex items-center gap-1.5">
-            {['Ready', 'Bring', 'Create'].map((origin) => (
-              <span key={origin} className="h-1.5 flex-1 rounded-full transition-all duration-300" style={{ backgroundColor: originStyles[origin].color, opacity: activePerson.origin === origin ? 0.62 : 0.14 }} />
-            ))}
-          </div>
-        </div>
-
-        <div className="absolute bottom-7 right-[238px] z-20 rounded-full border border-white/80 bg-white/[0.74] px-3 py-1.5 text-[9px] font-bold text-[#8F959E] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
-          hover an agent to inspect
         </div>
       </div>
     )
