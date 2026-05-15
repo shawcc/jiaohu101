@@ -876,7 +876,10 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
       desc: 'This empty seat can be filled by bringing your own agent, creating a private one, or hiring a ready-made agent.',
       color: '#F59E0B',
     }
-    const activePerson = isEmptySeatActive ? emptySeatInfo : (hasActiveAgent ? agentPeople[activeAgentLane % agentPeople.length] : agentPeople[0])
+    const activeSeatAgentIndex = hasActiveAgent && !isEmptySeatActive
+      ? (Math.floor(activeAgentLane / 100) * 18 + activeAgentLane % 100) % agentPeople.length
+      : 0
+    const activePerson = isEmptySeatActive ? emptySeatInfo : (hasActiveAgent ? agentPeople[activeSeatAgentIndex] : agentPeople[0])
     const originStyles = {
       Hire: { color: '#3EAB6E', label: 'Hire an agent' },
       Bring: { color: '#5B5FE3', label: 'Bring your agent' },
@@ -884,12 +887,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
     }
     const activeOrigin = isEmptySeatActive ? { color: '#F59E0B', label: 'Bring · Create · Hire' } : originStyles[activePerson.origin]
     const rows = Array.from({ length: 12 }, (_, row) => ({ row, cols: row < 3 ? 16 : row < 7 ? 17 : 18 }))
-    const occupiedSeats = new Map([
-      ['2-7', 0], ['2-8', 1], ['3-5', 2], ['3-9', 3], ['3-12', 4], ['4-3', 5], ['4-7', 6], ['4-10', 7], ['4-14', 8],
-      ['5-2', 9], ['5-5', 10], ['5-8', 11], ['5-11', 12], ['5-15', 13], ['6-4', 14], ['6-7', 15], ['6-10', 16], ['6-13', 17],
-      ['7-1', 18], ['7-4', 19], ['7-8', 20], ['7-12', 21], ['7-15', 22], ['8-3', 23], ['8-6', 0], ['8-9', 1], ['8-13', 2], ['8-16', 3],
-      ['9-1', 4], ['9-5', 5], ['9-8', 6], ['9-11', 7], ['9-14', 8], ['10-2', 9], ['10-6', 10], ['10-9', 11], ['10-13', 12], ['11-4', 13], ['11-8', 14], ['11-12', 15],
-    ])
     const emptySeatKey = '10-16'
 
     const renderAgent = (person, active, scale) => (
@@ -929,7 +926,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
         <div className="absolute inset-0 bg-gradient-to-b from-[#220708] via-[#5F1414] to-[#1D0506]" />
         <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/42 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/42 to-transparent" />
-        <div className="absolute inset-0 opacity-[0.10]" style={{ backgroundImage: 'linear-gradient(90deg, transparent 0 48%, rgba(255,255,255,0.35) 49% 51%, transparent 52% 100%)', backgroundSize: '58px 100%' }} />
 
         <svg viewBox="0 0 700 430" className="pointer-events-none absolute inset-0 z-20 h-full w-full">
           <defs>
@@ -973,20 +969,21 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                 {Array.from({ length: cols }).map((_, col) => {
                   const key = `${row}-${col}`
                   const empty = key === emptySeatKey
-                  const agentIdx = occupiedSeats.get(key)
-                  const person = typeof agentIdx === 'number' ? agentPeople[agentIdx % agentPeople.length] : null
-                  const active = empty ? isEmptySeatActive : activeAgentLane === agentIdx
+                  const seatAgentKey = row * 100 + col
+                  const agentIdx = (row * 18 + col) % agentPeople.length
+                  const person = empty ? null : agentPeople[agentIdx]
+                  const active = empty ? isEmptySeatActive : activeAgentLane === seatAgentKey
                   return (
                     <button
                       key={key}
                       type="button"
                       onMouseEnter={() => {
                         if (empty) setActiveAgentLane(emptySeatIndex)
-                        if (person) setActiveAgentLane(agentIdx)
+                        if (person) setActiveAgentLane(seatAgentKey)
                       }}
                       onFocus={() => {
                         if (empty) setActiveAgentLane(emptySeatIndex)
-                        if (person) setActiveAgentLane(agentIdx)
+                        if (person) setActiveAgentLane(seatAgentKey)
                       }}
                       className="relative min-h-[38px] rounded-t-[10px] transition-all duration-300"
                       style={{ zIndex: active ? 70 : 10 + row }}
@@ -995,6 +992,9 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                       {empty && (
                         <div className="absolute left-1/2 top-[-14px] z-20 -translate-x-1/2">
                           {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full bg-[#F59E0B]" />}
+                          <div className={`absolute left-1/2 top-[-30px] w-[96px] -translate-x-1/2 rounded-full border px-2 py-1 text-center text-[8px] font-black uppercase tracking-[0.08em] shadow-[0_12px_24px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B]' : 'border-white/50 bg-white/16 text-white/80 backdrop-blur'}`}>
+                            Hire\Bring\Create
+                          </div>
                           <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/60 bg-white/10 text-white/70'}`}>
                             <span className="text-[18px] font-black leading-none">+</span>
                           </div>
