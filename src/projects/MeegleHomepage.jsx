@@ -734,22 +734,27 @@ const WorkflowBoard = () => {
 }
 
 
-/* ============ GAME VERSION — 2.5D Isometric Game Board ============ */
 
-const GAME_PLAT_W = 138
-const GAME_PLAT_H = 52
-const GAME_SCENE_W = 780
-const GAME_SCENE_H = 380
-const GAME_PLAT_POS = [
-  { id: 'intake', cx: 80,  cy: 190 },
-  { id: 'scout',  cx: 240, cy: 100 },
-  { id: 'scope',  cx: 240, cy: 190 },
-  { id: 'spec',   cx: 240, cy: 280 },
-  { id: 'build',  cx: 440, cy: 190 },
-  { id: 'ship',   cx: 620, cy: 190 },
+/* ============ GAME VERSION — True 2.5D Isometric Strategy Board ============ */
+
+const GAME_TILE_W = 60
+const GAME_TILE_H = 30
+const GAME_ORIGIN_X = 220
+const GAME_ORIGIN_Y = 80
+
+const GAME_NODES = [
+  { id: 'intake', label: 'INTAKE', color: '#5B5FE3', col: 2, row: 3 },
+  { id: 'scout',  label: 'SCOUT',  color: '#3EAB6E', col: 5, row: 1 },
+  { id: 'scope',  label: 'SCOPE',  color: '#F59E0B', col: 5, row: 3 },
+  { id: 'spec',   label: 'SPEC',   color: '#8B5CF6', col: 5, row: 5 },
+  { id: 'build',  label: 'BUILD',  color: '#EC4899', col: 8, row: 3 },
+  { id: 'ship',   label: 'SHIP',   color: '#06B6D4', col: 11, row: 3 },
 ]
 
-const GAME_BRIDGES = [
+const GAME_BOARD_W = 640
+const GAME_BOARD_H = 380
+
+const GAME_PATHS = [
   { from: 'intake', to: 'scout' },
   { from: 'intake', to: 'scope' },
   { from: 'intake', to: 'spec' },
@@ -759,422 +764,349 @@ const GAME_BRIDGES = [
   { from: 'build',  to: 'ship' },
 ]
 
-/* ----- Isometric Island Platform ----- */
-const GameIsland = ({ node, state, agentColor, pos }) => {
-  const c = node.color
-  const W = GAME_PLAT_W; const H = GAME_PLAT_H
-  const hidden = state === 'hidden'
-  const building = state === 'building'
-  const populated = state === 'populated' || state === 'landing'
+function isoX(col, row) { return (col - row) * (GAME_TILE_W / 2) + GAME_ORIGIN_X }
+function isoY(col, row) { return (col + row) * (GAME_TILE_H / 2) + GAME_ORIGIN_Y }
 
-  if (hidden) return null
+const GameIsoTile = ({ col, row, color, visible, building, populated }) => {
+  if (!visible) return null
+  const cx = isoX(col, row)
+  const cy = isoY(col, row)
+  const hw = GAME_TILE_W / 2
+  const hh = GAME_TILE_H / 2
+  const rise = building ? 8 : populated ? 14 : 2
 
   return (
-    <div className="absolute" style={{
-      left: pos.cx - W/2, top: pos.cy - H/2,
-      width: W, height: H,
-      transition: 'opacity 0.5s ease, transform 0.5s ease',
-      transform: building ? 'scale(0.85)' : populated ? 'scale(1.06)' : 'scale(1)',
-      opacity: building ? 0.7 : 1
-    }}>
-      {/* Floating shadow */}
-      <div className="absolute rounded-2xl" style={{
-        left: -8, top: 16,
-        width: W + 16, height: H - 4,
-        backgroundColor: '#00000010',
-        filter: 'blur(12px)',
-        opacity: building ? 0.3 : populated ? 0.5 : 0.35
-      }} />
+    <g>
+      {/* Shadow under tile */}
+      <polygon
+        points={`${cx},${cy - rise + hh + 4} ${cx - hw - 2},${cy - rise + 4} ${cx},${cy - rise - hh} ${cx + hw + 2},${cy - rise + 4}`}
+        fill="rgba(0,0,0,0.15)" />
 
-      {/* Platform body */}
-      <div className="absolute inset-0 rounded-xl" style={{
-        background: populated
-          ? `linear-gradient(135deg, ${c}14 0%, ${c}06 100%)`
-          : building
-            ? `linear-gradient(135deg, ${c}08 0%, ${c}02 100%)`
-            : 'linear-gradient(135deg, #ffffff 0%, #f5f6f9 100%)',
-        border: `1.5px solid ${populated ? c + '50' : building ? c + '30' : '#e2e5ea'}`,
-        boxShadow: populated
-          ? `0 0 24px ${c}18, 0 4px 16px ${c}0A`
-          : building
-            ? `0 0 12px ${c}10`
-            : '0 2px 8px rgba(0,0,0,0.04)'
-      }} />
+      {/* Tile body (ground tile) */}
+      <polygon
+        points={`${cx},${cy - rise + hh} ${cx - hw},${cy - rise} ${cx},${cy - rise - hh} ${cx + hw},${cy - rise}`}
+        fill={populated ? color : building ? color + '50' : '#374151'}
+        stroke={populated ? color + '80' : building ? color + '30' : '#4b5563'}
+        strokeWidth="1"
+        style={{ transition: 'fill 0.4s ease' }} />
 
-      {/* Top rim highlight */}
-      <div className="absolute top-0 left-3 right-3 h-[1.5px] rounded-full" style={{
-        background: populated
-          ? `linear-gradient(90deg, transparent, ${c}40, transparent)`
-          : building
-            ? `linear-gradient(90deg, transparent, ${c}15, transparent)`
-            : 'transparent'
-      }} />
+      {/* Inner fill */}
+      <polygon
+        points={`${cx},${cy - rise + hh - 3} ${cx - hw + 4},${cy - rise + 2} ${cx},${cy - rise - hh + 3} ${cx + hw - 4},${cy - rise + 2}`}
+        fill={populated ? color + '20' : building ? color + '10' : '#1f2937'}
+        style={{ transition: 'fill 0.4s ease' }} />
 
-      {/* Construction grid */}
+      {/* Grid dot at center */}
+      <circle cx={cx} cy={cy - rise} r="1.2" fill={populated ? color + '80' : '#6b7280'} />
+
+      {/* Building construction spark */}
       {building && (
-        <div className="absolute inset-0 rounded-xl overflow-hidden" style={{ opacity: 0.5 }}>
-          <svg width={W} height={H} className="absolute inset-0">
-            <line x1="30" y1="0" x2="30" y2={H} stroke={c + '15'} strokeWidth="0.4" strokeDasharray="4 8" />
-            <line x1={W-30} y1="0" x2={W-30} y2={H} stroke={c + '15'} strokeWidth="0.4" strokeDasharray="4 8" />
-            <line x1="0" y1={H/2} x2={W} y2={H/2} stroke={c + '15'} strokeWidth="0.4" strokeDasharray="4 8" />
-          </svg>
-          <div className="absolute" style={{ right: 22, top: H/2 - 5 }}>
-            <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: c + '60' }} />
-          </div>
-        </div>
+        <circle cx={cx} cy={cy - rise - 3} r="2.5" fill={color} opacity="0.6">
+          <animate attributeName="opacity" values="0.6;0.1;0.6" dur="0.6s" repeatCount="indefinite" />
+          <animate attributeName="r" values="2.5;4;2.5" dur="0.6s" repeatCount="indefinite" />
+        </circle>
       )}
 
-      {/* Label */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-[12px] font-bold font-sans tracking-wide select-none"
-          style={{
-            color: populated ? c : building ? c + '60' : '#8f95a0',
-            textShadow: populated ? `0 0 12px ${c}20` : 'none'
-          }}>
-          {node.label}
-        </span>
-      </div>
+      {/* Platform on top (building block) */}
+      {!building && (
+        <g>
+          {/* Block sides */}
+          <polygon
+            points={`${cx},${cy - rise - 10 + hh/2} ${cx - hw + 6},${cy - rise - 7} ${cx},${cy - rise - hh - 3} ${cx + hw - 6},${cy - rise - 7}`}
+            fill={populated ? color : '#4b5563'}
+            opacity={populated ? 0.15 : 0.4} />
+          {/* Block top face */}
+          <rect x={cx - hw + 8} y={cy - rise - hh + 2} width={hw * 2 - 16} height={hh - 4} rx="2"
+            fill={populated ? color + '30' : '#2d3748'}
+            stroke={populated ? color + '60' : '#4b5563'} strokeWidth="0.8" />
 
-      {/* Characters on populated platforms */}
-      {populated && (
-        <div className="absolute inset-x-0 bottom-0 flex justify-center items-end" style={{ height: H + 18, pointerEvents: 'none' }}>
-          {/* Agent sprite */}
-          <div className="absolute animate-bob" style={{
-            left: W * 0.22, bottom: 8,
-            animation: 'bob 1.8s ease-in-out infinite'
-          }}>
-            <svg viewBox="0 0 32 32" width={26} height={26}>
-              <defs>
-                <radialGradient id={`glow-${node.id}`}>
-                  <stop offset="0%" stopColor={agentColor || c} stopOpacity="0.5" />
-                  <stop offset="100%" stopColor={agentColor || c} stopOpacity="0" />
-                </radialGradient>
-              </defs>
-              <circle cx="16" cy="20" r="10" fill={`url(#glow-${node.id})`} />
-              <circle cx="16" cy="9" r="7" fill={agentColor || c} opacity="0.9" />
-              <rect x="13" y="11.5" width="2" height="3.2" rx="1" fill={agentColor || c} opacity="0.55" />
-              <rect x="17" y="11.5" width="2" height="3.2" rx="1" fill={agentColor || c} opacity="0.55" />
-              <rect x="10.5" y="14" width="11" height="7.5" rx="3.5" fill={agentColor || c} opacity="0.7" />
-              <circle cx="14" cy="8" r="1.2" fill="white" />
-              <circle cx="18" cy="8" r="1.2" fill="white" />
-              <circle cx="14" cy="8" r="0.6" fill="#1a1a2e" />
-              <circle cx="18" cy="8" r="0.6" fill="#1a1a2e" />
-            </svg>
-          </div>
-
-          {/* Human sprite */}
-          <div className="absolute animate-bob" style={{
-            right: W * 0.2, bottom: 8,
-            animation: 'bob 1.8s ease-in-out 0.4s infinite'
-          }}>
-            <svg viewBox="0 0 24 28" width={20} height={24}>
-              <circle cx="12" cy="6" r="5" fill="#4b5563" />
-              <path d="M4 17c0-4.4 3.6-8 8-8s8 3.6 8 8" fill="#4b5563" opacity="0.75" />
-              <path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6v4H6Z" fill="#6b7280" opacity="0.5" />
-            </svg>
-          </div>
-        </div>
+          {/* Label on platform */}
+          <text x={cx} y={cy - rise - hh/2 + 2} textAnchor="middle" fontSize="8" fontWeight="700"
+            fill={populated ? color : '#9ca3af'} fontFamily="system-ui, monospace" letterSpacing="0.07em">
+            {GAME_NODES.find(n => n.col === col && n.row === row)?.label || ''}
+          </text>
+        </g>
       )}
-
-      {/* Checkmark badge */}
-      {populated && (
-        <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: '#16A34A', boxShadow: '0 2px 8px rgba(22,163,74,0.3)' }}>
-          <CheckCircle2 size={12} className="text-white" strokeWidth={3} />
-        </div>
-      )}
-    </div>
+    </g>
   )
 }
 
-/* ----- Energy Bridge (game-style) ----- */
-const GameBridge = ({ from, to, color, state }) => {
+const GamePathTile = ({ fromCol, fromRow, toCol, toRow, state }) => {
   if (state === 'hidden') return null
+  const fx = isoX(fromCol, fromRow)
+  const fy = isoY(fromCol, fromRow)
+  const tx = isoX(toCol, toRow)
+  const ty = isoY(toCol, toRow)
   const active = state === 'active'
   const building = state === 'building'
-  const built = state === 'built'
-
-  const dx = to.x - from.x; const dy = to.y - from.y
-  const cpf = 0.4
-  const cp1x = from.x + dx * cpf; const cp1y = from.y + dy * 0.1
-  const cp2x = to.x - dx * cpf; const cp2y = to.y - dy * 0.1
 
   return (
-    <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" style={{ zIndex: 1 }}>
-      {/* Glow under-path */}
-      {active && (
-        <path d={`M${from.x} ${from.y} C${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${to.x} ${to.y}`}
-          fill="none" stroke={color + '10'} strokeWidth="8" strokeLinecap="round" filter="blur(4px)" />
-      )}
-      {/* Main path */}
-      <path d={`M${from.x} ${from.y} C${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${to.x} ${to.y}`}
-        fill="none" strokeLinecap="round"
-        stroke={active ? color + '80' : built ? color + '18' : color + '10'}
-        strokeWidth={active ? 2.5 : built ? 1.5 : 1}
-        strokeDasharray={building ? '4 4' : active ? 'none' : 'none'}
-        opacity={active ? 1 : built ? 0.5 : 0.3}>
-        {building && <animate attributeName="stroke-dashoffset" from="16" to="0" dur="0.5s" repeatCount="indefinite" />}
-      </path>
-      {/* Particle dots along active bridge */}
+    <g>
+      {/* Path line */}
+      <line x1={fx} y1={fy} x2={tx} y2={ty}
+        stroke={active ? '#fbbf24' : building ? '#fbbf2440' : '#374151'}
+        strokeWidth={active ? 2.5 : building ? 1.5 : 1}
+        strokeDasharray={building ? '3 3' : 'none'}
+        opacity={active ? 1 : building ? 0.6 : 0.35} />
+      {/* Glow on active path */}
       {active && (
         <>
-          <circle r="3" fill={color} opacity="0.8">
-            <animateMotion dur="2s" repeatCount="indefinite"
-              path={`M${from.x} ${from.y} C${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${to.x} ${to.y}`} />
-            <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite" />
-          </circle>
-          <circle r="2" fill={to.color} opacity="0.6">
-            <animateMotion dur="2s" repeatCount="indefinite" begin="0.7s"
-              path={`M${from.x} ${from.y} C${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${to.x} ${to.y}`} />
+          <line x1={fx} y1={fy} x2={tx} y2={ty}
+            stroke="#fbbf24" strokeWidth="6" opacity="0.15" strokeLinecap="round" />
+          <circle r="2" fill="#fbbf24" opacity="0.8">
+            <animateMotion dur="1.5s" repeatCount="indefinite"
+              path={`M${fx} ${fy} L${tx} ${ty}`} />
+            <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite" />
           </circle>
         </>
       )}
-      {/* Arrow */}
-      <polygon points={`${to.x-5},${to.y-3.5} ${to.x},${to.y} ${to.x-5},${to.y+3.5}`}
-        fill={active ? to.color : color + '25'} opacity={active ? 0.8 : built ? 0.4 : 0.2} />
-    </svg>
+    </g>
   )
 }
 
-/* ----- Floating Particles ----- */
-const Particles = () => {
-  const particles = useRef(Array.from({ length: 18 }, (_, i) => ({
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: 1 + Math.random() * 2,
-    dur: 3 + Math.random() * 4,
-    delay: Math.random() * 5,
-    opacity: 0.1 + Math.random() * 0.25
-  })))
-
+const GameSprite = ({ col, row, color, isAgent }) => {
+  const cx = isoX(col, row)
+  const cy = isoY(col, row)
+  const rise = 14 // platform height
+  const y = cy - rise - 10
   return (
-    <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
-      {particles.current.map((p, i) => (
-        <circle key={i} cx={`${p.x}%`} cy={`${p.y}%`} r={p.size} fill="#5B5FE3" opacity={p.opacity}>
-          <animate attributeName="cy" values={`${p.y}%;${p.y - 8}%;${p.y}%`}
-            dur={`${p.dur}s`} repeatCount="indefinite" begin={`${p.delay}s`} />
-          <animate attributeName="opacity" values={`${p.opacity};${p.opacity * 0.3};${p.opacity}`}
-            dur={`${p.dur}s`} repeatCount="indefinite" begin={`${p.delay}s`} />
-        </circle>
-      ))}
-    </svg>
+    <g>
+      {isAgent ? (
+        <g transform={`translate(${cx - 10}, ${y - 16})`}>
+          {/* Glow */}
+          <circle cx="10" cy="12" r="8" fill={color + '30'} />
+          <circle cx="10" cy="4" r="5" fill={color} opacity="0.9" />
+          <rect x="8" y="6" width="1.5" height="2.5" rx="0.7" fill={color} opacity="0.5" />
+          <rect x="11" y="6" width="1.5" height="2.5" rx="0.7" fill={color} opacity="0.5" />
+          <rect x="6" y="8" width="8" height="5.5" rx="2.5" fill={color} opacity="0.65" />
+          <circle cx="9" cy="3.5" r="0.8" fill="white" />
+          <circle cx="12" cy="3.5" r="0.8" fill="white" />
+          <circle cx="9" cy="3.5" r="0.4" fill="#111" />
+          <circle cx="12" cy="3.5" r="0.4" fill="#111" />
+        </g>
+      ) : (
+        <g transform={`translate(${cx - 8}, ${y - 14})`}>
+          <circle cx="8" cy="3" r="3.5" fill="#e5e7eb" />
+          <path d="M2 12c0-3.3 2.7-6 6-6s6 2.7 6 6" fill="#e5e7eb" opacity="0.7" />
+        </g>
+      )}
+    </g>
   )
 }
 
-/* ----- Terrain Grid ----- */
-const TerrainGrid = () => (
-  <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0, opacity: 0.06 }}>
-    <defs>
-      <radialGradient id="tg" cx="50%" cy="50%">
-        <stop offset="0%" stopColor="#5B5FE3" stopOpacity="0.5" />
-        <stop offset="100%" stopColor="#5B5FE3" stopOpacity="0" />
-      </radialGradient>
-    </defs>
-    {/* Horizontal grid lines with perspective */}
-    {Array.from({ length: 12 }, (_, i) => {
-      const yPct = 5 + i * 8
-      const alpha = 1 - Math.abs(i - 5.5) / 8
-      return (
-        <line key={`h${i}`} x1="0%" y1={`${yPct}%`} x2="100%" y2={`${yPct}%`}
-          stroke="#5B5FE3" strokeWidth="0.4" opacity={Math.max(0.1, alpha * 0.6)} />
-      )
-    })}
-    {/* Vertical grid lines with perspective */}
-    {Array.from({ length: 10 }, (_, i) => {
-      const xPct = 5 + i * 10
-      return (
-        <line key={`v${i}`} x1={`${xPct}%`} y1="0%" x2={`${xPct}%`} y2="100%"
-          stroke="#5B5FE3" strokeWidth="0.3" opacity="0.25" />
-      )
-    })}
-  </svg>
-)
-
-/* ----- HUD Status Bar ----- */
-const GameHUD = ({ phase, step, agent, platform }) => (
-  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 pointer-events-none" style={{ zIndex: 20 }}>
-    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg"
-      style={{
-        backgroundColor: 'rgba(10,10,20,0.75)',
-        backdropFilter: 'blur(8px)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: '0 4px 16px rgba(0,0,0,0.3)'
-      }}>
-      <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: agent?.color || '#5B5FE3' }} />
-      <span className="text-[10px] font-semibold text-white/90 font-mono tracking-tight">
-        {phase === 'building' ? (
-          <>{'⚙'} STRUCTURING PIPELINE...</>
-        ) : phase === 'populating' && step < WORKFLOW_PLATFORMS.length ? (
-          <>{'↗'} DEPLOY {agent?.label?.toUpperCase()} → {platform?.label?.toUpperCase()}</>
-        ) : (
-          <>{'◆'} ALL SYSTEMS OPERATIONAL</>
-        )}
+const GameHUD_v2 = ({ phase, step, agent, node }) => (
+  <div className="absolute top-2 left-4 right-4 flex items-center justify-between pointer-events-none" style={{ zIndex: 30 }}>
+    <div className="flex items-center gap-2 text-[10px] font-mono text-[#9ca3af]">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#1f2937]/80 border border-[#374151]/50 text-[#fbbf24]">
+        <span>&#9889;</span> TURN {step + 1}/{GAME_NODES.length}
       </span>
+      {phase === 'building' && (
+        <span className="text-[#d1d5db]">
+          {step < GAME_NODES.length - 1 ? 'FOUNDING SETTLEMENT...' : 'PLANNING COMPLETE'}
+        </span>
+      )}
+      {phase === 'populating' && step < GAME_NODES.length && (
+        <span style={{ color: agent?.color || '#5B5FE3' }}>
+          DEPLOYING {agent?.label?.toUpperCase()} → {node?.label}
+        </span>
+      )}
+      {phase === 'populating' && step >= GAME_NODES.length && (
+        <span className="text-[#3EAB6E]">ALL SETTLEMENTS ACTIVE</span>
+      )}
+    </div>
+    {/* Mini resource bar */}
+    <div className="flex items-center gap-3 text-[9px] font-mono">
+      <span className="text-[#d1d5db]">POP: <span className="text-[#fbbf24]">{Math.min(step, GAME_NODES.length)}/{GAME_NODES.length}</span></span>
+      <span className="text-[#d1d5db]">AGENT: <span style={{ color: agent?.color || '#5B5FE3' }}>ONLINE</span></span>
+      <span className="text-[#d1d5db]">STAT: <span className={phase === 'populating' && step >= GAME_NODES.length ? 'text-[#3EAB6E]' : 'text-[#fbbf24]'}>
+        {phase === 'populating' && step >= GAME_NODES.length ? 'OK' : 'IN PROGRESS'}
+      </span></span>
     </div>
   </div>
 )
 
-/* ----- Main Game Board ----- */
 const GameWorkflowBoard = () => {
   const [buildPhase, setBuildPhase] = useState('building')
   const [step, setStep] = useState(0)
   const phaseRef = useRef('building')
   const stepRef = useRef(0)
-  const [flyActive, setFlyActive] = useState(false)
+  const [popAnim, setPopAnim] = useState(false)
 
-  const totalPlatforms = WORKFLOW_PLATFORMS.length
+  const totalNodes = GAME_NODES.length
 
   const advance = useCallback(() => {
     if (phaseRef.current === 'building') {
-      if (stepRef.current >= totalPlatforms - 1) {
+      if (stepRef.current >= totalNodes - 1) {
         phaseRef.current = 'populating'; stepRef.current = 0
         setBuildPhase('populating'); setStep(0)
-        setTimeout(() => { setFlyActive(true); setTimeout(() => setFlyActive(false), 900) }, 300)
+        setTimeout(() => setPopAnim(true), 300)
+        setTimeout(() => setPopAnim(false), 700)
       } else {
         stepRef.current += 1; setStep(s => s + 1)
       }
     } else {
-      if (stepRef.current >= totalPlatforms) return
-      setFlyActive(true)
+      if (stepRef.current >= totalNodes) return
+      setPopAnim(true)
       setTimeout(() => {
         stepRef.current += 1; setStep(s => s + 1)
-        setTimeout(() => setFlyActive(false), 200)
-      }, 900)
+        setTimeout(() => setPopAnim(false), 200)
+      }, 800)
     }
-  }, [totalPlatforms])
+  }, [totalNodes])
 
   useEffect(() => {
-    if (buildPhase === 'populating' && step >= totalPlatforms) {
+    if (buildPhase === 'populating' && step >= totalNodes) {
       const t = setTimeout(() => {
         phaseRef.current = 'building'; stepRef.current = 0
-        setBuildPhase('building'); setStep(0); setFlyActive(false)
+        setBuildPhase('building'); setStep(0); setPopAnim(false)
       }, 3000)
       return () => clearTimeout(t)
     }
-  }, [buildPhase, step, totalPlatforms])
+  }, [buildPhase, step, totalNodes])
 
   useEffect(() => {
-    const dur = buildPhase === 'building' ? 500 : 1200
-    if (buildPhase === 'populating' && step >= totalPlatforms) return
+    const dur = buildPhase === 'building' ? 550 : 1300
+    if (buildPhase === 'populating' && step >= totalNodes) return
     const t = setTimeout(advance, dur)
     return () => clearTimeout(t)
-  }, [step, buildPhase, advance, totalPlatforms])
+  }, [step, buildPhase, advance, totalNodes])
 
-  const buildOrder = WORKFLOW_PLATFORMS.map(p => p.id)
-  const isBuiltFn = id => buildOrder.indexOf(id) < (buildPhase === 'building' ? step + 1 : totalPlatforms)
-
-  const currentAgent = AGENT_BENCH[Math.min(step, totalPlatforms - 1) % AGENT_BENCH.length]
-  const currentPlat = WORKFLOW_PLATFORMS[Math.min(step, totalPlatforms - 1)]
+  const isBuilt = (idx) => idx < (buildPhase === 'building' ? step + 1 : totalNodes)
+  const currentAgent = AGENT_BENCH[Math.min(step, totalNodes - 1) % AGENT_BENCH.length]
+  const currentNode = GAME_NODES[Math.min(step, totalNodes - 1)]
 
   return (
-    <div className="relative w-full select-none" style={{ height: GAME_SCENE_H }}>
-      {/* Dark ambient overlay */}
-      <div className="absolute inset-0" style={{
-        background: 'radial-gradient(ellipse at 30% 50%, rgba(91,94,227,0.03) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(120,123,238,0.02) 0%, transparent 60%)'
+    <div className="relative w-full select-none rounded-2xl overflow-hidden" style={{ height: GAME_BOARD_H, backgroundColor: '#0a0a16' }}>
+      {/* Starfield background */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0, opacity: 0.3 }}>
+        <defs>
+          <radialGradient id="boardGlow" cx="50%" cy="40%">
+            <stop offset="0%" stopColor="#1e1b4b" />
+            <stop offset="100%" stopColor="#0a0a16" />
+          </radialGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#boardGlow)" />
+        {Array.from({ length: 40 }, (_, i) => (
+          <circle key={`s${i}`}
+            cx={Math.random() * 100 + '%'} cy={Math.random() * 100 + '%'}
+            r={0.4 + Math.random() * 0.6} fill="white" opacity={0.1 + Math.random() * 0.3}>
+            <animate attributeName="opacity" values="0.1;0.4;0.1" dur={2 + Math.random() * 3 + 's'} repeatCount="indefinite" begin={Math.random() * 3 + 's'} />
+          </circle>
+        ))}
+      </svg>
+
+      {/* Fog of war overlay */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        zIndex: 15,
+        background: 'radial-gradient(ellipse at 48% 45%, transparent 35%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.85) 95%)',
+        transition: 'opacity 0.8s ease'
       }} />
 
-      {/* Background terrain */}
-      <TerrainGrid />
-
-      {/* Floating particles */}
-      <Particles />
-
-      {/* Energy Bridges */}
-      {GAME_BRIDGES.map(({ from, to }) => {
-        const fp = GAME_PLAT_POS.find(p => p.id === from)
-        const tp = GAME_PLAT_POS.find(p => p.id === to)
-        if (!isBuiltFn(from) || !isBuiltFn(to)) return null
-        const toIdx = buildOrder.indexOf(to)
-        const popStep = buildPhase === 'populating' ? step : -1
-        const color = WORKFLOW_PLATFORMS.find(p => p.id === to).color
-        let brState = 'built'
-        if (buildPhase === 'building' && toIdx === step + 1) brState = 'building'
-        if (buildPhase === 'populating' && toIdx === popStep) brState = 'active'
-        return (
-          <GameBridge key={`gb-${from}-${to}`}
-            from={{ x: fp.cx, y: fp.cy, id: from }}
-            to={{ x: tp.cx, y: tp.cy, id: to }}
-            color={color} state={brState} />
-        )
-      })}
-
-      {/* Flying character (game-style: tiny sprite along bridge path) */}
-      {flyActive && buildPhase === 'populating' && step < totalPlatforms && (() => {
-        const plat = GAME_PLAT_POS[step]
-        // Fly from bench area (bottom-center) to platform center
-        const startX = GAME_SCENE_W / 2
-        const startY = GAME_SCENE_H - 30
-        const endX = plat.cx
-        const endY = plat.cy - 16
-        const flyStyle = {
-            left: startX, top: startY,
-            zIndex: 30,
-            transform: 'translate(-50%, -50%)',
-            animation: `flyToPlatform 0.8s cubic-bezier(0.22, 0.08, 0.08, 1) forwards`,
-            '--fly-ex': `${endX}px`,
-            '--fly-ey': `${endY}px`,
-            '--fly-sx': `${startX}px`,
-            '--fly-sy': `${startY}px`,
+      {/* Main SVG board */}
+      <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 10 }}
+        viewBox={`0 0 ${GAME_BOARD_W} ${GAME_BOARD_H}`} preserveAspectRatio="xMidYMid meet">
+        {/* Grid floor — all terrain cells */}
+        {(() => {
+          const cells = []
+          for (let c = 0; c <= 14; c++) {
+            for (let r = 0; r <= 7; r++) {
+              const isNodeCell = GAME_NODES.some(n => n.col === c && n.row === r)
+              const cx = isoX(c, r)
+              const cy = isoY(c, r)
+              cells.push(
+                <polygon key={`bg-${c}-${r}`}
+                  points={`${cx},${cy + GAME_TILE_H/2} ${cx - GAME_TILE_W/2},${cy} ${cx},${cy - GAME_TILE_H/2} ${cx + GAME_TILE_W/2},${cy}`}
+                  fill={isNodeCell ? '#111827' : '#0d1117'}
+                  stroke="#1a1f2e" strokeWidth="0.5" opacity="0.6" />
+              )
+            }
           }
+          return cells
+        })()}
+
+        {/* Paths between nodes */}
+        {GAME_PATHS.map(({ from, to }) => {
+          const fn = GAME_NODES.find(n => n.id === from)
+          const tn = GAME_NODES.find(n => n.id === to)
+          if (!fn || !tn) return null
+          const fromIdx = GAME_NODES.indexOf(fn)
+          const toIdx = GAME_NODES.indexOf(tn)
+          if (!isBuilt(fromIdx) || !isBuilt(toIdx)) return null
+          let pathState = 'built'
+          if (buildPhase === 'building' && toIdx === step + 1) pathState = 'building'
+          if (buildPhase === 'populating' && toIdx === step) pathState = 'active'
+          return <GamePathTile key={`gp-${from}-${to}`}
+            fromCol={fn.col} fromRow={fn.row} toCol={tn.col} toRow={tn.row} state={pathState} />
+        })}
+
+        {/* Node tiles */}
+        {GAME_NODES.map((node, idx) => {
+          const built = buildPhase === 'building' ? idx <= step : true
+          const popStep = buildPhase === 'populating' ? step : -1
+          const populated = buildPhase === 'populating' && idx < popStep
+          const popping = buildPhase === 'populating' && idx === popStep && popAnim
+
           return (
-          <div className="absolute pointer-events-none" style={flyStyle}>
-            <div style={{ animation: 'bob 0.3s ease-in-out infinite' }}>
-              <svg viewBox="0 0 32 32" width={30} height={30}>
-                <circle cx="16" cy="20" r="10" fill={currentAgent.color + '20'} />
-                <circle cx="16" cy="9" r="7" fill={currentAgent.color} opacity="0.9" />
-                <rect x="13" y="11.5" width="2" height="3.2" rx="1" fill={currentAgent.color} opacity="0.55" />
-                <rect x="17" y="11.5" width="2" height="3.2" rx="1" fill={currentAgent.color} opacity="0.55" />
-                <rect x="10.5" y="14" width="11" height="7.5" rx="3.5" fill={currentAgent.color} opacity="0.7" />
-                <circle cx="14" cy="8" r="1.2" fill="white" />
-                <circle cx="18" cy="8" r="1.2" fill="white" />
-                <circle cx="14" cy="8" r="0.6" fill="#1a1a2e" />
-                <circle cx="18" cy="8" r="0.6" fill="#1a1a2e" />
-              </svg>
-            </div>
-            {/* Trail */}
-            <div className="absolute top-1/2 -translate-y-1/2" style={{ right: '100%', width: 40, height: 2 }}>
-              <div style={{
-                width: '100%', height: '100%',
-                background: `linear-gradient(90deg, transparent, ${currentAgent.color}80)`,
-                borderRadius: 1
-              }} />
-            </div>
-          </div>
-        )
-      })()}
+            <GameIsoTile key={node.id}
+              col={node.col} row={node.row} color={node.color}
+              visible={built}
+              building={buildPhase === 'building' && idx === step}
+              populated={populated || popping} />
+          )
+        })}
 
-      {/* Platforms */}
-      {WORKFLOW_PLATFORMS.map((plat, i) => {
-        const id = plat.id
-        const idx = buildOrder.indexOf(id)
-        const pos = GAME_PLAT_POS[i]
-        const popStep = buildPhase === 'populating' ? step : -1
+        {/* Characters on populated nodes */}
+        {buildPhase === 'populating' && GAME_NODES.map((node, idx) => {
+          if (idx >= step) return null
+          const agent = AGENT_BENCH[idx % AGENT_BENCH.length]
+          return (
+            <g key={`chars-${node.id}`}>
+              <GameSprite col={node.col} row={node.row} color={agent.color} isAgent />
+              <g transform={`translate(${isoX(node.col, node.row) + 8}, ${isoY(node.col, node.row) - 24})`}>
+                <circle cx="0" cy="0" r="3" fill="#e5e7eb" opacity="0.8" />
+                <path d="M-1.5 3c0-1.5 1.2-3 3-3s3 1.5 3 3" fill="#e5e7eb" opacity="0.6" />
+              </g>
+            </g>
+          )
+        })}
 
-        let state = 'hidden'
-        if (buildPhase === 'building') {
-          if (idx < step) state = 'built'
-          else if (idx === step) state = 'building'
-        } else {
-          if (idx < popStep) state = 'populated'
-          else if (idx === popStep) state = 'landing'
-          else state = 'built'
-        }
-
-        const agent = AGENT_BENCH[idx % AGENT_BENCH.length]
-        return (
-          <GameIsland key={id}
-            node={{ id, label: plat.label, color: plat.color }}
-            state={state}
-            agentColor={agent.color}
-            pos={pos} />
-        )
-      })}
+        {/* Flying deployment effect */}
+        {buildPhase === 'populating' && step < totalNodes && popAnim && (
+          <g>
+            <circle cx={isoX(GAME_NODES[step].col, GAME_NODES[step].row)}
+              cy={isoY(GAME_NODES[step].col, GAME_NODES[step].row) - 20} r={4}
+              fill={currentAgent.color} opacity="0.8">
+              <animate attributeName="r" values="4;16;4" dur="0.8s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.8;0;0.8" dur="0.8s" repeatCount="indefinite" />
+            </circle>
+            <circle cx={isoX(GAME_NODES[step].col, GAME_NODES[step].row)}
+              cy={isoY(GAME_NODES[step].col, GAME_NODES[step].row) - 20} r={6}
+              fill={currentAgent.color} opacity="0.4">
+              <animate attributeName="r" values="6;24;6" dur="0.8s" repeatCount="indefinite" begin="0.2s" />
+              <animate attributeName="opacity" values="0.4;0;0.4" dur="0.8s" repeatCount="indefinite" begin="0.2s" />
+            </circle>
+          </g>
+        )}
+      </svg>
 
       {/* HUD */}
-      <GameHUD phase={buildPhase} step={step} agent={currentAgent} platform={currentPlat} />
+      <GameHUD_v2 phase={buildPhase} step={step} agent={currentAgent} node={currentNode} />
+
+      {/* Bottom build bar */}
+      {buildPhase === 'building' && (
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2" style={{ zIndex: 20 }}>
+          <div className="flex items-center gap-2 px-3 py-1 rounded bg-[#111827]/90 border border-[#374151]/50 text-[10px] font-mono text-[#d1d5db]">
+            <span className="text-[#fbbf24]">⚒</span>
+            {step < totalNodes - 1
+              ? `BUILDING ${GAME_NODES[step + 1]?.label} SETTLEMENT...`
+              : 'CONSTRUCTION COMPLETE'}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
+
 
 const AI_ASSISTANT_SCENES = [
   {
@@ -1572,14 +1504,13 @@ const MeegleHomepage = () => {
               </div>
             </div>
 
-            <div className="flex justify-end mb-4 mr-2">
-              <div className="inline-flex rounded-lg bg-[#f1f3f7] p-0.5">
-                <button onClick={() => setBoardVersion('game')} className={`rounded-md px-3 py-1.5 text-[11px] font-semibold transition-all ${boardVersion === 'game' ? 'bg-white text-[#111827] shadow-sm' : 'text-[#8f959e] hover:text-[#5B5FE3]'}`}>⚔ Game View</button>
-                <button onClick={() => setBoardVersion('classic')} className={`rounded-md px-3 py-1.5 text-[11px] font-semibold transition-all ${boardVersion === 'classic' ? 'bg-white text-[#111827] shadow-sm' : 'text-[#8f959e] hover:text-[#5B5FE3]'}`}>⊞ Classic</button>
-              </div>
-            </div>
-
             <div className="animate-scale-in order-1 lg:order-2" style={{ animationDelay: '0.2s' }}>
+              <div className="flex justify-end mb-4 mr-2">
+                <div className="inline-flex rounded-lg bg-[#f1f3f7] p-0.5">
+                  <button onClick={() => setBoardVersion('game')} className={`rounded-md px-3 py-1.5 text-[11px] font-semibold transition-all ${boardVersion === 'game' ? 'bg-white text-[#111827] shadow-sm' : 'text-[#8f959e] hover:text-[#5B5FE3]'}`}>⚔ Game View</button>
+                  <button onClick={() => setBoardVersion('classic')} className={`rounded-md px-3 py-1.5 text-[11px] font-semibold transition-all ${boardVersion === 'classic' ? 'bg-white text-[#111827] shadow-sm' : 'text-[#8f959e] hover:text-[#5B5FE3]'}`}>⊞ Classic</button>
+                </div>
+              </div>
               {boardVersion === 'classic' ? <WorkflowBoard /> : <GameWorkflowBoard />}
             </div>
           </div>
