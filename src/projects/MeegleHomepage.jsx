@@ -907,15 +907,17 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                 <div className="relative mx-auto" style={{ width: person.size, height: person.size }}>
                   {active && <div className="agent-spotlight absolute inset-[-12px] rounded-full" style={{ backgroundColor: person.color }} />}
                   <div className={`relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border bg-white shadow-[0_16px_38px_rgba(38,45,64,0.12)] transition-all duration-300 ${active ? 'border-white' : 'border-white/70'}`}>
-                    <div className="absolute inset-x-0 bottom-0 h-[42%]" style={{ backgroundColor: person.color, opacity: active ? 0.18 : 0.10 }} />
-                    <div className="absolute top-[18%] h-[32%] w-[32%] rounded-full" style={{ backgroundColor: person.color, opacity: active ? 0.22 : 0.13 }} />
-                    <div className="absolute top-[30%] h-[18%] w-[18%] rounded-full bg-white" />
-                    <div className="absolute top-[57%] h-[34%] w-[56%] rounded-t-full" style={{ backgroundColor: person.color }} />
-                    <span className="absolute bottom-[16%] text-[10px] font-black text-white">{person.initials}</span>
+                    <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 50% 18%, ${person.color}22, transparent 45%)` }} />
+                    <div className="absolute top-[15%] h-[38%] w-[38%] rounded-full" style={{ backgroundColor: person.color, opacity: active ? 0.20 : 0.12 }} />
+                    <div className="absolute top-[27%] h-[30%] w-[30%] rounded-full bg-[#FFE7D6]" />
+                    <div className="absolute top-[36%] flex w-[13%] justify-between">
+                      <span className="h-1 w-1 rounded-full bg-[#1F2329]/70" />
+                      <span className="h-1 w-1 rounded-full bg-[#1F2329]/70" />
+                    </div>
+                    <div className="absolute top-[48%] h-1 w-[10%] rounded-full bg-[#C26B4A]/45" />
+                    <div className="absolute top-[57%] h-[34%] w-[58%] rounded-t-full" style={{ backgroundColor: person.color }} />
+                    <div className="absolute top-[63%] h-[12%] w-[34%] rounded-t-full bg-white/20" />
                   </div>
-                  <span className="absolute -right-1 top-2 rounded-full border border-white bg-white px-1.5 py-0.5 text-[8px] font-black shadow-sm" style={{ color: originStyles[person.origin].color }}>
-                    {person.origin}
-                  </span>
                 </div>
                 <div className={`mt-1 text-center transition-all duration-300 ${active ? 'opacity-100' : 'opacity-70'}`}>
                   <div className="text-[10px] font-black text-[#111827]">{person.name}</div>
@@ -939,6 +941,58 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           <div className="rounded-2xl border border-[#EEF0F4] bg-[#FBFCFF] p-3">
             <div className="mb-2 text-[9px] font-black uppercase tracking-[0.14em] text-[#8F959E]">Action</div>
             <div className="text-[12px] font-black text-[#111827]">{activePerson.action}</div>
+          </div>
+          <div className="mt-3 overflow-hidden rounded-2xl border border-[#EEF0F4] bg-white p-3">
+            {activePerson.origin === 'Bring' && (
+              <div>
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="rounded-xl border border-[#E8EAFF] bg-[#F6F7FF] px-2.5 py-2">
+                    <div className="text-[8px] font-black uppercase tracking-[0.12em] text-[#5B5FE3]">External</div>
+                    <div className="text-[10px] font-black text-[#111827]">Your agent</div>
+                  </div>
+                  <div className="flex flex-1 items-center px-2">
+                    <span className="h-px flex-1 border-t border-dashed border-[#5B5FE3]/40" />
+                    <span className="mx-1 h-1.5 w-1.5 rounded-full bg-[#5B5FE3]" />
+                    <span className="h-px flex-1 border-t border-dashed border-[#5B5FE3]/40" />
+                  </div>
+                  <div className="rounded-xl bg-[#111827] px-2.5 py-2 text-white">
+                    <div className="text-[8px] font-black uppercase tracking-[0.12em] text-white/45">Meegle</div>
+                    <div className="text-[10px] font-black">Connect</div>
+                  </div>
+                </div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Bring an existing agent through MCP, CLI, API, or partner integrations.</div>
+              </div>
+            )}
+            {activePerson.origin === 'Create' && (
+              <div>
+                <div className="mb-3 grid grid-cols-[1fr_auto] gap-2">
+                  <div className="rounded-xl border border-[#FFE8BF] bg-[#FFF8EA] p-2">
+                    <div className="mb-1 h-1.5 w-12 rounded-full bg-[#F59E0B]/35" />
+                    <div className="mb-1 h-1.5 w-8 rounded-full bg-[#F59E0B]/20" />
+                    <div className="grid grid-cols-3 gap-1 pt-1">
+                      <span className="h-5 rounded-md bg-white shadow-sm" />
+                      <span className="h-5 rounded-md bg-white shadow-sm" />
+                      <span className="h-5 rounded-md bg-white shadow-sm" />
+                    </div>
+                  </div>
+                  <div className="flex h-full w-10 items-center justify-center rounded-xl bg-[#F59E0B] text-[18px] font-black text-white">+</div>
+                </div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Create a private agent from templates, skills, tools, and business context.</div>
+              </div>
+            )}
+            {activePerson.origin === 'Ready' && (
+              <div>
+                <div className="mb-3 grid grid-cols-3 gap-1.5">
+                  {[0, 1, 2].map((item) => (
+                    <div key={item} className="rounded-lg border border-[#DDF6E8] bg-[#F3FCF7] p-1.5">
+                      <div className="mb-1 h-5 rounded-md bg-[#3EAB6E]/15" />
+                      <div className="mx-auto h-1 w-8 rounded-full bg-[#3EAB6E]/30" />
+                    </div>
+                  ))}
+                </div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Pick a ready-made agent and place it directly into a workflow.</div>
+              </div>
+            )}
           </div>
           <div className="mt-3 flex items-center gap-1.5">
             {['Ready', 'Bring', 'Create'].map((origin) => (
