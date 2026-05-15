@@ -1776,14 +1776,15 @@ const MeegleHomepage = () => {
       </nav>
 
       {/* HERO */}
-      <section ref={heroRef} className="relative pt-32 md:pt-40 pb-20 bg-gradient-to-b from-[#FAFBFF] via-white to-white overflow-hidden">
-        <div className="absolute top-0 right-[-5%] w-[600px] h-[600px] rounded-full bg-[#5B5FE3]/[0.015] blur-[100px]" />
-        <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-[#F59E0B]/[0.008] blur-[80px]" />
+      <section ref={heroRef} className="relative pt-32 md:pt-40 pb-20 bg-gradient-to-br from-[#F7F8FF] via-white to-[#F7FFFB] overflow-hidden">
+        <div className="absolute top-[-22%] left-[-12%] h-[560px] w-[560px] rounded-full bg-[#5B5FE3]/[0.075] blur-[120px]" />
+        <div className="absolute top-[10%] right-[-8%] h-[620px] w-[620px] rounded-full bg-[#10B981]/[0.065] blur-[135px]" />
+        <div className="absolute bottom-[-28%] left-[28%] h-[560px] w-[720px] rounded-full bg-[#F59E0B]/[0.045] blur-[130px]" />
+        <div className="absolute bottom-[8%] right-[18%] h-[420px] w-[420px] rounded-full bg-[#EC4899]/[0.035] blur-[110px]" />
+        <div className="absolute inset-0 opacity-55" style={{ backgroundImage: 'linear-gradient(rgba(91,95,227,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(91,95,227,0.045) 1px, transparent 1px)', backgroundSize: '88px 88px', maskImage: 'radial-gradient(ellipse at 52% 38%, black 0%, transparent 68%)' }} />
 
         <div className="relative w-full max-w-[1340px] mx-auto px-6">
-          <div className="absolute inset-x-3 top-6 bottom-4 rounded-[48px] bg-gradient-to-br from-[#F7F8FF] via-white to-[#F8FBFF] shadow-[0_40px_120px_rgba(91,95,227,0.08)]" />
-          <div className="absolute inset-x-3 top-6 bottom-4 rounded-[48px] opacity-80" style={{ background: 'radial-gradient(circle at 16% 32%, rgba(91,95,227,0.08), transparent 34%), radial-gradient(circle at 72% 45%, rgba(16,185,129,0.07), transparent 30%), radial-gradient(circle at 86% 22%, rgba(236,72,153,0.06), transparent 28%)' }} />
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-16 items-center px-5 py-8 md:px-10 md:py-12">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-16 items-center">
             <div className="animate-fade-slide-up order-2 lg:order-1">
               <h1 className="text-[40px] md:text-[56px] leading-[1.0] font-black tracking-[-0.05em] text-[#0A0A14]">
                 Architect. Ship.
@@ -1801,12 +1802,6 @@ const MeegleHomepage = () => {
                 <button className="group rounded-2xl bg-[#0A0A14] px-8 py-4 text-[15px] font-bold text-white hover:bg-[#1A1A2E] transition-all shadow-[0_8px_30px_rgba(10,10,20,.2)]">
                   Get Started Free
                   <ArrowRight size={15} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
-                </button>
-                <button className="group flex items-center gap-2.5 rounded-2xl border border-[#E2E4E9] bg-white px-6 py-4 text-[15px] font-semibold text-[#111827] hover:bg-[#F9FAFB] transition-all">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#F4F6FF] text-[#5B5FE3] group-hover:scale-110 transition-transform">
-                    <Play size={13} fill="#5B5FE3" />
-                  </span>
-                  Watch Demo
                 </button>
               </div>
             </div>
@@ -2269,24 +2264,32 @@ const HUMAN_PALETTE = ['#FDE68A', '#BFDBFE', '#FBCFE8', '#BBF7D0']
 const getFlowNode = (id) => FLOW_NODES.find(node => node.id === id)
 
 const PersonAvatar = ({ color = '#FDE68A', size = 30 }) => (
-  <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true">
-    <circle cx="16" cy="16" r="15" fill="#fff" opacity="0.95" />
-    <circle cx="16" cy="12" r="5.2" fill={color} />
-    <path d="M7.5 27c1.2-7 4.2-10.5 8.5-10.5S23.3 20 24.5 27" fill={color} opacity="0.78" />
-    <circle cx="14.2" cy="11.6" r="0.75" fill="#111827" />
-    <circle cx="17.8" cy="11.6" r="0.75" fill="#111827" />
+  <svg viewBox="0 0 36 36" width={size} height={size} aria-hidden="true">
+    <ellipse cx="18" cy="30" rx="12" ry="4.2" fill="#172033" opacity="0.08" />
+    <rect x="7" y="4.5" width="22" height="25" rx="11" fill="#fff" />
+    <path d="M9.2 28.8c1.4-5.8 4.4-8.7 8.8-8.7s7.4 2.9 8.8 8.7" fill={color} />
+    <path d="M11.2 15.4c0-5.1 3-8.6 7.2-8.6 3.6 0 6.4 2.4 6.4 6.2 0 4.6-2.9 8.4-6.9 8.4-3.8 0-6.7-2.5-6.7-6z" fill="#FFD8B8" />
+    <path d="M10.2 14.2c.4-5.8 3.7-9.1 8.6-9.1 3.7 0 6.7 2.1 7.6 5.4-4.3.1-7.7-.8-10.1-2.4-1.2 2.7-3.2 4.8-6.1 6.1z" fill="#2A2F45" />
+    <circle cx="15.5" cy="15.5" r="0.9" fill="#172033" />
+    <circle cx="21.2" cy="15.5" r="0.9" fill="#172033" />
+    <path d="M16.2 18.5c1.3 1 2.7 1 4 0" fill="none" stroke="#172033" strokeWidth="1.1" strokeLinecap="round" opacity="0.55" />
+    <circle cx="9.2" cy="8.6" r="2.2" fill={color} opacity="0.85" />
   </svg>
 )
 
 const AgentAvatar = ({ color = '#5B5FE3', size = 30 }) => (
-  <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true">
-    <circle cx="16" cy="16" r="15" fill="#fff" opacity="0.95" />
-    <rect x="8.5" y="9" width="15" height="11" rx="5.5" fill={color} />
-    <path d="M16 9V5.5" stroke={color} strokeWidth="2" strokeLinecap="round" />
-    <circle cx="16" cy="5" r="1.6" fill={color} />
-    <rect x="11" y="19" width="10" height="5" rx="2.5" fill={color} opacity="0.62" />
-    <circle cx="13.4" cy="14.2" r="1" fill="white" />
-    <circle cx="18.6" cy="14.2" r="1" fill="white" />
+  <svg viewBox="0 0 36 36" width={size} height={size} aria-hidden="true">
+    <ellipse cx="18" cy="30" rx="12.5" ry="4.2" fill="#172033" opacity="0.08" />
+    <rect x="6.5" y="6.5" width="23" height="22" rx="9" fill="#fff" />
+    <rect x="9.5" y="9.5" width="17" height="13.5" rx="6.8" fill={color} />
+    <path d="M13 25.4h10" stroke={color} strokeWidth="3.2" strokeLinecap="round" opacity="0.56" />
+    <path d="M18 9.5V5.8" stroke={color} strokeWidth="2.2" strokeLinecap="round" />
+    <circle cx="18" cy="5.2" r="1.8" fill="#FF5A8A" />
+    <circle cx="15" cy="16.1" r="1.15" fill="#fff" />
+    <circle cx="21" cy="16.1" r="1.15" fill="#fff" />
+    <path d="M15.9 19c1.2.9 3 .9 4.2 0" fill="none" stroke="#fff" strokeWidth="1.2" strokeLinecap="round" opacity="0.9" />
+    <path d="M26.2 8.2l.8-1.7.9 1.7 1.8.7-1.8.8-.9 1.8-.8-1.8-1.8-.8 1.8-.7z" fill="#10B981" />
+    <path d="M7.4 11.7l.6-1.2.6 1.2 1.2.5-1.2.6-.6 1.2-.6-1.2-1.2-.6 1.2-.5z" fill="#F59E0B" />
   </svg>
 )
 
