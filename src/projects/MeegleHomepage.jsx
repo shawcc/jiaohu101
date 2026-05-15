@@ -1064,6 +1064,9 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                                 小A · selected
                               </div>
                               <div className="pointer-events-none absolute left-1/2 top-[-24px] z-40 h-16 w-16 -translate-x-1/2 rounded-full border-2 border-[#5B5FE3]/30 bg-[#5B5FE3]/10 shadow-[0_18px_46px_rgba(91,95,227,0.22)]" />
+                              <div className="pointer-events-none absolute left-[calc(50%+26px)] top-[-36px] z-50 flex h-8 w-8 items-center justify-center rounded-xl border border-[#FDE7B6] bg-[#FFF7E6] text-[14px] shadow-[0_12px_30px_rgba(180,83,9,0.20)]">
+                                ▣
+                              </div>
                             </>
                           )}
                         </div>
@@ -1369,12 +1372,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <text x="282" y="431" fill="#16A34A" fontSize="11" fontWeight="850">All integrations, content streams, and signals unified in one context layer</text>
           </g>
         </svg>
-        <div className="pointer-events-none absolute left-[30%] top-[38%] z-40 -translate-x-1/2 -translate-y-1/2">
-          <div className="flex items-center gap-2 rounded-full border border-[#5B5FE3]/18 bg-white/90 px-2.5 py-2 shadow-[0_18px_42px_rgba(91,95,227,0.14)] backdrop-blur">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#5B5FE3] text-[13px] font-black text-white">小A</span>
-            <div className="text-[10px] font-black uppercase tracking-[0.13em] text-[#5B5FE3]">with context</div>
-          </div>
-        </div>
         <div className="xiao-a-context-bag pointer-events-none absolute right-[9%] top-[23%] z-40 w-[210px] rounded-[26px] border border-[#FDE7B6] bg-white/94 p-4 shadow-[0_24px_60px_rgba(180,83,9,0.18)] backdrop-blur-xl">
           <div className="mb-3 flex items-center justify-between">
             <div className="text-[11px] font-black uppercase tracking-[0.14em] text-[#B45309]">小A's package</div>
@@ -2084,8 +2081,8 @@ const MeegleHomepage = () => {
   const agentX = 76 + ((68 - 76) * agentHop)
   const agentY = 46 + ((56 - 46) * agentHop) - Math.sin(agentHop * Math.PI) * 12
   const agentScale = 0.9 + Math.sin(agentHop * Math.PI) * 0.22
-  const packageX = 68 + ((82 - 68) * packageHop)
-  const packageY = 56 + ((35 - 56) * packageHop) - Math.sin(packageHop * Math.PI) * 10
+  const packageX = 70 + ((82 - 70) * packageHop)
+  const packageY = 54 + ((35 - 54) * packageHop) - Math.sin(packageHop * Math.PI) * 10
   const packageScale = 0.78 + (0.32 * packageHop)
   const showAgentHop = stackProgress >= 0.05 && stackProgress < 0.42
   const showPackageHop = stackProgress >= 0.34 && stackProgress <= 0.76
@@ -2359,7 +2356,7 @@ const MeegleHomepage = () => {
                 <div className="story-pulse flex items-center gap-2 rounded-full border border-white/75 bg-white/94 px-3 py-2 shadow-[0_20px_55px_rgba(91,95,227,0.24)] backdrop-blur-xl">
                   <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#5B5FE3] text-[14px] font-black text-white">小A</span>
                   <span className="pr-1 text-[11px] font-black uppercase tracking-[0.14em] text-[#5B5FE3]">
-                    SOP → Seat
+                    workflow → seat
                   </span>
                 </div>
               </div>
@@ -2379,8 +2376,8 @@ const MeegleHomepage = () => {
                   <div className="mb-2 flex items-center gap-2">
                     <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFF7E6] text-[16px]">▣</span>
                     <div>
-                      <div className="text-[10px] font-black uppercase tracking-[0.14em] text-[#B45309]">context package</div>
-                      <div className="text-[10px] font-bold text-[#646A73]">Seat → Context</div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.14em] text-[#B45309]">小A's package</div>
+                      <div className="text-[10px] font-bold text-[#646A73]">seat → context</div>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-1.5">
