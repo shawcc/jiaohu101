@@ -107,7 +107,9 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
   if (card.id === 'workflows') {
     return (
       <div className="relative w-full h-full flex items-center justify-center">
+        {illustrationVariant !== 'v5' && (
         <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#F4F6FF] to-[#E8EBFF]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
+        )}
         {illustrationVariant === 'v2' && (
         <svg viewBox="0 0 600 420" className="relative w-full max-w-[600px] h-auto drop-shadow-2xl" style={{ filter: 'drop-shadow(0 20px 40px rgba(91,94,227,0.10))' }}>
           <defs>
