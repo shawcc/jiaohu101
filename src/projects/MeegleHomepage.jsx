@@ -1126,10 +1126,10 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
           {/* Popular integrations */}
           {[
-            { x: 58, y: 58, label: 'Slack', icon: 'S', color: '#7C3AED' },
-            { x: 176, y: 28, label: 'Jira', icon: 'J', color: '#2563EB' },
-            { x: 556, y: 28, label: 'GitHub', icon: 'G', color: '#111827' },
-            { x: 676, y: 64, label: 'Figma', icon: 'F', color: '#EC4899' },
+            { x: 58, y: 86, label: 'Slack', icon: 'S', color: '#7C3AED' },
+            { x: 170, y: 164, label: 'Jira', icon: 'J', color: '#2563EB' },
+            { x: 556, y: 164, label: 'GitHub', icon: 'G', color: '#111827' },
+            { x: 676, y: 88, label: 'Figma', icon: 'F', color: '#EC4899' },
             { x: 612, y: 392, label: 'Drive', icon: 'D', color: '#10B981' },
             { x: 650, y: 392, label: 'Notion', icon: 'N', color: '#111827' },
             { x: 70, y: 394, label: 'Confluence', icon: 'C', color: '#F59E0B' },
@@ -1182,18 +1182,21 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
           {/* Context Center distributes normalized information packages upward */}
           <g>
-            <rect x="186" y="58" width="448" height="88" rx="28" fill="#FFFFFF" opacity="0.52" stroke="#FDE7B6" />
-            <text x="410" y="82" textAnchor="middle" fill="#B45309" fontSize="9" fontWeight="900" letterSpacing="1.6">AI-READY INFORMATION PACKAGES</text>
+            <rect x="122" y="36" width="576" height="104" rx="28" fill="#FFFFFF" opacity="0.72" stroke="#FDE7B6" strokeWidth="1.2" filter="url(#uc-shadow)" />
+            <rect x="146" y="54" width="112" height="22" rx="11" fill="#FFF7E6" />
+            <text x="202" y="69" textAnchor="middle" fill="#B45309" fontSize="8.5" fontWeight="900" letterSpacing="1.1">PACKAGE LAYER</text>
+            <text x="410" y="67" textAnchor="middle" fill="#111827" fontSize="12" fontWeight="900">Packaged context for every agent</text>
+            <text x="652" y="67" textAnchor="middle" fill="#5B5FE3" fontSize="9" fontWeight="900">Agent-ready output</text>
           </g>
           {[
-            { x: 206, y: 96, label: 'Brief', sub: 'executive summary', color: '#5B5FE3', anchorX: 344 },
-            { x: 322, y: 96, label: 'Risk', sub: 'early signals', color: '#EF4444', anchorX: 388 },
-            { x: 438, y: 96, label: 'Timeline', sub: 'next milestones', color: '#F59E0B', anchorX: 432 },
-            { x: 554, y: 96, label: 'Decision', sub: 'recommended action', color: '#10B981', anchorX: 476 },
+            { x: 160, y: 86, color: '#5B5FE3', anchorX: 296 },
+            { x: 280, y: 86, color: '#EF4444', anchorX: 372 },
+            { x: 400, y: 86, color: '#F59E0B', anchorX: 448 },
+            { x: 520, y: 86, color: '#10B981', anchorX: 524 },
           ].map((packet, i) => (
-            <g key={`packet-line-${packet.label}`}>
+            <g key={`packet-line-${i}`}>
               <path
-                d={`M410 150 C410 ${136 - i * 3}, ${packet.anchorX} ${packet.y + 26}, ${packet.x + 54} ${packet.y + 26}`}
+                d={`M410 150 C410 136, ${packet.anchorX} 132, ${packet.x + 52} 132`}
                 fill="none"
                 stroke={packet.color}
                 strokeWidth="1.8"
@@ -1202,7 +1205,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               >
                 <animate attributeName="stroke-dashoffset" from="24" to="0" dur={`${1.8 + i * 0.18}s`} repeatCount="indefinite" />
               </path>
-              <circle cx={packet.x + 54} cy={packet.y + 26} r="4.5" fill={packet.color} opacity="0.72">
+              <circle cx={packet.x + 52} cy="132" r="4.5" fill={packet.color} opacity="0.72">
                 <animate attributeName="opacity" values="0.2;0.9;0.2" dur={`${1.6 + i * 0.18}s`} repeatCount="indefinite" />
               </circle>
             </g>
@@ -1240,27 +1243,19 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           ))}
 
           {[
-            { x: 206, y: 96, label: 'Brief', sub: 'executive summary', icon: 'B', color: '#5B5FE3' },
-            { x: 322, y: 96, label: 'Risk', sub: 'early signals', icon: 'R', color: '#EF4444' },
-            { x: 438, y: 96, label: 'Timeline', sub: 'next milestones', icon: 'T', color: '#F59E0B' },
-            { x: 554, y: 96, label: 'Decision', sub: 'recommended action', icon: 'D', color: '#10B981' },
+            { x: 160, y: 86, sub: 'for planning', icon: '01', color: '#5B5FE3' },
+            { x: 280, y: 86, sub: 'for risk', icon: '02', color: '#EF4444' },
+            { x: 400, y: 86, sub: 'for status', icon: '03', color: '#F59E0B' },
+            { x: 520, y: 86, sub: 'for actions', icon: '04', color: '#10B981' },
           ].map((packet, i) => (
-            <g key={`packet-card-${packet.label}`}>
-              <animateTransform
-                attributeName="transform"
-                type="translate"
-                values={`0 0; 0 ${i % 2 === 0 ? -5 : -3}; 0 0`}
-                dur={`${3.2 + i * 0.25}s`}
-                repeatCount="indefinite"
-              />
-              <rect x={packet.x} y={packet.y} width="108" height="58" rx="18" fill="white" stroke={packet.color} strokeWidth="1.8" strokeOpacity="0.34" filter="url(#uc-shadow)" />
-              <rect x={packet.x + 8} y={packet.y + 38} width="68" height="5" rx="2.5" fill={packet.color} opacity="0.12" />
-              <rect x={packet.x + 8} y={packet.y + 48} width="44" height="4" rx="2" fill={packet.color} opacity="0.10" />
-              <circle cx={packet.x + 22} cy={packet.y + 21} r="13" fill={packet.color} opacity="0.14" />
-              <text x={packet.x + 22} y={packet.y + 25} textAnchor="middle" fill={packet.color} fontSize="10" fontWeight="950">{packet.icon}</text>
-              <text x={packet.x + 42} y={packet.y + 19} fill="#111827" fontSize="11" fontWeight="900">{packet.label}</text>
-              <text x={packet.x + 42} y={packet.y + 32} fill="#8F959E" fontSize="7.3" fontWeight="750">{packet.sub}</text>
-              <circle cx={packet.x + 94} cy={packet.y + 14} r="3.5" fill={packet.color} opacity="0.65">
+            <g key={`packet-card-${i}`}>
+              <rect x={packet.x} y={packet.y} width="104" height="42" rx="14" fill="white" stroke={packet.color} strokeWidth="1.8" strokeOpacity="0.34" filter="url(#uc-shadow)" />
+              <rect x={packet.x + 10} y={packet.y + 28} width="56" height="4" rx="2" fill={packet.color} opacity="0.12" />
+              <circle cx={packet.x + 19} cy={packet.y + 18} r="10" fill={packet.color} opacity="0.14" />
+              <text x={packet.x + 19} y={packet.y + 21} textAnchor="middle" fill={packet.color} fontSize="7.2" fontWeight="950">{packet.icon}</text>
+              <text x={packet.x + 36} y={packet.y + 17} fill="#111827" fontSize="11" fontWeight="900">Package</text>
+              <text x={packet.x + 36} y={packet.y + 29} fill="#8F959E" fontSize="7.2" fontWeight="750">{packet.sub}</text>
+              <circle cx={packet.x + 91} cy={packet.y + 13} r="3.5" fill={packet.color} opacity="0.65">
                 <animate attributeName="r" values="2.4;4;2.4" dur={`${2 + i * 0.2}s`} repeatCount="indefinite" />
               </circle>
             </g>
