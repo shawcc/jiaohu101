@@ -1002,7 +1002,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                           <div className={`absolute left-1/2 top-[-25px] w-[82px] -translate-x-1/2 rounded-full border px-2 py-1 text-center text-[7px] font-black uppercase tracking-[0.06em] shadow-[0_12px_24px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'scale-100 border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] opacity-100' : 'pointer-events-none scale-95 border-white/0 bg-transparent text-white/0 opacity-0'}`}>
                             Hire · Bring · Create
                           </div>
-                          <div className={`flex h-9 w-9 items-center justify-center rounded-full border border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/24 bg-white/[0.04] text-white/32'}`}>
+                          <div className={`flex h-9 w-9 items-center justify-center rounded-full border border-dashed transition-all duration-300 ${active ? 'scale-100 border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] opacity-100 shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'pointer-events-none scale-90 border-white/0 bg-transparent text-white/0 opacity-0'}`}>
                             <span className="text-[16px] font-black leading-none">+</span>
                           </div>
                         </div>
@@ -1010,7 +1010,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                       <div className={`relative h-full min-h-[38px] rounded-t-[10px] border border-[#5C0C0D]/60 bg-gradient-to-b from-[#B93425] via-[#8E1D18] to-[#5C0C0D] shadow-[inset_0_3px_0_rgba(255,255,255,0.16),0_7px_12px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'brightness-125 ring-2 ring-white/70' : ''}`}>
                         <div className="absolute inset-x-1 top-1 h-2 rounded-full bg-white/18" />
                         <div className="absolute bottom-0 left-1/2 h-[32%] w-[84%] -translate-x-1/2 rounded-t-[8px] bg-black/12" />
-                        {empty && <div className="absolute inset-1 rounded-t-[7px] border border-dashed border-white/20 bg-white/[0.03]" />}
+                        {empty && <div className={`absolute inset-1 rounded-t-[7px] border border-dashed transition-all duration-300 ${active ? 'border-white/55 bg-white/10' : 'border-white/0 bg-transparent'}`} />}
                       </div>
                     </button>
                   )
