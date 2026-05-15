@@ -4,6 +4,8 @@ import {
   ArrowUpRight,
   Bot,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   GitBranch,
   Globe,
   Layers,
