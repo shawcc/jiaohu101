@@ -2215,24 +2215,7 @@ const FLOW_EDGES = [
   { from: 'merge', to: 'outcome' },
 ]
 
-const HUMAN_PALETTE = ['#FDE68A', '#BFDBFE', '#FBCFE8', '#BBF7D0']
-
 const getFlowNode = (id) => FLOW_NODES.find(node => node.id === id)
-
-const PersonAvatar = ({ color = '#FDE68A', size = 44 }) => (
-  <svg viewBox="0 0 52 58" width={size} height={size} aria-hidden="true">
-    <ellipse cx="26" cy="53" rx="16" ry="4.2" fill="#172033" opacity="0.08" />
-    <path d="M15 52c1.3-8.4 5-12.6 11-12.6S35.8 43.6 37 52H15z" fill={color} />
-    <path d="M17 43.5c-3.4-1.1-5.4-3-6.1-5.8" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
-    <path d="M35 43.5c3.4-1.1 5.4-3 6.1-5.8" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
-    <path d="M17 23c0-9.4 5.3-15.2 13-15.2 6.1 0 10.7 4.3 10.7 11.1 0 9.4-5.6 16.7-13.1 16.7C21.3 35.6 17 30.6 17 23z" fill="#FFD9BF" />
-    <path d="M15.2 22.4C16 12.5 21.3 6.2 30.1 6.2c6.8 0 11.4 4 12.5 9.6-6.8.4-12.4-1-16.5-4.1-2 4.8-5.6 8.4-10.9 10.7z" fill="#252A3D" />
-    <circle cx="24.5" cy="23.8" r="1.2" fill="#172033" />
-    <circle cx="33.5" cy="23.8" r="1.2" fill="#172033" />
-    <path d="M26.3 29c2 1.4 4.2 1.4 6.2 0" fill="none" stroke="#172033" strokeWidth="1.4" strokeLinecap="round" opacity="0.6" />
-    <circle cx="15.2" cy="11.4" r="3" fill={color} opacity="0.9" />
-  </svg>
-)
 
 const AgentAvatar = ({ color = '#5B5FE3', size = 44 }) => (
   <svg viewBox="0 0 52 58" width={size} height={size} aria-hidden="true">
@@ -2252,7 +2235,7 @@ const AgentAvatar = ({ color = '#5B5FE3', size = 44 }) => (
   </svg>
 )
 
-const FlowNodeCard = ({ node, index, visible, active, assigned, completeState, showHuman, confirming }) => (
+const FlowNodeCard = ({ node, index, visible, active, assigned, completeState, confirming }) => (
   <div className="absolute" style={{
     left: node.x,
     top: node.y,
@@ -2277,7 +2260,8 @@ const FlowNodeCard = ({ node, index, visible, active, assigned, completeState, s
       filter: 'blur(12px)',
       transform: 'translate(10px, 4px)',
     }} />
-    <div className="relative flex h-full items-center justify-center overflow-hidden rounded-[14px] border bg-white/85 px-3 shadow-[10px_18px_34px_rgba(38,45,64,0.13)] backdrop-blur" style={{
+    <div className="relative flex h-full items-center overflow-hidden rounded-[14px] border px-3 shadow-[10px_18px_34px_rgba(38,45,64,0.13)] backdrop-blur" style={{
+      background: completeState === 'confirmed' ? '#10b981' : 'rgba(255,255,255,0.86)',
       borderColor: active ? `${node.color}88` : completeState === 'confirmed' ? '#10b98166' : completeState === 'agentDone' ? '#2563eb66' : 'rgba(148,163,184,0.35)',
       boxShadow: active
         ? `0 0 0 3px ${node.color}16, 12px 20px 38px rgba(38,45,64,0.16)`
@@ -2287,35 +2271,26 @@ const FlowNodeCard = ({ node, index, visible, active, assigned, completeState, s
             ? '0 0 0 3px rgba(37,99,235,0.10), 12px 20px 38px rgba(38,45,64,0.13)'
           : '10px 18px 34px rgba(38,45,64,0.12)',
     }}>
-      <span className="absolute left-3 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full" style={{ background: completeState === 'confirmed' ? '#10b981' : completeState === 'agentDone' ? '#2563EB' : node.color }} />
-      <span className="h-2 w-[42%] rounded-full opacity-40" style={{ background: node.color }} />
-      <span className="ml-2 h-2 w-[18%] rounded-full opacity-20" style={{ background: node.color }} />
-      <span className="absolute inset-x-3 bottom-1.5 h-px opacity-25" style={{ background: `linear-gradient(90deg, transparent, ${node.color}, transparent)` }} />
-      {completeState === 'agentDone' && (
-        <span className="absolute right-2 rounded-md bg-[#EFF6FF] px-1.5 py-0.5 text-[8px] font-black text-[#2563EB]">DONE</span>
-      )}
-      {completeState === 'confirmed' && (
-        <span className="absolute right-2 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10b981]">
-          <svg viewBox="0 0 10 10" width="9" height="9">
-            <path d="M2 5l2 2L8 3" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+      <span className="absolute left-3 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full" style={{ background: completeState === 'confirmed' ? 'white' : completeState === 'agentDone' ? '#2563EB' : node.color, opacity: completeState === 'confirmed' ? 0.9 : 1 }} />
+      <span className="ml-5 h-2 w-[36%] rounded-full" style={{ background: completeState === 'confirmed' ? 'white' : node.color, opacity: completeState === 'confirmed' ? 0.72 : 0.4 }} />
+      <span className="ml-2 h-2 w-[15%] rounded-full" style={{ background: completeState === 'confirmed' ? 'white' : node.color, opacity: completeState === 'confirmed' ? 0.42 : 0.2 }} />
+      {assigned && (
+        <span className="absolute right-1 top-1/2 -translate-y-1/2">
+          <AgentAvatar color={completeState === 'confirmed' ? '#059669' : AGENT_BENCH[index % AGENT_BENCH.length].color} size={32} />
         </span>
       )}
+      <span className="absolute inset-x-3 bottom-1.5 h-px opacity-25" style={{ background: completeState === 'confirmed' ? 'rgba(255,255,255,0.8)' : `linear-gradient(90deg, transparent, ${node.color}, transparent)` }} />
+      {completeState === 'agentDone' && (
+        <span className="absolute right-10 rounded-md bg-[#EFF6FF] px-1.5 py-0.5 text-[8px] font-black text-[#2563EB]">DONE</span>
+      )}
     </div>
-    {assigned && (
-      <div className="absolute -top-11 left-1/2 flex -translate-x-1/2 items-end" style={{ animation: 'bounceIn 0.45s cubic-bezier(0.16,1,0.3,1) both' }}>
-        <AgentAvatar color={AGENT_BENCH[index % AGENT_BENCH.length].color} size={46} />
-      </div>
-    )}
-    {showHuman && (
-      <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/80 bg-white/85 px-1.5 py-1 shadow-[0_12px_28px_rgba(38,45,64,0.14)] backdrop-blur" style={{
+    {confirming && (
+      <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full border border-white/80 bg-white/90 px-1.5 py-1 shadow-[0_12px_28px_rgba(38,45,64,0.14)] backdrop-blur" style={{
         top: node.h + 10,
         transform: 'translateX(-50%)',
       }}>
-        <PersonAvatar color={HUMAN_PALETTE[index % HUMAN_PALETTE.length]} size={36} />
-        {confirming && (
-          <span className="rounded-full bg-[#10b981] px-2 py-0.5 text-[9px] font-black text-white">Confirm</span>
-        )}
+        <span className="rounded-full bg-[#10b981] px-2 py-0.5 text-[9px] font-black text-white">Confirm</span>
+        <span className="rounded-full bg-[#F1F5F9] px-2 py-0.5 text-[9px] font-black text-[#64748B]">Redo</span>
       </div>
     )}
   </div>
@@ -2396,7 +2371,7 @@ const GameWorkflowBoard = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       setFrame(current => {
-        const maxFrame = activeStep === 0 ? FLOW_NODES.length - 1 : activeStep === 1 ? 1 : FLOW_NODES.length * 2 - 1
+        const maxFrame = activeStep === 0 ? FLOW_NODES.length - 1 : activeStep === 1 ? 1 : FLOW_NODES.length * 2
         if (current < maxFrame) return current + 1
         setActiveStep(step => (step + 1) % FLOW_STEPS.length)
         return 0
@@ -2407,9 +2382,10 @@ const GameWorkflowBoard = () => {
 
   const visibleNodeCount = activeStep === 0 ? frame + 1 : FLOW_NODES.length
   const assignedNodeCount = activeStep >= 1 ? FLOW_NODES.length : 0
-  const confirmedNodeCount = activeStep === 2 ? Math.ceil(frame / 2) : 0
-  const agentDoneNodeIndex = activeStep === 2 && frame % 2 === 0 ? Math.floor(frame / 2) : -1
-  const confirmingNodeIndex = activeStep === 2 && frame % 2 === 1 ? Math.floor(frame / 2) : -1
+  const currentDeliverIndex = Math.floor(frame / 2)
+  const confirmedNodeCount = activeStep === 2 ? Math.min(currentDeliverIndex, FLOW_NODES.length) : 0
+  const agentDoneNodeIndex = activeStep === 2 && frame % 2 === 0 && currentDeliverIndex < FLOW_NODES.length ? currentDeliverIndex : -1
+  const confirmingNodeIndex = activeStep === 2 && frame % 2 === 1 && currentDeliverIndex < FLOW_NODES.length ? currentDeliverIndex : -1
 
   return (
     <div className="relative w-full select-none overflow-visible" style={{ height: FLOW_BOARD_H }}>
@@ -2441,7 +2417,6 @@ const GameWorkflowBoard = () => {
             active={(activeStep === 0 && idx === frame) || (activeStep === 1 && assignedNodeCount === FLOW_NODES.length)}
             assigned={idx < assignedNodeCount}
             completeState={idx < confirmedNodeCount ? 'confirmed' : idx === agentDoneNodeIndex ? 'agentDone' : null}
-            showHuman={idx === confirmingNodeIndex}
             confirming={idx === confirmingNodeIndex}
           />
         ))}
