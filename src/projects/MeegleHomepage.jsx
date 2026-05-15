@@ -67,11 +67,12 @@ const STACK_CARDS = [
   }
 ]
 
-const AgentCardIllustration = ({ card, isVisible }) => {
+const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) => {
   if (card.id === 'workflows') {
     return (
       <div className="relative w-full h-full flex items-center justify-center">
         <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#F4F6FF] to-[#E8EBFF]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
+        {illustrationVariant === 'v2' && (
         <svg viewBox="0 0 600 420" className="relative w-full max-w-[600px] h-auto drop-shadow-2xl" style={{ filter: 'drop-shadow(0 20px 40px rgba(91,94,227,0.10))' }}>
           <defs>
             <linearGradient id="wf-bg" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -285,6 +286,297 @@ const AgentCardIllustration = ({ card, isVisible }) => {
             <text x="300" y="370" textAnchor="middle" fill="#5B5FE3" fontSize="9" fontWeight="600" opacity="0.4" fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="1">BUILD · DEPLOY · SCALE</text>
           </g>
         </svg>
+        )}
+{illustrationVariant === 'v3' && (
+          <svg viewBox="0 0 720 480" className="relative w-full max-w-[720px] h-auto drop-shadow-2xl" style={{ filter: 'drop-shadow(0 20px 40px rgba(91,94,227,0.10))' }}>
+            <defs>
+              <radialGradient id="v3-aura1" cx="20%" cy="15%" r="60%">
+                <stop offset="0%" stopColor="#5B5FE3" stopOpacity="0.16" />
+                <stop offset="100%" stopColor="#5B5FE3" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="v3-aura2" cx="75%" cy="55%" r="50%">
+                <stop offset="0%" stopColor="#787BEE" stopOpacity="0.12" />
+                <stop offset="100%" stopColor="#787BEE" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="v3-aura3" cx="45%" cy="80%" r="45%">
+                <stop offset="0%" stopColor="#A78BFA" stopOpacity="0.10" />
+                <stop offset="100%" stopColor="#A78BFA" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="v3-accent" cx="85%" cy="30%" r="40%">
+                <stop offset="0%" stopColor="#34D399" stopOpacity="0.07" />
+                <stop offset="100%" stopColor="#34D399" stopOpacity="0" />
+              </radialGradient>
+              <filter id="v3-glow">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+              <filter id="v3-shadow">
+                <feDropShadow dx="0" dy="1.5" stdDeviation="2.5" floodColor="#000" floodOpacity="0.25" />
+              </filter>
+              <filter id="v3-glow-strong">
+                <feGaussianBlur stdDeviation="7" result="blur" />
+                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+              </filter>
+              <radialGradient id="v3-node-purple" cx="40%" cy="30%">
+                <stop offset="0%" stopColor="#3C3ED8" />
+                <stop offset="100%" stopColor="#1E1F4A" />
+              </radialGradient>
+              <radialGradient id="v3-node-blue" cx="40%" cy="30%">
+                <stop offset="0%" stopColor="#5558E8" />
+                <stop offset="100%" stopColor="#252760" />
+              </radialGradient>
+              <radialGradient id="v3-node-lavender" cx="40%" cy="30%">
+                <stop offset="0%" stopColor="#7B6FF0" />
+                <stop offset="100%" stopColor="#2D2868" />
+              </radialGradient>
+              <radialGradient id="v3-node-teal" cx="40%" cy="30%">
+                <stop offset="0%" stopColor="#2DD4A0" />
+                <stop offset="100%" stopColor="#0F2D28" />
+              </radialGradient>
+              <radialGradient id="v3-node-amber" cx="40%" cy="30%">
+                <stop offset="0%" stopColor="#E8A040" />
+                <stop offset="100%" stopColor="#2D1E10" />
+              </radialGradient>
+              <radialGradient id="v3-node-active" cx="40%" cy="30%">
+                <stop offset="0%" stopColor="#6B6FF0" />
+                <stop offset="100%" stopColor="#3C3ED8" />
+              </radialGradient>
+              <pattern id="v3-dots" width="16" height="16" patternUnits="userSpaceOnUse">
+                <circle cx="8" cy="8" r="0.3" fill="#FFFFFF" opacity="0.04" />
+              </pattern>
+            </defs>
+
+            {/* Background */}
+            <rect width="720" height="480" rx="20" fill="#0C0E21" />
+            <rect width="720" height="480" rx="20" fill="url(#v3-aura1)" />
+            <rect width="720" height="480" rx="20" fill="url(#v3-aura2)" />
+            <rect width="720" height="480" rx="20" fill="url(#v3-aura3)" />
+            <rect width="720" height="480" rx="20" fill="url(#v3-accent)" />
+            <rect width="720" height="480" rx="20" fill="url(#v3-dots)" />
+
+            {/* Blueprint framing */}
+            <rect x="14" y="14" width="692" height="452" rx="14" fill="none" stroke="#FFFFFF" strokeOpacity="0.03" strokeWidth="0.5" />
+            {[[24,24],[696,24],[24,456],[696,456]].map(([cx, cy]) => (
+              <g key={`v3c-${cx}`} opacity="0.05">
+                <line x1={cx} y1={cy} x2={cx + 18} y2={cy} stroke="#FFFFFF" strokeWidth="0.5" />
+                <line x1={cx} y1={cy} x2={cx} y2={cy + 18} stroke="#FFFFFF" strokeWidth="0.5" />
+              </g>
+            ))}
+
+            {/* ===== CONNECTION PATHS (rendered first, below nodes) ===== */}
+            <g fill="none" strokeWidth="1.5">
+              {/* Purple zone (Product/R&D) connections */}
+              <path d="M83,54 C103,48 123,48 140,52" stroke="#5B5FE3" strokeOpacity="0.35" strokeWidth="2" />
+              <path d="M83,54 C103,54 123,66 145,80" stroke="#5B5FE3" strokeOpacity="0.25" strokeWidth="1.5" />
+              <path d="M83,54 C103,54 123,78 155,110" stroke="#5B5FE3" strokeOpacity="0.2" strokeWidth="1.2" strokeDasharray="5,5" />
+
+              <path d="M188,52 C208,52 220,62 233,80" stroke="#5B5FE3" strokeOpacity="0.3" strokeWidth="1.5" />
+              <path d="M188,52 C208,52 225,80 245,110" stroke="#5B5FE3" strokeOpacity="0.2" strokeWidth="1.2" strokeDasharray="4,6" />
+
+              <path d="M140,130 C155,130 170,110 185,108" stroke="#5B5FE3" strokeOpacity="0.3" strokeWidth="1.8" />
+              <path d="M185,108 C200,108 215,130 233,130" stroke="#5B5FE3" strokeOpacity="0.35" strokeWidth="1.5" />
+              <path d="M185,108 C200,108 215,170 233,180" stroke="#5B5FE3" strokeOpacity="0.2" strokeWidth="1.2" strokeDasharray="4,6" />
+
+              <path d="M140,130 C135,145 115,155 90,158" stroke="#5B5FE3" strokeOpacity="0.25" strokeWidth="1.2" strokeDasharray="3,5" />
+
+              <path d="M233,130 C248,130 265,110 260,108" stroke="#5B5FE3" strokeOpacity="0.3" strokeWidth="1.8" />
+              <path d="M290,108 C310,108 325,170 323,180" stroke="#5B5FE3" strokeOpacity="0.2" strokeWidth="1.2" strokeDasharray="4,6" />
+
+              {/* Blue-Purple zone (Growth/Marketing) connections */}
+              <path d="M455,44 C475,44 490,70 500,95" stroke="#787BEE" strokeOpacity="0.3" strokeWidth="1.8" />
+              <path d="M455,44 C470,44 460,70 448,95" stroke="#787BEE" strokeOpacity="0.25" strokeWidth="1.5" />
+              <path d="M455,44 C480,44 510,70 522,95" stroke="#787BEE" strokeOpacity="0.25" strokeWidth="1.5" />
+              <path d="M455,44 C490,44 545,55 560,45" stroke="#787BEE" strokeOpacity="0.2" strokeWidth="1.2" strokeDasharray="4,6" />
+
+              <path d="M500,145 C500,155 478,175 455,175" stroke="#787BEE" strokeOpacity="0.3" strokeWidth="1.8" />
+              <path d="M522,145 C522,155 548,175 568,165" stroke="#787BEE" strokeOpacity="0.2" strokeWidth="1.2" strokeDasharray="4,6" />
+              <path d="M448,145 C435,155 415,175 395,175" stroke="#787BEE" strokeOpacity="0.25" strokeWidth="1.5" />
+
+              <path d="M455,225 C465,245 485,265 500,270" stroke="#787BEE" strokeOpacity="0.25" strokeWidth="1.5" />
+              <path d="M568,225 C555,245 540,255 520,255" stroke="#787BEE" strokeOpacity="0.2" strokeWidth="1.2" strokeDasharray="4,6" />
+
+              {/* Lavender zone (Customer Ops) connections */}
+              <path d="M345,320 C360,320 380,295 395,295" stroke="#A78BFA" strokeOpacity="0.3" strokeWidth="1.8" />
+              <path d="M345,320 C345,335 330,360 310,375" stroke="#A78BFA" strokeOpacity="0.25" strokeWidth="1.5" />
+              <path d="M345,320 C365,320 385,360 395,375" stroke="#A78BFA" strokeOpacity="0.2" strokeWidth="1.2" strokeDasharray="4,6" />
+
+              <path d="M450,345 C460,355 470,370 468,385" stroke="#A78BFA" strokeOpacity="0.25" strokeWidth="1.5" />
+
+              {/* Teal accent (Data/Analytics) cross-connections */}
+              <path d="M295,108 C320,100 360,120 390,130" stroke="#34D399" strokeOpacity="0.18" strokeWidth="1.2" strokeDasharray="3,7" />
+              <path d="M390,130 C430,140 470,115 500,95" stroke="#34D399" strokeOpacity="0.18" strokeWidth="1.2" strokeDasharray="3,7" />
+              <path d="M390,130 C390,170 370,220 350,280" stroke="#34D399" strokeOpacity="0.18" strokeWidth="1.2" strokeDasharray="3,7" />
+              <path d="M500,95 C520,110 530,210 500,230" stroke="#34D399" strokeOpacity="0.18" strokeWidth="1.2" strokeDasharray="3,7" />
+
+              {/* Amber accent (Compliance/Security) scattered checkpoints */}
+              <path d="M188,52 C185,80 175,110 160,140" stroke="#F59E0B" strokeOpacity="0.2" strokeWidth="1" strokeDasharray="2,8" />
+              <path d="M500,230 C480,250 460,270 450,345" stroke="#F59E0B" strokeOpacity="0.2" strokeWidth="1" strokeDasharray="2,8" />
+            </g>
+
+            {/* ===== NODES ===== */}
+            <g fontFamily="system-ui,-apple-system,sans-serif">
+
+              {/* ---- Purple Zone: Product & Engineering (10 nodes) ---- */}
+              {[
+                { x: 48, y: 36, w: 70, h: 32, label: '需求', size: 'md', group: 'purple' },
+                { x: 150, y: 36, w: 76, h: 32, label: '产品方案', size: 'md', group: 'purple' },
+                { x: 104, y: 80, w: 72, h: 28, label: '前端', size: 'sm', group: 'purple' },
+                { x: 186, y: 80, w: 62, h: 28, label: '后端', size: 'sm', group: 'purple' },
+                { x: 134, y: 120, w: 56, h: 24, label: '设计', size: 'xs', group: 'purple' },
+                { x: 204, y: 100, w: 62, h: 28, label: '移动端', size: 'sm', group: 'purple' },
+                { x: 88, y: 150, w: 56, h: 24, label: 'QA', size: 'xs', group: 'purple' },
+                { x: 165, y: 150, w: 72, h: 28, label: '联调测试', size: 'sm', group: 'purple' },
+                { x: 140, y: 190, w: 70, h: 32, label: '部署', size: 'md', group: 'purple' },
+                { x: 240, y: 150, w: 56, h: 24, label: '监控', size: 'xs', group: 'purple' },
+              ].map((n) => (
+                <g key={`p-${n.label}`} filter="url(#v3-shadow)">
+                  <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2} fill={n.label === '联调测试' ? 'url(#v3-node-active)' : 'url(#v3-node-purple)'}
+                    stroke={n.label === '联调测试' ? '#5B5FE3' : '#FFFFFF'} strokeWidth={n.label === '联调测试' ? 1.2 : 0.3} strokeOpacity={n.label === '联调测试' ? 0.6 : 0.06} />
+                  <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 1} textAnchor="middle"
+                    fill={n.label === '联调测试' ? '#E8EAFF' : '#9295C0'} fontSize={n.size === 'xs' ? 9.5 : 10.5} fontWeight="700" letterSpacing="0.4">{n.label}</text>
+                  {n.label === '联调测试' && (
+                    <g filter="url(#v3-glow-strong)">
+                      <circle cx={n.x + n.w - 4} cy={n.y + 8} r="3" fill="#A78BFA" opacity="0.5">
+                        <animate attributeName="opacity" values="0.5;0.15;0.5" dur="1.8s" repeatCount="indefinite" />
+                      </circle>
+                    </g>
+                  )}
+                </g>
+              ))}
+
+              {/* ---- Blue-Purple Zone: Growth & Marketing (9 nodes) ---- */}
+              {[
+                { x: 410, y: 28, w: 90, h: 32, label: 'Campaign 策略', size: 'md', group: 'blue' },
+                { x: 460, y: 80, w: 80, h: 28, label: '多渠道分发', size: 'sm', group: 'blue' },
+                { x: 360, y: 80, w: 74, h: 28, label: '内容制作', size: 'sm', group: 'blue' },
+                { x: 410, y: 130, w: 90, h: 32, label: '执行编排', size: 'md', group: 'blue', agent: true },
+                { x: 525, y: 80, w: 56, h: 28, label: '投放', size: 'sm', group: 'blue' },
+                { x: 550, y: 35, w: 56, h: 24, label: '活动', size: 'xs', group: 'blue' },
+                { x: 350, y: 165, w: 62, h: 28, label: 'A/B 测试', size: 'sm', group: 'blue' },
+                { x: 420, y: 210, w: 80, h: 32, label: '数据回收', size: 'md', group: 'blue' },
+                { x: 555, y: 150, w: 56, h: 24, label: '报表', size: 'xs', group: 'blue' },
+              ].map((n) => (
+                <g key={`b-${n.label}`} filter="url(#v3-shadow)">
+                  {n.agent && (
+                    <rect x={n.x - 4} y={n.y - 4} width={n.w + 8} height={n.h + 8} rx={n.h / 2 + 4} fill="none" stroke="#787BEE" strokeWidth="1.2" strokeOpacity="0.25" strokeDasharray="4,3">
+                      <animate attributeName="strokeOpacity" values="0.25;0.08;0.25" dur="2.5s" repeatCount="indefinite" />
+                    </rect>
+                  )}
+                  <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2} fill={n.agent ? 'url(#v3-node-blue)' : n.group === 'blue' ? 'url(#v3-node-blue)' : 'url(#v3-node-purple)'}
+                    stroke={n.agent ? '#787BEE' : '#FFFFFF'} strokeWidth={n.agent ? 1 : 0.3} strokeOpacity={n.agent ? 0.5 : 0.06} />
+                  <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 1} textAnchor="middle"
+                    fill={n.agent ? '#C8CCFF' : '#9295C0'} fontSize={n.size === 'xs' ? 9.5 : 10.5} fontWeight="700" letterSpacing="0.4">{n.label}</text>
+                  {n.agent && (
+                    <rect x={n.x + n.w - 20} y={n.y + 3} width="16" height="12" rx="6" fill="#787BEE" opacity="0.2" />
+                  )}
+                </g>
+              ))}
+
+              {/* ---- Lavender Zone: Customer Operations (7 nodes) ---- */}
+              {[
+                { x: 295, y: 310, w: 100, h: 34, label: '工单接入', size: 'lg', group: 'lavender' },
+                { x: 250, y: 365, w: 56, h: 24, label: 'P0 紧急', size: 'xs', group: 'lavender' },
+                { x: 350, y: 360, w: 62, h: 28, label: '标准分派', size: 'sm', group: 'lavender' },
+                { x: 410, y: 350, w: 56, h: 24, label: '低优先', size: 'xs', group: 'lavender' },
+                { x: 335, y: 405, w: 74, h: 32, label: '智能处理', size: 'md', group: 'lavender' },
+                { x: 270, y: 400, w: 56, h: 24, label: '升级', size: 'xs', group: 'lavender' },
+                { x: 420, y: 408, w: 70, h: 32, label: '闭环验证', size: 'md', group: 'lavender' },
+              ].map((n) => (
+                <g key={`l-${n.label}`} filter="url(#v3-shadow)">
+                  <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2} fill="url(#v3-node-lavender)"
+                    stroke="#FFFFFF" strokeWidth="0.3" strokeOpacity="0.06" />
+                  <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 1} textAnchor="middle"
+                    fill="#A095D0" fontSize={n.size === 'xs' ? 9.5 : n.size === 'lg' ? 11.5 : 10.5} fontWeight="700" letterSpacing="0.4">{n.label}</text>
+                </g>
+              ))}
+
+              {/* ---- Teal Zone: Data & Analytics (4 nodes, cross-cutting) ---- */}
+              {[
+                { x: 340, y: 125, w: 68, h: 32, label: '数据看板', size: 'md', group: 'teal' },
+                { x: 440, y: 265, w: 56, h: 24, label: '洞察', size: 'xs', group: 'teal' },
+                { x: 525, y: 255, w: 56, h: 24, label: '预警', size: 'xs', group: 'teal' },
+                { x: 210, y: 255, w: 68, h: 28, label: '分析引擎', size: 'sm', group: 'teal' },
+              ].map((n) => (
+                <g key={`t-${n.label}`} filter="url(#v3-shadow)">
+                  <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2} fill="url(#v3-node-teal)"
+                    stroke="#FFFFFF" strokeWidth="0.3" strokeOpacity="0.06" />
+                  <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 1} textAnchor="middle"
+                    fill="#5FD8A8" fontSize={n.size === 'xs' ? 9.5 : 10.5} fontWeight="700" letterSpacing="0.4">{n.label}</text>
+                </g>
+              ))}
+
+              {/* ---- Amber Zone: Security & Compliance (3 scattered nodes) ---- */}
+              {[
+                { x: 265, y: 52, w: 62, h: 28, label: '合规审查', size: 'sm', group: 'amber' },
+                { x: 445, y: 310, w: 62, h: 28, label: '安全审计', size: 'sm', group: 'amber' },
+                { x: 560, y: 310, w: 74, h: 28, label: '权限管控', size: 'sm', group: 'amber' },
+              ].map((n) => (
+                <g key={`a-${n.label}`} filter="url(#v3-shadow)">
+                  <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2} fill="url(#v3-node-amber)"
+                    stroke="#FFFFFF" strokeWidth="0.3" strokeOpacity="0.06" />
+                  <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 1} textAnchor="middle"
+                    fill="#D0A860" fontSize="10.5" fontWeight="700" letterSpacing="0.4">{n.label}</text>
+                </g>
+              ))}
+
+              {/* ---- Additional rich nodes for density ---- */}
+              {[
+                { x: 50, y: 250, w: 62, h: 28, label: '代码仓库', size: 'sm', group: 'purple' },
+                { x: 65, y: 320, w: 56, h: 24, label: 'CI/CD', size: 'xs', group: 'purple' },
+                { x: 20, y: 380, w: 56, h: 24, label: '文档', size: 'xs', group: 'purple' },
+                { x: 140, y: 340, w: 56, h: 24, label: 'API', size: 'xs', group: 'purple' },
+                { x: 580, y: 195, w: 56, h: 24, label: '外部', size: 'xs', group: 'blue' },
+                { x: 610, y: 235, w: 56, h: 24, label: 'Webhook', size: 'xs', group: 'blue' },
+                { x: 490, y: 380, w: 68, h: 28, label: '归档', size: 'sm', group: 'lavender' },
+                { x: 180, y: 370, w: 56, h: 24, label: '日志', size: 'xs', group: 'teal' },
+                { x: 605, y: 380, w: 56, h: 24, label: '导出', size: 'xs', group: 'teal' },
+              ].map((n) => (
+                <g key={`x-${n.label}`} filter="url(#v3-shadow)">
+                  <rect x={n.x} y={n.y} width={n.w} height={n.h} rx={n.h / 2}
+                    fill={n.group === 'purple' ? 'url(#v3-node-purple)' : n.group === 'blue' ? 'url(#v3-node-blue)' : n.group === 'lavender' ? 'url(#v3-node-lavender)' : 'url(#v3-node-teal)'}
+                    stroke="#FFFFFF" strokeWidth="0.3" strokeOpacity="0.05" />
+                  <text x={n.x + n.w / 2} y={n.y + n.h / 2 + 1} textAnchor="middle"
+                    fill={n.group === 'teal' ? '#5FD8A8' : '#9295C0'} fontSize="9.5" fontWeight="600" letterSpacing="0.4" opacity="0.8">{n.label}</text>
+                </g>
+              ))}
+
+            </g>
+
+            {/* ---- Floating particles ---- */}
+            {[
+              [35, 40], [200, 55], [320, 85], [520, 65], [590, 90],
+              [80, 170], [315, 140], [480, 135], [610, 180],
+              [290, 275], [200, 310], [570, 285], [620, 310],
+              [80, 300], [155, 385], [240, 410], [500, 410], [570, 390],
+              [670, 150], [660, 260], [680, 370], [680, 430],
+            ].map(([px, py], i) => (
+              <circle key={`vp-${i}`} cx={px} cy={py} r={i % 4 === 0 ? 1.8 : 1} fill="#FFFFFF"
+                opacity={0.03 + (i % 4) * 0.015}>
+                <animate attributeName="opacity"
+                  values={`${0.03 + (i % 4) * 0.015};${0.01};${0.03 + (i % 4) * 0.015}`}
+                  dur={`${2.5 + (i % 3) * 1.2}s`} repeatCount="indefinite" />
+              </circle>
+            ))}
+
+            {/* ---- Zone labels (subtle, bottom) ---- */}
+            <g opacity="0.22">
+              <circle cx="115" cy="225" r="1.5" fill="#5B5FE3" opacity="0.5" />
+              <text x="130" y="227" fill="#5B5FE3" fontSize="8" fontWeight="700" letterSpacing="1">PRODUCT ENGINEERING</text>
+              <circle cx="465" cy="268" r="1.5" fill="#787BEE" opacity="0.5" />
+              <text x="480" y="267" fill="#787BEE" fontSize="8" fontWeight="700" letterSpacing="1">GROWTH MARKETING</text>
+              <circle cx="328" cy="440" r="1.5" fill="#A78BFA" opacity="0.5" />
+              <text x="343" y="439" fill="#A78BFA" fontSize="8" fontWeight="700" letterSpacing="1">CUSTOMER</text>
+              <text x="343" y="449" fill="#A78BFA" fontSize="8" fontWeight="700" letterSpacing="1" opacity="0.7">OPERATIONS</text>
+            </g>
+
+            {/* ---- Bottom annotation ---- */}
+            <g opacity="0.25">
+              <line x1="220" y1="465" x2="500" y2="465" stroke="#5B5FE3" strokeWidth="0.5" strokeOpacity="0.15" />
+              <circle cx="360" cy="465" r="1.5" fill="#5B5FE3" strokeOpacity="0.25" />
+              <text x="360" y="458" textAnchor="middle" fill="#5B5FE3" fontSize="8" fontWeight="700" opacity="0.5" letterSpacing="1.5">YOUR WORKFLOWS · ALL HERE · ALL RUNNING</text>
+            </g>
+          </svg>
+        )}
       </div>
     )
   }
@@ -1083,6 +1375,7 @@ const MeegleHomepage = () => {
   const [mobileMenu, setMobileMenu] = useState(false)
   const [activeTab, setActiveTab] = useState('planning')
   const [cascadeVariant, setCascadeVariant] = useState('fullbleed')
+  const [illustrationVariant, setIllustrationVariant] = useState('v3')
   const heroRef = useRef(null)
 
   return (
@@ -1285,6 +1578,27 @@ const MeegleHomepage = () => {
           >
             顶天版
           </button>
+          <div className="w-px h-5 bg-[#E2E4E9] mx-0.5" />
+          <button
+            onClick={() => setIllustrationVariant('v2')}
+            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
+              illustrationVariant === 'v2'
+                ? 'bg-[#5B5FE3] text-white shadow-sm'
+                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
+            }`}
+          >
+            v2 蓝图版
+          </button>
+          <button
+            onClick={() => setIllustrationVariant('v3')}
+            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
+              illustrationVariant === 'v3'
+                ? 'bg-[#5B5FE3] text-white shadow-sm'
+                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
+            }`}
+          >
+            v3 丰富版
+          </button>
         </div>
 
         {STACK_CARDS.map((card, idx) => (
@@ -1318,7 +1632,7 @@ const MeegleHomepage = () => {
 
                   <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[440px]">
                     <div className="rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]">
-                      <AgentCardIllustration card={card} isVisible={true} />
+                      <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} />
                     </div>
                   </div>
                 </div>
@@ -1340,7 +1654,7 @@ const MeegleHomepage = () => {
 
                   <div className="relative h-full py-4 lg:py-6">
                     <div className="rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]">
-                      <AgentCardIllustration card={card} isVisible={true} />
+                      <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} />
                     </div>
                   </div>
                 </>
@@ -1680,16 +1994,16 @@ const FlowNode = ({ node, state, agentColor }) => {
     <div className="absolute" style={{
       left: node.x, top: node.y, width: w, height: h,
       transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease',
-      transform: building ? 'translateY(40px) scale(0.85)' : assigning ? 'scale(1.06)' : 'translateY(0) scale(1)',
+      transform: building ? 'translateY(40px) scale(0.85) translateZ(-2px)' : assigning ? 'scale(1.06) translateZ(8px)' : 'translateY(0) scale(1) translateZ(3px)',
       opacity: building ? 0.5 : 1,
       zIndex: assigning ? 20 : complete ? 12 : 1,
     }}>
-      {/* Bottom drop shadow (俯视角阴影) */}
+      {/* Directional drop shadow — casts toward bottom-right for 2.5D depth */}
       <div style={{
-        position: 'absolute', left: 9, top: h + 4, width: w - 18, height: 14,
-        backgroundColor: c + (complete ? '22' : '0e'),
-        borderRadius: '50%', filter: 'blur(10px)',
-        opacity: building ? 0.06 : complete ? 0.35 : 0.18,
+        position: 'absolute', left: 6, top: h + 2, width: w - 12, height: 16,
+        backgroundColor: c + (complete ? '25' : '10'),
+        borderRadius: '50%', filter: 'blur(12px)',
+        opacity: building ? 0.04 : complete ? 0.4 : 0.2,
         transition: 'all 0.5s ease',
       }} />
 
@@ -1701,8 +2015,8 @@ const FlowNode = ({ node, state, agentColor }) => {
           : building ? '#111118' : '#16161f',
         border: `1px solid ${complete ? '#1a3a2a' : building ? '#1e1e2a' : '#222230'}`,
         boxShadow: complete
-          ? `0 0 24px ${c}15, 0 4px 16px rgba(0,0,0,0.4)`
-          : building ? '0 1px 4px rgba(0,0,0,0.2)' : '0 4px 18px rgba(0,0,0,0.35)',
+          ? `0 0 24px ${c}15, 0 8px 28px rgba(0,0,0,0.5)`
+          : building ? '0 2px 8px rgba(0,0,0,0.25)' : '0 6px 24px rgba(0,0,0,0.45)',
         overflow: 'hidden', transition: 'all 0.5s ease',
       }}>
         {/* Colored header strip */}
@@ -1815,7 +2129,7 @@ const FlowEdge = ({ fromNode, toNode, state }) => {
     ? `M ${fcx} ${fcy} L ${tcx} ${tcy}`
     : `M ${fcx} ${fcy} C ${(fcx+tcx)/2} ${fcy}, ${(fcx+tcx)/2} ${tcy}, ${tcx} ${tcy}`
 
-  const color = active ? '#fbbf24' : building ? '#c4b5fd' : '#d1d5db'
+  const color = active ? '#fbbf24' : building ? '#c4b5fd' : 'rgba(255,255,255,0.12)'
   const markerId = `arrow-${fromNode.id}-${toNode.id}`
 
   return (
@@ -1965,77 +2279,91 @@ const GameWorkflowBoard = () => {
 
   return (
     <div className="relative w-full select-none rounded-2xl overflow-hidden"
-      style={{ height: FLOW_BOARD_H, backgroundColor: '#fafbfe' }}>
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.05 }}>
-        <defs>
-          <pattern id="flowdots" width="22" height="22" patternUnits="userSpaceOnUse">
-            <circle cx="11" cy="11" r="0.8" fill="#5B5FE3" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#flowdots)" />
-      </svg>
+      style={{ height: FLOW_BOARD_H, backgroundColor: '#08080f', perspective: '1000px', perspectiveOrigin: '50% 20%' }}>
+      {/* 2.5D scene — tilted for top-down perspective */}
+      <div className="absolute inset-0" style={{
+        transform: 'rotateX(4deg)',
+        transformStyle: 'preserve-3d',
+      }}>
+        {/* Subtle floor surface */}
+        <div className="absolute" style={{
+          left: '4%', right: '4%', bottom: '8%', top: '6%',
+          background: 'radial-gradient(ellipse at 50% 55%, rgba(255,255,255,0.018) 0%, transparent 70%)',
+          borderRadius: '8px',
+          pointerEvents: 'none',
+        }} />
 
-      <div className="absolute left-0 right-0" style={{ top: FLOW_BOARD_H - 8, height: 8, background: 'linear-gradient(0deg, #f0f2f8 0%, transparent 100%)' }} />
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 1 }}>
+          <defs>
+            <pattern id="flowdots" width="24" height="24" patternUnits="userSpaceOnUse">
+              <circle cx="12" cy="12" r="0.6" fill="rgba(255,255,255,0.025)" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#flowdots)" />
+        </svg>
 
-      {FLOW_EDGES.map(({ from, to }) => {
-        const fn = FLOW_NODES.find(n => n.id === from)
-        const tn = FLOW_NODES.find(n => n.id === to)
-        if (!fn || !tn) return null
-        return <FlowEdge key={`fe-${from}-${to}`} fromNode={fn} toNode={tn} state={getEdgeState(from, to)} />
-      })}
+        <div className="absolute left-0 right-0" style={{ top: FLOW_BOARD_H - 4, height: 4, background: 'linear-gradient(0deg, #0c0c18 0%, transparent 100%)' }} />
 
-      {flyActive && phase === 'assigning' && step < total && (
-        <FlowJumper
-          fromNode={flyFrom || FLOW_NODES[0]}
-          toNode={FLOW_NODES[step]}
-          color={AGENT_BENCH[step % AGENT_BENCH.length].color}
-        />
-      )}
+        {FLOW_EDGES.map(({ from, to }) => {
+          const fn = FLOW_NODES.find(n => n.id === from)
+          const tn = FLOW_NODES.find(n => n.id === to)
+          if (!fn || !tn) return null
+          return <FlowEdge key={`fe-${from}-${to}`} fromNode={fn} toNode={tn} state={getEdgeState(from, to)} />
+        })}
 
-      {FLOW_NODES.map((node, idx) => {
-        const id = node.id
-        const bi = buildOrder.indexOf(id)
-
-        let state = 'hidden'
-        if (phase === 'building') {
-          if (bi < step) state = 'built'
-          else if (bi === step) state = 'building'
-        } else if (phase === 'assigning') {
-          if (bi < step) state = 'populated'
-          else if (bi === step) state = flyActive ? 'assigning' : 'built'
-          else state = 'built'
-        } else if (phase === 'complete') {
-          state = 'complete'
-        }
-
-        const agent = AGENT_BENCH[bi % AGENT_BENCH.length]
-        return <FlowNode key={id} node={node} state={state} agentColor={agent.color} />
-      })}
-
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2" style={{ zIndex: 20 }}>
-        {phase === 'building' && (
-          <span className="text-[11px] font-semibold" style={{
-            color: FLOW_NODES[Math.min(step, total - 1)].color,
-            animation: 'fadeSlideUp 0.5s ease-out',
-          }}>
-            Building the workflow pipeline... {step + 1}/{total}
-          </span>
+        {flyActive && phase === 'assigning' && step < total && (
+          <FlowJumper
+            fromNode={flyFrom || FLOW_NODES[0]}
+            toNode={FLOW_NODES[step]}
+            color={AGENT_BENCH[step % AGENT_BENCH.length].color}
+          />
         )}
-        {phase === 'assigning' && step < total && (
-          <span className="text-[11px] font-semibold" style={{
-            color: AGENT_BENCH[step % AGENT_BENCH.length].color,
-            animation: 'fadeSlideUp 0.5s ease-out',
-          }}>
-            {flyActive
-              ? `${AGENT_BENCH[step % AGENT_BENCH.length].label} assigned to ${FLOW_NODES[step].label}`
-              : '...'}
-          </span>
-        )}
-        {phase === 'complete' && (
-          <span className="text-[11px] font-semibold text-[#10b981]" style={{ animation: 'fadeSlideUp 0.5s ease-out' }}>
-            All agents orchestrated — pipeline complete!
-          </span>
-        )}
+
+        {FLOW_NODES.map((node, idx) => {
+          const id = node.id
+          const bi = buildOrder.indexOf(id)
+
+          let state = 'hidden'
+          if (phase === 'building') {
+            if (bi < step) state = 'built'
+            else if (bi === step) state = 'building'
+          } else if (phase === 'assigning') {
+            if (bi < step) state = 'populated'
+            else if (bi === step) state = flyActive ? 'assigning' : 'built'
+            else state = 'built'
+          } else if (phase === 'complete') {
+            state = 'complete'
+          }
+
+          const agent = AGENT_BENCH[bi % AGENT_BENCH.length]
+          return <FlowNode key={id} node={node} state={state} agentColor={agent.color} />
+        })}
+
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2" style={{ zIndex: 20 }}>
+          {phase === 'building' && (
+            <span className="text-[11px] font-semibold" style={{
+              color: FLOW_NODES[Math.min(step, total - 1)].color,
+              animation: 'fadeSlideUp 0.5s ease-out',
+            }}>
+              Building the workflow pipeline... {step + 1}/{total}
+            </span>
+          )}
+          {phase === 'assigning' && step < total && (
+            <span className="text-[11px] font-semibold" style={{
+              color: AGENT_BENCH[step % AGENT_BENCH.length].color,
+              animation: 'fadeSlideUp 0.5s ease-out',
+            }}>
+              {flyActive
+                ? `${AGENT_BENCH[step % AGENT_BENCH.length].label} assigned to ${FLOW_NODES[step].label}`
+                : '...'}
+            </span>
+          )}
+          {phase === 'complete' && (
+            <span className="text-[11px] font-semibold text-[#10b981]" style={{ animation: 'fadeSlideUp 0.5s ease-out' }}>
+              All agents orchestrated — pipeline complete!
+            </span>
+          )}
+        </div>
       </div>
     </div>
   )
