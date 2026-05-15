@@ -2031,7 +2031,53 @@ const MeegleHomepage = () => {
   const [mobileMenu, setMobileMenu] = useState(false)
   const [cascadeVariant, setCascadeVariant] = useState('fullbleed')
   const [illustrationVariant, setIllustrationVariant] = useState('v5')
+  const [stackProgress, setStackProgress] = useState(-1)
   const heroRef = useRef(null)
+  const stackRef = useRef(null)
+
+  useEffect(() => {
+    let frame = 0
+    const updateStackProgress = () => {
+      frame = 0
+      const el = stackRef.current
+      if (!el) return
+
+      const rect = el.getBoundingClientRect()
+      const viewport = window.innerHeight || 1
+      const totalScroll = Math.max(1, el.offsetHeight - viewport)
+      const inView = rect.top <= viewport && rect.bottom >= 0
+      const scrolled = Math.max(0, Math.min(totalScroll, -rect.top))
+      setStackProgress(inView ? scrolled / totalScroll : -1)
+    }
+
+    const requestUpdate = () => {
+      if (frame) return
+      frame = window.requestAnimationFrame(updateStackProgress)
+    }
+
+    updateStackProgress()
+    window.addEventListener('scroll', requestUpdate, { passive: true })
+    window.addEventListener('resize', requestUpdate)
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('resize', requestUpdate)
+    }
+  }, [])
+
+  const clamp01 = (value) => Math.max(0, Math.min(1, value))
+  const segmentProgress = (start, end) => clamp01((stackProgress - start) / (end - start))
+  const agentHop = segmentProgress(0.05, 0.36)
+  const packageHop = segmentProgress(0.40, 0.70)
+  const storyVisible = stackProgress >= 0.04 && stackProgress <= 0.78 && illustrationVariant === 'v5'
+  const agentX = 70 + (8 * agentHop)
+  const agentY = 44 + (18 * agentHop) - Math.sin(agentHop * Math.PI) * 14
+  const agentScale = 0.9 + Math.sin(agentHop * Math.PI) * 0.22
+  const packageX = 78
+  const packageY = 62 + ((34 - 62) * packageHop) - Math.sin(packageHop * Math.PI) * 10
+  const packageScale = 0.78 + (0.32 * packageHop)
+  const showAgentHop = stackProgress >= 0.05 && stackProgress < 0.42
+  const showPackageHop = stackProgress >= 0.34 && stackProgress <= 0.76
 
   return (
     <div className="bg-white text-[#1F2329] font-sans" style={{ overflowX: 'clip', overflowY: 'visible' }}>
@@ -2108,6 +2154,20 @@ const MeegleHomepage = () => {
         @keyframes shimmerSweep {
           0% { background-position: 200% 0; }
           100% { background-position: -200% 0; }
+        }
+        @keyframes storyPulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(91,95,227,0.22); }
+          50% { box-shadow: 0 0 0 18px rgba(91,95,227,0); }
+        }
+        @keyframes storyBagGlow {
+          0%, 100% { filter: drop-shadow(0 14px 26px rgba(245,158,11,0.18)); }
+          50% { filter: drop-shadow(0 22px 38px rgba(245,158,11,0.34)); }
+        }
+        .story-pulse {
+          animation: storyPulse 2.2s ease-in-out infinite;
+        }
+        .story-bag-glow {
+          animation: storyBagGlow 2.4s ease-in-out infinite;
         }
       `}</style>
 
@@ -2208,7 +2268,7 @@ const MeegleHomepage = () => {
       </section>
 
       {/* MULTI-AGENT — Cascade Stacking */}
-      <div className="relative" style={{ height: `${(STACK_CARDS.length + 1) * 100}vh` }}>
+      <div ref={stackRef} className="relative" style={{ height: `${(STACK_CARDS.length + 1) * 100}vh` }}>
         <div className="fixed top-20 right-6 z-[100] flex items-center gap-1.5 rounded-xl bg-white/90 backdrop-blur border border-[#E2E4E9] p-1 shadow-[0_4px_20px_rgba(15,23,42,0.08)]">
           <button
             onClick={() => setCascadeVariant('centered')}
@@ -2272,6 +2332,81 @@ const MeegleHomepage = () => {
             v5 瀑布流
           </button>
         </div>
+
+        {storyVisible && (
+          <div className="pointer-events-none fixed inset-0 z-[85] hidden lg:block">
+            <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+              {showAgentHop && (
+                <path
+                  d="M70 44 C75 22, 82 42, 78 62"
+                  fill="none"
+                  stroke="#5B5FE3"
+                  strokeWidth="0.35"
+                  strokeDasharray="1.2 1.8"
+                  opacity={0.16 + Math.sin(agentHop * Math.PI) * 0.28}
+                />
+              )}
+              {showPackageHop && (
+                <path
+                  d="M78 62 C88 50, 86 40, 78 34"
+                  fill="none"
+                  stroke="#F59E0B"
+                  strokeWidth="0.35"
+                  strokeDasharray="1.2 1.8"
+                  opacity={0.16 + Math.sin(packageHop * Math.PI) * 0.30}
+                />
+              )}
+            </svg>
+
+            {showAgentHop && (
+              <div
+                className="absolute transition-opacity duration-150"
+                style={{
+                  left: `${agentX}vw`,
+                  top: `${agentY}vh`,
+                  opacity: 0.34 + Math.sin(agentHop * Math.PI) * 0.66,
+                  transform: `translate(-50%, -50%) scale(${agentScale})`,
+                }}
+              >
+                <div className="story-pulse flex items-center gap-2 rounded-full border border-white/75 bg-white/94 px-3 py-2 shadow-[0_20px_55px_rgba(91,95,227,0.24)] backdrop-blur-xl">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#5B5FE3] text-[14px] font-black text-white">小A</span>
+                  <span className="pr-1 text-[11px] font-black uppercase tracking-[0.14em] text-[#5B5FE3]">
+                    SOP → Seat
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {showPackageHop && (
+              <div
+                className="absolute transition-opacity duration-150"
+                style={{
+                  left: `${packageX}vw`,
+                  top: `${packageY}vh`,
+                  opacity: 0.28 + Math.sin(packageHop * Math.PI) * 0.72,
+                  transform: `translate(-50%, -50%) scale(${packageScale})`,
+                }}
+              >
+                <div className="story-bag-glow rounded-[22px] border border-[#FDE7B6] bg-white/95 p-3 shadow-[0_22px_60px_rgba(180,83,9,0.22)] backdrop-blur-xl">
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFF7E6] text-[16px]">▣</span>
+                    <div>
+                      <div className="text-[10px] font-black uppercase tracking-[0.14em] text-[#B45309]">context package</div>
+                      <div className="text-[10px] font-bold text-[#646A73]">Seat → Context</div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {['Docs', 'Chats', 'Tasks', 'Metrics'].map((item) => (
+                      <span key={item} className="rounded-lg bg-[#FFF8EA] px-2 py-1 text-center text-[8px] font-black text-[#B45309]">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {STACK_CARDS.map((card, idx) => (
           <section
