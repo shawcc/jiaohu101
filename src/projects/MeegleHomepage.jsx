@@ -887,8 +887,12 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
     const activeOrigin = isEmptySeatActive ? { color: '#F59E0B', label: 'Bring · Create · Hire' } : originStyles[activePerson.origin]
     const rows = Array.from({ length: 12 }, (_, row) => ({ row, cols: row < 3 ? 15 : row < 7 ? 16 : 17 }))
     const emptySeatKeys = new Set([
-      '2-4', '2-10', '3-7', '4-2', '4-12', '5-5', '5-13', '6-9',
-      '7-3', '7-11', '8-6', '8-14', '9-10', '10-4', '10-12', '11-8',
+      '1-3', '1-9', '1-13', '2-4', '2-7', '2-10', '2-14',
+      '3-2', '3-6', '3-11', '3-15', '4-1', '4-5', '4-9', '4-12',
+      '5-3', '5-5', '5-8', '5-13', '5-15', '6-2', '6-6', '6-9', '6-14',
+      '7-3', '7-7', '7-11', '7-15', '8-1', '8-4', '8-6', '8-10', '8-14',
+      '9-2', '9-6', '9-10', '9-13', '9-16', '10-4', '10-8', '10-12', '10-15',
+      '11-1', '11-5', '11-8', '11-11', '11-15',
     ])
 
     const renderAgent = (person, active, scale) => (
@@ -995,18 +999,18 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                       {empty && (
                         <div className="absolute left-1/2 top-[-14px] z-20 -translate-x-1/2">
                           {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full bg-[#F59E0B]" />}
-                          <div className={`absolute left-1/2 top-[-25px] w-[82px] -translate-x-1/2 rounded-full border px-2 py-1 text-center text-[7px] font-black uppercase tracking-[0.06em] shadow-[0_12px_24px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B]' : 'border-white/45 bg-white/14 text-white/75 backdrop-blur'}`}>
+                          <div className={`absolute left-1/2 top-[-25px] w-[82px] -translate-x-1/2 rounded-full border px-2 py-1 text-center text-[7px] font-black uppercase tracking-[0.06em] shadow-[0_12px_24px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'scale-100 border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] opacity-100' : 'pointer-events-none scale-95 border-white/0 bg-transparent text-white/0 opacity-0'}`}>
                             Hire · Bring · Create
                           </div>
-                          <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/60 bg-white/10 text-white/70'}`}>
-                            <span className="text-[18px] font-black leading-none">+</span>
+                          <div className={`flex h-9 w-9 items-center justify-center rounded-full border border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/24 bg-white/[0.04] text-white/32'}`}>
+                            <span className="text-[16px] font-black leading-none">+</span>
                           </div>
                         </div>
                       )}
                       <div className={`relative h-full min-h-[38px] rounded-t-[10px] border border-[#5C0C0D]/60 bg-gradient-to-b from-[#B93425] via-[#8E1D18] to-[#5C0C0D] shadow-[inset_0_3px_0_rgba(255,255,255,0.16),0_7px_12px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'brightness-125 ring-2 ring-white/70' : ''}`}>
                         <div className="absolute inset-x-1 top-1 h-2 rounded-full bg-white/18" />
                         <div className="absolute bottom-0 left-1/2 h-[32%] w-[84%] -translate-x-1/2 rounded-t-[8px] bg-black/12" />
-                        {empty && <div className="absolute inset-1 rounded-t-[7px] border border-dashed border-white/55 bg-white/8" />}
+                        {empty && <div className="absolute inset-1 rounded-t-[7px] border border-dashed border-white/20 bg-white/[0.03]" />}
                       </div>
                     </button>
                   )
