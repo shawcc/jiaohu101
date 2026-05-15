@@ -882,127 +882,126 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
       Create: { color: '#F59E0B', label: 'Create your agent' },
     }
     const activeOrigin = isEmptySeatActive ? { color: '#F59E0B', label: 'Bring or create' } : originStyles[activePerson.origin]
-    const theaterRows = [
-      { top: 118, seatWidth: 38, seatHeight: 30, head: 18, gap: 5, start: 0, count: 10, scale: 0.74 },
-      { top: 153, seatWidth: 44, seatHeight: 35, head: 20, gap: 6, start: 10, count: 11, scale: 0.82 },
-      { top: 193, seatWidth: 50, seatHeight: 41, head: 24, gap: 7, start: 21, count: 10, scale: 0.92 },
-      { top: 241, seatWidth: 59, seatHeight: 50, head: 28, gap: 8, start: 31, count: 9, scale: 1.04 },
-      { top: 300, seatWidth: 71, seatHeight: 62, head: 34, gap: 10, start: 40, count: 7, scale: 1.18, emptyAt: 6 },
-    ]
-    const workflowNodes = [
-      { label: 'Brief', x: 176, color: '#5B5FE3' },
-      { label: 'Plan', x: 246, color: '#3EAB6E' },
-      { label: 'Build', x: 316, color: '#F59E0B' },
-      { label: 'Review', x: 386, color: '#A78BFA' },
-      { label: 'Ship', x: 456, color: '#10B981' },
-    ]
+    const rows = Array.from({ length: 11 }, (_, row) => ({ row, cols: row < 2 ? 11 : row < 6 ? 12 : 13 }))
+    const occupiedSeats = new Map([
+      ['3-5', 0], ['3-6', 1], ['4-3', 2], ['4-8', 3], ['5-5', 4], ['5-6', 5], ['5-9', 6],
+      ['6-2', 7], ['6-4', 8], ['6-7', 9], ['6-10', 10], ['7-3', 11], ['7-6', 12], ['7-8', 13], ['7-11', 14],
+      ['8-1', 15], ['8-4', 16], ['8-6', 17], ['8-9', 18], ['9-2', 19], ['9-5', 20], ['9-8', 21], ['10-1', 22], ['10-4', 23], ['10-10', 24],
+    ])
+    const emptySeatKey = '10-11'
 
-    const renderAgentActor = (person, active, scale) => (
-      <div className="relative" style={{ width: 42 * scale, height: 58 * scale }}>
-        {active && <div className="agent-seat-spotlight absolute inset-[-16px] rounded-full" style={{ backgroundColor: person.color }} />}
-        <div className={`absolute left-1/2 top-0 rounded-full bg-[#20242A] shadow-[0_10px_22px_rgba(15,23,42,0.26)] transition-all duration-300 ${active ? 'ring-2 ring-white scale-110' : 'ring-1 ring-white/45'}`} style={{ width: 30 * scale, height: 34 * scale, transform: 'translateX(-50%)' }}>
-          <div className="absolute inset-0 rounded-full" style={{ background: `radial-gradient(circle at 38% 22%, ${person.color}66, transparent 48%)` }} />
-          <div className="absolute left-[22%] top-[24%] h-[34%] w-[56%] rounded-full bg-[#F0C6A6]" />
-          <div className="absolute left-[34%] top-[36%] flex w-[32%] justify-between">
-            <span className="h-1 w-1 rounded-full bg-[#111827]/75" />
-            <span className="h-1 w-1 rounded-full bg-[#111827]/75" />
+    const renderAgent = (person, active, scale) => (
+      <div className="absolute left-1/2 top-[-18px] z-20 -translate-x-1/2" style={{ transform: `translateX(-50%) ${active ? 'translateY(-8px) scale(1.1)' : ''}` }}>
+        {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full" style={{ backgroundColor: person.color }} />}
+        <div className="relative" style={{ width: 38 * scale, height: 48 * scale }}>
+          <div className={`absolute left-1/2 top-0 rounded-full bg-[#20242A] shadow-[0_10px_22px_rgba(15,23,42,0.30)] transition-all duration-300 ${active ? 'ring-2 ring-white' : 'ring-1 ring-white/45'}`} style={{ width: 28 * scale, height: 31 * scale, transform: 'translateX(-50%)' }}>
+            <div className="absolute inset-0 rounded-full" style={{ background: `radial-gradient(circle at 38% 22%, ${person.color}70, transparent 48%)` }} />
+            <div className="absolute left-[22%] top-[24%] h-[35%] w-[56%] rounded-full bg-[#F2C6A5]" />
+            <div className="absolute left-[34%] top-[36%] flex w-[32%] justify-between">
+              <span className="h-1 w-1 rounded-full bg-[#111827]/75" />
+              <span className="h-1 w-1 rounded-full bg-[#111827]/75" />
+            </div>
           </div>
-        </div>
-        <div className="absolute bottom-0 left-1/2 rounded-t-full shadow-[0_8px_18px_rgba(15,23,42,0.18)]" style={{ width: 38 * scale, height: 34 * scale, transform: 'translateX(-50%)', backgroundColor: person.color }}>
-          <div className="absolute inset-x-[24%] top-[18%] h-[16%] rounded-full bg-white/22" />
-        </div>
-      </div>
-    )
-
-    const renderEmptySeatMarker = (active, scale) => (
-      <div className="relative" style={{ width: 42 * scale, height: 58 * scale }}>
-        {active && <div className="agent-seat-spotlight absolute inset-[-16px] rounded-full bg-[#F59E0B]" />}
-        <div className={`absolute left-1/2 top-3 flex items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/70 bg-white/35 text-white/80'}`} style={{ width: 34 * scale, height: 34 * scale, transform: 'translateX(-50%)' }}>
-          <span className="text-[18px] font-black leading-none">+</span>
+          <div className="absolute bottom-0 left-1/2 rounded-t-full shadow-[0_8px_18px_rgba(15,23,42,0.20)]" style={{ width: 35 * scale, height: 28 * scale, transform: 'translateX(-50%)', backgroundColor: person.color }}>
+            <div className="absolute inset-x-[25%] top-[18%] h-[17%] rounded-full bg-white/22" />
+          </div>
         </div>
       </div>
     )
 
     return (
-      <div className="relative h-full min-h-[440px] w-full overflow-hidden px-4 py-5">
+      <div className="relative h-full min-h-[440px] w-full overflow-hidden">
         <style>{`
           @keyframes agentSeatSpotlight {
             0%, 100% { opacity: 0.16; transform: scale(0.88); }
-            50% { opacity: 0.38; transform: scale(1.16); }
-          }
-          @keyframes auditoriumBeam {
-            0%, 100% { opacity: 0.12; }
-            50% { opacity: 0.28; }
+            50% { opacity: 0.42; transform: scale(1.16); }
           }
           @keyframes workflowDash {
-            from { stroke-dashoffset: 40; }
+            from { stroke-dashoffset: 42; }
             to { stroke-dashoffset: 0; }
           }
           .agent-seat-spotlight { animation: agentSeatSpotlight 2.8s ease-in-out infinite; filter: blur(1px); }
-          .auditorium-beam { animation: auditoriumBeam 3.8s ease-in-out infinite; }
           .workflow-stage-line { animation: workflowDash 2.4s linear infinite; }
         `}</style>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#F7EDDF] via-[#E6B77D] to-[#F6F8FF]" />
-        <div className="absolute inset-x-5 top-4 h-[144px] rounded-b-[44px] bg-gradient-to-b from-[#8B4A22] via-[#B86D31] to-[#D7914C] shadow-[inset_0_-34px_64px_rgba(59,31,13,0.22)]" />
-        <div className="absolute inset-x-16 top-[68px] h-[74px] rounded-[28px] border border-white/15 bg-[#161A28]/86 shadow-[0_24px_60px_rgba(45,24,12,0.24)]" />
-        <div className="absolute left-7 top-8 h-[178px] w-24 skew-y-[-12deg] bg-gradient-to-b from-[#D6A06A] to-[#9D5628] opacity-60" />
-        <div className="absolute right-7 top-8 h-[178px] w-24 skew-y-[12deg] bg-gradient-to-b from-[#D6A06A] to-[#9D5628] opacity-60" />
-        <div className="absolute left-1/2 top-3 h-4 w-4 -translate-x-1/2 rounded-full bg-white shadow-[0_0_34px_rgba(255,245,218,1)]" />
-        <div className="absolute left-[28%] top-[34px] h-3 w-3 rounded-full bg-white shadow-[0_0_24px_rgba(255,245,218,0.9)]" />
-        <div className="absolute right-[28%] top-[34px] h-3 w-3 rounded-full bg-white shadow-[0_0_24px_rgba(255,245,218,0.9)]" />
-        <div className="auditorium-beam pointer-events-none absolute left-[18%] top-2 h-[378px] w-[150px] origin-top rotate-[10deg] bg-gradient-to-b from-white/42 to-transparent blur-xl" />
-        <div className="auditorium-beam pointer-events-none absolute right-[18%] top-2 h-[378px] w-[150px] origin-top rotate-[-10deg] bg-gradient-to-b from-white/42 to-transparent blur-xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#220708] via-[#5F1414] to-[#1D0506]" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/42 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/42 to-transparent" />
+        <div className="absolute inset-0 opacity-[0.10]" style={{ backgroundImage: 'linear-gradient(90deg, transparent 0 48%, rgba(255,255,255,0.35) 49% 51%, transparent 52% 100%)', backgroundSize: '58px 100%' }} />
 
-        <div className="absolute left-6 top-5 z-30 rounded-full border border-white/80 bg-white/[0.76] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
-          Agents waiting backstage
-        </div>
-
-        <svg viewBox="0 0 640 420" className="pointer-events-none absolute inset-0 z-20 h-full w-full">
+        <svg viewBox="0 0 700 430" className="pointer-events-none absolute inset-0 z-20 h-full w-full">
           <defs>
-            <linearGradient id="stageFlow" x1="0" y1="0" x2="1" y2="0">
+            <linearGradient id="frontStageFlow" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#5B5FE3" stopOpacity="0.18" />
-              <stop offset="50%" stopColor="#F59E0B" stopOpacity="0.70" />
+              <stop offset="50%" stopColor="#F59E0B" stopOpacity="0.80" />
               <stop offset="100%" stopColor="#10B981" stopOpacity="0.18" />
             </linearGradient>
+            <radialGradient id="stageGlow" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.38" />
+              <stop offset="100%" stopColor="#F59E0B" stopOpacity="0" />
+            </radialGradient>
           </defs>
-          <path className="workflow-stage-line" d="M176 104 C224 88, 268 120, 316 104 S410 88, 456 104" fill="none" stroke="url(#stageFlow)" strokeWidth="2" strokeDasharray="8 10" />
-          {workflowNodes.map((node, idx) => (
+          <ellipse cx="350" cy="78" rx="220" ry="58" fill="url(#stageGlow)" />
+          <rect x="154" y="46" width="392" height="76" rx="26" fill="#120F1C" opacity="0.86" />
+          <path className="workflow-stage-line" d="M205 84 C250 68, 292 100, 337 84 S425 68, 472 84" fill="none" stroke="url(#frontStageFlow)" strokeWidth="2.2" strokeDasharray="8 10" />
+          {[
+            { label: 'Brief', x: 205, color: '#5B5FE3' },
+            { label: 'Plan', x: 272, color: '#3EAB6E' },
+            { label: 'Build', x: 340, color: '#F59E0B' },
+            { label: 'Review', x: 408, color: '#A78BFA' },
+            { label: 'Ship', x: 475, color: '#10B981' },
+          ].map((node, idx) => (
             <g key={node.label}>
-              <rect x={node.x - 28} y="88" width="56" height="32" rx="16" fill={idx === 2 ? node.color : '#FFFFFF'} opacity="0.96" />
-              <text x={node.x} y="108" textAnchor="middle" fill={idx === 2 ? '#FFFFFF' : node.color} fontSize="8" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
-              {idx === 2 && <circle cx={node.x + 21} cy="84" r="5" fill="#F59E0B" opacity="0.86" />}
+              <rect x={node.x - 27} y="68" width="54" height="32" rx="16" fill={idx === 2 ? node.color : '#FFFFFF'} opacity="0.96" />
+              <text x={node.x} y="88" textAnchor="middle" fill={idx === 2 ? '#FFFFFF' : node.color} fontSize="8" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
             </g>
           ))}
-          <text x="316" y="74" textAnchor="middle" fill="#FFFFFF" opacity="0.78" fontSize="10" fontWeight="850" fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="1.2">LIVE WORKFLOW STAGE</text>
+          <text x="350" y="34" textAnchor="middle" fill="#FFFFFF" opacity="0.80" fontSize="10" fontWeight="850" fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="1.4">LIVE WORKFLOW STAGE</text>
         </svg>
 
-        <div className="absolute inset-x-2 bottom-0 top-[122px] z-30 overflow-hidden rounded-b-[36px]">
-          {theaterRows.map((row, rowIdx) => {
-            const totalWidth = row.count * row.seatWidth + (row.count - 1) * row.gap
+        <div className="absolute left-5 top-5 z-40 rounded-full border border-white/15 bg-white/[0.10] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-white/80 shadow-[0_12px_28px_rgba(0,0,0,0.18)] backdrop-blur">
+          Create or bring your agent
+        </div>
+
+        <div className="absolute inset-x-3 bottom-[-10px] top-[118px] z-30">
+          {rows.map(({ row, cols }) => {
+            const scale = 0.78 + row * 0.035
             return (
-              <div key={`seat-row-${rowIdx}`} className="absolute left-1/2 flex -translate-x-1/2 items-end" style={{ top: row.top, gap: row.gap, width: totalWidth }}>
-                {Array.from({ length: row.count }).map((_, seatIdx) => {
-                  const empty = row.emptyAt === seatIdx
-                  const agentIdx = empty ? emptySeatIndex : (row.start + seatIdx) % agentPeople.length
-                  const person = empty ? emptySeatInfo : agentPeople[agentIdx]
-                  const active = activeAgentLane === agentIdx
+              <div key={`front-row-${row}`} className="grid gap-1.5" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, marginBottom: row < 7 ? 3 : 5 }}>
+                {Array.from({ length: cols }).map((_, col) => {
+                  const key = `${row}-${col}`
+                  const empty = key === emptySeatKey
+                  const agentIdx = occupiedSeats.get(key)
+                  const person = typeof agentIdx === 'number' ? agentPeople[agentIdx % agentPeople.length] : null
+                  const active = empty ? isEmptySeatActive : activeAgentLane === agentIdx
                   return (
                     <button
-                      key={empty ? 'open-seat' : `${person.name}-${rowIdx}-${seatIdx}`}
+                      key={key}
                       type="button"
-                      onMouseEnter={() => setActiveAgentLane(agentIdx)}
-                      onFocus={() => setActiveAgentLane(agentIdx)}
-                      className="group relative shrink-0 transition-all duration-300"
-                      style={{ width: row.seatWidth, zIndex: active ? 80 : 20 + rowIdx }}
+                      onMouseEnter={() => {
+                        if (empty) setActiveAgentLane(emptySeatIndex)
+                        if (person) setActiveAgentLane(agentIdx)
+                      }}
+                      onFocus={() => {
+                        if (empty) setActiveAgentLane(emptySeatIndex)
+                        if (person) setActiveAgentLane(agentIdx)
+                      }}
+                      className="relative min-h-[27px] rounded-t-[8px] transition-all duration-300"
+                      style={{ zIndex: active ? 70 : 10 + row }}
                     >
-                      <div className="absolute left-1/2 -translate-x-1/2 transition-all duration-300" style={{ top: -row.head - 18, transform: `translateX(-50%) ${active ? 'translateY(-8px) scale(1.08)' : ''}` }}>
-                        {empty ? renderEmptySeatMarker(active, row.scale) : renderAgentActor(person, active, row.scale)}
-                      </div>
-                      <div className={`relative rounded-t-[18px] border border-[#783A17]/30 bg-gradient-to-b from-[#C96C25] to-[#8E3D16] shadow-[0_10px_22px_rgba(73,37,15,0.26)] transition-all duration-300 ${active ? 'brightness-110 ring-2 ring-white/80' : ''}`} style={{ height: row.seatHeight }}>
-                        <div className="absolute inset-x-1.5 top-1.5 h-2 rounded-full bg-white/18" />
-                        <div className="absolute inset-x-0 bottom-0 h-[30%] rounded-t-[12px] bg-black/10" />
-                        {empty && <div className="absolute inset-1 rounded-t-[16px] border border-dashed border-white/70 bg-white/10" />}
+                      {person && renderAgent(person, active, scale)}
+                      {empty && (
+                        <div className="absolute left-1/2 top-[-14px] z-20 -translate-x-1/2">
+                          {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full bg-[#F59E0B]" />}
+                          <div className={`flex h-9 w-9 items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/60 bg-white/10 text-white/70'}`}>
+                            <span className="text-[18px] font-black leading-none">+</span>
+                          </div>
+                        </div>
+                      )}
+                      <div className={`relative h-full min-h-[27px] rounded-t-[8px] border border-[#5C0C0D]/60 bg-gradient-to-b from-[#B93425] via-[#8E1D18] to-[#5C0C0D] shadow-[inset_0_3px_0_rgba(255,255,255,0.16),0_7px_12px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'brightness-125 ring-2 ring-white/70' : ''}`}>
+                        <div className="absolute inset-x-1 top-1 h-1.5 rounded-full bg-white/18" />
+                        <div className="absolute bottom-0 left-1/2 h-[32%] w-[84%] -translate-x-1/2 rounded-t-[6px] bg-black/12" />
+                        {empty && <div className="absolute inset-1 rounded-t-[7px] border border-dashed border-white/55 bg-white/8" />}
                       </div>
                     </button>
                   )
@@ -1012,7 +1011,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           })}
         </div>
 
-        <div className="absolute right-4 top-1/2 z-[90] w-[218px] -translate-y-1/2 rounded-[28px] border border-white/80 bg-white/[0.92] p-4 shadow-[0_24px_70px_rgba(38,45,64,0.14)] backdrop-blur-xl">
+        <div className="absolute right-4 top-1/2 z-[90] w-[218px] -translate-y-1/2 rounded-[28px] border border-white/80 bg-white/[0.93] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
           <div className="mb-3 flex items-center justify-between">
             <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.12em]" style={{ color: activeOrigin.color, backgroundColor: `${activeOrigin.color}14` }}>
               {activeOrigin.label}
@@ -1098,11 +1097,11 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
   if (card.id === 'context') {
     return (
-      <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#FFF9EA] via-[#FFF4D5] to-[#FFEAB3]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
-        <div className="absolute inset-8 rounded-[32px] bg-white/30 blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(#D97706 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
-        <svg viewBox="0 0 640 430" className="relative w-full max-w-[640px] h-auto" style={{ filter: 'drop-shadow(0 24px 48px rgba(245,158,11,0.14))' }}>
+      <div className="relative h-full w-full overflow-hidden">
+        <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#FFF9EA] via-[#FFF2D2] to-[#FFE8AF]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
+        <div className="absolute inset-[4%] rounded-[34px] bg-white/18 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.09]" style={{ backgroundImage: 'radial-gradient(#D97706 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
+        <svg viewBox="0 0 820 500" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 h-full w-full" style={{ filter: 'drop-shadow(0 24px 52px rgba(245,158,11,0.14))' }}>
           <defs>
             <linearGradient id="uc-grad" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#F59E0B" />
@@ -1120,17 +1119,20 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <filter id="uc-glow"><feGaussianBlur stdDeviation="10" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
           </defs>
 
-          <rect x="40" y="38" width="560" height="354" rx="42" fill="#FFFFFF" opacity="0.28" />
-          <rect x="66" y="66" width="508" height="298" rx="34" fill="#FFFFFF" opacity="0.22" />
+          <rect x="40" y="34" width="740" height="432" rx="42" fill="#FFFFFF" opacity="0.24" />
+          <rect x="70" y="64" width="680" height="372" rx="34" fill="#FFFFFF" opacity="0.16" />
+          <rect x="124" y="120" width="570" height="258" rx="32" fill="#FFFFFF" opacity="0.28" />
+          <rect x="150" y="144" width="520" height="210" rx="26" fill="#FFFDF8" opacity="0.72" />
 
           {/* Popular integrations */}
           {[
-            { x: 58, y: 50, label: 'Slack', icon: 'S', color: '#7C3AED' },
-            { x: 192, y: 26, label: 'Jira', icon: 'J', color: '#2563EB' },
-            { x: 340, y: 28, label: 'GitHub', icon: 'G', color: '#111827' },
-            { x: 496, y: 56, label: 'Figma', icon: 'F', color: '#EC4899' },
-            { x: 70, y: 344, label: 'Drive', icon: 'D', color: '#10B981' },
-            { x: 470, y: 344, label: 'Notion', icon: 'N', color: '#111827' },
+            { x: 58, y: 58, label: 'Slack', icon: 'S', color: '#7C3AED' },
+            { x: 176, y: 28, label: 'Jira', icon: 'J', color: '#2563EB' },
+            { x: 556, y: 28, label: 'GitHub', icon: 'G', color: '#111827' },
+            { x: 676, y: 64, label: 'Figma', icon: 'F', color: '#EC4899' },
+            { x: 612, y: 392, label: 'Drive', icon: 'D', color: '#10B981' },
+            { x: 650, y: 392, label: 'Notion', icon: 'N', color: '#111827' },
+            { x: 70, y: 394, label: 'Confluence', icon: 'C', color: '#F59E0B' },
           ].map((app, i) => (
             <g key={app.label}>
               <rect x={app.x} y={app.y} width="86" height="34" rx="17" fill="white" stroke={app.color} strokeWidth="1" strokeOpacity="0.14" filter="url(#uc-shadow)" />
@@ -1138,7 +1140,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               <text x={app.x + 14} y={app.y + 21} fill={app.color} fontSize="10" fontWeight="900">{app.icon}</text>
               <text x={app.x + 34} y={app.y + 21} fill="#111827" fontSize="10" fontWeight="800">{app.label}</text>
               <path
-                d={`M${app.x + 43} ${app.y + 34} C${app.x + 80} ${app.y + 74}, ${i < 3 ? 250 : 390} ${i < 3 ? 112 : 318}, 320 214`}
+                d={`M${app.x + 43} ${app.y + 34} C${app.x + 80} ${app.y + 80}, ${i < 4 ? 280 : 520} ${i < 4 ? 132 : 352}, 410 248`}
                 fill="none"
                 stroke={app.color}
                 strokeWidth="1"
@@ -1149,16 +1151,16 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           ))}
 
           {[
-            { x: 70, y: 118, icon: '📄', label: 'Docs', sub: 'Specs / wiki', color: '#3B82F6', tx: 238, ty: 162 },
-            { x: 72, y: 190, icon: '💬', label: 'Chats', sub: 'Slack / Lark', color: '#8B5CF6', tx: 224, ty: 206 },
-            { x: 86, y: 262, icon: '🎫', label: 'Tickets', sub: 'Jira / Linear', color: '#EF4444', tx: 240, ty: 252 },
-            { x: 452, y: 112, icon: '📅', label: 'Meetings', sub: 'Notes / calls', color: '#10B981', tx: 404, ty: 162 },
-            { x: 472, y: 190, icon: '📊', label: 'Metrics', sub: 'BI / reports', color: '#F59E0B', tx: 418, ty: 208 },
-            { x: 448, y: 266, icon: '🧩', label: 'PRDs', sub: 'Requirements', color: '#06B6D4', tx: 402, ty: 252 },
+            { x: 134, y: 128, icon: '📄', label: 'Docs', sub: 'Specs / wiki', color: '#3B82F6', tx: 320, ty: 188 },
+            { x: 138, y: 206, icon: '💬', label: 'Chats', sub: 'Slack / Lark', color: '#8B5CF6', tx: 304, ty: 246 },
+            { x: 146, y: 286, icon: '🎫', label: 'Tickets', sub: 'Jira / Linear', color: '#EF4444', tx: 320, ty: 304 },
+            { x: 562, y: 120, icon: '📅', label: 'Meetings', sub: 'Notes / calls', color: '#10B981', tx: 500, ty: 188 },
+            { x: 576, y: 206, icon: '📊', label: 'Metrics', sub: 'BI / reports', color: '#F59E0B', tx: 516, ty: 246 },
+            { x: 554, y: 292, icon: '🧩', label: 'PRDs', sub: 'Requirements', color: '#06B6D4', tx: 502, ty: 304 },
           ].map((src, i) => (
             <g key={src.label}>
               <path
-                d={`M${src.x + (src.x < 320 ? 118 : 0)} ${src.y + 25} C${src.x < 320 ? src.x + 174 : src.x - 72} ${src.y + 25}, ${src.tx} ${src.ty}, ${src.tx} ${src.ty}`}
+                d={`M${src.x + (src.x < 410 ? 118 : 0)} ${src.y + 27} C${src.x < 410 ? src.x + 184 : src.x - 76} ${src.y + 27}, ${src.tx} ${src.ty}, ${src.tx} ${src.ty}`}
                 fill="none"
                 stroke={src.color}
                 strokeWidth="1.6"
@@ -1170,60 +1172,141 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               <circle cx={src.tx} cy={src.ty} r="3" fill={src.color} opacity="0.55">
                 <animate attributeName="opacity" values="0.25;0.85;0.25" dur={`${1.8 + i * 0.16}s`} repeatCount="indefinite" />
               </circle>
-              <rect x={src.x} y={src.y} width="118" height="54" rx="15" fill="url(#uc-card)" stroke={src.color} strokeWidth="1.2" strokeOpacity="0.18" filter="url(#uc-shadow)" />
-              <circle cx={src.x + 23} cy={src.y + 25} r="13" fill={src.color} opacity="0.10" />
-              <text x={src.x + 15} y={src.y + 31} fontSize="15">{src.icon}</text>
-              <text x={src.x + 44} y={src.y + 30} fill="#111827" fontSize="11" fontWeight="750">{src.label}</text>
-              <text x={src.x + 44} y={src.y + 43} fill="#8F959E" fontSize="8" fontWeight="700">{src.sub}</text>
+              <rect x={src.x} y={src.y} width="126" height="56" rx="16" fill="url(#uc-card)" stroke={src.color} strokeWidth="1.2" strokeOpacity="0.18" filter="url(#uc-shadow)" />
+              <circle cx={src.x + 23} cy={src.y + 28} r="14" fill={src.color} opacity="0.10" />
+              <text x={src.x + 15} y={src.y + 34} fontSize="15">{src.icon}</text>
+              <text x={src.x + 46} y={src.y + 31} fill="#111827" fontSize="11" fontWeight="750">{src.label}</text>
+              <text x={src.x + 46} y={src.y + 45} fill="#8F959E" fontSize="8" fontWeight="700">{src.sub}</text>
+            </g>
+          ))}
+
+          {/* Context Center distributes normalized information packages upward */}
+          <g>
+            <rect x="186" y="58" width="448" height="88" rx="28" fill="#FFFFFF" opacity="0.52" stroke="#FDE7B6" />
+            <text x="410" y="82" textAnchor="middle" fill="#B45309" fontSize="9" fontWeight="900" letterSpacing="1.6">AI-READY INFORMATION PACKAGES</text>
+          </g>
+          {[
+            { x: 206, y: 96, label: 'Brief', sub: 'executive summary', color: '#5B5FE3', anchorX: 344 },
+            { x: 322, y: 96, label: 'Risk', sub: 'early signals', color: '#EF4444', anchorX: 388 },
+            { x: 438, y: 96, label: 'Timeline', sub: 'next milestones', color: '#F59E0B', anchorX: 432 },
+            { x: 554, y: 96, label: 'Decision', sub: 'recommended action', color: '#10B981', anchorX: 476 },
+          ].map((packet, i) => (
+            <g key={`packet-line-${packet.label}`}>
+              <path
+                d={`M410 150 C410 ${136 - i * 3}, ${packet.anchorX} ${packet.y + 26}, ${packet.x + 54} ${packet.y + 26}`}
+                fill="none"
+                stroke={packet.color}
+                strokeWidth="1.8"
+                strokeDasharray="5,7"
+                opacity="0.55"
+              >
+                <animate attributeName="stroke-dashoffset" from="24" to="0" dur={`${1.8 + i * 0.18}s`} repeatCount="indefinite" />
+              </path>
+              <circle cx={packet.x + 54} cy={packet.y + 26} r="4.5" fill={packet.color} opacity="0.72">
+                <animate attributeName="opacity" values="0.2;0.9;0.2" dur={`${1.6 + i * 0.18}s`} repeatCount="indefinite" />
+              </circle>
             </g>
           ))}
 
           <g filter="url(#uc-glow)">
-            <circle cx="320" cy="214" r="108" fill="#F59E0B" opacity="0.10" />
-            <circle cx="320" cy="214" r="80" fill="#5B5FE3" opacity="0.08" />
-            <circle cx="320" cy="214" r="48" fill="#A78BFA" opacity="0.12" />
+            <circle cx="410" cy="248" r="122" fill="#F59E0B" opacity="0.10">
+              <animate attributeName="r" values="112;128;112" dur="4.4s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.06;0.13;0.06" dur="4.4s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="410" cy="248" r="94" fill="#5B5FE3" opacity="0.08">
+              <animate attributeName="r" values="88;100;88" dur="3.8s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="410" cy="248" r="56" fill="#A78BFA" opacity="0.12">
+              <animate attributeName="opacity" values="0.08;0.16;0.08" dur="3.2s" repeatCount="indefinite" />
+            </circle>
           </g>
 
-          <rect x="244" y="132" width="152" height="166" rx="28" fill="white" stroke="#E9ECF3" strokeWidth="1.2" filter="url(#uc-shadow)" />
-          <rect x="244" y="132" width="152" height="46" rx="28" fill="url(#uc-core)" />
-          <text x="320" y="160" textAnchor="middle" fill="white" fontSize="13" fontWeight="850">Unified Context</text>
-          <text x="320" y="194" textAnchor="middle" fill="#8F959E" fontSize="8" fontWeight="800" letterSpacing="1.2">NORMALIZED LAYER</text>
+          <rect x="326" y="150" width="168" height="196" rx="30" fill="white" stroke="#E9ECF3" strokeWidth="1.2" filter="url(#uc-shadow)" />
+          <rect x="326" y="150" width="168" height="50" rx="30" fill="url(#uc-core)" />
+          <text x="410" y="180" textAnchor="middle" fill="white" fontSize="13" fontWeight="850">Context Center</text>
+          <text x="410" y="214" textAnchor="middle" fill="#8F959E" fontSize="8" fontWeight="800" letterSpacing="1.2">SOURCE OF TRUTH</text>
 
           {[
-            { y: 214, label: 'Entities', pct: 92, color: '#5B5FE3' },
-            { y: 242, label: 'Signals', pct: 86, color: '#F59E0B' },
-            { y: 270, label: 'Decisions', pct: 96, color: '#10B981' },
+            { y: 238, label: 'Entities', pct: 92, color: '#5B5FE3' },
+            { y: 270, label: 'Signals', pct: 86, color: '#F59E0B' },
+            { y: 302, label: 'Decisions', pct: 96, color: '#10B981' },
           ].map((item) => (
             <g key={item.label}>
-              <text x="266" y={item.y - 5} fill="#646A73" fontSize="9" fontWeight="700">{item.label}</text>
-              <text x="374" y={item.y - 5} textAnchor="end" fill={item.color} fontSize="8" fontWeight="850">{item.pct}%</text>
-              <rect x="266" y={item.y + 2} width="108" height="6" rx="3" fill="#F0F2F6" />
-              <rect x="266" y={item.y + 2} width={item.pct * 1.08} height="6" rx="3" fill={item.color} opacity="0.82" />
+              <text x="352" y={item.y - 5} fill="#646A73" fontSize="9" fontWeight="700">{item.label}</text>
+              <text x="470" y={item.y - 5} textAnchor="end" fill={item.color} fontSize="8" fontWeight="850">{item.pct}%</text>
+              <rect x="352" y={item.y + 2} width="118" height="6" rx="3" fill="#F0F2F6" />
+              <rect x="352" y={item.y + 2} width={item.pct * 1.18} height="6" rx="3" fill={item.color} opacity="0.82" />
+            </g>
+          ))}
+
+          {[
+            { x: 206, y: 96, label: 'Brief', sub: 'executive summary', icon: 'B', color: '#5B5FE3' },
+            { x: 322, y: 96, label: 'Risk', sub: 'early signals', icon: 'R', color: '#EF4444' },
+            { x: 438, y: 96, label: 'Timeline', sub: 'next milestones', icon: 'T', color: '#F59E0B' },
+            { x: 554, y: 96, label: 'Decision', sub: 'recommended action', icon: 'D', color: '#10B981' },
+          ].map((packet, i) => (
+            <g key={`packet-card-${packet.label}`}>
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                values={`0 0; 0 ${i % 2 === 0 ? -5 : -3}; 0 0`}
+                dur={`${3.2 + i * 0.25}s`}
+                repeatCount="indefinite"
+              />
+              <rect x={packet.x} y={packet.y} width="108" height="58" rx="18" fill="white" stroke={packet.color} strokeWidth="1.8" strokeOpacity="0.34" filter="url(#uc-shadow)" />
+              <rect x={packet.x + 8} y={packet.y + 38} width="68" height="5" rx="2.5" fill={packet.color} opacity="0.12" />
+              <rect x={packet.x + 8} y={packet.y + 48} width="44" height="4" rx="2" fill={packet.color} opacity="0.10" />
+              <circle cx={packet.x + 22} cy={packet.y + 21} r="13" fill={packet.color} opacity="0.14" />
+              <text x={packet.x + 22} y={packet.y + 25} textAnchor="middle" fill={packet.color} fontSize="10" fontWeight="950">{packet.icon}</text>
+              <text x={packet.x + 42} y={packet.y + 19} fill="#111827" fontSize="11" fontWeight="900">{packet.label}</text>
+              <text x={packet.x + 42} y={packet.y + 32} fill="#8F959E" fontSize="7.3" fontWeight="750">{packet.sub}</text>
+              <circle cx={packet.x + 94} cy={packet.y + 14} r="3.5" fill={packet.color} opacity="0.65">
+                <animate attributeName="r" values="2.4;4;2.4" dur={`${2 + i * 0.2}s`} repeatCount="indefinite" />
+              </circle>
             </g>
           ))}
 
           {/* Knowledge graph chips */}
           {[
-            { cx: 292, cy: 116, label: 'Owner' },
-            { cx: 356, cy: 114, label: 'Goal' },
-            { cx: 214, cy: 214, label: 'Risk' },
-            { cx: 426, cy: 214, label: 'ETA' },
-            { cx: 292, cy: 322, label: 'Scope' },
-            { cx: 356, cy: 324, label: 'Status' },
+            { cx: 284, cy: 164, label: 'Owner' },
+            { cx: 536, cy: 164, label: 'Goal' },
+            { cx: 278, cy: 246, label: 'Risk' },
+            { cx: 544, cy: 248, label: 'ETA' },
+            { cx: 364, cy: 380, label: 'Scope' },
+            { cx: 452, cy: 384, label: 'Status' },
           ].map((node, i) => (
             <g key={node.label}>
-              <line x1={node.cx} y1={node.cy} x2="320" y2="214" stroke="#5B5FE3" strokeWidth="1" strokeDasharray="3,6" opacity="0.16" />
+              <line x1={node.cx} y1={node.cy} x2="410" y2="248" stroke="#5B5FE3" strokeWidth="1" strokeDasharray="3,6" opacity="0.16" />
               <rect x={node.cx - 24} y={node.cy - 11} width="48" height="22" rx="11" fill="white" stroke="#5B5FE3" strokeOpacity="0.12" filter="url(#uc-shadow)" />
               <text x={node.cx} y={node.cy + 4} textAnchor="middle" fill="#646A73" fontSize="8" fontWeight="800">{node.label}</text>
               <circle cx={node.cx - 30} cy={node.cy} r="3" fill={i % 2 ? '#F59E0B' : '#5B5FE3'} opacity="0.55" />
             </g>
           ))}
 
+          {/* Right-side control / sync rail */}
           <g>
-            <rect x="216" y="364" width="208" height="34" rx="17" fill="white" stroke="#DDF6E8" filter="url(#uc-shadow)" />
-            <circle cx="236" cy="381" r="11" fill="#ECFDF5" stroke="#16A34A" strokeWidth="2" />
-            <path d="M231 381 l3 3 l7 -8" stroke="#16A34A" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-            <text x="256" y="385" fill="#16A34A" fontSize="11" fontWeight="850">All integrations synced into one context</text>
+            <rect x="620" y="146" width="106" height="170" rx="20" fill="white" stroke="#E9ECF3" filter="url(#uc-shadow)" />
+            <rect x="620" y="146" width="106" height="36" rx="20" fill="url(#uc-grad)" />
+            <text x="673" y="168" textAnchor="middle" fill="white" fontSize="10" fontWeight="850">Sync State</text>
+            {[
+              { y: 202, label: 'Schemas aligned', pct: 100 },
+              { y: 234, label: 'Context merged', pct: 94 },
+              { y: 266, label: 'Updates indexed', pct: 100 },
+            ].map((item) => (
+              <g key={item.label}>
+                <text x="634" y={item.y - 4} fill="#646A73" fontSize="7.5" fontWeight="700">{item.label}</text>
+                <rect x="634" y={item.y + 2} width="78" height="5" rx="2.5" fill="#F0F2F6" />
+                <rect x="634" y={item.y + 2} width={item.pct * 0.78} height="5" rx="2.5" fill={item.pct === 100 ? '#10B981' : '#F59E0B'} />
+              </g>
+            ))}
+            <text x="673" y="302" textAnchor="middle" fill="#10B981" fontSize="8" fontWeight="850">Ready for every agent</text>
+          </g>
+
+          <g>
+            <rect x="238" y="410" width="344" height="34" rx="17" fill="white" stroke="#DDF6E8" filter="url(#uc-shadow)" />
+            <circle cx="260" cy="427" r="11" fill="#ECFDF5" stroke="#16A34A" strokeWidth="2" />
+            <path d="M255 427 l3 3 l7 -8" stroke="#16A34A" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <text x="282" y="431" fill="#16A34A" fontSize="11" fontWeight="850">All integrations, content streams, and signals unified in one context layer</text>
           </g>
         </svg>
       </div>
