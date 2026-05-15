@@ -91,6 +91,7 @@ const STACK_CARDS = [
 
 const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) => {
   const [waterfallOffset, setWaterfallOffset] = useState(0)
+  const [activeAgentLane, setActiveAgentLane] = useState(1)
 
   useEffect(() => {
     if (card.id !== 'workflows' || illustrationVariant !== 'v5') return undefined
@@ -839,45 +840,146 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
   }
 
   if (card.id === 'orchestrate') {
+    const agentSources = [
+      { label: 'Use', title: 'Ready agents', desc: 'Native copilots', color: '#3EAB6E', count: '80+' },
+      { label: 'Buy', title: 'Marketplace', desc: 'Partner agents', color: '#5B5FE3', count: '240+' },
+      { label: 'Build', title: 'Custom lab', desc: 'Private agents', color: '#F59E0B', count: '∞' },
+    ]
+    const agentCards = [
+      { name: 'Code Agent', role: 'Dev tasks', icon: '⌘', source: 2, color: '#5B5FE3', x: 'left-[8%]', y: 'top-[17%]' },
+      { name: 'Research Agent', role: 'Market scan', icon: 'R', source: 1, color: '#3EAB6E', x: 'left-[58%]', y: 'top-[10%]' },
+      { name: 'CRM Agent', role: 'Sales ops', icon: 'C', source: 0, color: '#34D399', x: 'left-[70%]', y: 'top-[39%]' },
+      { name: 'Design Agent', role: 'Creative work', icon: 'D', source: 1, color: '#A78BFA', x: 'left-[10%]', y: 'top-[53%]' },
+      { name: 'Data Agent', role: 'BI insight', icon: 'B', source: 0, color: '#0EA5E9', x: 'left-[44%]', y: 'top-[68%]' },
+      { name: 'Ops Agent', role: 'Internal tools', icon: 'O', source: 2, color: '#F59E0B', x: 'left-[73%]', y: 'top-[73%]' },
+    ]
+
     return (
-      <div className="relative w-full h-full flex items-center justify-center">
-        <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#EDF7F0] to-[#D6F3E2]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
-        <svg viewBox="0 0 480 380" className="relative w-full max-w-[480px] h-auto" style={{ filter: 'drop-shadow(0 20px 40px rgba(62,171,110,0.12))' }}>
+      <div className="relative w-full h-full min-h-[440px] overflow-hidden px-4 py-5">
+        <style>{`
+          @keyframes agentFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+          }
+          @keyframes agentOrbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          @keyframes agentPulseLine {
+            0% { stroke-dashoffset: 70; opacity: 0.12; }
+            45% { opacity: 0.42; }
+            100% { stroke-dashoffset: 0; opacity: 0.12; }
+          }
+          @keyframes agentScan {
+            0% { transform: translateX(-120%); opacity: 0; }
+            22% { opacity: 0.55; }
+            100% { transform: translateX(120%); opacity: 0; }
+          }
+          .agent-orbit-ring { animation: agentOrbit 22s linear infinite; transform-origin: center; }
+          .agent-flow-line { animation: agentPulseLine 2.8s ease-in-out infinite; }
+          .agent-card-float { animation: agentFloat 5s ease-in-out infinite; }
+          .agent-scan-line { animation: agentScan 3.6s ease-in-out infinite; }
+        `}</style>
+
+        <div className="absolute inset-0 opacity-80" style={{ backgroundImage: 'radial-gradient(circle at 50% 48%, rgba(62,171,110,0.13), transparent 34%), radial-gradient(circle at 76% 18%, rgba(91,95,227,0.10), transparent 28%), radial-gradient(circle at 18% 78%, rgba(245,158,11,0.10), transparent 30%)' }} />
+        <div className="absolute inset-x-6 top-6 h-px bg-gradient-to-r from-transparent via-[#D8F2E2] to-transparent" />
+        <div className="absolute inset-x-6 bottom-6 h-px bg-gradient-to-r from-transparent via-[#D8F2E2] to-transparent" />
+
+        <svg viewBox="0 0 640 420" className="absolute inset-0 h-full w-full">
           <defs>
-            <linearGradient id="og-grad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#3EAB6E" />
-              <stop offset="100%" stopColor="#58C98A" />
+            <linearGradient id="agent-line-green" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#3EAB6E" stopOpacity="0" />
+              <stop offset="45%" stopColor="#3EAB6E" stopOpacity="0.72" />
+              <stop offset="100%" stopColor="#5B5FE3" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="agent-line-blue" x1="1" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#5B5FE3" stopOpacity="0" />
+              <stop offset="45%" stopColor="#5B5FE3" stopOpacity="0.68" />
+              <stop offset="100%" stopColor="#3EAB6E" stopOpacity="0" />
             </linearGradient>
           </defs>
-          <rect x="190" y="140" width="100" height="100" rx="24" fill="url(#og-grad)" filter="drop-shadow(0 12px 32px rgba(62,171,110,0.35))" />
-          <text x="240" y="195" textAnchor="middle" fill="white" fontSize="13" fontWeight="800">Meegle</text>
-          {[
-            { cx: 120, cy: 100, color: '#5B5FE3', label: 'Code Agent', delay: 0 },
-            { cx: 360, cy: 100, color: '#F59E0B', label: 'Data Agent', delay: 0.3 },
-            { cx: 90, cy: 280, color: '#8B5CF6', label: 'Doc Agent', delay: 0.6 },
-            { cx: 390, cy: 280, color: '#EF4444', label: 'QA Agent', delay: 0.9 },
-            { cx: 240, cy: 60, color: '#3B82F6', label: 'PM Agent', delay: 0.15 },
-          ].map((agent, i) => (
-            <g key={i}>
-              <line
-                x1={agent.cx} y1={agent.cy} x2="240" y2="190"
-                stroke={agent.color} strokeWidth="2" strokeDasharray="4,4" opacity="0.5"
-                className={isVisible ? 'animate-pulse' : ''}
-              />
-              <circle cx={agent.cx} cy={agent.cy} r="22" fill="white" stroke={agent.color} strokeWidth="2" filter="drop-shadow(0 4px 12px rgba(0,0,0,0.06))" />
-              <circle cx={agent.cx} cy={agent.cy} r="10" fill={agent.color} opacity="0.15" />
-              <circle cx={agent.cx} cy={agent.cy} r="5" fill={agent.color} />
-              <text x={agent.cx} y={agent.cy + 34} textAnchor="middle" fill="#646A73" fontSize="9" fontWeight="600">{agent.label}</text>
-            </g>
-          ))}
-          <g>
-            <animateTransform attributeName="transform" type="rotate" from="0 240 190" to="360 240 190" dur="20s" repeatCount="indefinite" />
-            <circle cx="280" cy="160" r="4" fill="#3EAB6E" opacity="0.6" />
-            <circle cx="300" cy="180" r="3" fill="#58C98A" opacity="0.5" />
-            <circle cx="260" cy="200" r="3.5" fill="#3EAB6E" opacity="0.5" />
-            <circle cx="310" cy="150" r="2.5" fill="#58C98A" opacity="0.4" />
-          </g>
+          <path className="agent-flow-line" d="M92 116 C178 92, 250 128, 312 210" fill="none" stroke="url(#agent-line-blue)" strokeWidth="2.2" strokeDasharray="10 12" />
+          <path className="agent-flow-line" d="M512 92 C424 96, 370 132, 318 210" fill="none" stroke="url(#agent-line-green)" strokeWidth="2.2" strokeDasharray="10 12" style={{ animationDelay: '0.45s' }} />
+          <path className="agent-flow-line" d="M552 292 C470 278, 395 260, 326 218" fill="none" stroke="url(#agent-line-blue)" strokeWidth="2.2" strokeDasharray="10 12" style={{ animationDelay: '0.75s' }} />
+          <path className="agent-flow-line" d="M96 304 C178 276, 234 262, 314 222" fill="none" stroke="url(#agent-line-green)" strokeWidth="2.2" strokeDasharray="10 12" style={{ animationDelay: '1.05s' }} />
+          <path className="agent-flow-line" d="M320 346 C312 300, 310 260, 318 224" fill="none" stroke="url(#agent-line-green)" strokeWidth="2" strokeDasharray="8 12" style={{ animationDelay: '1.35s' }} />
         </svg>
+
+        <div className="absolute left-4 top-6 z-20 flex w-[128px] flex-col gap-2">
+          {agentSources.map((source, idx) => (
+            <button
+              key={source.label}
+              type="button"
+              onMouseEnter={() => setActiveAgentLane(idx)}
+              onFocus={() => setActiveAgentLane(idx)}
+              className={`group rounded-2xl border px-3 py-2.5 text-left transition-all duration-300 ${activeAgentLane === idx ? 'border-white bg-white shadow-[0_16px_36px_rgba(38,45,64,0.12)]' : 'border-white/70 bg-white/[0.58] hover:bg-white/[0.90]'}`}
+            >
+              <div className="mb-1 flex items-center justify-between">
+                <span className="text-[10px] font-black uppercase tracking-[0.14em]" style={{ color: source.color }}>{source.label}</span>
+                <span className="rounded-full px-1.5 py-0.5 text-[8px] font-black" style={{ color: source.color, backgroundColor: `${source.color}14` }}>{source.count}</span>
+              </div>
+              <div className="text-[11px] font-black text-[#111827]">{source.title}</div>
+              <div className="text-[9px] font-semibold text-[#8F959E]">{source.desc}</div>
+            </button>
+          ))}
+        </div>
+
+        <div className="absolute left-1/2 top-1/2 z-10 h-[168px] w-[168px] -translate-x-1/2 -translate-y-1/2 rounded-[36px] border border-white/80 bg-white/[0.88] p-4 shadow-[0_24px_70px_rgba(38,45,64,0.14)] backdrop-blur-xl">
+          <div className="agent-orbit-ring absolute inset-[-18px] rounded-[48px] border border-dashed border-[#3EAB6E]/25" />
+          <div className="agent-orbit-ring absolute inset-[-34px] rounded-[62px] border border-dashed border-[#5B5FE3]/15" style={{ animationDuration: '32s', animationDirection: 'reverse' }} />
+          <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[24px] bg-gradient-to-br from-[#182319] via-[#102119] to-[#162A20] p-4 text-white">
+            <div className="agent-scan-line absolute inset-y-0 w-16 rotate-12 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <div className="relative">
+              <div className="mb-2 flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#3EAB6E] text-[13px] font-black shadow-[0_10px_22px_rgba(62,171,110,0.32)]">M</div>
+                <div>
+                  <div className="text-[12px] font-black">Agent Hub</div>
+                  <div className="text-[8px] font-bold uppercase tracking-[0.16em] text-white/[0.42]">Orchestrator</div>
+                </div>
+              </div>
+              <div className="text-[10px] leading-4 text-white/[0.62]">Route any agent into workflows, systems, and human checkpoints.</div>
+            </div>
+            <div className="relative grid grid-cols-3 gap-1.5">
+              {agentSources.map((source, idx) => (
+                <div key={`hub-${source.label}`} className={`rounded-lg px-1.5 py-1 text-center text-[8px] font-black transition-all duration-300 ${activeAgentLane === idx ? 'bg-white text-[#102119]' : 'bg-white/[0.08] text-white/50'}`}>
+                  {source.label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {agentCards.map((agent, idx) => {
+          const active = activeAgentLane === agent.source
+          return (
+            <button
+              key={agent.name}
+              type="button"
+              onMouseEnter={() => setActiveAgentLane(agent.source)}
+              onFocus={() => setActiveAgentLane(agent.source)}
+              className={`agent-card-float absolute z-20 w-[150px] rounded-[22px] border bg-white p-3 text-left transition-all duration-300 ${agent.x} ${agent.y} ${active ? 'scale-[1.04] border-white shadow-[0_20px_42px_rgba(38,45,64,0.16)]' : 'border-white/70 shadow-[0_12px_30px_rgba(38,45,64,0.08)] opacity-[0.82]'}`}
+              style={{ animationDelay: `${idx * 0.38}s` }}
+            >
+              <div className="mb-2 flex items-start justify-between">
+                <div className="flex h-9 w-9 items-center justify-center rounded-2xl text-[13px] font-black text-white" style={{ backgroundColor: agent.color }}>{agent.icon}</div>
+                <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.08em]" style={{ color: agentSources[agent.source].color, backgroundColor: `${agentSources[agent.source].color}14` }}>{agentSources[agent.source].label}</span>
+              </div>
+              <div className="text-[12px] font-black text-[#111827]">{agent.name}</div>
+              <div className="mt-0.5 text-[9px] font-semibold text-[#8F959E]">{agent.role}</div>
+              <div className="mt-2 flex items-center gap-1">
+                <span className="h-1.5 flex-1 rounded-full" style={{ backgroundColor: agent.color, opacity: active ? 0.5 : 0.18 }} />
+                <span className="h-1.5 w-4 rounded-full" style={{ backgroundColor: agent.color, opacity: active ? 0.36 : 0.12 }} />
+              </div>
+            </button>
+          )
+        })}
+
+        <div className="absolute bottom-7 left-4 z-20 rounded-full border border-white/80 bg-white/[0.72] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-[#3EAB6E] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
+          Use · Buy · Build
+        </div>
+        <div className="absolute bottom-7 right-4 z-20 rounded-full border border-white/80 bg-white/[0.72] px-3 py-1.5 text-[9px] font-bold text-[#8F959E] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
+          hover sources to orchestrate
+        </div>
       </div>
     )
   }
