@@ -710,7 +710,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           </svg>
         )}
         {illustrationVariant === 'v5' && (
-          <div className="relative mx-auto w-full max-w-[620px] h-full min-h-[440px] overflow-hidden">
+          <div className="relative mx-auto w-full max-w-[700px] h-full min-h-[440px] overflow-hidden">
             <style>{`
               .workflow-waterfall-card {
                 box-shadow: 0 18px 42px rgba(47, 55, 110, 0.10);
@@ -720,10 +720,10 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(91,95,227,0.10) 1px, transparent 0)', backgroundSize: '18px 18px' }} />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_12%,rgba(91,95,227,0.14),transparent_34%),radial-gradient(circle_at_84%_42%,rgba(52,211,153,0.10),transparent_30%)]" />
 
-            <div className="absolute top-5 left-2 z-20 rounded-full bg-white/88 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
-            <div className="absolute top-5 right-2 z-20 rounded-full bg-white/82 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">scroll to move</div>
+            <div className="absolute top-5 left-0 z-20 rounded-full bg-white/88 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
+            <div className="absolute top-5 right-0 z-20 rounded-full bg-white/82 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">scroll to move</div>
 
-            <div className="relative z-10 flex h-full gap-5 px-2 pt-16 pb-6">
+            <div className="relative z-10 flex h-full gap-4 px-0 pt-16 pb-6">
               {[
                 {
                   dir: 'up', shift: 40, cards: [
