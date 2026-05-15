@@ -717,8 +717,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               }
             `}</style>
 
-            <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(91,95,227,0.10) 1px, transparent 0)', backgroundSize: '18px 18px' }} />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_12%,rgba(91,95,227,0.14),transparent_34%),radial-gradient(circle_at_84%_42%,rgba(52,211,153,0.10),transparent_30%)]" />
 
             <div className="absolute top-5 left-0 z-20 rounded-full bg-white/88 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
             <div className="absolute top-5 right-0 z-20 rounded-full bg-white/82 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">scroll to move</div>
