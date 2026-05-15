@@ -2405,7 +2405,6 @@ const GameWorkflowBoard = () => {
   const confirmedNodeCount = activeStep === 2 ? Math.ceil(frame / 2) : 0
   const agentDoneNodeIndex = activeStep === 2 && frame % 2 === 0 ? Math.floor(frame / 2) : -1
   const confirmingNodeIndex = activeStep === 2 && frame % 2 === 1 ? Math.floor(frame / 2) : -1
-  const completed = activeStep === 2
 
   return (
     <div className="relative w-full select-none overflow-visible" style={{ height: FLOW_BOARD_H }}>
