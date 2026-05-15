@@ -718,9 +718,9 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               .workflow-node-arrow::after {
                 content: '';
                 position: absolute;
-                right: -12px;
+                right: -14px;
                 top: 50%;
-                width: 10px;
+                width: 12px;
                 height: 1px;
                 background: currentColor;
                 opacity: 0.34;
@@ -728,7 +728,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               .workflow-node-arrow::before {
                 content: '';
                 position: absolute;
-                right: -13px;
+                right: -15px;
                 top: calc(50% - 3px);
                 width: 6px;
                 height: 6px;
@@ -745,97 +745,85 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <div className="absolute top-5 left-6 z-20 rounded-full bg-white/88 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
             <div className="absolute top-5 right-6 z-20 rounded-full bg-white/82 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">scroll to move</div>
 
-            <div className="relative z-10 flex h-full gap-4 px-6 pt-16 pb-6 -rotate-[1.2deg]">
+            <div className="relative z-10 flex h-full gap-5 px-7 pt-16 pb-6">
               {[
                 {
                   dir: 'up', shift: 0, cards: [
-                    { title: 'Product Launch SOP', tag: 'R&D', color: '#5B5FE3', h: 178, agent: 'PM Agent', branches: [['需求', '方案', '开发'], ['设计', 'QA', '发布']] },
-                    { title: 'Bug Triage SOP', tag: 'Engineering', color: '#7B6FF0', h: 150, agent: 'QA Agent', branches: [['告警', '定位', '修复'], ['复现', '验证']] },
-                    { title: 'Docs Release SOP', tag: 'Content', color: '#34D399', h: 158, agent: 'Doc Agent', branches: [['草稿', '评审', '发布'], ['翻译', '同步']] },
-                    { title: 'Incident SOP', tag: 'Ops', color: '#F59E0B', h: 164, agent: 'Ops Agent', branches: [['告警', '分级', '处理'], ['通知', '复盘']] },
+                    { title: 'CRM Lead-to-Deal', tag: 'CRM / Sales', color: '#34D399', h: 204, agent: 'Sales Agent', summary: '从线索进入到成交签约，自动推进销售协作。', primary: ['Lead', 'Qualify', 'Demo', 'Proposal'], secondary: ['Legal', 'Discount', 'Contract'] },
+                    { title: 'Customer Onboarding', tag: 'CSM', color: '#5B5FE3', h: 190, agent: 'CS Agent', summary: '客户签约后，跨团队完成配置、迁移、培训和验收。', primary: ['Kickoff', 'Setup', 'Migration', 'Training'], secondary: ['Risk', 'Support', 'Go-live'] },
+                    { title: 'Renewal Management', tag: 'Revenue', color: '#A78BFA', h: 176, agent: 'RevOps Agent', summary: '续约窗口触发健康度评估、风险处理和商务跟进。', primary: ['Health', 'Risk', 'Plan', 'Renew'], secondary: ['Usage', 'Exec sync'] },
                   ]
                 },
                 {
-                  dir: 'down', shift: 70, cards: [
-                    { title: 'Global Campaign SOP', tag: 'GTM', color: '#787BEE', h: 190, agent: 'GTM Agent', branches: [['策略', '内容', '投放'], ['渠道', '素材', '复盘']] },
-                    { title: 'IT Ticket SOP', tag: 'Internal Ops', color: '#5B5FE3', h: 154, agent: 'IT Agent', branches: [['请求', '审批', '处理'], ['权限', '通知']] },
-                    { title: 'Customer Onboarding SOP', tag: 'CSM', color: '#34D399', h: 178, agent: 'CS Agent', branches: [['启动', '迁移', '培训'], ['配置', '验收']] },
-                    { title: 'Partner Review SOP', tag: 'BD', color: '#A78BFA', h: 148, agent: 'BD Agent', branches: [['线索', '评估', '跟进'], ['风险', '条款']] },
+                  dir: 'down', shift: 90, cards: [
+                    { title: 'Product Development', tag: 'R&D', color: '#5B5FE3', h: 214, agent: 'PM Agent', summary: '从需求池到发布上线，研发、设计、测试有序协作。', primary: ['PRD', 'Design', 'Dev', 'QA', 'Release'], secondary: ['Review', 'Docs', 'Monitor'] },
+                    { title: 'Bug Triage', tag: 'Engineering', color: '#F59E0B', h: 180, agent: 'QA Agent', summary: '线上问题自动分级，进入修复、验证、复盘闭环。', primary: ['Report', 'Triage', 'Fix', 'Verify'], secondary: ['P0', 'Rollback', 'Postmortem'] },
+                    { title: 'Security Review', tag: 'SecOps', color: '#EF4444', h: 176, agent: 'Sec Agent', summary: '高风险改动进入安全扫描、例外审批和审计归档。', primary: ['Scan', 'Assess', 'Approve', 'Archive'], secondary: ['Exception', 'Policy'] },
                   ]
                 },
                 {
-                  dir: 'up', shift: 140, cards: [
-                    { title: 'Compliance Approval SOP', tag: 'Risk', color: '#F59E0B', h: 166, agent: 'Risk Agent', branches: [['申请', '审查', '审批'], ['例外', '归档']] },
-                    { title: 'Revenue Forecast SOP', tag: 'Finance', color: '#34D399', h: 184, agent: 'Data Agent', branches: [['收集', '建模', '预测'], ['校验', '汇报']] },
-                    { title: 'Hiring Pipeline SOP', tag: 'HR', color: '#787BEE', h: 150, agent: 'HR Agent', branches: [['筛选', '面试', 'Offer'], ['背调', '入职']] },
-                    { title: 'QBR Planning SOP', tag: 'Leadership', color: '#5B5FE3', h: 170, agent: 'BI Agent', branches: [['数据', '叙事', '行动'], ['风险', '决策']] },
-                  ]
-                },
-                {
-                  dir: 'down', shift: 210, cards: [
-                    { title: 'Deal Desk SOP', tag: 'Sales', color: '#34D399', h: 176, agent: 'Sales Agent', branches: [['报价', '折扣', '合同'], ['法务', '签署']] },
-                    { title: 'Security Review SOP', tag: 'SecOps', color: '#F59E0B', h: 154, agent: 'Sec Agent', branches: [['扫描', '例外', '签核'], ['策略', '审计']] },
-                    { title: 'Data Request SOP', tag: 'Analytics', color: '#5B5FE3', h: 166, agent: 'Data Agent', branches: [['定义', '查询', '共享'], ['权限', '监控']] },
-                    { title: 'Localization SOP', tag: 'Global', color: '#A78BFA', h: 158, agent: 'L10n Agent', branches: [['提取', '翻译', '校验'], ['发布', '回收']] },
+                  dir: 'up', shift: 180, cards: [
+                    { title: 'GTM Campaign Launch', tag: 'GTM', color: '#787BEE', h: 210, agent: 'GTM Agent', summary: '市场活动从策略到素材、渠道、投放和复盘统一管理。', primary: ['Strategy', 'Content', 'Channel', 'Launch'], secondary: ['Creative', 'Budget', 'Report'] },
+                    { title: 'IT Service Request', tag: 'Internal Ops', color: '#5B5FE3', h: 184, agent: 'IT Agent', summary: '员工请求进入审批、权限配置、执行和通知流程。', primary: ['Request', 'Approve', 'Provision', 'Notify'], secondary: ['Permission', 'SLA'] },
+                    { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', h: 180, agent: 'Risk Agent', summary: '合规事项按标准审批链路流转，过程可追踪。', primary: ['Submit', 'Review', 'Approve', 'Audit'], secondary: ['Exception', 'Record'] },
                   ]
                 },
               ].map((column, columnIdx) => {
-                const travel = 720
+                const travel = 640
                 const direction = column.dir === 'up' ? -1 : 1
                 const raw = (waterfallOffset * direction + column.shift) % travel
                 const offset = raw > 0 ? raw - travel : raw
                 return (
-                  <div key={`wf-column-${columnIdx}`} className="h-full w-[160px] shrink-0 overflow-hidden">
+                  <div key={`wf-column-${columnIdx}`} className="h-full flex-1 overflow-hidden">
                     <div
                       className="transition-transform duration-500 ease-out will-change-transform"
                       style={{ transform: `translateY(${offset}px)` }}
                     >
                       {[...column.cards, ...column.cards].map((item, idx) => (
-                        <div key={`${item.title}-${idx}`} className="workflow-waterfall-card mb-4 rounded-[22px] border border-white/80 bg-white/90 backdrop-blur-sm p-3" style={{ height: item.h }}>
-                          <div className="mb-3 flex items-start justify-between gap-2">
+                        <div key={`${item.title}-${idx}`} className="workflow-waterfall-card mb-5 rounded-[24px] border border-white/80 bg-white/92 backdrop-blur-sm p-4" style={{ height: item.h }}>
+                          <div className="mb-3 flex items-start justify-between gap-3">
                             <div className="min-w-0">
-                              <div className="mb-1 flex items-center gap-2">
+                              <div className="mb-1.5 flex items-center gap-2">
                                 <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
-                                <span className="truncate text-[10px] font-black text-[#111827]">{item.title}</span>
+                                <span className="truncate text-[12px] font-black text-[#111827]">{item.title}</span>
                               </div>
-                              <span className="rounded-full px-1.5 py-0.5 text-[7px] font-black uppercase" style={{ color: item.color, backgroundColor: `${item.color}14` }}>{item.tag}</span>
+                              <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.08em]" style={{ color: item.color, backgroundColor: `${item.color}14` }}>{item.tag}</span>
                             </div>
-                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] shadow-sm" style={{ backgroundColor: `${item.color}18`, color: item.color }}>
-                              🤖
+                            <div className="flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1 text-[8px] font-black" style={{ color: item.color, backgroundColor: `${item.color}14` }}>
+                              <span>🤖</span>
+                              <span>{item.agent}</span>
                             </div>
                           </div>
 
-                          <div className="mb-2 rounded-2xl p-2.5" style={{ backgroundColor: `${item.color}0D` }}>
+                          <p className="mb-3 text-[10px] leading-4 text-[#646A73]">{item.summary}</p>
+
+                          <div className="rounded-2xl border border-white/80 p-3" style={{ backgroundColor: `${item.color}0D` }}>
                             <div className="mb-2 flex items-center justify-between">
-                              <span className="text-[8px] font-black uppercase tracking-[0.12em] text-[#8F959E]">Workflow</span>
-                              <span className="text-[8px] font-bold" style={{ color: item.color }}>{item.agent}</span>
+                              <span className="text-[8px] font-black uppercase tracking-[0.14em] text-[#8F959E]">Main workflow</span>
+                              <span className="h-1.5 w-12 rounded-full" style={{ backgroundColor: item.color, opacity: 0.35 }} />
                             </div>
-                            <div className="space-y-2.5">
-                              {item.branches.map((branch, branchIdx) => (
-                                <div key={`${item.title}-branch-${branchIdx}`} className="flex items-center gap-3">
-                                  {branch.map((node, nodeIdx) => (
-                                    <span
-                                      key={node}
-                                      className={`relative rounded-full px-2 py-1 text-[8px] font-black ${nodeIdx < branch.length - 1 ? 'workflow-node-arrow' : ''}`}
-                                      style={{
-                                        color: nodeIdx === 0 && branchIdx === 0 ? '#FFFFFF' : item.color,
-                                        backgroundColor: nodeIdx === 0 && branchIdx === 0 ? item.color : '#FFFFFF',
-                                        border: `1px solid ${item.color}26`,
-                                      }}
-                                    >
-                                      {node}
-                                    </span>
-                                  ))}
-                                </div>
+                            <div className="mb-3 flex items-center gap-4">
+                              {item.primary.map((node, nodeIdx) => (
+                                <span
+                                  key={node}
+                                  className={`relative rounded-full px-2 py-1 text-[8px] font-black ${nodeIdx < item.primary.length - 1 ? 'workflow-node-arrow' : ''}`}
+                                  style={{
+                                    color: nodeIdx === 0 ? '#FFFFFF' : item.color,
+                                    backgroundColor: nodeIdx === 0 ? item.color : '#FFFFFF',
+                                    border: `1px solid ${item.color}26`,
+                                  }}
+                                >
+                                  {node}
+                                </span>
                               ))}
                             </div>
-                          </div>
-
-                          <div className="flex items-center gap-1.5 rounded-2xl border border-[#EEF0F4] bg-white/70 p-2">
-                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px]" style={{ backgroundColor: `${item.color}18` }}>🤖</span>
-                            <div className="min-w-0 flex-1">
-                              <div className="h-1.5 w-full rounded-full bg-[#E8EBF7]" />
-                              <div className="mt-1 h-1.5 w-2/3 rounded-full" style={{ backgroundColor: item.color, opacity: 0.26 }} />
+                            <div className="rounded-xl bg-white/70 p-2">
+                              <div className="mb-1.5 text-[8px] font-black uppercase tracking-[0.12em] text-[#A1A7B3]">Branch / checkpoint</div>
+                              <div className="flex flex-wrap gap-1.5">
+                                {item.secondary.map((node) => (
+                                  <span key={node} className="rounded-full border px-2 py-1 text-[8px] font-bold" style={{ borderColor: `${item.color}24`, color: item.color, backgroundColor: `${item.color}08` }}>{node}</span>
+                                ))}
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -848,8 +836,8 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
             <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-24 bg-gradient-to-b from-[#F7F8FF] via-[#F7F8FF]/82 to-transparent" />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-28 bg-gradient-to-t from-[#F7F8FF] via-[#F7F8FF]/82 to-transparent" />
-            <div className="pointer-events-none absolute left-0 top-0 z-30 h-full w-16 bg-gradient-to-r from-[#F7F8FF] to-transparent" />
-            <div className="pointer-events-none absolute right-0 top-0 z-30 h-full w-16 bg-gradient-to-l from-[#F7F8FF] to-transparent" />
+            <div className="pointer-events-none absolute left-0 top-0 z-30 h-full w-12 bg-gradient-to-r from-[#F7F8FF] to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 z-30 h-full w-12 bg-gradient-to-l from-[#F7F8FF] to-transparent" />
           </div>
         )}
       </div>
