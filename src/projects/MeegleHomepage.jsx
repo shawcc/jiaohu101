@@ -92,6 +92,16 @@ const STACK_CARDS = [
 const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) => {
   const [waterfallOffset, setWaterfallOffset] = useState(0)
   const [activeAgentLane, setActiveAgentLane] = useState(null)
+  const xiaoAAgent = {
+    name: '小A',
+    role: 'Workflow actor',
+    origin: 'Create',
+    action: 'Join workflow with context',
+    desc: '小A first appears inside a SOP workflow, then takes a seat in the agent fleet, and finally carries its context package into the data layer.',
+    color: '#5B5FE3',
+    initials: 'A',
+    story: true,
+  }
 
   useEffect(() => {
     if (card.id !== 'workflows' || illustrationVariant !== 'v5') return undefined
@@ -738,6 +748,13 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               .workflow-waterfall-card {
                 box-shadow: 0 18px 42px rgba(47, 55, 110, 0.10);
               }
+              @keyframes xiaoAWorkflowJump {
+                0%, 100% { transform: translateY(0) scale(1); }
+                45% { transform: translateY(-7px) scale(1.04); }
+              }
+              .xiao-a-workflow {
+                animation: xiaoAWorkflowJump 2.4s ease-in-out infinite;
+              }
             `}</style>
 
 
@@ -772,7 +789,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                       style={{ transform: `translateY(${offset}px)` }}
                     >
                       {column.cards.map((item) => (
-                        <div key={item.title} className="workflow-waterfall-card mb-6 overflow-hidden rounded-[24px] border border-white/80 bg-white/94 backdrop-blur-sm p-4" style={{ height: item.h }}>
+                        <div key={item.title} className="workflow-waterfall-card relative mb-6 overflow-hidden rounded-[24px] border border-white/80 bg-white/94 backdrop-blur-sm p-4" style={{ height: item.h }}>
                           <div className="mb-3 flex items-start justify-between gap-3">
                             <div className="min-w-0">
                               <div className="mb-1.5 flex items-center gap-2">
@@ -812,7 +829,15 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                                     {nodeIdx === 2 && (
                                       <g>
                                         <circle cx={x + 21} cy="9" r="7" fill={item.color} opacity="0.14" />
-                                        <text x={x + 21} y="12" textAnchor="middle" fontSize="8">🤖</text>
+                                        {item.title === 'Product Development' ? (
+                                          <g>
+                                            <circle cx={x + 21} cy="9" r="9" fill="#5B5FE3" opacity="0.16" />
+                                            <circle cx={x + 21} cy="8.5" r="6" fill="#5B5FE3" />
+                                            <text x={x + 21} y="11.2" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">A</text>
+                                          </g>
+                                        ) : (
+                                          <text x={x + 21} y="12" textAnchor="middle" fontSize="8">🤖</text>
+                                        )}
                                       </g>
                                     )}
                                   </g>
@@ -826,6 +851,14 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                               ))}
                             </svg>
                           </div>
+                          {item.title === 'Product Development' && (
+                            <div className="xiao-a-workflow absolute right-5 top-[90px] z-30 rounded-full border border-[#5B5FE3]/20 bg-white px-2.5 py-1.5 shadow-[0_14px_32px_rgba(91,95,227,0.16)]">
+                              <div className="flex items-center gap-2">
+                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#5B5FE3] text-[12px] font-black text-white">小A</span>
+                                <span className="text-[9px] font-black uppercase tracking-[0.12em] text-[#5B5FE3]">in SOP</span>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -868,6 +901,8 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
     ]
     const hasActiveAgent = activeAgentLane !== null
     const isEmptySeatActive = typeof activeAgentLane === 'number' && activeAgentLane < 0
+    const storySeatKey = 510
+    const isStorySeatActive = activeAgentLane === storySeatKey
     const emptySeatInfo = {
       name: 'Open seat',
       role: 'Your next agent',
@@ -878,7 +913,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
     const activeSeatAgentIndex = hasActiveAgent && !isEmptySeatActive
       ? (Math.floor(activeAgentLane / 100) * 18 + activeAgentLane % 100) % agentPeople.length
       : 0
-    const activePerson = isEmptySeatActive ? emptySeatInfo : (hasActiveAgent ? agentPeople[activeSeatAgentIndex] : agentPeople[0])
+    const activePerson = isEmptySeatActive ? emptySeatInfo : (isStorySeatActive ? xiaoAAgent : (hasActiveAgent ? agentPeople[activeSeatAgentIndex] : agentPeople[0]))
     const originStyles = {
       Hire: { color: '#3EAB6E', label: 'Hire an agent' },
       Bring: { color: '#5B5FE3', label: 'Bring your agent' },
@@ -921,11 +956,16 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             0%, 100% { opacity: 0.16; transform: scale(0.88); }
             50% { opacity: 0.42; transform: scale(1.16); }
           }
+          @keyframes xiaoASeatBreathe {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.05); }
+          }
           @keyframes workflowDash {
             from { stroke-dashoffset: 42; }
             to { stroke-dashoffset: 0; }
           }
           .agent-seat-spotlight { animation: agentSeatSpotlight 2.8s ease-in-out infinite; filter: blur(1px); }
+          .xiao-a-seat { animation: xiaoASeatBreathe 2.6s ease-in-out infinite; }
           .workflow-stage-line { animation: workflowDash 2.4s linear infinite; }
         `}</style>
 
@@ -986,7 +1026,8 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                   const emptyActiveKey = -((row + 1) * 100 + col)
                   const seatAgentKey = row * 100 + col
                   const agentIdx = (row * 18 + col) % agentPeople.length
-                  const person = empty ? null : agentPeople[agentIdx]
+                  const isStorySeat = seatAgentKey === storySeatKey
+                  const person = empty ? null : (isStorySeat ? xiaoAAgent : agentPeople[agentIdx])
                   const active = empty ? activeAgentLane === emptyActiveKey : activeAgentLane === seatAgentKey
                   return (
                     <button
@@ -1003,7 +1044,16 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                       className="relative min-h-[38px] rounded-t-[10px] transition-all duration-300"
                       style={{ zIndex: active ? 70 : 10 + row }}
                     >
-                      {person && renderAgent(person, active, scale)}
+                      {person && (
+                        <div className={isStorySeat ? 'xiao-a-seat' : ''}>
+                          {renderAgent(person, active || isStorySeat, scale)}
+                          {isStorySeat && (
+                            <div className="pointer-events-none absolute left-1/2 top-[-42px] z-50 -translate-x-1/2 rounded-full border border-white/70 bg-white px-2 py-1 text-[8px] font-black text-[#5B5FE3] shadow-[0_12px_28px_rgba(91,95,227,0.18)]">
+                              小A
+                            </div>
+                          )}
+                        </div>
+                      )}
                       {empty && (
                         <div className="absolute left-1/2 top-[-14px] z-20 -translate-x-1/2">
                           {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full bg-[#F59E0B]" />}
@@ -1123,6 +1173,18 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
         <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#FFF9EA] via-[#FFF2D2] to-[#FFE8AF]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
         <div className="absolute inset-[4%] rounded-[34px] bg-white/18 blur-3xl" />
         <div className="absolute inset-0 opacity-[0.09]" style={{ backgroundImage: 'radial-gradient(#D97706 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
+        <style>{`
+          @keyframes xiaoAFeatherDrift {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(-6deg); opacity: 0.36; }
+            50% { transform: translate3d(18px, -14px, 0) rotate(8deg); opacity: 0.92; }
+          }
+          @keyframes xiaoABagOpen {
+            0%, 100% { transform: translateY(0) scale(1); }
+            45% { transform: translateY(-8px) scale(1.03); }
+          }
+          .xiao-a-feather { animation: xiaoAFeatherDrift 4.8s ease-in-out infinite; }
+          .xiao-a-context-bag { animation: xiaoABagOpen 2.8s ease-in-out infinite; }
+        `}</style>
         <svg viewBox="0 0 820 500" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 h-full w-full" style={{ filter: 'drop-shadow(0 24px 52px rgba(245,158,11,0.14))' }}>
           <defs>
             <linearGradient id="uc-grad" x1="0" y1="0" x2="1" y2="1">
@@ -1290,6 +1352,35 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <text x="282" y="431" fill="#16A34A" fontSize="11" fontWeight="850">All integrations, content streams, and signals unified in one context layer</text>
           </g>
         </svg>
+        <div className="pointer-events-none absolute left-[42%] top-[16%] z-30">
+          <div className="xiao-a-feather h-8 w-16 rounded-[999px_999px_999px_10px] bg-white/75 shadow-[0_12px_28px_rgba(245,158,11,0.18)]" />
+        </div>
+        <div className="pointer-events-none absolute left-[47%] top-[40%] z-40 -translate-x-1/2 -translate-y-1/2">
+          <div className="flex items-center gap-3 rounded-full border border-[#5B5FE3]/20 bg-white/90 px-3 py-2 shadow-[0_20px_50px_rgba(91,95,227,0.16)] backdrop-blur">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#5B5FE3] text-[13px] font-black text-white">小A</span>
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-[0.14em] text-[#5B5FE3]">same agent</div>
+              <div className="text-[11px] font-bold text-[#111827]">arrives with context</div>
+            </div>
+          </div>
+        </div>
+        <div className="xiao-a-context-bag pointer-events-none absolute right-[14%] top-[28%] z-40 w-[190px] rounded-[26px] border border-[#FDE7B6] bg-white/92 p-4 shadow-[0_24px_60px_rgba(180,83,9,0.18)] backdrop-blur-xl">
+          <div className="mb-3 flex items-center justify-between">
+            <div className="text-[11px] font-black uppercase tracking-[0.14em] text-[#B45309]">小A's package</div>
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#FFF7E6] text-[16px]">▣</div>
+          </div>
+          <div className="mb-3 rounded-2xl bg-[#FFF8EA] p-3">
+            <div className="mb-2 h-2 w-20 rounded-full bg-[#F59E0B]/35" />
+            <div className="h-2 w-28 rounded-full bg-[#F59E0B]/18" />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {['Docs', 'Chats', 'Tasks', 'Metrics'].map((item) => (
+              <div key={item} className="rounded-xl border border-[#F1F3F7] bg-white px-2 py-1.5 text-center text-[9px] font-black text-[#646A73]">
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     )
   }
