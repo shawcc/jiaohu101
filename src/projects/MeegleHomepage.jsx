@@ -710,42 +710,38 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           </svg>
         )}
         {illustrationVariant === 'v5' && (
-          <div className="relative mx-auto w-full max-w-[620px] h-full min-h-[440px] overflow-hidden rounded-[32px] border border-white/70 bg-[#F7F8FF] shadow-[0_24px_70px_rgba(72,80,160,0.16)]">
+          <div className="relative mx-auto w-full max-w-[620px] h-full min-h-[440px] overflow-hidden">
             <style>{`
               .workflow-waterfall-card {
-                box-shadow: 0 18px 42px rgba(47, 55, 110, 0.12);
-              }
-              .workflow-step-line {
-                background: linear-gradient(180deg, currentColor 0%, currentColor 100%);
-                opacity: 0.16;
+                box-shadow: 0 18px 42px rgba(47, 55, 110, 0.10);
               }
             `}</style>
 
-            <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(91,95,227,0.12) 1px, transparent 0)', backgroundSize: '18px 18px' }} />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_12%,rgba(91,95,227,0.18),transparent_34%),radial-gradient(circle_at_84%_42%,rgba(52,211,153,0.13),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0.08))]" />
+            <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(91,95,227,0.10) 1px, transparent 0)', backgroundSize: '18px 18px' }} />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_12%,rgba(91,95,227,0.14),transparent_34%),radial-gradient(circle_at_84%_42%,rgba(52,211,153,0.10),transparent_30%)]" />
 
-            <div className="absolute top-5 left-6 z-20 rounded-full bg-white/88 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
-            <div className="absolute top-5 right-6 z-20 rounded-full bg-white/82 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">scroll to move</div>
+            <div className="absolute top-5 left-2 z-20 rounded-full bg-white/88 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
+            <div className="absolute top-5 right-2 z-20 rounded-full bg-white/82 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">scroll to move</div>
 
-            <div className="relative z-10 flex h-full gap-5 px-7 pt-16 pb-6">
+            <div className="relative z-10 flex h-full gap-5 px-2 pt-16 pb-6">
               {[
                 {
                   dir: 'up', shift: 40, cards: [
-                    { title: 'CRM Lead-to-Deal', tag: 'CRM / Sales', color: '#34D399', h: 226, agent: 'Sales Agent', summary: '从线索进入到成交签约，销售、法务、商务审批都在一套流程里推进。', primary: ['Lead captured', 'Qualified', 'Demo booked', 'Proposal sent', 'Contract signed'], secondary: ['Legal review', 'Discount approval', 'Handoff to CSM'] },
-                    { title: 'Customer Onboarding', tag: 'CSM', color: '#5B5FE3', h: 214, agent: 'CS Agent', summary: '客户签约后，配置、迁移、培训、验收被组织成标准交付路径。', primary: ['Kickoff', 'Workspace setup', 'Data migration', 'Training', 'Go-live'], secondary: ['Risk check', 'Support ticket', 'Success review'] },
-                    { title: 'Renewal Management', tag: 'Revenue', color: '#A78BFA', h: 200, agent: 'RevOps Agent', summary: '续约窗口自动触发健康度评估、风险处理和商务跟进。', primary: ['Usage review', 'Health score', 'Risk plan', 'Exec sync', 'Renewal'], secondary: ['Churn risk', 'Expansion signal'] },
+                    { title: 'CRM Lead-to-Deal', tag: 'CRM / Sales', color: '#34D399', h: 210, agent: 'Sales Agent', summary: '线索进入后，销售、法务、商务审批按同一 SOP 横向流转。', primary: ['Lead', 'Qualify', 'Demo', 'Proposal', 'Deal'], branch: ['Legal', 'Discount', 'CSM'] },
+                    { title: 'Customer Onboarding', tag: 'CSM', color: '#5B5FE3', h: 202, agent: 'CS Agent', summary: '客户签约后，配置、迁移、培训、验收形成标准交付路径。', primary: ['Kickoff', 'Setup', 'Migrate', 'Train', 'Go-live'], branch: ['Risk', 'Support', 'Review'] },
+                    { title: 'Renewal Management', tag: 'Revenue', color: '#A78BFA', h: 194, agent: 'RevOps Agent', summary: '续约窗口触发健康度评估、风险处理和商务跟进。', primary: ['Usage', 'Health', 'Risk', 'Exec', 'Renew'], branch: ['Churn', 'Expansion'] },
                   ]
                 },
                 {
-                  dir: 'down', shift: -120, cards: [
-                    { title: 'Product Development', tag: 'R&D', color: '#5B5FE3', h: 238, agent: 'PM Agent', summary: '从需求池到上线发布，产品、设计、研发、测试围绕同一 SOP 协作。', primary: ['PRD', 'Design review', 'Development', 'QA gate', 'Release'], secondary: ['Tech review', 'Docs update', 'Monitor metrics'] },
-                    { title: 'GTM Campaign Launch', tag: 'GTM', color: '#787BEE', h: 226, agent: 'GTM Agent', summary: '市场活动从策略、内容、渠道到投放和复盘，形成可复用打法。', primary: ['Strategy', 'Content plan', 'Channel setup', 'Launch', 'Retrospective'], secondary: ['Creative approval', 'Budget check', 'Attribution report'] },
-                    { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', h: 204, agent: 'Risk Agent', summary: '合规事项按审批链路流转，例外、审计、归档都有明确节点。', primary: ['Submit', 'Review', 'Approval', 'Audit', 'Archive'], secondary: ['Exception path', 'Policy record'] },
+                  dir: 'down', shift: -110, cards: [
+                    { title: 'Product Development', tag: 'R&D', color: '#5B5FE3', h: 218, agent: 'PM Agent', summary: '需求、设计、研发、测试、发布都在横向工作流里有序发生。', primary: ['PRD', 'Design', 'Dev', 'QA', 'Release'], branch: ['Tech', 'Docs', 'Monitor'] },
+                    { title: 'GTM Campaign Launch', tag: 'GTM', color: '#787BEE', h: 210, agent: 'GTM Agent', summary: '策略、内容、渠道、投放、复盘沉淀为可复用打法。', primary: ['Strategy', 'Content', 'Channel', 'Launch', 'Review'], branch: ['Creative', 'Budget', 'Report'] },
+                    { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', h: 198, agent: 'Risk Agent', summary: '合规事项按审批链路流转，例外、审计、归档都有明确节点。', primary: ['Submit', 'Review', 'Approve', 'Audit', 'Archive'], branch: ['Exception', 'Policy'] },
                   ]
                 },
               ].map((column, columnIdx) => {
                 const direction = column.dir === 'up' ? -1 : 1
-                const offset = Math.max(-280, Math.min(70, waterfallOffset * direction * 0.32 + column.shift))
+                const offset = Math.max(-260, Math.min(50, waterfallOffset * direction * 0.28 + column.shift))
                 return (
                   <div key={`wf-column-${columnIdx}`} className="h-full flex-1 overflow-hidden">
                     <div
@@ -753,7 +749,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                       style={{ transform: `translateY(${offset}px)` }}
                     >
                       {column.cards.map((item) => (
-                        <div key={item.title} className="workflow-waterfall-card mb-6 rounded-[24px] border border-white/80 bg-white/92 backdrop-blur-sm p-4" style={{ height: item.h }}>
+                        <div key={item.title} className="workflow-waterfall-card mb-6 overflow-hidden rounded-[24px] border border-white/80 bg-white/94 backdrop-blur-sm p-4" style={{ height: item.h }}>
                           <div className="mb-3 flex items-start justify-between gap-3">
                             <div className="min-w-0">
                               <div className="mb-1.5 flex items-center gap-2">
@@ -768,30 +764,44 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                             </div>
                           </div>
 
-                          <p className="mb-3 text-[10px] leading-4 text-[#646A73]">{item.summary}</p>
+                          <p className="mb-3 h-[32px] overflow-hidden text-[10px] leading-4 text-[#646A73]">{item.summary}</p>
 
-                          <div className="rounded-2xl border border-white/80 p-3" style={{ backgroundColor: `${item.color}0D`, color: item.color }}>
+                          <div className="overflow-hidden rounded-2xl border border-white/80 p-3" style={{ backgroundColor: `${item.color}0D` }}>
                             <div className="mb-2 flex items-center justify-between">
-                              <span className="text-[8px] font-black uppercase tracking-[0.14em] text-[#8F959E]">Main workflow</span>
+                              <span className="text-[8px] font-black uppercase tracking-[0.14em] text-[#8F959E]">Horizontal workflow</span>
                               <span className="h-1.5 w-12 rounded-full" style={{ backgroundColor: item.color, opacity: 0.35 }} />
                             </div>
-                            <div className="space-y-1.5">
-                              {item.primary.map((node, nodeIdx) => (
-                                <div key={node} className="relative flex items-center gap-2">
-                                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[8px] font-black text-white" style={{ backgroundColor: item.color }}>{nodeIdx + 1}</span>
-                                  <span className="rounded-full bg-white px-2 py-1 text-[8px] font-black" style={{ color: item.color, border: `1px solid ${item.color}22` }}>{node}</span>
-                                  {nodeIdx < item.primary.length - 1 && <span className="workflow-step-line absolute left-[9px] top-[20px] h-[10px] w-px" />}
-                                </div>
+                            <svg viewBox="0 0 250 88" className="block h-[88px] w-full overflow-visible">
+                              <defs>
+                                <filter id={`wf-card-shadow-${item.title.replace(/\s/g, '-')}`}>
+                                  <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#27315F" floodOpacity="0.10" />
+                                </filter>
+                              </defs>
+                              <path d="M26 32 C58 28, 70 28, 84 32 S128 36, 142 32 S186 28, 224 32" fill="none" stroke={item.color} strokeWidth="2" strokeOpacity="0.26" />
+                              <path d="M84 42 C96 58, 114 62, 128 64" fill="none" stroke={item.color} strokeWidth="1.5" strokeOpacity="0.22" strokeDasharray="4,4" />
+                              <path d="M142 42 C154 58, 174 62, 188 64" fill="none" stroke={item.color} strokeWidth="1.5" strokeOpacity="0.22" strokeDasharray="4,4" />
+                              {item.primary.map((node, nodeIdx) => {
+                                const x = 4 + nodeIdx * 48
+                                return (
+                                  <g key={`${item.title}-${node}`} filter={`url(#wf-card-shadow-${item.title.replace(/\s/g, '-')})`}>
+                                    <rect x={x} y="20" width="42" height="24" rx="12" fill={nodeIdx === 0 ? item.color : '#FFFFFF'} stroke={item.color} strokeWidth={nodeIdx === 0 ? 0 : 1} strokeOpacity="0.24" />
+                                    <text x={x + 21} y="35" textAnchor="middle" fill={nodeIdx === 0 ? '#FFFFFF' : item.color} fontSize="6.5" fontWeight="800" fontFamily="system-ui,-apple-system,sans-serif">{node}</text>
+                                    {nodeIdx === 2 && (
+                                      <g>
+                                        <circle cx={x + 21} cy="9" r="7" fill={item.color} opacity="0.14" />
+                                        <text x={x + 21} y="12" textAnchor="middle" fontSize="8">🤖</text>
+                                      </g>
+                                    )}
+                                  </g>
+                                )
+                              })}
+                              {item.branch.map((node, nodeIdx) => (
+                                <g key={`${item.title}-branch-${node}`}>
+                                  <rect x={70 + nodeIdx * 48} y="58" width="42" height="20" rx="10" fill="#FFFFFF" stroke={item.color} strokeWidth="1" strokeOpacity="0.18" />
+                                  <text x={91 + nodeIdx * 48} y="71" textAnchor="middle" fill={item.color} fontSize="6" fontWeight="800" fontFamily="system-ui,-apple-system,sans-serif">{node}</text>
+                                </g>
                               ))}
-                            </div>
-                            <div className="mt-3 rounded-xl bg-white/72 p-2">
-                              <div className="mb-1.5 text-[8px] font-black uppercase tracking-[0.12em] text-[#A1A7B3]">Branch / checkpoint</div>
-                              <div className="flex flex-wrap gap-1.5">
-                                {item.secondary.map((node) => (
-                                  <span key={node} className="rounded-full border px-2 py-1 text-[8px] font-bold" style={{ borderColor: `${item.color}24`, color: item.color, backgroundColor: `${item.color}08` }}>{node}</span>
-                                ))}
-                              </div>
-                            </div>
+                            </svg>
                           </div>
                         </div>
                       ))}
@@ -800,11 +810,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                 )
               })}
             </div>
-
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-24 bg-gradient-to-b from-[#F7F8FF] via-[#F7F8FF]/82 to-transparent" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-28 bg-gradient-to-t from-[#F7F8FF] via-[#F7F8FF]/82 to-transparent" />
-            <div className="pointer-events-none absolute left-0 top-0 z-30 h-full w-10 bg-gradient-to-r from-[#F7F8FF] to-transparent" />
-            <div className="pointer-events-none absolute right-0 top-0 z-30 h-full w-10 bg-gradient-to-l from-[#F7F8FF] to-transparent" />
           </div>
         )}
       </div>
