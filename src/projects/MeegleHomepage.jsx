@@ -710,32 +710,14 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           </svg>
         )}
         {illustrationVariant === 'v5' && (
-          <div className="relative w-full h-full min-h-[440px] overflow-hidden rounded-[32px] border border-white/70 bg-[#F7F8FF] shadow-[0_24px_70px_rgba(72,80,160,0.16)]">
+          <div className="relative mx-auto w-full max-w-[620px] h-full min-h-[440px] overflow-hidden rounded-[32px] border border-white/70 bg-[#F7F8FF] shadow-[0_24px_70px_rgba(72,80,160,0.16)]">
             <style>{`
               .workflow-waterfall-card {
                 box-shadow: 0 18px 42px rgba(47, 55, 110, 0.12);
               }
-              .workflow-node-arrow::after {
-                content: '';
-                position: absolute;
-                right: -14px;
-                top: 50%;
-                width: 12px;
-                height: 1px;
-                background: currentColor;
-                opacity: 0.34;
-              }
-              .workflow-node-arrow::before {
-                content: '';
-                position: absolute;
-                right: -15px;
-                top: calc(50% - 3px);
-                width: 6px;
-                height: 6px;
-                border-right: 1px solid currentColor;
-                border-top: 1px solid currentColor;
-                transform: rotate(45deg);
-                opacity: 0.34;
+              .workflow-step-line {
+                background: linear-gradient(180deg, currentColor 0%, currentColor 100%);
+                opacity: 0.16;
               }
             `}</style>
 
@@ -748,39 +730,30 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <div className="relative z-10 flex h-full gap-5 px-7 pt-16 pb-6">
               {[
                 {
-                  dir: 'up', shift: 0, cards: [
-                    { title: 'CRM Lead-to-Deal', tag: 'CRM / Sales', color: '#34D399', h: 204, agent: 'Sales Agent', summary: '从线索进入到成交签约，自动推进销售协作。', primary: ['Lead', 'Qualify', 'Demo', 'Proposal'], secondary: ['Legal', 'Discount', 'Contract'] },
-                    { title: 'Customer Onboarding', tag: 'CSM', color: '#5B5FE3', h: 190, agent: 'CS Agent', summary: '客户签约后，跨团队完成配置、迁移、培训和验收。', primary: ['Kickoff', 'Setup', 'Migration', 'Training'], secondary: ['Risk', 'Support', 'Go-live'] },
-                    { title: 'Renewal Management', tag: 'Revenue', color: '#A78BFA', h: 176, agent: 'RevOps Agent', summary: '续约窗口触发健康度评估、风险处理和商务跟进。', primary: ['Health', 'Risk', 'Plan', 'Renew'], secondary: ['Usage', 'Exec sync'] },
+                  dir: 'up', shift: 40, cards: [
+                    { title: 'CRM Lead-to-Deal', tag: 'CRM / Sales', color: '#34D399', h: 226, agent: 'Sales Agent', summary: '从线索进入到成交签约，销售、法务、商务审批都在一套流程里推进。', primary: ['Lead captured', 'Qualified', 'Demo booked', 'Proposal sent', 'Contract signed'], secondary: ['Legal review', 'Discount approval', 'Handoff to CSM'] },
+                    { title: 'Customer Onboarding', tag: 'CSM', color: '#5B5FE3', h: 214, agent: 'CS Agent', summary: '客户签约后，配置、迁移、培训、验收被组织成标准交付路径。', primary: ['Kickoff', 'Workspace setup', 'Data migration', 'Training', 'Go-live'], secondary: ['Risk check', 'Support ticket', 'Success review'] },
+                    { title: 'Renewal Management', tag: 'Revenue', color: '#A78BFA', h: 200, agent: 'RevOps Agent', summary: '续约窗口自动触发健康度评估、风险处理和商务跟进。', primary: ['Usage review', 'Health score', 'Risk plan', 'Exec sync', 'Renewal'], secondary: ['Churn risk', 'Expansion signal'] },
                   ]
                 },
                 {
-                  dir: 'down', shift: 90, cards: [
-                    { title: 'Product Development', tag: 'R&D', color: '#5B5FE3', h: 214, agent: 'PM Agent', summary: '从需求池到发布上线，研发、设计、测试有序协作。', primary: ['PRD', 'Design', 'Dev', 'QA', 'Release'], secondary: ['Review', 'Docs', 'Monitor'] },
-                    { title: 'Bug Triage', tag: 'Engineering', color: '#F59E0B', h: 180, agent: 'QA Agent', summary: '线上问题自动分级，进入修复、验证、复盘闭环。', primary: ['Report', 'Triage', 'Fix', 'Verify'], secondary: ['P0', 'Rollback', 'Postmortem'] },
-                    { title: 'Security Review', tag: 'SecOps', color: '#EF4444', h: 176, agent: 'Sec Agent', summary: '高风险改动进入安全扫描、例外审批和审计归档。', primary: ['Scan', 'Assess', 'Approve', 'Archive'], secondary: ['Exception', 'Policy'] },
-                  ]
-                },
-                {
-                  dir: 'up', shift: 180, cards: [
-                    { title: 'GTM Campaign Launch', tag: 'GTM', color: '#787BEE', h: 210, agent: 'GTM Agent', summary: '市场活动从策略到素材、渠道、投放和复盘统一管理。', primary: ['Strategy', 'Content', 'Channel', 'Launch'], secondary: ['Creative', 'Budget', 'Report'] },
-                    { title: 'IT Service Request', tag: 'Internal Ops', color: '#5B5FE3', h: 184, agent: 'IT Agent', summary: '员工请求进入审批、权限配置、执行和通知流程。', primary: ['Request', 'Approve', 'Provision', 'Notify'], secondary: ['Permission', 'SLA'] },
-                    { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', h: 180, agent: 'Risk Agent', summary: '合规事项按标准审批链路流转，过程可追踪。', primary: ['Submit', 'Review', 'Approve', 'Audit'], secondary: ['Exception', 'Record'] },
+                  dir: 'down', shift: -120, cards: [
+                    { title: 'Product Development', tag: 'R&D', color: '#5B5FE3', h: 238, agent: 'PM Agent', summary: '从需求池到上线发布，产品、设计、研发、测试围绕同一 SOP 协作。', primary: ['PRD', 'Design review', 'Development', 'QA gate', 'Release'], secondary: ['Tech review', 'Docs update', 'Monitor metrics'] },
+                    { title: 'GTM Campaign Launch', tag: 'GTM', color: '#787BEE', h: 226, agent: 'GTM Agent', summary: '市场活动从策略、内容、渠道到投放和复盘，形成可复用打法。', primary: ['Strategy', 'Content plan', 'Channel setup', 'Launch', 'Retrospective'], secondary: ['Creative approval', 'Budget check', 'Attribution report'] },
+                    { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', h: 204, agent: 'Risk Agent', summary: '合规事项按审批链路流转，例外、审计、归档都有明确节点。', primary: ['Submit', 'Review', 'Approval', 'Audit', 'Archive'], secondary: ['Exception path', 'Policy record'] },
                   ]
                 },
               ].map((column, columnIdx) => {
-                const travel = 640
                 const direction = column.dir === 'up' ? -1 : 1
-                const raw = (waterfallOffset * direction + column.shift) % travel
-                const offset = raw > 0 ? raw - travel : raw
+                const offset = Math.max(-280, Math.min(70, waterfallOffset * direction * 0.32 + column.shift))
                 return (
                   <div key={`wf-column-${columnIdx}`} className="h-full flex-1 overflow-hidden">
                     <div
                       className="transition-transform duration-500 ease-out will-change-transform"
                       style={{ transform: `translateY(${offset}px)` }}
                     >
-                      {[...column.cards, ...column.cards].map((item, idx) => (
-                        <div key={`${item.title}-${idx}`} className="workflow-waterfall-card mb-5 rounded-[24px] border border-white/80 bg-white/92 backdrop-blur-sm p-4" style={{ height: item.h }}>
+                      {column.cards.map((item) => (
+                        <div key={item.title} className="workflow-waterfall-card mb-6 rounded-[24px] border border-white/80 bg-white/92 backdrop-blur-sm p-4" style={{ height: item.h }}>
                           <div className="mb-3 flex items-start justify-between gap-3">
                             <div className="min-w-0">
                               <div className="mb-1.5 flex items-center gap-2">
@@ -797,27 +770,21 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
                           <p className="mb-3 text-[10px] leading-4 text-[#646A73]">{item.summary}</p>
 
-                          <div className="rounded-2xl border border-white/80 p-3" style={{ backgroundColor: `${item.color}0D` }}>
+                          <div className="rounded-2xl border border-white/80 p-3" style={{ backgroundColor: `${item.color}0D`, color: item.color }}>
                             <div className="mb-2 flex items-center justify-between">
                               <span className="text-[8px] font-black uppercase tracking-[0.14em] text-[#8F959E]">Main workflow</span>
                               <span className="h-1.5 w-12 rounded-full" style={{ backgroundColor: item.color, opacity: 0.35 }} />
                             </div>
-                            <div className="mb-3 flex items-center gap-4">
+                            <div className="space-y-1.5">
                               {item.primary.map((node, nodeIdx) => (
-                                <span
-                                  key={node}
-                                  className={`relative rounded-full px-2 py-1 text-[8px] font-black ${nodeIdx < item.primary.length - 1 ? 'workflow-node-arrow' : ''}`}
-                                  style={{
-                                    color: nodeIdx === 0 ? '#FFFFFF' : item.color,
-                                    backgroundColor: nodeIdx === 0 ? item.color : '#FFFFFF',
-                                    border: `1px solid ${item.color}26`,
-                                  }}
-                                >
-                                  {node}
-                                </span>
+                                <div key={node} className="relative flex items-center gap-2">
+                                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[8px] font-black text-white" style={{ backgroundColor: item.color }}>{nodeIdx + 1}</span>
+                                  <span className="rounded-full bg-white px-2 py-1 text-[8px] font-black" style={{ color: item.color, border: `1px solid ${item.color}22` }}>{node}</span>
+                                  {nodeIdx < item.primary.length - 1 && <span className="workflow-step-line absolute left-[9px] top-[20px] h-[10px] w-px" />}
+                                </div>
                               ))}
                             </div>
-                            <div className="rounded-xl bg-white/70 p-2">
+                            <div className="mt-3 rounded-xl bg-white/72 p-2">
                               <div className="mb-1.5 text-[8px] font-black uppercase tracking-[0.12em] text-[#A1A7B3]">Branch / checkpoint</div>
                               <div className="flex flex-wrap gap-1.5">
                                 {item.secondary.map((node) => (
@@ -836,8 +803,8 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
             <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-24 bg-gradient-to-b from-[#F7F8FF] via-[#F7F8FF]/82 to-transparent" />
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-28 bg-gradient-to-t from-[#F7F8FF] via-[#F7F8FF]/82 to-transparent" />
-            <div className="pointer-events-none absolute left-0 top-0 z-30 h-full w-12 bg-gradient-to-r from-[#F7F8FF] to-transparent" />
-            <div className="pointer-events-none absolute right-0 top-0 z-30 h-full w-12 bg-gradient-to-l from-[#F7F8FF] to-transparent" />
+            <div className="pointer-events-none absolute left-0 top-0 z-30 h-full w-10 bg-gradient-to-r from-[#F7F8FF] to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 z-30 h-full w-10 bg-gradient-to-l from-[#F7F8FF] to-transparent" />
           </div>
         )}
       </div>
@@ -1432,7 +1399,7 @@ const AI_ASSISTANT_SCENES = [
 
 const AIAssistantSection = () => {
   const [activeIdx, setActiveIdx] = useState(0)
-  const [typingBubble, setTypingBubble] = useState(null)
+  const [isTyping, setIsTyping] = useState(false)
   const sectionRef = useRef(null)
   const cycleRef = useRef(null)
   const started = useRef(false)
@@ -1441,8 +1408,8 @@ const AIAssistantSection = () => {
   const selectScene = useCallback((idx) => {
     if (cycleRef.current) clearTimeout(cycleRef.current)
     setActiveIdx(idx)
-    setTypingBubble(idx)
-    setTimeout(() => setTypingBubble(null), 1800)
+    setIsTyping(true)
+    setTimeout(() => setIsTyping(false), 900)
   }, [])
 
   useEffect(() => {
@@ -1454,10 +1421,9 @@ const AIAssistantSection = () => {
         let step = 0
         const total = scenesRef.current.length
         const play = () => {
-          const idx = step % total
-          selectScene(idx)
-          step++
-          cycleRef.current = setTimeout(play, 3500)
+          selectScene(step % total)
+          step += 1
+          cycleRef.current = setTimeout(play, 3300)
         }
         play()
       }
@@ -1470,7 +1436,7 @@ const AIAssistantSection = () => {
   }, [selectScene])
 
   const activeScene = AI_ASSISTANT_SCENES[activeIdx]
-  const isTyping = typingBubble === activeIdx
+  const totalScenes = AI_ASSISTANT_SCENES.length
 
   return (
     <section ref={sectionRef} className="relative py-32 md:py-44 bg-[#FAFBFF] overflow-hidden">
@@ -1495,110 +1461,94 @@ const AIAssistantSection = () => {
           </p>
         </div>
 
-        {/* Single canvas: product screenshot as background, switchable dialog overlay on left */}
-        <div className="relative rounded-[28px] overflow-hidden border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.06)]">
-          <div className="relative w-full" style={{ aspectRatio: '16 / 9', minHeight: 540 }}>
-            {AI_ASSISTANT_SCENES.map((scene, idx) => (
-              <div
-                key={scene.id}
-                className={`absolute inset-0 w-full h-full transition-all duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] bg-gradient-to-br ${scene.gradient}`}
-                style={{ opacity: activeIdx === idx ? 0.06 : 0 }}
-              >
-                <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className={`h-16 w-16 rounded-2xl bg-gradient-to-br ${scene.gradient} flex items-center justify-center shadow-lg`} style={{ opacity: 0.25 }}>
-                    <span className="text-[28px]">{scene.icon}</span>
-                  </div>
-                  <p className="text-[12px] font-semibold text-[#B0B8C5] mt-4">Replace with product screenshot</p>
-                </div>
-              </div>
-            ))}
+        <div className="relative overflow-hidden rounded-[28px] border border-black/[0.04] bg-white shadow-[0_20px_80px_rgba(15,23,42,0.08)]">
+          <div className="relative min-h-[560px] w-full">
+            <div className="absolute inset-y-0 left-0 w-[48%] bg-[#FBFCFF]" />
+            <div className="absolute inset-y-0 right-0 w-[52%] bg-gradient-to-br from-[#6B5CFF] via-[#4F55F6] to-[#3B39E8]" />
+            <div className="absolute inset-y-0 left-[48%] w-px bg-white/70" />
+            <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: 'radial-gradient(#5B5FE3 1px, transparent 1px)', backgroundSize: '14px 14px' }} />
 
-            {/* Switchable dialog overlay: only ONE at a time */}
-            <div className="absolute left-6 md:left-10 top-1/2 -translate-y-1/2 z-10 max-w-[360px] w-[42%]">
-              {AI_ASSISTANT_SCENES.map((scene, idx) => (
-                <div
-                  key={scene.id}
-                  className="transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
-                  style={{
-                    position: activeIdx === idx ? 'relative' : 'absolute',
-                    inset: activeIdx === idx ? 'auto' : 0,
-                    opacity: activeIdx === idx ? 1 : 0,
-                    transform: `translateY(${activeIdx === idx ? 0 : (idx > activeIdx ? 16 : -16)}px)`,
-                    pointerEvents: activeIdx === idx ? 'auto' : 'none',
-                    visibility: activeIdx === idx ? 'visible' : 'hidden'
-                  }}
-                >
-                  {/* User bubble */}
-                  <div className="flex justify-end mb-1.5">
+            <div className="absolute left-[64px] top-0 h-full w-px bg-[#D8DFFF]" />
+
+            <div className="absolute left-[78px] top-[-24px] h-[640px] w-[340px]">
+              {AI_ASSISTANT_SCENES.map((scene, idx) => {
+                let rel = (idx - activeIdx + totalScenes) % totalScenes
+                if (rel > totalScenes / 2) rel -= totalScenes
+                const visible = rel >= -2 && rel <= 3
+                const isActive = idx === activeIdx
+                const top = 206 + rel * 104
+
+                if (!visible) return null
+
+                if (isActive) {
+                  return (
                     <div
-                      className="rounded-2xl rounded-br-md px-3.5 py-2.5 transition-all duration-500"
-                      style={{
-                        backgroundColor: scene.color,
-                        color: 'white',
-                        boxShadow: `0 8px 32px ${scene.color}40`
-                      }}
+                      key={scene.id}
+                      className="absolute left-[-12px] w-[380px] rounded-[4px] bg-white p-3 shadow-[0_14px_44px_rgba(15,23,42,0.16)] transition-all duration-500"
+                      style={{ top }}
                     >
-                      <div className="text-[10px] font-bold mb-0.5 text-white/50">You</div>
-                      <div className="text-[12px] leading-[1.5] font-semibold max-w-[240px]">
-                        {isTyping ? (
-                          <span>
-                            {scene.label.substring(0, Math.max(4, Math.floor(scene.label.length * 0.55)))}
-                            <span className="inline-flex ml-0.5">...<span className="animate-pulse">.</span></span>
-                          </span>
-                        ) : scene.label}
+                      <div className="mb-2 flex items-center gap-1.5 text-[13px] font-black tracking-[-0.02em] text-[#111827]">
+                        <Sparkles size={15} className="text-[#5B5FE3]" />
+                        Meegle Assistant
                       </div>
-                    </div>
-                  </div>
-
-                  {/* AI response bubble */}
-                  <div
-                    className="rounded-2xl rounded-bl-md px-3.5 py-2.5 transition-all duration-500 relative"
-                    style={{
-                      backgroundColor: 'white',
-                      border: '1px solid #EEF0F4',
-                      boxShadow: '0 8px 32px rgba(15,23,42,0.08)'
-                    }}
-                  >
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <div className="h-4 w-4 rounded bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center">
-                        <Sparkles size={9} className="text-white" />
-                      </div>
-                      <div className="text-[9px] font-bold text-[#8F959E]">Meegle AI</div>
-                    </div>
-                    <div className="text-[11px] leading-[1.6] text-[#374151]">
-                      {isTyping ? (
-                        <span>
-                          {scene.prompt.substring(0, Math.max(6, Math.floor(scene.prompt.length * 0.5)))}
-                          <span className="inline-flex ml-0.5">...<span className="animate-pulse">.</span></span>
-                        </span>
-                      ) : (
-                        <div>
-                          <div className="font-semibold mb-1" style={{ color: scene.color }}>{scene.label}</div>
-                          <span>{scene.prompt}</span>
-                          <div className="text-[9px] text-[#B0B8C5] mt-1.5">{scene.desc}</div>
+                      <div className="rounded-[4px] border border-[#8179FF] bg-white px-3 py-2.5 shadow-[0_0_0_1px_rgba(129,121,255,0.08)]">
+                        <div className="min-h-[22px] text-[13px] font-medium leading-[1.55] text-[#111827]">
+                          {isTyping ? (
+                            <span>
+                              {scene.prompt.substring(0, Math.max(12, Math.floor(scene.prompt.length * 0.58)))}
+                              <span className="inline-flex ml-0.5">...<span className="animate-pulse">.</span></span>
+                            </span>
+                          ) : scene.prompt}
                         </div>
-                      )}
+                        <div className="mt-3 flex items-center justify-between text-[#1F2329]">
+                          <div className="flex items-center gap-4">
+                            <span className="text-[18px] leading-none">@</span>
+                            <span className="text-[20px] leading-none">+</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-[14px] leading-none">⌘</span>
+                            <span className="h-6 w-6 rounded-full bg-[#1F2329]" />
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  )
+                }
+
+                return (
+                  <button
+                    key={scene.id}
+                    onClick={() => selectScene(idx)}
+                    className="absolute left-0 w-[340px] rounded-[3px] border border-[#D9DDE8] bg-white/58 px-4 py-4 text-left text-[13px] font-medium text-[#8D96A8] backdrop-blur-sm transition-all duration-500 hover:border-[#BFC6FF] hover:bg-white/84 hover:text-[#5B5FE3]"
+                    style={{ top }}
+                  >
+                    <span>{scene.prompt}</span>
+                    {rel > 0 && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[18px] text-[#9AA3B5]">+</span>}
+                  </button>
+                )
+              })}
             </div>
 
-            {/* Scene label badge */}
-            <div className="absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-sm border border-black/[0.06] px-4 py-2 shadow-sm transition-all duration-500">
-              <div className={`h-5 w-5 rounded-full bg-gradient-to-br ${activeScene.gradient} flex items-center justify-center`}>
-                <span className="text-[9px]">{activeScene.icon}</span>
+            <div className="absolute right-[42px] top-[78px] h-[384px] w-[46%] rounded-[12px] bg-white shadow-[0_18px_50px_rgba(18,24,74,0.18)] transition-all duration-700">
+              <div className="flex h-full items-center justify-center rounded-[12px] border border-white/40 bg-white/92">
+                <div className="text-center">
+                  <div className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${activeScene.gradient} shadow-lg transition-all duration-500`}>
+                    <span className="text-[28px]">{activeScene.icon}</span>
+                  </div>
+                  <div className="text-[15px] font-black text-[#111827]">{activeScene.label}</div>
+                  <div className="mt-2 text-[12px] font-semibold text-[#A1A7B3]">Product screenshot placeholder</div>
+                </div>
               </div>
-              <span className="text-[11px] font-bold text-[#111827]">{activeScene.label}</span>
             </div>
+
+            <div className="absolute right-[42px] top-[78px] h-[384px] w-[46%] rounded-[12px] ring-1 ring-white/20" />
           </div>
         </div>
 
-        {/* Scene dots + nav arrows */}
-        <div className="flex items-center justify-center gap-3 mt-5">
+        <div className="mt-5 flex items-center justify-center gap-3">
           <button
             onClick={() => selectScene((activeIdx - 1 + AI_ASSISTANT_SCENES.length) % AI_ASSISTANT_SCENES.length)}
-            className="h-7 w-7 rounded-full border border-[#EEF0F4] bg-white flex items-center justify-center hover:bg-[#F4F6FF] transition-colors shadow-sm"
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-[#EEF0F4] bg-white shadow-sm transition-colors hover:bg-[#F4F6FF]"
           >
             <ChevronLeft size={12} className="text-[#8F959E]" />
           </button>
@@ -1619,7 +1569,7 @@ const AIAssistantSection = () => {
           </div>
           <button
             onClick={() => selectScene((activeIdx + 1) % AI_ASSISTANT_SCENES.length)}
-            className="h-7 w-7 rounded-full border border-[#EEF0F4] bg-white flex items-center justify-center hover:bg-[#F4F6FF] transition-colors shadow-sm"
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-[#EEF0F4] bg-white shadow-sm transition-colors hover:bg-[#F4F6FF]"
           >
             <ChevronRight size={12} className="text-[#8F959E]" />
           </button>
@@ -2465,7 +2415,7 @@ const GameWorkflowBoard = () => {
         transform: 'translate(-50%, -50%) scale(0.68)',
       }}>
         <svg className="absolute inset-0 overflow-visible" viewBox={`0 0 ${FLOW_BOARD_W + 100} 330`} width={FLOW_BOARD_W + 100} height="330">
-          {FLOW_EDGES.map((edge, idx) => {
+          {FLOW_EDGES.map((edge) => {
             const fromIdx = FLOW_NODES.findIndex(node => node.id === edge.from)
             const toIdx = FLOW_NODES.findIndex(node => node.id === edge.to)
             const visible = activeStep === 0 ? toIdx < visibleNodeCount && fromIdx < visibleNodeCount : true
@@ -2487,7 +2437,7 @@ const GameWorkflowBoard = () => {
             active={(activeStep === 0 && idx === frame) || (activeStep === 1 && assignedNodeCount === FLOW_NODES.length)}
             assigned={idx < assignedNodeCount}
             completeState={idx < confirmedNodeCount ? 'confirmed' : idx === agentDoneNodeIndex ? 'agentDone' : null}
-            showHuman={completed}
+            showHuman={idx === confirmingNodeIndex}
             confirming={idx === confirmingNodeIndex}
           />
         ))}
