@@ -860,19 +860,22 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
       { name: 'SRE Agent', role: 'Operations', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent for incidents, runbooks, and system reliability checks.', color: '#F97316', initials: 'SR' },
       { name: 'Docs Agent', role: 'Knowledge', origin: 'Ready', action: 'Use ready-made agent', desc: 'Keep specs, decisions, and team knowledge searchable and current.', color: '#64748B', initials: 'DOC' },
       { name: 'Partner Agent', role: 'Ecosystem', origin: 'Bring', action: 'Bring external agent', desc: 'Bring partner-built agents into your controlled workflow environment.', color: '#7C3AED', initials: 'PA' },
+      { name: 'Procurement Agent', role: 'Procurement', origin: 'Create', action: 'Create custom agent', desc: 'Create a private agent for sourcing, vendor checks, and purchase approvals.', color: '#B45309', initials: 'PR' },
+      { name: 'Localization Agent', role: 'Global ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'Translate, localize, and review assets across markets.', color: '#0891B2', initials: 'LO' },
+      { name: 'Customer Agent', role: 'Customer success', origin: 'Bring', action: 'Bring external agent', desc: 'Connect a customer-facing agent into renewal and onboarding workflows.', color: '#059669', initials: 'CS' },
+      { name: 'Release Agent', role: 'Release ops', origin: 'Ready', action: 'Use ready-made agent', desc: 'Coordinate release checklists, blockers, and launch approvals.', color: '#4F46E5', initials: 'RL' },
+      { name: 'Insights Agent', role: 'Strategy', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent that turns market, product, and customer signals into decisions.', color: '#9333EA', initials: 'IN' },
     ]
-    const emptySeatIndex = agentPeople.length
+    const emptySeatIndex = 999
     const isEmptySeatActive = activeAgentLane === emptySeatIndex
     const emptySeatInfo = {
       name: 'Open seat',
       role: 'Your next agent',
-      origin: 'Create',
       action: 'Bring your agent or create one',
-      desc: 'Reserve this seat for an existing external agent, or create a private agent from your tools, skills, and business context.',
+      desc: 'This empty seat is reserved for an existing external agent, or a new private agent created in Meegle.',
       color: '#F59E0B',
-      initials: '+',
     }
-    const activePerson = isEmptySeatActive ? emptySeatInfo : (agentPeople[activeAgentLane] || agentPeople[0])
+    const activePerson = isEmptySeatActive ? emptySeatInfo : (agentPeople[activeAgentLane % agentPeople.length] || agentPeople[0])
     const originStyles = {
       Ready: { color: '#3EAB6E', label: 'Ready-made' },
       Bring: { color: '#5B5FE3', label: 'Bring your agent' },
@@ -880,31 +883,43 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
     }
     const activeOrigin = isEmptySeatActive ? { color: '#F59E0B', label: 'Bring or create' } : originStyles[activePerson.origin]
     const theaterRows = [
-      { top: 112, seatWidth: 54, seatHeight: 44, head: 18, gap: 11, seats: [0, 1, 2, 3, 4] },
-      { top: 158, seatWidth: 61, seatHeight: 50, head: 21, gap: 10, seats: [5, 6, 7, 8, 9, 10] },
-      { top: 212, seatWidth: 70, seatHeight: 58, head: 25, gap: 10, seats: [11, 12, 13, 14, 15] },
-      { top: 274, seatWidth: 82, seatHeight: 68, head: 30, gap: 12, seats: [16, 17, 18, emptySeatIndex] },
+      { top: 118, seatWidth: 38, seatHeight: 30, head: 18, gap: 5, start: 0, count: 10, scale: 0.74 },
+      { top: 153, seatWidth: 44, seatHeight: 35, head: 20, gap: 6, start: 10, count: 11, scale: 0.82 },
+      { top: 193, seatWidth: 50, seatHeight: 41, head: 24, gap: 7, start: 21, count: 10, scale: 0.92 },
+      { top: 241, seatWidth: 59, seatHeight: 50, head: 28, gap: 8, start: 31, count: 9, scale: 1.04 },
+      { top: 300, seatWidth: 71, seatHeight: 62, head: 34, gap: 10, start: 40, count: 7, scale: 1.18, emptyAt: 6 },
+    ]
+    const workflowNodes = [
+      { label: 'Brief', x: 176, color: '#5B5FE3' },
+      { label: 'Plan', x: 246, color: '#3EAB6E' },
+      { label: 'Build', x: 316, color: '#F59E0B' },
+      { label: 'Review', x: 386, color: '#A78BFA' },
+      { label: 'Ship', x: 456, color: '#10B981' },
     ]
 
-    const renderSeatPerson = (person, active, empty = false) => (
-      <div className="relative mx-auto" style={{ width: empty ? 48 : '62%', height: empty ? 48 : undefined }}>
-        {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full" style={{ backgroundColor: person.color }} />}
-        {empty ? (
-          <div className={`relative flex h-12 w-12 items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.20)]' : 'border-[#F59E0B]/35 bg-white/[0.68] text-[#F59E0B]/70'}`}>
-            <span className="text-[24px] font-black leading-none">+</span>
+    const renderAgentActor = (person, active, scale) => (
+      <div className="relative" style={{ width: 42 * scale, height: 58 * scale }}>
+        {active && <div className="agent-seat-spotlight absolute inset-[-16px] rounded-full" style={{ backgroundColor: person.color }} />}
+        <div className={`absolute left-1/2 top-0 rounded-full bg-[#20242A] shadow-[0_10px_22px_rgba(15,23,42,0.26)] transition-all duration-300 ${active ? 'ring-2 ring-white scale-110' : 'ring-1 ring-white/45'}`} style={{ width: 30 * scale, height: 34 * scale, transform: 'translateX(-50%)' }}>
+          <div className="absolute inset-0 rounded-full" style={{ background: `radial-gradient(circle at 38% 22%, ${person.color}66, transparent 48%)` }} />
+          <div className="absolute left-[22%] top-[24%] h-[34%] w-[56%] rounded-full bg-[#F0C6A6]" />
+          <div className="absolute left-[34%] top-[36%] flex w-[32%] justify-between">
+            <span className="h-1 w-1 rounded-full bg-[#111827]/75" />
+            <span className="h-1 w-1 rounded-full bg-[#111827]/75" />
           </div>
-        ) : (
-          <div className={`relative aspect-square overflow-hidden rounded-full border bg-[#22272E] shadow-[0_12px_26px_rgba(15,23,42,0.18)] transition-all duration-300 ${active ? 'border-white scale-110' : 'border-white/50'}`}>
-            <div className="absolute inset-0" style={{ background: `radial-gradient(circle at 42% 20%, ${person.color}55, transparent 48%)` }} />
-            <div className="absolute left-[29%] top-[18%] h-[42%] w-[42%] rounded-full bg-[#F4C7A5]" />
-            <div className="absolute left-[35%] top-[33%] flex w-[30%] justify-between">
-              <span className="h-1 w-1 rounded-full bg-[#1F2329]/75" />
-              <span className="h-1 w-1 rounded-full bg-[#1F2329]/75" />
-            </div>
-            <div className="absolute left-[41%] top-[47%] h-1 w-[18%] rounded-full bg-[#9A563D]/50" />
-            <div className="absolute bottom-[-8%] left-[18%] h-[38%] w-[64%] rounded-t-full" style={{ backgroundColor: person.color }} />
-          </div>
-        )}
+        </div>
+        <div className="absolute bottom-0 left-1/2 rounded-t-full shadow-[0_8px_18px_rgba(15,23,42,0.18)]" style={{ width: 38 * scale, height: 34 * scale, transform: 'translateX(-50%)', backgroundColor: person.color }}>
+          <div className="absolute inset-x-[24%] top-[18%] h-[16%] rounded-full bg-white/22" />
+        </div>
+      </div>
+    )
+
+    const renderEmptySeatMarker = (active, scale) => (
+      <div className="relative" style={{ width: 42 * scale, height: 58 * scale }}>
+        {active && <div className="agent-seat-spotlight absolute inset-[-16px] rounded-full bg-[#F59E0B]" />}
+        <div className={`absolute left-1/2 top-3 flex items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/70 bg-white/35 text-white/80'}`} style={{ width: 34 * scale, height: 34 * scale, transform: 'translateX(-50%)' }}>
+          <span className="text-[18px] font-black leading-none">+</span>
+        </div>
       </div>
     )
 
@@ -912,56 +927,82 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
       <div className="relative h-full min-h-[440px] w-full overflow-hidden px-4 py-5">
         <style>{`
           @keyframes agentSeatSpotlight {
-            0%, 100% { opacity: 0.18; transform: scale(0.9); }
-            50% { opacity: 0.34; transform: scale(1.12); }
+            0%, 100% { opacity: 0.16; transform: scale(0.88); }
+            50% { opacity: 0.38; transform: scale(1.16); }
           }
           @keyframes auditoriumBeam {
-            0%, 100% { opacity: 0.14; }
-            50% { opacity: 0.26; }
+            0%, 100% { opacity: 0.12; }
+            50% { opacity: 0.28; }
+          }
+          @keyframes workflowDash {
+            from { stroke-dashoffset: 40; }
+            to { stroke-dashoffset: 0; }
           }
           .agent-seat-spotlight { animation: agentSeatSpotlight 2.8s ease-in-out infinite; filter: blur(1px); }
           .auditorium-beam { animation: auditoriumBeam 3.8s ease-in-out infinite; }
+          .workflow-stage-line { animation: workflowDash 2.4s linear infinite; }
         `}</style>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#FCF7EE] via-[#F6E3C8] to-[#F8FBFF]" />
-        <div className="absolute inset-x-8 top-6 h-[102px] rounded-b-[42px] bg-gradient-to-b from-[#B7793F] to-[#D69A58] shadow-[inset_0_-28px_50px_rgba(111,65,24,0.20)]" />
-        <div className="absolute left-10 top-8 h-[132px] w-20 skew-y-[-12deg] bg-gradient-to-b from-[#D2A06A] to-[#B7793F] opacity-45" />
-        <div className="absolute right-10 top-8 h-[132px] w-20 skew-y-[12deg] bg-gradient-to-b from-[#D2A06A] to-[#B7793F] opacity-45" />
-        <div className="absolute left-1/2 top-5 h-4 w-4 -translate-x-1/2 rounded-full bg-white shadow-[0_0_28px_rgba(255,245,218,0.95)]" />
-        <div className="absolute left-[30%] top-14 h-3 w-3 rounded-full bg-white shadow-[0_0_22px_rgba(255,245,218,0.86)]" />
-        <div className="absolute right-[30%] top-14 h-3 w-3 rounded-full bg-white shadow-[0_0_22px_rgba(255,245,218,0.86)]" />
-        <div className="auditorium-beam pointer-events-none absolute left-[18%] top-4 h-[340px] w-[130px] origin-top rotate-[10deg] bg-gradient-to-b from-white/36 to-transparent blur-xl" />
-        <div className="auditorium-beam pointer-events-none absolute right-[18%] top-4 h-[340px] w-[130px] origin-top rotate-[-10deg] bg-gradient-to-b from-white/36 to-transparent blur-xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F7EDDF] via-[#E6B77D] to-[#F6F8FF]" />
+        <div className="absolute inset-x-5 top-4 h-[144px] rounded-b-[44px] bg-gradient-to-b from-[#8B4A22] via-[#B86D31] to-[#D7914C] shadow-[inset_0_-34px_64px_rgba(59,31,13,0.22)]" />
+        <div className="absolute inset-x-16 top-[68px] h-[74px] rounded-[28px] border border-white/15 bg-[#161A28]/86 shadow-[0_24px_60px_rgba(45,24,12,0.24)]" />
+        <div className="absolute left-7 top-8 h-[178px] w-24 skew-y-[-12deg] bg-gradient-to-b from-[#D6A06A] to-[#9D5628] opacity-60" />
+        <div className="absolute right-7 top-8 h-[178px] w-24 skew-y-[12deg] bg-gradient-to-b from-[#D6A06A] to-[#9D5628] opacity-60" />
+        <div className="absolute left-1/2 top-3 h-4 w-4 -translate-x-1/2 rounded-full bg-white shadow-[0_0_34px_rgba(255,245,218,1)]" />
+        <div className="absolute left-[28%] top-[34px] h-3 w-3 rounded-full bg-white shadow-[0_0_24px_rgba(255,245,218,0.9)]" />
+        <div className="absolute right-[28%] top-[34px] h-3 w-3 rounded-full bg-white shadow-[0_0_24px_rgba(255,245,218,0.9)]" />
+        <div className="auditorium-beam pointer-events-none absolute left-[18%] top-2 h-[378px] w-[150px] origin-top rotate-[10deg] bg-gradient-to-b from-white/42 to-transparent blur-xl" />
+        <div className="auditorium-beam pointer-events-none absolute right-[18%] top-2 h-[378px] w-[150px] origin-top rotate-[-10deg] bg-gradient-to-b from-white/42 to-transparent blur-xl" />
 
-        <div className="absolute left-6 top-5 z-30 rounded-full border border-white/80 bg-white/[0.72] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
-          Create or bring your agent
+        <div className="absolute left-6 top-5 z-30 rounded-full border border-white/80 bg-white/[0.76] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-[0_12px_28px_rgba(38,45,64,0.08)] backdrop-blur">
+          Agents waiting backstage
         </div>
 
-        <div className="absolute inset-x-3 bottom-0 top-[92px] z-10 overflow-hidden rounded-b-[36px]">
+        <svg viewBox="0 0 640 420" className="pointer-events-none absolute inset-0 z-20 h-full w-full">
+          <defs>
+            <linearGradient id="stageFlow" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#5B5FE3" stopOpacity="0.18" />
+              <stop offset="50%" stopColor="#F59E0B" stopOpacity="0.70" />
+              <stop offset="100%" stopColor="#10B981" stopOpacity="0.18" />
+            </linearGradient>
+          </defs>
+          <path className="workflow-stage-line" d="M176 104 C224 88, 268 120, 316 104 S410 88, 456 104" fill="none" stroke="url(#stageFlow)" strokeWidth="2" strokeDasharray="8 10" />
+          {workflowNodes.map((node, idx) => (
+            <g key={node.label}>
+              <rect x={node.x - 28} y="88" width="56" height="32" rx="16" fill={idx === 2 ? node.color : '#FFFFFF'} opacity="0.96" />
+              <text x={node.x} y="108" textAnchor="middle" fill={idx === 2 ? '#FFFFFF' : node.color} fontSize="8" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
+              {idx === 2 && <circle cx={node.x + 21} cy="84" r="5" fill="#F59E0B" opacity="0.86" />}
+            </g>
+          ))}
+          <text x="316" y="74" textAnchor="middle" fill="#FFFFFF" opacity="0.78" fontSize="10" fontWeight="850" fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="1.2">LIVE WORKFLOW STAGE</text>
+        </svg>
+
+        <div className="absolute inset-x-2 bottom-0 top-[122px] z-30 overflow-hidden rounded-b-[36px]">
           {theaterRows.map((row, rowIdx) => {
-            const totalWidth = row.seats.length * row.seatWidth + (row.seats.length - 1) * row.gap
+            const totalWidth = row.count * row.seatWidth + (row.count - 1) * row.gap
             return (
               <div key={`seat-row-${rowIdx}`} className="absolute left-1/2 flex -translate-x-1/2 items-end" style={{ top: row.top, gap: row.gap, width: totalWidth }}>
-                {row.seats.map((agentIdx) => {
-                  const empty = agentIdx === emptySeatIndex
+                {Array.from({ length: row.count }).map((_, seatIdx) => {
+                  const empty = row.emptyAt === seatIdx
+                  const agentIdx = empty ? emptySeatIndex : (row.start + seatIdx) % agentPeople.length
                   const person = empty ? emptySeatInfo : agentPeople[agentIdx]
                   const active = activeAgentLane === agentIdx
                   return (
                     <button
-                      key={empty ? 'open-seat' : person.name}
+                      key={empty ? 'open-seat' : `${person.name}-${rowIdx}-${seatIdx}`}
                       type="button"
                       onMouseEnter={() => setActiveAgentLane(agentIdx)}
                       onFocus={() => setActiveAgentLane(agentIdx)}
                       className="group relative shrink-0 transition-all duration-300"
-                      style={{ width: row.seatWidth, zIndex: active ? 50 : 20 + rowIdx }}
+                      style={{ width: row.seatWidth, zIndex: active ? 80 : 20 + rowIdx }}
                     >
-                      <div className={`absolute left-1/2 top-[-${row.head}px] -translate-x-1/2 transition-all duration-300`} style={{ top: -row.head, width: empty ? 48 : row.head * 1.55 }}>
-                        {renderSeatPerson(person, active, empty)}
+                      <div className="absolute left-1/2 -translate-x-1/2 transition-all duration-300" style={{ top: -row.head - 18, transform: `translateX(-50%) ${active ? 'translateY(-8px) scale(1.08)' : ''}` }}>
+                        {empty ? renderEmptySeatMarker(active, row.scale) : renderAgentActor(person, active, row.scale)}
                       </div>
-                      <div className={`relative rounded-t-[18px] border border-[#8C4A20]/35 bg-gradient-to-b from-[#CB6E26] to-[#9F4618] shadow-[0_12px_24px_rgba(91,49,19,0.28)] transition-all duration-300 ${active ? 'brightness-110 ring-2 ring-white/80' : ''}`} style={{ height: row.seatHeight }}>
-                        <div className="absolute inset-x-2 top-2 h-2 rounded-full bg-white/18" />
-                        <div className="absolute inset-x-0 bottom-0 h-[34%] rounded-t-[14px] bg-black/10" />
-                        {empty && <div className="absolute inset-1 rounded-t-[16px] border border-dashed border-white/60 bg-white/10" />}
+                      <div className={`relative rounded-t-[18px] border border-[#783A17]/30 bg-gradient-to-b from-[#C96C25] to-[#8E3D16] shadow-[0_10px_22px_rgba(73,37,15,0.26)] transition-all duration-300 ${active ? 'brightness-110 ring-2 ring-white/80' : ''}`} style={{ height: row.seatHeight }}>
+                        <div className="absolute inset-x-1.5 top-1.5 h-2 rounded-full bg-white/18" />
+                        <div className="absolute inset-x-0 bottom-0 h-[30%] rounded-t-[12px] bg-black/10" />
+                        {empty && <div className="absolute inset-1 rounded-t-[16px] border border-dashed border-white/70 bg-white/10" />}
                       </div>
                     </button>
                   )
@@ -971,7 +1012,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           })}
         </div>
 
-        <div className="absolute right-4 top-1/2 z-[70] w-[218px] -translate-y-1/2 rounded-[28px] border border-white/80 bg-white/[0.92] p-4 shadow-[0_24px_70px_rgba(38,45,64,0.14)] backdrop-blur-xl">
+        <div className="absolute right-4 top-1/2 z-[90] w-[218px] -translate-y-1/2 rounded-[28px] border border-white/80 bg-white/[0.92] p-4 shadow-[0_24px_70px_rgba(38,45,64,0.14)] backdrop-blur-xl">
           <div className="mb-3 flex items-center justify-between">
             <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.12em]" style={{ color: activeOrigin.color, backgroundColor: `${activeOrigin.color}14` }}>
               {activeOrigin.label}
