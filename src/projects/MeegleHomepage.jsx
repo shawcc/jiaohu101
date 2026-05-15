@@ -695,6 +695,114 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             </g>
           </svg>
         )}
+        {illustrationVariant === 'v5' && (
+          <div className="relative w-full max-w-[720px] h-[480px] overflow-hidden rounded-[32px] border border-white/70 bg-[#F7F8FF] shadow-[0_24px_70px_rgba(72,80,160,0.16)]">
+            <style>{`
+              @keyframes workflowWaterfallUp {
+                0% { transform: translateY(0); }
+                100% { transform: translateY(-50%); }
+              }
+              @keyframes workflowWaterfallDown {
+                0% { transform: translateY(-50%); }
+                100% { transform: translateY(0); }
+              }
+              .workflow-waterfall-card {
+                box-shadow: 0 18px 40px rgba(47, 55, 110, 0.10);
+              }
+              .workflow-waterfall-column-up {
+                animation: workflowWaterfallUp 28s linear infinite;
+              }
+              .workflow-waterfall-column-down {
+                animation: workflowWaterfallDown 32s linear infinite;
+              }
+              .workflow-waterfall:hover .workflow-waterfall-column-up,
+              .workflow-waterfall:hover .workflow-waterfall-column-down {
+                animation-play-state: paused;
+              }
+            `}</style>
+
+            <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(91,95,227,0.12) 1px, transparent 0)', backgroundSize: '18px 18px' }} />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_15%,rgba(91,95,227,0.18),transparent_34%),radial-gradient(circle_at_80%_35%,rgba(52,211,153,0.12),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.48),rgba(255,255,255,0.1))]" />
+
+            <div className="absolute top-5 left-6 z-20 rounded-full bg-white/86 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
+            <div className="absolute top-5 right-6 z-20 rounded-full bg-white/80 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">many workflows, organized</div>
+
+            <div className="workflow-waterfall relative z-10 flex gap-4 px-6 pt-16 pb-6 h-full -rotate-[1.2deg]">
+              {[
+                {
+                  dir: 'up', delay: '0s', cards: [
+                    { title: 'Product Launch SOP', tag: 'R&D', color: '#5B5FE3', h: 150, metric: '12 steps', rows: ['PRD intake', 'Design review', 'QA gate'] },
+                    { title: 'Bug Triage', tag: 'Engineering', color: '#7B6FF0', h: 118, metric: 'P0-P2', rows: ['Classify', 'Assign owner', 'Patch release'] },
+                    { title: 'Docs Release', tag: 'Content', color: '#34D399', h: 136, metric: '4 teams', rows: ['Draft', 'Legal review', 'Publish'] },
+                    { title: 'Incident Review', tag: 'Ops', color: '#F59E0B', h: 126, metric: 'SLA', rows: ['Alert', 'War room', 'Postmortem'] },
+                  ]
+                },
+                {
+                  dir: 'down', delay: '-8s', cards: [
+                    { title: 'Global Campaign', tag: 'GTM', color: '#787BEE', h: 176, metric: '8 markets', rows: ['Audience', 'Creative', 'Launch', 'Attribution'] },
+                    { title: 'IT Tickets', tag: 'Internal Ops', color: '#5B5FE3', h: 132, metric: '3h avg', rows: ['Request', 'Approve', 'Resolve'] },
+                    { title: 'Customer Onboarding', tag: 'CSM', color: '#34D399', h: 160, metric: '21 days', rows: ['Kickoff', 'Migration', 'Training'] },
+                    { title: 'Partner Review', tag: 'BD', color: '#A78BFA', h: 122, metric: 'weekly', rows: ['Pipeline', 'Risk check', 'Next step'] },
+                  ]
+                },
+                {
+                  dir: 'up', delay: '-14s', cards: [
+                    { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', h: 142, metric: 'audit', rows: ['Submit', 'Review', 'Archive'] },
+                    { title: 'Revenue Forecast', tag: 'Finance', color: '#34D399', h: 168, metric: '$2.8k', rows: ['Collect', 'Model', 'Report', 'Notify'] },
+                    { title: 'Hiring Pipeline', tag: 'HR', color: '#787BEE', h: 128, metric: '5 stages', rows: ['Screen', 'Interview', 'Offer'] },
+                    { title: 'QBR Planning', tag: 'Leadership', color: '#5B5FE3', h: 152, metric: 'exec', rows: ['Data pull', 'Narrative', 'Actions'] },
+                  ]
+                },
+                {
+                  dir: 'down', delay: '-20s', cards: [
+                    { title: 'Deal Desk SOP', tag: 'Sales', color: '#34D399', h: 158, metric: 'pipeline', rows: ['Quote', 'Approval', 'Contract'] },
+                    { title: 'Security Review', tag: 'SecOps', color: '#F59E0B', h: 128, metric: 'policy', rows: ['Scan', 'Exception', 'Signoff'] },
+                    { title: 'Data Request', tag: 'Analytics', color: '#5B5FE3', h: 148, metric: 'dashboards', rows: ['Define', 'Query', 'Share'] },
+                    { title: 'Localization', tag: 'Global', color: '#A78BFA', h: 136, metric: '12 locales', rows: ['Extract', 'Translate', 'Verify'] },
+                  ]
+                },
+              ].map((column, columnIdx) => (
+                <div key={`wf-column-${columnIdx}`} className="w-[160px] shrink-0 overflow-hidden">
+                  <div className={column.dir === 'up' ? 'workflow-waterfall-column-up' : 'workflow-waterfall-column-down'} style={{ animationDelay: column.delay }}>
+                    {[...column.cards, ...column.cards].map((item, idx) => (
+                      <div key={`${item.title}-${idx}`} className="workflow-waterfall-card mb-4 rounded-[22px] border border-white/80 bg-white/88 backdrop-blur-sm p-3" style={{ height: item.h }}>
+                        <div className="mb-2 flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
+                            <span className="truncate text-[10px] font-black text-[#111827]">{item.title}</span>
+                          </div>
+                          <span className="rounded-full px-1.5 py-0.5 text-[7px] font-black uppercase" style={{ color: item.color, backgroundColor: `${item.color}14` }}>{item.tag}</span>
+                        </div>
+                        <div className="mb-3 rounded-2xl p-2" style={{ backgroundColor: `${item.color}0F` }}>
+                          <div className="mb-1 flex items-end gap-1.5">
+                            {[0.35, 0.7, 0.48, 0.88, 0.58].map((v, barIdx) => (
+                              <span key={barIdx} className="w-4 rounded-t-md" style={{ height: 28 * v, backgroundColor: item.color, opacity: 0.32 + barIdx * 0.08 }} />
+                            ))}
+                          </div>
+                          <div className="text-[16px] font-black leading-none" style={{ color: item.color }}>{item.metric}</div>
+                        </div>
+                        <div className="space-y-1.5">
+                          {item.rows.map((row, rowIdx) => (
+                            <div key={row} className="flex items-center gap-1.5">
+                              <span className="h-4 w-4 shrink-0 rounded-full text-center text-[8px] font-black leading-4 text-white" style={{ backgroundColor: item.color, opacity: 0.85 - rowIdx * 0.12 }}>{rowIdx + 1}</span>
+                              <span className="h-2.5 flex-1 rounded-full bg-[#E8EBF7]" />
+                              {rowIdx === 1 && <span className="h-2.5 w-5 rounded-full" style={{ backgroundColor: item.color, opacity: 0.22 }} />}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-24 bg-gradient-to-b from-[#F7F8FF] via-[#F7F8FF]/82 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-28 bg-gradient-to-t from-[#F7F8FF] via-[#F7F8FF]/82 to-transparent" />
+            <div className="pointer-events-none absolute left-0 top-0 z-30 h-full w-16 bg-gradient-to-r from-[#F7F8FF] to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 z-30 h-full w-16 bg-gradient-to-l from-[#F7F8FF] to-transparent" />
+          </div>
+        )}
       </div>
     )
   }
@@ -1488,7 +1596,7 @@ const MeegleHomepage = () => {
   const [mobileMenu, setMobileMenu] = useState(false)
   const [activeTab, setActiveTab] = useState('planning')
   const [cascadeVariant, setCascadeVariant] = useState('fullbleed')
-  const [illustrationVariant, setIllustrationVariant] = useState('v4')
+  const [illustrationVariant, setIllustrationVariant] = useState('v5')
   const heroRef = useRef(null)
 
   return (
@@ -1721,6 +1829,16 @@ const MeegleHomepage = () => {
             }`}
           >
             v4 SOP版
+          </button>
+          <button
+            onClick={() => setIllustrationVariant('v5')}
+            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
+              illustrationVariant === 'v5'
+                ? 'bg-[#5B5FE3] text-white shadow-sm'
+                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
+            }`}
+          >
+            v5 瀑布流
           </button>
         </div>
 
