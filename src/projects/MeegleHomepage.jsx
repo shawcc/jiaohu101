@@ -866,9 +866,8 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
       { name: 'Release Agent', role: 'Release ops', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Coordinate release checklists, blockers, and launch approvals.', color: '#4F46E5', initials: 'RL' },
       { name: 'Insights Agent', role: 'Strategy', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent that turns market, product, and customer signals into decisions.', color: '#9333EA', initials: 'IN' },
     ]
-    const emptySeatIndex = 999
     const hasActiveAgent = activeAgentLane !== null
-    const isEmptySeatActive = activeAgentLane === emptySeatIndex
+    const isEmptySeatActive = typeof activeAgentLane === 'number' && activeAgentLane < 0
     const emptySeatInfo = {
       name: 'Open seat',
       role: 'Your next agent',
@@ -886,8 +885,11 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
       Create: { color: '#F59E0B', label: 'Create your agent' },
     }
     const activeOrigin = isEmptySeatActive ? { color: '#F59E0B', label: 'Bring · Create · Hire' } : originStyles[activePerson.origin]
-    const rows = Array.from({ length: 12 }, (_, row) => ({ row, cols: row < 3 ? 16 : row < 7 ? 17 : 18 }))
-    const emptySeatKey = '10-16'
+    const rows = Array.from({ length: 12 }, (_, row) => ({ row, cols: row < 3 ? 15 : row < 7 ? 16 : 17 }))
+    const emptySeatKeys = new Set([
+      '2-4', '2-10', '3-7', '4-2', '4-12', '5-5', '5-13', '6-9',
+      '7-3', '7-11', '8-6', '8-14', '9-10', '10-4', '10-12', '11-8',
+    ])
 
     const renderAgent = (person, active, scale) => (
       <div className="absolute left-1/2 top-[-18px] z-20 -translate-x-1/2" style={{ transform: `translateX(-50%) ${active ? 'translateY(-8px) scale(1.1)' : ''}` }}>
@@ -961,28 +963,29 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           Bring · Create · Hire
         </div>
 
-        <div className="absolute bottom-[-22px] left-1/2 top-[122px] z-30 w-[124%] -translate-x-1/2">
+        <div className="absolute bottom-[-18px] left-1/2 top-[122px] z-30 w-[112%] -translate-x-1/2">
           {rows.map(({ row, cols }) => {
             const scale = 0.84 + row * 0.04
             return (
               <div key={`front-row-${row}`} className="grid gap-x-2 gap-y-2" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, marginBottom: row < 8 ? 5 : 7 }}>
                 {Array.from({ length: cols }).map((_, col) => {
                   const key = `${row}-${col}`
-                  const empty = key === emptySeatKey
+                  const empty = emptySeatKeys.has(key)
+                  const emptyActiveKey = -((row + 1) * 100 + col)
                   const seatAgentKey = row * 100 + col
                   const agentIdx = (row * 18 + col) % agentPeople.length
                   const person = empty ? null : agentPeople[agentIdx]
-                  const active = empty ? isEmptySeatActive : activeAgentLane === seatAgentKey
+                  const active = empty ? activeAgentLane === emptyActiveKey : activeAgentLane === seatAgentKey
                   return (
                     <button
                       key={key}
                       type="button"
                       onMouseEnter={() => {
-                        if (empty) setActiveAgentLane(emptySeatIndex)
+                        if (empty) setActiveAgentLane(emptyActiveKey)
                         if (person) setActiveAgentLane(seatAgentKey)
                       }}
                       onFocus={() => {
-                        if (empty) setActiveAgentLane(emptySeatIndex)
+                        if (empty) setActiveAgentLane(emptyActiveKey)
                         if (person) setActiveAgentLane(seatAgentKey)
                       }}
                       className="relative min-h-[38px] rounded-t-[10px] transition-all duration-300"
@@ -992,8 +995,8 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                       {empty && (
                         <div className="absolute left-1/2 top-[-14px] z-20 -translate-x-1/2">
                           {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full bg-[#F59E0B]" />}
-                          <div className={`absolute left-1/2 top-[-30px] w-[96px] -translate-x-1/2 rounded-full border px-2 py-1 text-center text-[8px] font-black uppercase tracking-[0.08em] shadow-[0_12px_24px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B]' : 'border-white/50 bg-white/16 text-white/80 backdrop-blur'}`}>
-                            Hire\Bring\Create
+                          <div className={`absolute left-1/2 top-[-25px] w-[82px] -translate-x-1/2 rounded-full border px-2 py-1 text-center text-[7px] font-black uppercase tracking-[0.06em] shadow-[0_12px_24px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B]' : 'border-white/45 bg-white/14 text-white/75 backdrop-blur'}`}>
+                            Hire · Bring · Create
                           </div>
                           <div className={`flex h-10 w-10 items-center justify-center rounded-full border-2 border-dashed transition-all duration-300 ${active ? 'border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'border-white/60 bg-white/10 text-white/70'}`}>
                             <span className="text-[18px] font-black leading-none">+</span>
