@@ -72,57 +72,114 @@ const AgentCardIllustration = ({ card, isVisible }) => {
     return (
       <div className="relative w-full h-full flex items-center justify-center">
         <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#F4F6FF] to-[#E8EBFF]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
-        <svg viewBox="0 0 480 380" className="relative w-full max-w-[480px] h-auto drop-shadow-2xl" style={{ filter: 'drop-shadow(0 20px 40px rgba(91,94,227,0.12))' }}>
+        <svg viewBox="0 0 600 420" className="relative w-full max-w-[600px] h-auto drop-shadow-2xl" style={{ filter: 'drop-shadow(0 20px 40px rgba(91,94,227,0.10))' }}>
           <defs>
             <linearGradient id="wf-grad" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#5B5FE3" />
               <stop offset="100%" stopColor="#787BEE" />
             </linearGradient>
-            <filter id="wf-shadow"><feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#5B5FE3" floodOpacity="0.15" /></filter>
-          </defs>
-          {[
-            { x: 40, y: 30, w: 140, h: 56, label: 'Requirement\nIntake', done: true },
-            { x: 40, y: 110, w: 140, h: 56, label: 'Scope &\nTriage', done: true },
-            { x: 40, y: 190, w: 140, h: 56, label: 'Design\nReview', done: false },
-            { x: 220, y: 80, w: 140, h: 56, label: 'Agent\nPlanning', done: true },
-            { x: 220, y: 160, w: 140, h: 56, label: 'Auto\nExecution', done: false },
-            { x: 300, y: 260, w: 140, h: 56, label: 'Quality\nGate', done: false },
-            { x: 80, y: 280, w: 160, h: 56, label: 'Release &\nMonitor', done: false }
-          ].map((node, i) => (
-            <g key={i} filter="url(#wf-shadow)">
-              <rect x={node.x} y={node.y} width={node.w} height={node.h} rx="14" fill="white" stroke={node.done ? '#16A34A' : node.label === 'Agent\nPlanning' || node.label === 'Auto\nExecution' ? '#5B5FE3' : '#E2E4E9'} strokeWidth="2" />
-              {node.done && <rect x={node.x} y={node.y} width={node.w} height={node.h} rx="14" fill="#F0FDF4" />}
-              {node.done ? (
-                <>
-                  <text x={node.x + node.w / 2} y={node.y + 22} textAnchor="middle" fill="#16A34A" fontSize="11" fontWeight="700">{node.label.split('\n')[0]}</text>
-                  <text x={node.x + node.w / 2} y={node.y + 40} textAnchor="middle" fill="#16A34A" fontSize="11" fontWeight="700">{node.label.split('\n')[1]}</text>
-                  <circle cx={node.x + node.w - 14} cy={node.y + 14} r="8" fill="#16A34A" />
-                  <path d={`M${node.x + node.w - 18} ${node.y + 14} l3 4 l6 -7`} stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                </>
-              ) : (
-                <>
-                  <text x={node.x + node.w / 2} y={node.y + 22} textAnchor="middle" fill={node.label === 'Agent\nPlanning' || node.label === 'Auto\nExecution' ? '#5B5FE3' : '#646A73'} fontSize="11" fontWeight="700">{node.label.split('\n')[0]}</text>
-                  <text x={node.x + node.w / 2} y={node.y + 40} textAnchor="middle" fill={node.label === 'Agent\nPlanning' || node.label === 'Auto\nExecution' ? '#5B5FE3' : '#646A73'} fontSize="11" fontWeight="700">{node.label.split('\n')[1]}</text>
-                </>
-              )}
-            </g>
-          ))}
-          <line x1="110" y1="86" x2="110" y2="110" stroke="#16A34A" strokeWidth="2" markerEnd="url(#arrow-done)" />
-          <line x1="110" y1="166" x2="110" y2="190" stroke={isVisible ? '#5B5FE3' : '#E2E4E9'} strokeWidth="2" strokeDasharray="6,3" />
-          <path d="M180 58 C200 58, 200 108, 220 108" stroke="#16A34A" strokeWidth="2" fill="none" markerEnd="url(#arrow-done)" />
-          <path d="M290 108 C310 108, 310 158, 220 158" stroke={isVisible ? '#5B5FE3' : '#E2E4E9'} strokeWidth="2" fill="none" strokeDasharray="6,3" />
-          <path d="M180 188 C200 188, 200 288, 300 288" stroke={isVisible ? '#5B5FE3' : '#E2E4E9'} strokeWidth="2" fill="none" strokeDasharray="6,3" />
-          <defs>
-            <marker id="arrow-done" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M0,0 L10,5 L0,10 Z" fill="#16A34A" />
+            <marker id="wf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#5B5FE3" opacity="0.45" />
             </marker>
+            <marker id="wf-arrow-dim" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#DEE0E3" opacity="0.6" />
+            </marker>
+            <pattern id="wf-grid" width="28" height="28" patternUnits="userSpaceOnUse">
+              <path d="M 28 0 L 0 0 L 0 28" fill="none" stroke="#5B5FE3" strokeWidth="0.25" opacity="0.06" />
+            </pattern>
+            <filter id="wf-card-shadow">
+              <feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#5B5FE3" floodOpacity="0.10" />
+            </filter>
+            <filter id="wf-active-glow">
+              <feDropShadow dx="0" dy="3" stdDeviation="8" floodColor="#5B5FE3" floodOpacity="0.22" />
+            </filter>
           </defs>
+
+          {/* Blueprint grid */}
+          <rect x="0" y="0" width="600" height="420" rx="28" fill="url(#wf-grid)" />
+          <rect x="0" y="0" width="600" height="420" rx="28" fill="none" stroke="#5B5FE3" strokeWidth="0.5" opacity="0.08" />
+
+          {/* ======= Track 1: R&D (5 nodes) ======= */}
+          <g>
+            {[
+              { x: 64, label: '需求', color: '#787BEE' },
+              { x: 164, label: '方案', color: '#646BE6' },
+              { x: 264, label: '开发', color: '#5B5FE3', active: true },
+              { x: 364, label: '审查', color: '#646BE6' },
+              { x: 464, label: '发布', color: '#787BEE' },
+            ].map((node, i) => (
+              <g key={`wf1-${i}`} filter={node.active ? 'url(#wf-active-glow)' : 'url(#wf-card-shadow)'}>
+                <rect x={node.x} y="60" width="72" height="38" rx="10" fill="white"
+                  stroke={node.active ? '#5B5FE3' : '#E8EBF0'} strokeWidth={node.active ? 2 : 1}
+                  strokeDasharray={node.active ? '5,3' : 'none'} />
+                <text x={node.x + 36} y="84" textAnchor="middle" fill={node.active ? '#5B5FE3' : '#646A73'} fontSize="13" fontWeight="700" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
+                {node.active && (
+                  <circle cx={node.x + 64} cy="70" r="5" fill="#5B5FE3" opacity="0.9">
+                    <animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.6s" repeatCount="indefinite" />
+                  </circle>
+                )}
+                {/* Arrow between nodes */}
+                {i < 4 && (
+                  <line x1={node.x + 72} y1="79" x2={node.x + 100} y2="79" stroke="#5B5FE3" strokeOpacity="0.35" strokeWidth="2" markerEnd="url(#wf-arrow)" />
+                )}
+              </g>
+            ))}
+            {/* Track label */}
+            <rect x="12" y="62" width="40" height="34" rx="8" fill="#F4F6FF" stroke="#E8EBFF" strokeWidth="1" />
+            <text x="32" y="85" textAnchor="middle" fill="#5B5FE3" fontSize="10" fontWeight="700">R&D</text>
+          </g>
+
+          {/* ======= Track 2: GTM Marketing (4 nodes) ======= */}
+          <g>
+            {[
+              { x: 90, label: '策略' },
+              { x: 204, label: '执行', agent: true },
+              { x: 318, label: '分析' },
+              { x: 432, label: '迭代' },
+            ].map((node, i) => (
+              <g key={`wf2-${i}`} filter="url(#wf-card-shadow)">
+                <rect x={node.x} y="172" width="78" height="42" rx="10" fill="white" stroke="#E8EBF0" strokeWidth="1" />
+                <text x={node.x + 39} y="198" textAnchor="middle" fill="#646A73" fontSize="13" fontWeight="700" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
+                {node.agent && (
+                  <g transform={`translate(${node.x + 58}, 175)`}>
+                    <rect x="0" y="0" width="24" height="14" rx="7" fill="#F4F6FF" stroke="#5B5FE3" strokeWidth="0.8" opacity="0.7" />
+                    <text x="12" y="10.5" textAnchor="middle" fill="#5B5FE3" fontSize="8" fontWeight="700">🤖</text>
+                  </g>
+                )}
+                {i < 3 && (
+                  <line x1={node.x + 78} y1="193" x2={node.x + 114} y2="193" stroke="#5B5FE3" strokeOpacity="0.3" strokeWidth="2" markerEnd="url(#wf-arrow)" />
+                )}
+              </g>
+            ))}
+            {/* Track label */}
+            <rect x="12" y="174" width="48" height="38" rx="8" fill="#F4F6FF" stroke="#E8EBFF" strokeWidth="1" />
+            <text x="36" y="198" textAnchor="middle" fill="#5B5FE3" fontSize="10" fontWeight="700">GTM</text>
+          </g>
+
+          {/* ======= Track 3: Customer Support (4 nodes) ======= */}
+          <g>
+            {[
+              { x: 92, label: '接单' },
+              { x: 208, label: '分派' },
+              { x: 324, label: '处理' },
+              { x: 440, label: '闭环' },
+            ].map((node, i) => (
+              <g key={`wf3-${i}`} filter="url(#wf-card-shadow)">
+                <rect x={node.x} y="288" width="68" height="38" rx="10" fill="white" stroke="#E8EBF0" strokeWidth="1" />
+                <text x={node.x + 34} y="312" textAnchor="middle" fill="#646A73" fontSize="13" fontWeight="700" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
+                {i < 3 && (
+                  <line x1={node.x + 68} y1="307" x2={node.x + 116} y2="307" stroke="#5B5FE3" strokeOpacity="0.3" strokeWidth="2" markerEnd="url(#wf-arrow)" />
+                )}
+              </g>
+            ))}
+            <rect x="12" y="289" width="58" height="36" rx="8" fill="#F4F6FF" stroke="#E8EBFF" strokeWidth="1" />
+            <text x="41" y="312" textAnchor="middle" fill="#5B5FE3" fontSize="10" fontWeight="700">Support</text>
+          </g>
+
+          {/* Bottom decorative label */}
+          <rect x="200" y="360" width="200" height="30" rx="14" fill="white" stroke="#5B5FE3" strokeWidth="0.5" opacity="0.6" />
+          <text x="300" y="380" textAnchor="middle" fill="#5B5FE3" fontSize="10" fontWeight="600" opacity="0.5" fontFamily="system-ui,-apple-system,sans-serif">各团队流程 · 有序发生</text>
         </svg>
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
-          {[0, 1, 2].map(i => (
-            <div key={i} className="h-1 rounded-full transition-all duration-700" style={{ width: i === 0 ? 32 : 18, backgroundColor: i === 0 ? '#5B5FE3' : '#E2E4E9' }} />
-          ))}
-        </div>
       </div>
     )
   }
@@ -715,33 +772,25 @@ const AI_ASSISTANT_SCENES = [
 
 const AIAssistantSection = () => {
   const [activeIdx, setActiveIdx] = useState(0)
-  const [typedPrompt, setTypedPrompt] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
-  const [showResult, setShowResult] = useState(false)
+  const [visibleBubbles, setVisibleBubbles] = useState([0])
+  const [typingBubble, setTypingBubble] = useState(null)
   const sectionRef = useRef(null)
   const cycleRef = useRef(null)
   const started = useRef(false)
   const scenesRef = useRef(AI_ASSISTANT_SCENES)
 
-  const runScene = useCallback((idx) => {
+  const selectScene = useCallback((idx) => {
     if (cycleRef.current) clearTimeout(cycleRef.current)
-    const scene = scenesRef.current[idx]
+    if (!visibleBubbles.includes(idx)) {
+      setVisibleBubbles(prev => [...prev, idx])
+    }
     setActiveIdx(idx)
-    setShowResult(false)
-    setIsTyping(true)
-    setTypedPrompt('')
-    let ci = 0
-    const full = scene.prompt
-    const iv = setInterval(() => {
-      ci++
-      setTypedPrompt(full.substring(0, ci))
-      if (ci >= full.length) {
-        clearInterval(iv)
-        setIsTyping(false)
-        setTimeout(() => setShowResult(true), 400)
-      }
-    }, 45)
-  }, [])
+    setTypingBubble(idx)
+    setTimeout(() => {
+      setTypingBubble(null)
+    }, 1800)
+    return () => {}
+  }, [visibleBubbles])
 
   useEffect(() => {
     const el = sectionRef.current
@@ -753,9 +802,9 @@ const AIAssistantSection = () => {
         const total = scenesRef.current.length
         const play = () => {
           const idx = step % total
-          runScene(idx)
+          selectScene(idx)
           step++
-          cycleRef.current = setTimeout(play, 4000)
+          cycleRef.current = setTimeout(play, 3500)
         }
         play()
       }
@@ -765,7 +814,7 @@ const AIAssistantSection = () => {
       observer.disconnect()
       if (cycleRef.current) clearTimeout(cycleRef.current)
     }
-  }, [runScene])
+  }, [selectScene])
 
   const activeScene = AI_ASSISTANT_SCENES[activeIdx]
 
@@ -792,102 +841,133 @@ const AIAssistantSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.05fr] gap-8 lg:gap-10 items-start">
-          <div className="rounded-[24px] border border-[#EEF0F4] bg-white shadow-[0_8px_40px_rgba(15,23,42,0.04)] overflow-hidden">
-            <div className="p-5 md:p-7">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="h-7 w-7 rounded-lg bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center">
-                  <Sparkles size={13} className="text-white" />
-                </div>
-                <span className="text-[13px] font-bold text-[#111827]">Meegle AI</span>
-              </div>
-              <p className="text-[14px] text-[#8F959E] mb-5">Hi, what are we working on today?</p>
-
-              <div className="relative mb-5">
-                <div className="flex items-center gap-3 rounded-xl border-2 border-[#E8EBF0] bg-[#FAFBFF] px-4 py-3.5 transition-all focus-within:border-[#5B5FE3]/40 focus-within:shadow-[0_0_0_4px_rgba(91,94,227,0.06)]">
-                  <Sparkles size={16} className="text-[#5B5FE3] flex-shrink-0" />
-                  <span className="flex-1 text-[14px] text-[#111827] font-medium min-h-[22px] select-none">
-                    {typedPrompt || 'Ask AI to plan, analyze, or optimize...'}
-                    {isTyping && (
-                      <span className="inline-block w-[2px] h-[17px] bg-[#5B5FE3] ml-0.5 align-middle animate-pulse" />
-                    )}
-                  </span>
-                  <button className="h-8 w-8 rounded-lg bg-[#5B5FE3] flex items-center justify-center flex-shrink-0" style={{ opacity: showResult ? 1 : 0 }}>
-                    <ArrowRight size={13} className="text-white" />
-                  </button>
-                </div>
-
-                {showResult && (
-                  <div
-                    className="mt-4 flex items-center gap-3 rounded-xl px-4 py-3.5 transition-all duration-300"
-                    style={{
-                      backgroundColor: activeScene.color + '08',
-                      borderWidth: 1,
-                      borderStyle: 'solid',
-                      borderColor: activeScene.color + '20'
-                    }}
-                  >
-                    <div className={"h-7 w-7 rounded-lg bg-gradient-to-br " + activeScene.gradient + " flex items-center justify-center flex-shrink-0 shadow-sm"}>
-                      <span className="text-[12px]">{activeScene.icon}</span>
-                    </div>
-                    <div>
-                      <div className="text-[12px] font-bold text-[#111827]">{activeScene.label}</div>
-                      <div className="text-[11px] text-[#8F959E]">{activeScene.desc}</div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {AI_ASSISTANT_SCENES.map((scene, idx) => (
-                  <button
-                    key={scene.id}
-                    onClick={() => runScene(idx)}
-                    className={"flex items-center gap-2 rounded-xl border px-3 py-2 text-[12px] font-semibold transition-all duration-300 " + (activeIdx === idx ? 'text-white shadow-md' : 'bg-white border-[#EEF0F4] text-[#646A73] hover:border-[#D8DFFF] hover:text-[#111827] hover:shadow-sm')}
-                    style={activeIdx === idx ? { backgroundColor: scene.color, borderColor: scene.color } : {}}
-                  >
-                    <span className="text-[14px] leading-none">{scene.icon}</span>
-                    {scene.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="relative">
+        {/* Single canvas: product screenshot as background, chat overlay on left */}
+        <div className="relative rounded-[28px] overflow-hidden border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.06)]">
+          {/* Background images stack */}
+          <div className="relative w-full" style={{ aspectRatio: '16 / 9', minHeight: 540 }}>
             {AI_ASSISTANT_SCENES.map((scene, idx) => (
               <div
                 key={scene.id}
-                className="rounded-[24px] overflow-hidden transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)] border border-black/[0.04] bg-white shadow-[0_16px_60px_rgba(15,23,42,0.06)]"
+                className={"absolute inset-0 w-full h-full transition-all duration-800 ease-[cubic-bezier(0.22,1,0.36,1)] bg-gradient-to-br " + scene.gradient}
                 style={{
-                  position: activeIdx === idx && showResult ? 'relative' : 'absolute',
-                  inset: activeIdx === idx && showResult ? 'auto' : 0,
-                  opacity: activeIdx === idx && showResult ? 1 : 0,
-                  transform: "scale(" + (activeIdx === idx && showResult ? 1 : 0.97) + ")",
-                  pointerEvents: activeIdx === idx && showResult ? 'auto' : 'none',
-                  zIndex: activeIdx === idx && showResult ? 1 : 0
+                  opacity: activeIdx === idx ? 0.06 : 0,
                 }}
               >
-                <div className="flex items-center gap-2.5 px-5 py-4 border-b border-[#F3F4F6]">
-                  <div className={"h-7 w-7 rounded-lg bg-gradient-to-br " + scene.gradient + " flex items-center justify-center shadow-sm"}>
-                    <span className="text-[13px]">{scene.icon}</span>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <div className={"h-16 w-16 rounded-2xl bg-gradient-to-br " + scene.gradient + " flex items-center justify-center shadow-lg"} style={{ opacity: 0.25 }}>
+                    <span className="text-[28px]">{scene.icon}</span>
                   </div>
-                  <div>
-                    <div className="text-[12px] font-bold text-[#111827]">{scene.label}</div>
-                    <div className="text-[10px] text-[#8F959E] truncate max-w-[260px]">{scene.prompt.substring(0, 48)}...</div>
-                  </div>
-                </div>
-                <div className={"w-full aspect-[16/10] bg-gradient-to-br " + scene.gradient + " flex items-center justify-center"} style={{ opacity: 0.06 }}>
-                  <div className="text-center">
-                    <div className={"h-16 w-16 rounded-2xl bg-gradient-to-br " + scene.gradient + " flex items-center justify-center mx-auto mb-4 shadow-lg"} style={{ opacity: 0.3 }}>
-                      <span className="text-[28px]">{scene.icon}</span>
-                    </div>
-                    <p className="text-[12px] font-semibold text-[#B0B8C5]">Replace with product screenshot</p>
-                  </div>
+                  <p className="text-[12px] font-semibold text-[#B0B8C5] mt-4">Replace with product screenshot</p>
                 </div>
               </div>
             ))}
+
+            {/* Floating chat bubbles overlay */}
+            <div className="absolute left-6 md:left-10 top-8 bottom-8 flex flex-col justify-start gap-3 z-10 max-w-[360px] w-[44%] pointer-events-none">
+              {AI_ASSISTANT_SCENES.map((scene, idx) => {
+                if (!visibleBubbles.includes(idx)) return null
+                const isActive = activeIdx === idx
+                const isTyping = typingBubble === idx
+                return (
+                  <button
+                    key={scene.id}
+                    onClick={() => selectScene(idx)}
+                    className="pointer-events-auto text-left focus:outline-none"
+                  >
+                    {/* User bubble */}
+                    <div className="flex justify-end mb-1.5">
+                      <div
+                        className="rounded-2xl rounded-br-md px-3.5 py-2.5 transition-all duration-500"
+                        style={{
+                          backgroundColor: scene.color,
+                          color: 'white',
+                          transform: "scale(" + (isActive ? 1.02 : 1) + ")",
+                          boxShadow: isActive
+                            ? ("0 8px 32px " + scene.color + "40")
+                            : "0 2px 8px rgba(0,0,0,0.06)"
+                        }}
+                      >
+                        <div className="text-[10px] font-bold mb-0.5 text-white/50">You</div>
+                        <div className="text-[12px] leading-[1.5] font-semibold max-w-[240px]">
+                          {isTyping ? (
+                            <span>{scene.label.substring(0, Math.max(4, Math.floor(scene.label.length * 0.55)))}<span className="inline-flex ml-0.5">...<span className="animate-pulse">.</span></span></span>
+                          ) : scene.label}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* AI response bubble */}
+                    <div
+                      className="rounded-2xl rounded-bl-md px-3.5 py-2.5 transition-all duration-500 relative"
+                      style={{
+                        backgroundColor: 'white',
+                        border: '1px solid #EEF0F4',
+                        transform: "scale(" + (isActive ? 1.02 : 1) + ")",
+                        boxShadow: isActive
+                          ? "0 8px 32px rgba(15,23,42,0.08)"
+                          : "0 2px 8px rgba(0,0,0,0.04)"
+                      }}
+                    >
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <div className="h-4 w-4 rounded bg-gradient-to-br from-[#5B5FE3] to-[#787BEE] flex items-center justify-center">
+                          <Sparkles size={9} className="text-white" />
+                        </div>
+                        <div className="text-[9px] font-bold text-[#8F959E]">Meegle AI</div>
+                      </div>
+                      <div className="text-[11px] leading-[1.6] text-[#374151]">
+                        {isTyping ? (
+                          <span>{scene.prompt.substring(0, Math.max(6, Math.floor(scene.prompt.length * 0.5)))}<span className="inline-flex ml-0.5">...<span className="animate-pulse">.</span></span></span>
+                        ) : (
+                          <span>
+                            {scene.prompt}
+                            {isActive && (
+                              <span
+                                className="absolute bottom-2 right-3 h-5 w-5 rounded-full flex items-center justify-center animate-pulse"
+                                style={{ backgroundColor: scene.color + '20' }}
+                              >
+                                <span
+                                  className="h-2 w-2 rounded-full"
+                                  style={{ backgroundColor: scene.color }}
+                                />
+                              </span>
+                            )}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Scene label badge */}
+            <div
+              className="absolute bottom-6 right-6 z-10 flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-sm border border-black/[0.06] px-4 py-2 shadow-sm transition-all duration-500"
+              style={{ opacity: typingBubble === null ? 1 : 0.6 }}
+            >
+              <div className={"h-5 w-5 rounded-full bg-gradient-to-br " + activeScene.gradient + " flex items-center justify-center"}>
+                <span className="text-[9px]">{activeScene.icon}</span>
+              </div>
+              <span className="text-[11px] font-bold text-[#111827]">{activeScene.label}</span>
+            </div>
           </div>
+        </div>
+
+        {/* Scene dots */}
+        <div className="flex justify-center gap-2 mt-5">
+          {AI_ASSISTANT_SCENES.map((scene, idx) => (
+            <button
+              key={scene.id}
+              onClick={() => selectScene(idx)}
+              className="rounded-full transition-all duration-500"
+              style={{
+                width: activeIdx === idx ? 24 : 8,
+                height: 8,
+                backgroundColor: activeIdx === idx ? scene.color : '#D1D5DB',
+                opacity: activeIdx === idx ? 1 : 0.45
+              }}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -971,6 +1051,10 @@ const MeegleHomepage = () => {
         @keyframes trailFade {
           0% { transform: scale(1) translateY(0); opacity: 0.5; }
           100% { transform: scale(0.3) translateY(-12px); opacity: 0; }
+        }
+        @keyframes shimmerSweep {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
         }
       `}</style>
 
@@ -1439,213 +1523,224 @@ const MeegleHomepage = () => {
 }
 
 
-/* ============ GAME VERSION — Hopscotch Board with Jumping Agents ============ */
+/* ============ GAME VERSION — Flow Canvas with Agent Orchestration ============ */
 
-const HOP_BOARD_W = 660
-const HOP_BOARD_H = 350
-const HOP_BLOCK_W = 96
-const HOP_BLOCK_H = 44
+const FLOW_BOARD_W = 680
+const FLOW_BOARD_H = 400
+const FLOW_NODE_W = 106
+const FLOW_NODE_H = 64
 
-const HOP_BLOCKS = [
-  { id: 'intake', label: 'Intake', color: '#5B5FE3', x: 28,  y: 170, num: 1 },
-  { id: 'scout',  label: 'Scout',  color: '#3EAB6E', x: 158, y: 80,  num: 2 },
-  { id: 'scope',  label: 'Scope',  color: '#F59E0B', x: 158, y: 170, num: 3 },
-  { id: 'spec',   label: 'Spec',   color: '#8B5CF6', x: 158, y: 260, num: 4 },
-  { id: 'build',  label: 'Build',  color: '#EC4899', x: 320, y: 170, num: 5 },
-  { id: 'ship',   label: 'Ship',   color: '#06B6D4', x: 480, y: 170, num: 6 },
+const FLOW_NODES = [
+  { id: 'collect', label: 'Collect', icon: '📥', color: '#5B5FE3', x: 22,  y: 168 },
+  { id: 'analyze', label: 'Analyze', icon: '🔬', color: '#F59E0B', x: 154, y: 76 },
+  { id: 'design',  label: 'Design',  icon: '🎨', color: '#8B5CF6', x: 154, y: 260 },
+  { id: 'build',   label: 'Build',   icon: '⚡',  color: '#3EAB6E', x: 304, y: 168 },
+  { id: 'review',  label: 'Review',  icon: '🔍', color: '#EC4899', x: 444, y: 168 },
+  { id: 'deploy',  label: 'Deploy',  icon: '🚀', color: '#06B6D4', x: 582, y: 168 },
 ]
 
-const HopBlock = ({ block, state, agentColor }) => {
-  const c = block.color
-  const bw = HOP_BLOCK_W; const bh = HOP_BLOCK_H
+const FLOW_EDGES = [
+  { from: 'collect', to: 'analyze' },
+  { from: 'collect', to: 'design' },
+  { from: 'analyze', to: 'build' },
+  { from: 'design',  to: 'build' },
+  { from: 'build',   to: 'review' },
+  { from: 'review',  to: 'deploy' },
+]
+
+const AgentIcon = ({ color, size = 22 }) => (
+  <svg viewBox="0 0 24 24" width={size} height={size}>
+    <circle cx="12" cy="7" r="5.5" fill={color} opacity="0.9" />
+    <rect x="10" y="8.8" width="1.5" height="2.2" rx="0.7" fill={color} opacity="0.5" />
+    <rect x="12.5" y="8.8" width="1.5" height="2.2" rx="0.7" fill={color} opacity="0.5" />
+    <rect x="7.5" y="10.5" width="9" height="6" rx="3" fill={color} opacity="0.65" />
+    <circle cx="10.5" cy="6" r="0.8" fill="white" />
+    <circle cx="13.5" cy="6" r="0.8" fill="white" />
+    <circle cx="10.5" cy="6" r="0.4" fill="#111" />
+    <circle cx="13.5" cy="6" r="0.4" fill="#111" />
+  </svg>
+)
+
+const FlowNode = ({ node, state, agentColor }) => {
+  const c = node.color
+  const w = FLOW_NODE_W; const h = FLOW_NODE_H
   const hidden = state === 'hidden'
-  const emerging = state === 'building'
-  const built = state === 'built'
-  const populated = state === 'populated' || state === 'jumping'
-  const jumpPhase = state === 'jumping'
+  const building = state === 'building'
+  const assigning = state === 'assigning'
+  const complete = state === 'complete'
 
   if (hidden) return null
 
   return (
     <div className="absolute" style={{
-      left: block.x, top: block.y,
-      width: bw, height: bh,
+      left: node.x, top: node.y, width: w, height: h,
       transition: 'transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease',
-      transform: emerging
-        ? 'translateY(60px) scale(0.7)'
-        : jumpPhase
-          ? 'scale(1.12)'
-          : populated
-            ? 'scale(1.05)'
-            : 'translateY(0) scale(1)',
-      opacity: emerging ? 0.5 : 1,
-      zIndex: jumpPhase ? 25 : populated ? 10 : 1
+      transform: building ? 'translateY(36px) scale(0.82)' : assigning ? 'scale(1.08)' : 'translateY(0) scale(1)',
+      opacity: building ? 0.55 : 1,
+      zIndex: assigning ? 20 : complete ? 12 : 1,
     }}>
-      {/* Shadow */}
-      <div className="absolute rounded-2xl" style={{
-        left: -4, top: bh + 8,
-        width: bw + 8, height: 12,
-        backgroundColor: c + '15',
-        filter: 'blur(8px)',
-        opacity: emerging ? 0.1 : populated ? 0.5 : 0.25
+      <div style={{
+        position: 'absolute', left: 8, top: h + 6, width: w - 16, height: 10,
+        backgroundColor: c + (complete ? '22' : '0e'),
+        borderRadius: '50%', filter: 'blur(8px)',
+        opacity: building ? 0.1 : complete ? 0.45 : 0.22,
+        transition: 'all 0.5s ease',
       }} />
 
-      {/* Block body */}
-      <div className="absolute inset-0 rounded-2xl flex items-center justify-center"
-        style={{
-          background: populated
-            ? `linear-gradient(135deg, ${c}18 0%, ${c}06 100%)`
-            : emerging
-              ? `linear-gradient(135deg, ${c}08 0%, ${c}02 100%)`
-              : 'linear-gradient(135deg, #ffffff 0%, #f7f8fa 100%)',
-          border: `2px solid ${populated ? c + '55' : emerging ? c + '25' : '#e5e8ed'}`,
-          boxShadow: populated
-            ? `0 0 20px ${c}1A, 0 4px 12px rgba(0,0,0,0.05)`
-            : emerging
-              ? '0 2px 6px rgba(0,0,0,0.03)'
-              : '0 2px 8px rgba(0,0,0,0.04)'
+      <div style={{
+        position: 'absolute', inset: 0, borderRadius: 12,
+        background: complete
+          ? `linear-gradient(135deg, ${c}0c, #f0fdf4)`
+          : building ? '#f9fafb' : '#ffffff',
+        border: `1.5px solid ${complete ? '#10b981' : building ? '#e5e7eb' : '#e8ecf0'}`,
+        boxShadow: complete
+          ? `0 0 18px ${c}18, 0 2px 8px rgba(0,0,0,0.03)`
+          : building ? '0 1px 3px rgba(0,0,0,0.02)' : '0 2px 8px rgba(0,0,0,0.04)',
+        display: 'flex', alignItems: 'center', gap: 10, padding: '0 12px',
+        overflow: 'hidden', transition: 'all 0.5s ease',
+      }}>
+        <div style={{
+          position: 'absolute', left: 0, top: 0, bottom: 0, width: 3,
+          backgroundColor: complete ? '#10b981' : building ? '#d1d5db' : c,
+          borderRadius: '12px 0 0 12px', transition: 'background-color 0.5s ease',
+        }} />
+
+        <div style={{
+          width: 34, height: 34, borderRadius: 9, flexShrink: 0,
+          background: building ? '#f3f4f6' : `linear-gradient(135deg, ${c}14, ${c}06)`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 15, transition: 'all 0.5s ease',
         }}>
-        {/* Hopscotch number */}
-        <span className="absolute left-2.5 top-1 text-[9px] font-black opacity-15" style={{ color: c }}>
-          {block.num}
-        </span>
-        {/* Label */}
-        <span className="text-[12px] font-bold tracking-tight" style={{
-          color: populated ? c : emerging ? c + '40' : '#9aa0ab'
-        }}>
-          {block.label}
-        </span>
+          {node.icon}
+        </div>
+
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontSize: 11, fontWeight: 700,
+            color: building ? '#9ca3af' : complete ? '#065f46' : '#1f2937',
+            transition: 'color 0.4s ease', letterSpacing: '-0.01em',
+          }}>
+            {node.label}
+          </div>
+        </div>
+
+        {complete && (
+          <div style={{
+            position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
+            width: 20, height: 20, borderRadius: '50%', backgroundColor: '#10b981',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            animation: 'bounceIn 0.5s cubic-bezier(0.16,1,0.3,1) both',
+            boxShadow: '0 2px 6px rgba(16,185,129,0.3)',
+          }}>
+            <svg viewBox="0 0 10 10" width="9" height="9">
+              <path d="M2 5l2 2L8 3" fill="none" stroke="white" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        )}
+
+        {building && (
+          <div style={{
+            position: 'absolute', inset: 0, borderRadius: 12,
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%)',
+            backgroundSize: '200% 100%',
+            animation: 'shimmerSweep 1.6s ease-in-out infinite',
+          }} />
+        )}
       </div>
 
-      {/* Characters on populated block */}
-      {populated && !jumpPhase && (
-        <div className="absolute -top-7 left-0 right-0 flex justify-center gap-3 pointer-events-none"
-          style={{ animation: 'bounceIn 0.4s cubic-bezier(0.16,1,0.3,1) both' }}>
-          {/* Agent */}
-          <div style={{ animation: 'hopIdle 1.2s ease-in-out infinite' }}>
-            <svg viewBox="0 0 24 24" width="22" height="22">
-              <circle cx="12" cy="7" r="5.5" fill={agentColor || c} opacity="0.9" />
-              <rect x="10" y="8.8" width="1.5" height="2.2" rx="0.7" fill={agentColor || c} opacity="0.5" />
-              <rect x="12.5" y="8.8" width="1.5" height="2.2" rx="0.7" fill={agentColor || c} opacity="0.5" />
-              <rect x="7.5" y="10.5" width="9" height="6" rx="3" fill={agentColor || c} opacity="0.65" />
-              <circle cx="10.5" cy="6" r="0.8" fill="white" />
-              <circle cx="13.5" cy="6" r="0.8" fill="white" />
-              <circle cx="10.5" cy="6" r="0.4" fill="#111" />
-              <circle cx="13.5" cy="6" r="0.4" fill="#111" />
-            </svg>
-          </div>
-          {/* Human */}
-          <div style={{ animation: 'hopIdle 1.2s ease-in-out 0.15s infinite' }}>
-            <svg viewBox="0 0 18 22" width="16" height="20">
-              <circle cx="9" cy="4.5" r="3.5" fill="#9ca3af" />
-              <path d="M3 14c0-3.3 2.7-6 6-6s6 2.7 6 6" fill="#9ca3af" opacity="0.65" />
-            </svg>
-          </div>
+      {assigning && (
+        <div style={{
+          position: 'absolute', top: -26, left: '50%', transform: 'translateX(-50%)',
+          animation: 'bounceIn 0.4s cubic-bezier(0.16,1,0.3,1) both',
+        }}>
+          <AgentIcon color={agentColor} size={22} />
         </div>
       )}
-
-      {/* Jumping character (appears on block during jumpPhase) */}
-      {jumpPhase && (
-        <div className="absolute -top-8 left-1/2 -translate-x-1/2" style={{ animation: 'hopJump 0.35s cubic-bezier(0.16,1,0.3,1) both' }}>
-          <svg viewBox="0 0 24 24" width="26" height="26">
-            <circle cx="12" cy="7" r="5.5" fill={agentColor || c} opacity="0.9" />
-            <rect x="10" y="8.8" width="1.5" height="2.2" rx="0.7" fill={agentColor || c} opacity="0.5" />
-            <rect x="12.5" y="8.8" width="1.5" height="2.2" rx="0.7" fill={agentColor || c} opacity="0.5" />
-            <rect x="7.5" y="10.5" width="9" height="6" rx="3" fill={agentColor || c} opacity="0.65" />
-            <circle cx="10.5" cy="6" r="0.8" fill="white" />
-            <circle cx="13.5" cy="6" r="0.8" fill="white" />
-            <circle cx="10.5" cy="6" r="0.4" fill="#111" />
-            <circle cx="13.5" cy="6" r="0.4" fill="#111" />
-          </svg>
-        </div>
-      )}
-
-      {/* Construction ripple */}
-      {emerging && (
-        <div className="absolute inset-0 rounded-2xl overflow-hidden" style={{ opacity: 0.4 }}>
-          <div className="absolute inset-0" style={{
-            background: `repeating-linear-gradient(45deg, transparent, transparent 4px, ${c}08 4px, ${c}08 8px)`
-          }} />
-        </div>
-      )}
-
-      {/* Done check */}
-      {populated && !jumpPhase && (
-        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: c, boxShadow: `0 2px 6px ${c}30` }}>
-          <svg viewBox="0 0 10 10" width="9" height="9">
-            <path d="M2 5l2 2L8 3" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+      {(state === 'populated' || complete) && !assigning && (
+        <div style={{
+          position: 'absolute', top: -18, right: -4,
+          animation: 'bounceIn 0.4s cubic-bezier(0.16,1,0.3,1) both',
+        }}>
+          <AgentIcon color={agentColor} size={17} />
         </div>
       )}
     </div>
   )
 }
 
-const HopDots = ({ from, to, state }) => {
+const FlowEdge = ({ fromNode, toNode, state }) => {
   if (state === 'hidden') return null
+  const fcx = fromNode.x + FLOW_NODE_W / 2
+  const fcy = fromNode.y + FLOW_NODE_H / 2
+  const tcx = toNode.x + FLOW_NODE_W / 2
+  const tcy = toNode.y + FLOW_NODE_H / 2
+
+  const isHorizontal = Math.abs(fcy - tcy) < 10
   const active = state === 'active'
   const building = state === 'building'
-  const bw2 = HOP_BLOCK_W / 2; const bh2 = HOP_BLOCK_H / 2
-  const fx = from.x + bw2; const fy = from.y + bh2
-  const tx = to.x + bw2; const ty = to.y + bh2
-  const dx = tx - fx; const dy = ty - fy
-  const steps = Math.max(4, Math.floor(Math.sqrt(dx*dx + dy*dy) / 22))
-  const dots = Array.from({ length: steps }, (_, i) => {
-    const t = (i + 1) / (steps + 1)
-    return { x: fx + dx * t, y: fy + dy * t }
-  })
+
+  const pathD = isHorizontal
+    ? `M ${fcx} ${fcy} L ${tcx} ${tcy}`
+    : `M ${fcx} ${fcy} C ${(fcx+tcx)/2} ${fcy}, ${(fcx+tcx)/2} ${tcy}, ${tcx} ${tcy}`
+
+  const color = active ? '#fbbf24' : building ? '#c4b5fd' : '#d1d5db'
+  const markerId = `arrow-${fromNode.id}-${toNode.id}`
 
   return (
-    <svg className="absolute inset-0 pointer-events-none overflow-visible" style={{ zIndex: 0 }}>
-      {dots.map((d, i) => (
-        <circle key={i} cx={d.x} cy={d.y} r={active ? 2.5 : 1.5}
-          fill={active ? '#fbbf24' : building ? from.color + '40' : '#d1d5db'}
-          opacity={active ? 1 : building ? 0.6 : 0.35}>
-          {building && <animate attributeName="opacity" values="0.6;0.15;0.6" dur="0.6s" begin={i * 0.04 + 's'} repeatCount="indefinite" />}
-        </circle>
-      ))}
-      {/* Arrow tip */}
-      <polygon points={`${tx-6},${ty-4} ${tx},${ty} ${tx-6},${ty+4}`}
-        fill={active ? '#fbbf24' : '#d1d5db'} opacity={active ? 0.8 : 0.4} />
+    <svg style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'visible', zIndex: 0 }}>
+      <defs>
+        <marker id={markerId} viewBox="0 0 8 6" refX="8" refY="3" markerWidth="8" markerHeight="6" orient="auto">
+          <path d="M0 0l8 3-8 3z" fill={color} opacity={active ? 0.9 : building ? 0.5 : 0.35} />
+        </marker>
+      </defs>
+      <path
+        d={pathD}
+        fill="none"
+        stroke={color}
+        strokeWidth={active ? 2 : 1.2}
+        strokeDasharray={building ? '6 4' : 'none'}
+        opacity={active ? 1 : building ? 0.7 : 0.4}
+        markerEnd={`url(#${markerId})`}
+      />
+      {building && (
+        <path
+          d={pathD}
+          fill="none"
+          stroke={color}
+          strokeWidth={1.2}
+          strokeDasharray="6 4"
+          strokeDashoffset="0"
+          opacity={0.4}
+        >
+          <animate attributeName="stroke-dashoffset" from="20" to="0" dur="0.6s" repeatCount="indefinite" />
+        </path>
+      )}
     </svg>
   )
 }
 
-/* Flying Agent from one block to next */
-const HopJumper = ({ fromBlock, toBlock, color }) => {
-  if (!fromBlock || !toBlock) return null
-  const startX = fromBlock.x + HOP_BLOCK_W / 2 - 13
-  const startY = fromBlock.y - 20
-  const endX = toBlock.x + HOP_BLOCK_W / 2 - 13
-  const endY = toBlock.y - 20
+const FlowJumper = ({ fromNode, toNode, color }) => {
+  if (!fromNode || !toNode) return null
+  const sx = fromNode.x + FLOW_NODE_W / 2 - 13
+  const sy = fromNode.y - 22
+  const ex = toNode.x + FLOW_NODE_W / 2 - 13
+  const ey = toNode.y - 22
 
   return (
     <div className="absolute pointer-events-none" style={{
       zIndex: 30,
-      animation: `hopJumpArc 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both`,
-      '--hx0': `${startX}px`, '--hy0': `${startY}px`,
-      '--hx1': `${endX}px`, '--hy1': `${endY}px`,
+      animation: 'hopJumpArc 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+      '--hx0': `${sx}px`, '--hy0': `${sy}px`,
+      '--hx1': `${ex}px`, '--hy1': `${ey}px`,
     }}>
-      <svg viewBox="0 0 24 24" width="26" height="26">
-        <circle cx="12" cy="7" r="5.5" fill={color} opacity="0.9" />
-        <rect x="10" y="8.8" width="1.5" height="2.2" rx="0.7" fill={color} opacity="0.5" />
-        <rect x="12.5" y="8.8" width="1.5" height="2.2" rx="0.7" fill={color} opacity="0.5" />
-        <rect x="7.5" y="10.5" width="9" height="6" rx="3" fill={color} opacity="0.65" />
-        <circle cx="10.5" cy="6" r="0.8" fill="white" />
-        <circle cx="13.5" cy="6" r="0.8" fill="white" />
-        <circle cx="10.5" cy="6" r="0.4" fill="#111" />
-        <circle cx="13.5" cy="6" r="0.4" fill="#111" />
-      </svg>
-      {/* Trail particles */}
-      <div className="absolute top-full left-1/2 -translate-x-1/2" style={{ marginTop: -4 }}>
+      <AgentIcon color={color} size={24} />
+      <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', marginTop: -6 }}>
         {[0, 1, 2].map(i => (
-          <div key={i} className="absolute rounded-full" style={{
-            left: -5 + i * 4, top: -4 + i * 3,
-            width: 3, height: 3,
-            backgroundColor: color,
-            opacity: 0.5 - i * 0.15,
-            animation: `trailFade 0.5s ease-out ${i * 0.05}s both`
+          <div key={i} style={{
+            position: 'absolute', left: -4 + i * 3, top: -3 + i * 2,
+            width: 3, height: 3, borderRadius: '50%',
+            backgroundColor: color, opacity: 0.5 - i * 0.15,
+            animation: `trailFade 0.5s ease-out ${i * 0.05}s both`,
           }} />
         ))}
       </div>
@@ -1654,143 +1749,159 @@ const HopJumper = ({ fromBlock, toBlock, color }) => {
 }
 
 const GameWorkflowBoard = () => {
-  const [buildPhase, setBuildPhase] = useState('building')
+  const [phase, setPhase] = useState('building')
   const [step, setStep] = useState(0)
   const phaseRef = useRef('building')
   const stepRef = useRef(0)
-  const [jumpActive, setJumpActive] = useState(false)
-  const [jumpFrom, setJumpFrom] = useState(null)
+  const [flyActive, setFlyActive] = useState(false)
+  const [flyFrom, setFlyFrom] = useState(null)
 
-  const total = HOP_BLOCKS.length
+  const total = FLOW_NODES.length
+  const buildOrder = FLOW_NODES.map(n => n.id)
 
   const advance = useCallback(() => {
-    if (phaseRef.current === 'building') {
-      if (stepRef.current >= total - 1) {
-        phaseRef.current = 'populating'; stepRef.current = 0
-        setBuildPhase('populating'); setStep(0)
-        setTimeout(() => setJumpActive(true), 350)
-        setTimeout(() => setJumpActive(false), 1100)
+    const p = phaseRef.current
+    const s = stepRef.current
+
+    if (p === 'building') {
+      if (s >= total - 1) {
+        phaseRef.current = 'assigning'
+        stepRef.current = 0
+        setPhase('assigning')
+        setStep(0)
+        setTimeout(() => {
+          setFlyActive(true)
+          setTimeout(() => setFlyActive(false), 750)
+        }, 400)
       } else {
-        stepRef.current += 1; setStep(s => s + 1)
+        stepRef.current += 1
+        setStep(v => v + 1)
       }
-    } else {
-      if (stepRef.current >= total) return
-      const prev = stepRef.current > 0 ? HOP_BLOCKS[stepRef.current - 1] : null
-      setJumpFrom(prev)
-      setJumpActive(true)
+    } else if (p === 'assigning') {
+      if (s >= total) return
+      const prev = s > 0 ? FLOW_NODES[s - 1] : null
+      setFlyFrom(prev)
+      setFlyActive(true)
       setTimeout(() => {
-        setJumpActive(false)
-        stepRef.current += 1; setStep(s => s + 1)
+        setFlyActive(false)
+        stepRef.current += 1
+        setStep(v => v + 1)
       }, 800)
     }
   }, [total])
 
   useEffect(() => {
-    if (buildPhase === 'populating' && step >= total) {
+    if (phase === 'assigning' && step >= total) {
       const t = setTimeout(() => {
-        phaseRef.current = 'building'; stepRef.current = 0
-        setBuildPhase('building'); setStep(0); setJumpActive(false); setJumpFrom(null)
-      }, 2800)
+        phaseRef.current = 'complete'
+        setPhase('complete')
+        setFlyActive(false)
+        setFlyFrom(null)
+        setTimeout(() => {
+          phaseRef.current = 'building'
+          stepRef.current = 0
+          setPhase('building')
+          setStep(0)
+        }, 2800)
+      }, 600)
       return () => clearTimeout(t)
     }
-  }, [buildPhase, step, total])
+  }, [phase, step, total])
 
   useEffect(() => {
-    const dur = buildPhase === 'building' ? 550 : 1400
-    if (buildPhase === 'populating' && step >= total) return
+    const dur = phase === 'building' ? 600 : phase === 'assigning' ? 1400 : Infinity
+    if (phase === 'complete') return
+    if (phase === 'assigning' && step >= total) return
     const t = setTimeout(advance, dur)
     return () => clearTimeout(t)
-  }, [step, buildPhase, advance, total])
+  }, [step, phase, advance, total])
 
-  const buildOrder = HOP_BLOCKS.map(b => b.id)
-  const targetBlock = buildPhase === 'populating' && step < total ? HOP_BLOCKS[step] : null
-  const prevBlock = step > 0 ? HOP_BLOCKS[Math.min(step - 1, total - 1)] : null
+  const getEdgeState = (fromId, toId) => {
+    const fi = buildOrder.indexOf(fromId)
+    const ti = buildOrder.indexOf(toId)
+    if (phase === 'building') {
+      if (fi > step || ti > step) return 'hidden'
+      if (ti === step + 1) return 'building'
+      return 'built'
+    }
+    if (phase === 'assigning') {
+      if (ti === step) return 'active'
+      return 'built'
+    }
+    return 'built'
+  }
 
   return (
     <div className="relative w-full select-none rounded-2xl overflow-hidden"
-      style={{ height: HOP_BOARD_H, backgroundColor: '#fafbfe' }}>
-      {/* Playful dot background */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.06 }}>
+      style={{ height: FLOW_BOARD_H, backgroundColor: '#fafbfe' }}>
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.05 }}>
         <defs>
-          <pattern id="hopdots" width="24" height="24" patternUnits="userSpaceOnUse">
-            <circle cx="12" cy="12" r="1" fill="#5B5FE3" />
+          <pattern id="flowdots" width="22" height="22" patternUnits="userSpaceOnUse">
+            <circle cx="11" cy="11" r="0.8" fill="#5B5FE3" />
           </pattern>
         </defs>
-        <rect width="100%" height="100%" fill="url(#hopdots)" />
+        <rect width="100%" height="100%" fill="url(#flowdots)" />
       </svg>
 
-      {/* Subtle ground line */}
-      <div className="absolute left-0 right-0" style={{ top: HOP_BOARD_H - 8, height: 8, background: 'linear-gradient(0deg, #f0f2f8 0%, transparent 100%)' }} />
+      <div className="absolute left-0 right-0" style={{ top: FLOW_BOARD_H - 8, height: 8, background: 'linear-gradient(0deg, #f0f2f8 0%, transparent 100%)' }} />
 
-      {/* Connection dots between blocks */}
-      {(() => {
-        const paths = [
-          { from: 'intake', to: 'scout' }, { from: 'intake', to: 'scope' },
-          { from: 'intake', to: 'spec' }, { from: 'scout', to: 'build' },
-          { from: 'scope', to: 'build' }, { from: 'spec', to: 'build' },
-          { from: 'build', to: 'ship' },
-        ]
-        return paths.map(({ from, to }) => {
-          const fb = HOP_BLOCKS.find(b => b.id === from)
-          const tb = HOP_BLOCKS.find(b => b.id === to)
-          if (!fb || !tb) return null
-          const fi = buildOrder.indexOf(from)
-          const ti = buildOrder.indexOf(to)
-          const built = fi < (buildPhase === 'building' ? step + 1 : total)
-          const tBuilt = ti < (buildPhase === 'building' ? step + 1 : total)
-          if (!built || !tBuilt) return null
+      {FLOW_EDGES.map(({ from, to }) => {
+        const fn = FLOW_NODES.find(n => n.id === from)
+        const tn = FLOW_NODES.find(n => n.id === to)
+        if (!fn || !tn) return null
+        return <FlowEdge key={`fe-${from}-${to}`} fromNode={fn} toNode={tn} state={getEdgeState(from, to)} />
+      })}
 
-          let state = 'built'
-          if (buildPhase === 'building' && ti === step + 1) state = 'building'
-          if (buildPhase === 'populating' && ti === step) state = 'active'
-
-          return <HopDots key={`hd-${from}-${to}`} from={fb} to={tb} state={state} />
-        })
-      })()}
-
-      {/* Jumping agent */}
-      {jumpActive && buildPhase === 'populating' && step < total && (
-        <HopJumper
-          fromBlock={jumpFrom || HOP_BLOCKS[0]}
-          toBlock={HOP_BLOCKS[step]}
-          color={AGENT_BENCH[step % AGENT_BENCH.length].color} />
+      {flyActive && phase === 'assigning' && step < total && (
+        <FlowJumper
+          fromNode={flyFrom || FLOW_NODES[0]}
+          toNode={FLOW_NODES[step]}
+          color={AGENT_BENCH[step % AGENT_BENCH.length].color}
+        />
       )}
 
-      {/* Blocks */}
-      {HOP_BLOCKS.map((block, idx) => {
-        const id = block.id
+      {FLOW_NODES.map((node, idx) => {
+        const id = node.id
         const bi = buildOrder.indexOf(id)
-        const popStep = buildPhase === 'populating' ? step : -1
 
         let state = 'hidden'
-        if (buildPhase === 'building') {
+        if (phase === 'building') {
           if (bi < step) state = 'built'
           else if (bi === step) state = 'building'
-        } else {
-          if (bi < popStep) state = 'populated'
-          else if (bi === popStep) state = jumpActive ? 'jumping' : 'built'
+        } else if (phase === 'assigning') {
+          if (bi < step) state = 'populated'
+          else if (bi === step) state = flyActive ? 'assigning' : 'built'
           else state = 'built'
+        } else if (phase === 'complete') {
+          state = 'complete'
         }
 
         const agent = AGENT_BENCH[bi % AGENT_BENCH.length]
-        return <HopBlock key={id} block={block} state={state} agentColor={agent.color} />
+        return <FlowNode key={id} node={node} state={state} agentColor={agent.color} />
       })}
 
-      {/* Status text */}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2" style={{ zIndex: 20 }}>
-        {buildPhase === 'building' && (
-          <span className="text-[11px] font-semibold text-[#8f959e]">
-            Building the hopscotch... {step + 1}/{total}
+        {phase === 'building' && (
+          <span className="text-[11px] font-semibold" style={{
+            color: FLOW_NODES[Math.min(step, total - 1)].color,
+            animation: 'fadeSlideUp 0.5s ease-out',
+          }}>
+            Building the workflow pipeline... {step + 1}/{total}
           </span>
         )}
-        {buildPhase === 'populating' && step < total && (
-          <span className="text-[11px] font-semibold" style={{ color: targetBlock?.color }}>
-            {jumpActive ? `${AGENT_BENCH[step % AGENT_BENCH.length].label} hopping to ${targetBlock?.label} !` : '...'}
+        {phase === 'assigning' && step < total && (
+          <span className="text-[11px] font-semibold" style={{
+            color: AGENT_BENCH[step % AGENT_BENCH.length].color,
+            animation: 'fadeSlideUp 0.5s ease-out',
+          }}>
+            {flyActive
+              ? `${AGENT_BENCH[step % AGENT_BENCH.length].label} assigned to ${FLOW_NODES[step].label}`
+              : '...'}
           </span>
         )}
-        {buildPhase === 'populating' && step >= total && (
-          <span className="text-[11px] font-semibold text-[#3EAB6E]">
-            All agents deployed — hop complete!
+        {phase === 'complete' && (
+          <span className="text-[11px] font-semibold text-[#10b981]" style={{ animation: 'fadeSlideUp 0.5s ease-out' }}>
+            All agents orchestrated — pipeline complete!
           </span>
         )}
       </div>
