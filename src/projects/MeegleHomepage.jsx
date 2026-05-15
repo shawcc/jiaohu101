@@ -1475,13 +1475,13 @@ const AIAssistantSection = () => {
 
             <div className="absolute left-[64px] top-0 h-full w-px bg-[#D8DFFF]" />
 
-            <div className="absolute left-[78px] top-[-24px] h-[640px] w-[340px]">
+            <div className="absolute left-[78px] top-0 h-[560px] w-[340px]">
               {AI_ASSISTANT_SCENES.map((scene, idx) => {
                 let rel = (idx - activeIdx + totalScenes) % totalScenes
                 if (rel > totalScenes / 2) rel -= totalScenes
                 const visible = rel >= -2 && rel <= 3
                 const isActive = idx === activeIdx
-                const top = 206 + rel * 104
+                const top = 178 + rel * 96 + (rel > 0 ? 72 : 0)
 
                 if (!visible) return null
 
@@ -1490,7 +1490,7 @@ const AIAssistantSection = () => {
                     <div
                       key={scene.id}
                       className="absolute left-[-12px] w-[380px] rounded-[4px] bg-white p-3 shadow-[0_14px_44px_rgba(15,23,42,0.16)] transition-all duration-500"
-                      style={{ top }}
+                      style={{ top, zIndex: 20 }}
                     >
                       <div className="mb-2 flex items-center gap-1.5 text-[13px] font-black tracking-[-0.02em] text-[#111827]">
                         <Sparkles size={15} className="text-[#5B5FE3]" />
@@ -1525,7 +1525,7 @@ const AIAssistantSection = () => {
                     key={scene.id}
                     onClick={() => selectScene(idx)}
                     className="absolute left-0 w-[340px] rounded-[3px] border border-[#D9DDE8] bg-white/58 px-4 py-4 text-left text-[13px] font-medium text-[#8D96A8] backdrop-blur-sm transition-all duration-500 hover:border-[#BFC6FF] hover:bg-white/84 hover:text-[#5B5FE3]"
-                    style={{ top }}
+                    style={{ top, zIndex: rel > 0 ? 8 - rel : 8 + rel }}
                   >
                     <span>{scene.prompt}</span>
                     {rel > 0 && <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[18px] text-[#9AA3B5]">+</span>}
@@ -1861,7 +1861,10 @@ const MeegleHomepage = () => {
                   </div>
 
                   <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[440px]">
-                    <div className="rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]">
+                    <div className={card.id === 'workflows' && illustrationVariant === 'v5'
+                      ? 'h-full overflow-visible'
+                      : 'rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]'
+                    }>
                       <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} />
                     </div>
                   </div>
@@ -1883,7 +1886,10 @@ const MeegleHomepage = () => {
                   </div>
 
                   <div className="relative h-full py-4 lg:py-6">
-                    <div className="rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]">
+                    <div className={card.id === 'workflows' && illustrationVariant === 'v5'
+                      ? 'h-full overflow-visible'
+                      : 'rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]'
+                    }>
                       <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} />
                     </div>
                   </div>
