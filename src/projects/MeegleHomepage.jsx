@@ -971,7 +971,15 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           {rows.map(({ row, cols }) => {
             const scale = 0.84 + row * 0.04
             return (
-              <div key={`front-row-${row}`} className="grid gap-x-2 gap-y-2" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, marginBottom: row < 8 ? 5 : 7 }}>
+              <div
+                key={`front-row-${row}`}
+                className="grid gap-x-2 gap-y-2"
+                style={{
+                  gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+                  marginBottom: row < 8 ? 5 : 7,
+                  transform: `translateX(${row % 2 === 0 ? '-1.8%' : '1.8%'})`,
+                }}
+              >
                 {Array.from({ length: cols }).map((_, col) => {
                   const key = `${row}-${col}`
                   const empty = emptySeatKeys.has(key)
