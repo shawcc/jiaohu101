@@ -957,47 +957,80 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
   if (card.id === 'context') {
     return (
       <div className="relative w-full h-full flex items-center justify-center">
-        <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#FFFBF0] to-[#FFF3D6]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
-        <svg viewBox="0 0 480 380" className="relative w-full max-w-[480px] h-auto" style={{ filter: 'drop-shadow(0 20px 40px rgba(245,158,11,0.12))' }}>
+        <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#FFF9EA] via-[#FFF5D9] to-[#FFF0BE]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
+        <div className="absolute inset-8 rounded-[32px] bg-white/25 blur-3xl" />
+        <svg viewBox="0 0 520 400" className="relative w-full max-w-[520px] h-auto" style={{ filter: 'drop-shadow(0 24px 48px rgba(245,158,11,0.12))' }}>
           <defs>
             <linearGradient id="uc-grad" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#F59E0B" />
               <stop offset="100%" stopColor="#FBBF24" />
             </linearGradient>
-            <filter id="uc-glow"><feGaussianBlur stdDeviation="4" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+            <linearGradient id="uc-core" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#5B5FE3" />
+              <stop offset="100%" stopColor="#A78BFA" />
+            </linearGradient>
+            <filter id="uc-shadow"><feDropShadow dx="0" dy="10" stdDeviation="12" floodColor="#7C4D00" floodOpacity="0.10" /></filter>
+            <filter id="uc-glow"><feGaussianBlur stdDeviation="7" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
           </defs>
+
+          <rect x="72" y="56" width="376" height="288" rx="34" fill="#FFFFFF" opacity="0.32" />
+          <rect x="96" y="80" width="328" height="240" rx="28" fill="#FFFFFF" opacity="0.26" />
+
           {[
-            { x: 30, y: 50, w: 130, h: 50, icon: '📄', label: 'Documents', color: '#3B82F6' },
-            { x: 30, y: 120, w: 130, h: 50, icon: '💬', label: 'Messages', color: '#8B5CF6' },
-            { x: 30, y: 190, w: 130, h: 50, icon: '📊', label: 'Analytics', color: '#EF4444' },
-            { x: 30, y: 260, w: 130, h: 50, icon: '📅', label: 'Calendar', color: '#3EAB6E' },
+            { x: 42, y: 74, icon: '📄', label: 'Docs', color: '#3B82F6', tx: 210, ty: 150 },
+            { x: 52, y: 158, icon: '💬', label: 'Chats', color: '#8B5CF6', tx: 202, ty: 190 },
+            { x: 40, y: 244, icon: '🎫', label: 'Tickets', color: '#EF4444', tx: 210, ty: 236 },
+            { x: 368, y: 66, icon: '📅', label: 'Meetings', color: '#10B981', tx: 314, ty: 150 },
+            { x: 382, y: 158, icon: '📊', label: 'Reports', color: '#F59E0B', tx: 322, ty: 194 },
+            { x: 360, y: 254, icon: '🧩', label: 'PRDs', color: '#06B6D4', tx: 314, ty: 238 },
           ].map((src, i) => (
-            <g key={i}>
-              <rect x={src.x} y={src.y} width={src.w} height={src.h} rx="12" fill="white" stroke="#E2E4E9" strokeWidth="1.5" filter="drop-shadow(0 2px 8px rgba(0,0,0,0.04))" />
-              <text x={src.x + 16} y={src.y + 31} fontSize="16">{src.icon}</text>
-              <text x={src.x + 46} y={src.y + 31} fill="#111827" fontSize="12" fontWeight="600">{src.label}</text>
-              <line x1={src.x + src.w} y1={src.y + src.h / 2} x2="310" y2={src.y + src.h / 2} stroke={src.color} strokeWidth="1.5" strokeDasharray="5,3" opacity="0.4" />
+            <g key={src.label}>
+              <path
+                d={`M${src.x + 54} ${src.y + 25} C${src.x < 260 ? src.x + 118 : src.x - 48} ${src.y + 25}, ${src.tx} ${src.ty}, ${src.tx} ${src.ty}`}
+                fill="none"
+                stroke={src.color}
+                strokeWidth="1.4"
+                strokeDasharray="4,5"
+                opacity="0.32"
+              >
+                <animate attributeName="stroke-dashoffset" from="18" to="0" dur={`${1.6 + i * 0.2}s`} repeatCount="indefinite" />
+              </path>
+              <circle cx={src.tx} cy={src.ty} r="3" fill={src.color} opacity="0.55">
+                <animate attributeName="opacity" values="0.25;0.85;0.25" dur={`${1.8 + i * 0.16}s`} repeatCount="indefinite" />
+              </circle>
+              <rect x={src.x} y={src.y} width="108" height="50" rx="14" fill="white" stroke={src.color} strokeWidth="1.2" strokeOpacity="0.18" filter="url(#uc-shadow)" />
+              <circle cx={src.x + 23} cy={src.y + 25} r="13" fill={src.color} opacity="0.10" />
+              <text x={src.x + 15} y={src.y + 31} fontSize="15">{src.icon}</text>
+              <text x={src.x + 44} y={src.y + 30} fill="#111827" fontSize="11" fontWeight="750">{src.label}</text>
             </g>
           ))}
-          <rect x="320" y="30" width="140" height="280" rx="20" fill="white" stroke="#E2E4E9" strokeWidth="1.5" filter="drop-shadow(0 8px 32px rgba(0,0,0,0.06))" />
-          <rect x="320" y="30" width="140" height="48" rx="20" fill="url(#uc-grad)" />
-          <text x="390" y="60" textAnchor="middle" fill="white" fontSize="12" fontWeight="700">Unified Context</text>
+
+          <g filter="url(#uc-glow)">
+            <circle cx="260" cy="200" r="84" fill="#F59E0B" opacity="0.08" />
+            <circle cx="260" cy="200" r="62" fill="#5B5FE3" opacity="0.06" />
+          </g>
+
+          <rect x="198" y="128" width="124" height="144" rx="24" fill="white" stroke="#E9ECF3" strokeWidth="1.2" filter="url(#uc-shadow)" />
+          <rect x="198" y="128" width="124" height="42" rx="24" fill="url(#uc-core)" />
+          <text x="260" y="154" textAnchor="middle" fill="white" fontSize="12" fontWeight="800">Context Hub</text>
+
           {[
-            { y: 95, label: 'Docs ingested', pct: 100 },
-            { y: 145, label: 'Messages synced', pct: 100 },
-            { y: 195, label: 'Reports parsed', pct: 88 },
-            { y: 245, label: 'Events loaded', pct: 100 },
-          ].map((item, i) => (
-            <g key={i}>
-              <text x="340" y={item.y} fill="#646A73" fontSize="10" fontWeight="500">{item.label}</text>
-              <rect x="340" y={item.y + 6} width="100" height="6" rx="3" fill="#F3F4F6" />
-              <rect x="340" y={item.y + 6} width={item.pct} height="6" rx="3" fill={item.pct === 100 ? '#16A34A' : '#F59E0B'} className="transition-all duration-1000" />
-              <text x="448" y={item.y} textAnchor="end" fill={item.pct === 100 ? '#16A34A' : '#F59E0B'} fontSize="10" fontWeight="700">{item.pct}%</text>
+            { y: 188, label: 'Entities', pct: 88, color: '#5B5FE3' },
+            { y: 220, label: 'Signals', pct: 74, color: '#F59E0B' },
+            { y: 252, label: 'Decisions', pct: 96, color: '#10B981' },
+          ].map((item) => (
+            <g key={item.label}>
+              <text x="218" y={item.y - 5} fill="#646A73" fontSize="9" fontWeight="700">{item.label}</text>
+              <rect x="218" y={item.y + 2} width="84" height="6" rx="3" fill="#F0F2F6" />
+              <rect x="218" y={item.y + 2} width={item.pct * 0.84} height="6" rx="3" fill={item.color} opacity="0.82" />
             </g>
           ))}
-          <circle cx="390" cy="330" r="12" fill="#F0FDF4" stroke="#16A34A" strokeWidth="2" />
-          <path d="M384 330 l3 4 l6 -7" stroke="#16A34A" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          <text x="410" y="334" fill="#16A34A" fontSize="11" fontWeight="700">All agents synced</text>
+
+          <g>
+            <circle cx="260" cy="310" r="13" fill="#ECFDF5" stroke="#16A34A" strokeWidth="2" />
+            <path d="M254 310 l4 4 l8 -9" stroke="#16A34A" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <text x="282" y="314" fill="#16A34A" fontSize="11" fontWeight="800">All sources normalized</text>
+          </g>
         </svg>
       </div>
     )
