@@ -1128,18 +1128,18 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
           <rect x="40" y="34" width="740" height="432" rx="42" fill="#FFFFFF" opacity="0.24" />
           <rect x="70" y="64" width="680" height="372" rx="34" fill="#FFFFFF" opacity="0.16" />
-          <rect x="124" y="120" width="570" height="258" rx="32" fill="#FFFFFF" opacity="0.28" />
-          <rect x="150" y="144" width="520" height="210" rx="26" fill="#FFFDF8" opacity="0.72" />
+          <rect x="104" y="126" width="612" height="258" rx="32" fill="#FFFFFF" opacity="0.24" />
+          <rect x="128" y="154" width="564" height="198" rx="26" fill="#FFFDF8" opacity="0.58" />
 
           {/* Popular integrations */}
           {[
-            { x: 58, y: 86, label: 'Slack', icon: 'S', color: '#7C3AED' },
-            { x: 170, y: 164, label: 'Jira', icon: 'J', color: '#2563EB' },
-            { x: 556, y: 164, label: 'GitHub', icon: 'G', color: '#111827' },
-            { x: 676, y: 88, label: 'Figma', icon: 'F', color: '#EC4899' },
-            { x: 612, y: 392, label: 'Drive', icon: 'D', color: '#10B981' },
-            { x: 650, y: 392, label: 'Notion', icon: 'N', color: '#111827' },
-            { x: 70, y: 394, label: 'Confluence', icon: 'C', color: '#F59E0B' },
+            { x: 58, y: 160, label: 'Slack', icon: 'S', color: '#7C3AED' },
+            { x: 58, y: 220, label: 'Jira', icon: 'J', color: '#2563EB' },
+            { x: 58, y: 280, label: 'GitHub', icon: 'G', color: '#111827' },
+            { x: 676, y: 160, label: 'Figma', icon: 'F', color: '#EC4899' },
+            { x: 676, y: 220, label: 'Drive', icon: 'D', color: '#10B981' },
+            { x: 676, y: 280, label: 'Notion', icon: 'N', color: '#111827' },
+            { x: 366, y: 390, label: 'Confluence', icon: 'C', color: '#F59E0B' },
           ].map((app, i) => (
             <g key={app.label}>
               <rect x={app.x} y={app.y} width="86" height="34" rx="17" fill="white" stroke={app.color} strokeWidth="1" strokeOpacity="0.14" filter="url(#uc-shadow)" />
@@ -1147,7 +1147,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               <text x={app.x + 14} y={app.y + 21} fill={app.color} fontSize="10" fontWeight="900">{app.icon}</text>
               <text x={app.x + 34} y={app.y + 21} fill="#111827" fontSize="10" fontWeight="800">{app.label}</text>
               <path
-                d={`M${app.x + 43} ${app.y + 34} C${app.x + 80} ${app.y + 80}, ${i < 4 ? 280 : 520} ${i < 4 ? 132 : 352}, 410 248`}
+                d={`M${app.x + 43} ${app.y + 17} C${app.x < 410 ? app.x + 130 : app.x - 70} ${app.y + 17}, ${app.x < 410 ? 270 : 550} ${i < 3 ? 210 : 300}, 410 258`}
                 fill="none"
                 stroke={app.color}
                 strokeWidth="1"
@@ -1158,12 +1158,12 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           ))}
 
           {[
-            { x: 134, y: 128, icon: '📄', label: 'Docs', sub: 'Specs / wiki', color: '#3B82F6', tx: 320, ty: 188 },
-            { x: 138, y: 206, icon: '💬', label: 'Chats', sub: 'Slack / Lark', color: '#8B5CF6', tx: 304, ty: 246 },
-            { x: 146, y: 286, icon: '🎫', label: 'Tickets', sub: 'Jira / Linear', color: '#EF4444', tx: 320, ty: 304 },
-            { x: 562, y: 120, icon: '📅', label: 'Meetings', sub: 'Notes / calls', color: '#10B981', tx: 500, ty: 188 },
-            { x: 576, y: 206, icon: '📊', label: 'Metrics', sub: 'BI / reports', color: '#F59E0B', tx: 516, ty: 246 },
-            { x: 554, y: 292, icon: '🧩', label: 'PRDs', sub: 'Requirements', color: '#06B6D4', tx: 502, ty: 304 },
+            { x: 152, y: 166, icon: '📄', label: 'Docs', sub: 'Specs / wiki', color: '#3B82F6', tx: 330, ty: 214 },
+            { x: 152, y: 246, icon: '💬', label: 'Chats', sub: 'Slack / Lark', color: '#8B5CF6', tx: 330, ty: 258 },
+            { x: 152, y: 326, icon: '🎫', label: 'Tickets', sub: 'Jira / Linear', color: '#EF4444', tx: 330, ty: 304 },
+            { x: 542, y: 166, icon: '📅', label: 'Meetings', sub: 'Notes / calls', color: '#10B981', tx: 490, ty: 214 },
+            { x: 542, y: 246, icon: '📊', label: 'Metrics', sub: 'BI / reports', color: '#F59E0B', tx: 490, ty: 258 },
+            { x: 542, y: 326, icon: '🧩', label: 'PRDs', sub: 'Requirements', color: '#06B6D4', tx: 490, ty: 304 },
           ].map((src, i) => (
             <g key={src.label}>
               <path
@@ -1189,21 +1189,21 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
           {/* Context Center distributes normalized information packages upward */}
           <g>
-            <rect x="122" y="36" width="576" height="104" rx="28" fill="#FFFFFF" opacity="0.72" stroke="#FDE7B6" strokeWidth="1.2" filter="url(#uc-shadow)" />
-            <rect x="146" y="54" width="112" height="22" rx="11" fill="#FFF7E6" />
-            <text x="202" y="69" textAnchor="middle" fill="#B45309" fontSize="8.5" fontWeight="900" letterSpacing="1.1">PACKAGE LAYER</text>
-            <text x="410" y="67" textAnchor="middle" fill="#111827" fontSize="12" fontWeight="900">Packaged context for every agent</text>
-            <text x="652" y="67" textAnchor="middle" fill="#5B5FE3" fontSize="9" fontWeight="900">Agent-ready output</text>
+            <rect x="104" y="42" width="612" height="86" rx="26" fill="#FFFFFF" opacity="0.78" stroke="#FDE7B6" strokeWidth="1.2" filter="url(#uc-shadow)" />
+            <rect x="128" y="58" width="112" height="22" rx="11" fill="#FFF7E6" />
+            <text x="184" y="73" textAnchor="middle" fill="#B45309" fontSize="8.5" fontWeight="900" letterSpacing="1.1">PACKAGE LAYER</text>
+            <text x="410" y="71" textAnchor="middle" fill="#111827" fontSize="12" fontWeight="900">Context Center packages the right block on demand</text>
+            <text x="662" y="73" textAnchor="middle" fill="#5B5FE3" fontSize="9" fontWeight="900">To agents</text>
           </g>
           {[
-            { x: 160, y: 86, color: '#5B5FE3', anchorX: 296 },
-            { x: 280, y: 86, color: '#EF4444', anchorX: 372 },
-            { x: 400, y: 86, color: '#F59E0B', anchorX: 448 },
-            { x: 520, y: 86, color: '#10B981', anchorX: 524 },
+            { x: 160, y: 88, color: '#5B5FE3', anchorX: 296 },
+            { x: 288, y: 88, color: '#EF4444', anchorX: 372 },
+            { x: 416, y: 88, color: '#F59E0B', anchorX: 448 },
+            { x: 544, y: 88, color: '#10B981', anchorX: 524 },
           ].map((packet, i) => (
             <g key={`packet-line-${i}`}>
               <path
-                d={`M410 150 C410 136, ${packet.anchorX} 132, ${packet.x + 52} 132`}
+                d={`M410 176 C410 150, ${packet.anchorX} 126, ${packet.x + 52} 126`}
                 fill="none"
                 stroke={packet.color}
                 strokeWidth="1.8"
@@ -1212,34 +1212,34 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               >
                 <animate attributeName="stroke-dashoffset" from="24" to="0" dur={`${1.8 + i * 0.18}s`} repeatCount="indefinite" />
               </path>
-              <circle cx={packet.x + 52} cy="132" r="4.5" fill={packet.color} opacity="0.72">
+              <circle cx={packet.x + 52} cy="126" r="4.5" fill={packet.color} opacity="0.72">
                 <animate attributeName="opacity" values="0.2;0.9;0.2" dur={`${1.6 + i * 0.18}s`} repeatCount="indefinite" />
               </circle>
             </g>
           ))}
 
           <g filter="url(#uc-glow)">
-            <circle cx="410" cy="248" r="122" fill="#F59E0B" opacity="0.10">
+            <circle cx="410" cy="258" r="104" fill="#F59E0B" opacity="0.10">
               <animate attributeName="r" values="112;128;112" dur="4.4s" repeatCount="indefinite" />
               <animate attributeName="opacity" values="0.06;0.13;0.06" dur="4.4s" repeatCount="indefinite" />
             </circle>
-            <circle cx="410" cy="248" r="94" fill="#5B5FE3" opacity="0.08">
+            <circle cx="410" cy="258" r="82" fill="#5B5FE3" opacity="0.08">
               <animate attributeName="r" values="88;100;88" dur="3.8s" repeatCount="indefinite" />
             </circle>
-            <circle cx="410" cy="248" r="56" fill="#A78BFA" opacity="0.12">
+            <circle cx="410" cy="258" r="50" fill="#A78BFA" opacity="0.12">
               <animate attributeName="opacity" values="0.08;0.16;0.08" dur="3.2s" repeatCount="indefinite" />
             </circle>
           </g>
 
-          <rect x="326" y="150" width="168" height="196" rx="30" fill="white" stroke="#E9ECF3" strokeWidth="1.2" filter="url(#uc-shadow)" />
-          <rect x="326" y="150" width="168" height="50" rx="30" fill="url(#uc-core)" />
-          <text x="410" y="180" textAnchor="middle" fill="white" fontSize="13" fontWeight="850">Context Center</text>
-          <text x="410" y="214" textAnchor="middle" fill="#8F959E" fontSize="8" fontWeight="800" letterSpacing="1.2">SOURCE OF TRUTH</text>
+          <rect x="326" y="176" width="168" height="164" rx="30" fill="white" stroke="#E9ECF3" strokeWidth="1.2" filter="url(#uc-shadow)" />
+          <rect x="326" y="176" width="168" height="48" rx="30" fill="url(#uc-core)" />
+          <text x="410" y="205" textAnchor="middle" fill="white" fontSize="13" fontWeight="850">Context Center</text>
+          <text x="410" y="238" textAnchor="middle" fill="#8F959E" fontSize="8" fontWeight="800" letterSpacing="1.2">SOURCE OF TRUTH</text>
 
           {[
-            { y: 238, label: 'Entities', pct: 92, color: '#5B5FE3' },
-            { y: 270, label: 'Signals', pct: 86, color: '#F59E0B' },
-            { y: 302, label: 'Decisions', pct: 96, color: '#10B981' },
+            { y: 260, label: 'Entities', pct: 92, color: '#5B5FE3' },
+            { y: 288, label: 'Signals', pct: 86, color: '#F59E0B' },
+            { y: 316, label: 'Decisions', pct: 96, color: '#10B981' },
           ].map((item) => (
             <g key={item.label}>
               <text x="352" y={item.y - 5} fill="#646A73" fontSize="9" fontWeight="700">{item.label}</text>
@@ -1250,10 +1250,10 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           ))}
 
           {[
-            { x: 160, y: 86, sub: 'for planning', icon: '01', color: '#5B5FE3' },
-            { x: 280, y: 86, sub: 'for risk', icon: '02', color: '#EF4444' },
-            { x: 400, y: 86, sub: 'for status', icon: '03', color: '#F59E0B' },
-            { x: 520, y: 86, sub: 'for actions', icon: '04', color: '#10B981' },
+            { x: 160, y: 88, sub: 'for planning', icon: '01', color: '#5B5FE3' },
+            { x: 288, y: 88, sub: 'for risk', icon: '02', color: '#EF4444' },
+            { x: 416, y: 88, sub: 'for status', icon: '03', color: '#F59E0B' },
+            { x: 544, y: 88, sub: 'for actions', icon: '04', color: '#10B981' },
           ].map((packet, i) => (
             <g key={`packet-card-${i}`}>
               <rect x={packet.x} y={packet.y} width="104" height="42" rx="14" fill="white" stroke={packet.color} strokeWidth="1.8" strokeOpacity="0.34" filter="url(#uc-shadow)" />
@@ -1267,42 +1267,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               </circle>
             </g>
           ))}
-
-          {/* Knowledge graph chips */}
-          {[
-            { cx: 284, cy: 164, label: 'Owner' },
-            { cx: 536, cy: 164, label: 'Goal' },
-            { cx: 278, cy: 246, label: 'Risk' },
-            { cx: 544, cy: 248, label: 'ETA' },
-            { cx: 364, cy: 380, label: 'Scope' },
-            { cx: 452, cy: 384, label: 'Status' },
-          ].map((node, i) => (
-            <g key={node.label}>
-              <line x1={node.cx} y1={node.cy} x2="410" y2="248" stroke="#5B5FE3" strokeWidth="1" strokeDasharray="3,6" opacity="0.16" />
-              <rect x={node.cx - 24} y={node.cy - 11} width="48" height="22" rx="11" fill="white" stroke="#5B5FE3" strokeOpacity="0.12" filter="url(#uc-shadow)" />
-              <text x={node.cx} y={node.cy + 4} textAnchor="middle" fill="#646A73" fontSize="8" fontWeight="800">{node.label}</text>
-              <circle cx={node.cx - 30} cy={node.cy} r="3" fill={i % 2 ? '#F59E0B' : '#5B5FE3'} opacity="0.55" />
-            </g>
-          ))}
-
-          {/* Right-side control / sync rail */}
-          <g>
-            <rect x="620" y="146" width="106" height="170" rx="20" fill="white" stroke="#E9ECF3" filter="url(#uc-shadow)" />
-            <rect x="620" y="146" width="106" height="36" rx="20" fill="url(#uc-grad)" />
-            <text x="673" y="168" textAnchor="middle" fill="white" fontSize="10" fontWeight="850">Sync State</text>
-            {[
-              { y: 202, label: 'Schemas aligned', pct: 100 },
-              { y: 234, label: 'Context merged', pct: 94 },
-              { y: 266, label: 'Updates indexed', pct: 100 },
-            ].map((item) => (
-              <g key={item.label}>
-                <text x="634" y={item.y - 4} fill="#646A73" fontSize="7.5" fontWeight="700">{item.label}</text>
-                <rect x="634" y={item.y + 2} width="78" height="5" rx="2.5" fill="#F0F2F6" />
-                <rect x="634" y={item.y + 2} width={item.pct * 0.78} height="5" rx="2.5" fill={item.pct === 100 ? '#10B981' : '#F59E0B'} />
-              </g>
-            ))}
-            <text x="673" y="302" textAnchor="middle" fill="#10B981" fontSize="8" fontWeight="850">Ready for every agent</text>
-          </g>
 
           <g>
             <rect x="238" y="410" width="344" height="34" rx="17" fill="white" stroke="#DDF6E8" filter="url(#uc-shadow)" />
