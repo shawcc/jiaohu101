@@ -760,6 +760,17 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
             <div className="absolute top-5 left-0 z-20 px-2 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">SOP waterfall</div>
             <div className="absolute top-5 right-0 z-20 px-2 py-1 text-[10px] font-bold text-[#8F959E]">scroll to move</div>
+            <div className="xiao-a-workflow pointer-events-none absolute left-[56%] top-[46%] z-40 -translate-x-1/2 -translate-y-1/2">
+              <div className="rounded-full border border-[#5B5FE3]/18 bg-white/95 px-3 py-2 shadow-[0_18px_46px_rgba(91,95,227,0.18)] backdrop-blur">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#5B5FE3] text-[12px] font-black text-white ring-4 ring-[#5B5FE3]/10">小A</span>
+                  <div>
+                    <div className="text-[9px] font-black uppercase tracking-[0.14em] text-[#5B5FE3]">in workflow</div>
+                    <div className="text-[9px] font-bold text-[#8F959E]">joins a SOP node</div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <div className="relative z-10 flex h-full gap-4 px-0 pt-16 pb-6">
               {[
@@ -852,7 +863,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                             </svg>
                           </div>
                           {item.title === 'Product Development' && (
-                            <div className="xiao-a-workflow absolute right-5 top-[90px] z-30 rounded-full border border-[#5B5FE3]/20 bg-white px-2.5 py-1.5 shadow-[0_14px_32px_rgba(91,95,227,0.16)]">
+                            <div className="xiao-a-workflow absolute left-1/2 top-[132px] z-30 -translate-x-1/2 rounded-full border border-[#5B5FE3]/20 bg-white px-2.5 py-1.5 shadow-[0_14px_32px_rgba(91,95,227,0.16)]">
                               <div className="flex items-center gap-2">
                                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#5B5FE3] text-[12px] font-black text-white">小A</span>
                                 <span className="text-[9px] font-black uppercase tracking-[0.12em] text-[#5B5FE3]">in SOP</span>
@@ -1048,9 +1059,12 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                         <div className={isStorySeat ? 'xiao-a-seat' : ''}>
                           {renderAgent(person, active || isStorySeat, scale)}
                           {isStorySeat && (
-                            <div className="pointer-events-none absolute left-1/2 top-[-42px] z-50 -translate-x-1/2 rounded-full border border-white/70 bg-white px-2 py-1 text-[8px] font-black text-[#5B5FE3] shadow-[0_12px_28px_rgba(91,95,227,0.18)]">
-                              小A
-                            </div>
+                            <>
+                              <div className="pointer-events-none absolute left-1/2 top-[-56px] z-50 -translate-x-1/2 rounded-full border border-white/80 bg-white px-3 py-1.5 text-[9px] font-black text-[#5B5FE3] shadow-[0_14px_34px_rgba(91,95,227,0.22)]">
+                                小A · selected
+                              </div>
+                              <div className="pointer-events-none absolute left-1/2 top-[-24px] z-40 h-16 w-16 -translate-x-1/2 rounded-full border-2 border-[#5B5FE3]/30 bg-[#5B5FE3]/10 shadow-[0_18px_46px_rgba(91,95,227,0.22)]" />
+                            </>
                           )}
                         </div>
                       )}
@@ -1171,18 +1185,13 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
     return (
       <div className="relative h-full w-full overflow-hidden">
         <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#FFF9EA] via-[#FFF2D2] to-[#FFE8AF]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
-        <div className="absolute inset-[4%] rounded-[34px] bg-white/18 blur-3xl" />
-        <div className="absolute inset-0 opacity-[0.09]" style={{ backgroundImage: 'radial-gradient(#D97706 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
+        <div className="absolute inset-[4%] rounded-[34px] bg-white/12 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: 'radial-gradient(#D97706 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
         <style>{`
-          @keyframes xiaoAFeatherDrift {
-            0%, 100% { transform: translate3d(0, 0, 0) rotate(-6deg); opacity: 0.36; }
-            50% { transform: translate3d(18px, -14px, 0) rotate(8deg); opacity: 0.92; }
-          }
           @keyframes xiaoABagOpen {
             0%, 100% { transform: translateY(0) scale(1); }
             45% { transform: translateY(-8px) scale(1.03); }
           }
-          .xiao-a-feather { animation: xiaoAFeatherDrift 4.8s ease-in-out infinite; }
           .xiao-a-context-bag { animation: xiaoABagOpen 2.8s ease-in-out infinite; }
         `}</style>
         <svg viewBox="0 0 820 500" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 h-full w-full" style={{ filter: 'drop-shadow(0 24px 52px rgba(245,158,11,0.14))' }}>
@@ -1209,6 +1218,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           <rect x="128" y="154" width="564" height="198" rx="26" fill="#FFFDF8" opacity="0.58" />
 
           {/* Popular integrations */}
+          <g opacity="0.30">
           {[
             { x: 58, y: 160, label: 'Slack', icon: 'S', color: '#7C3AED' },
             { x: 58, y: 220, label: 'Jira', icon: 'J', color: '#2563EB' },
@@ -1233,7 +1243,9 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               />
             </g>
           ))}
+          </g>
 
+          <g opacity="0.42">
           {[
             { x: 152, y: 166, icon: '📄', label: 'Docs', sub: 'Specs / wiki', color: '#3B82F6', tx: 330, ty: 214 },
             { x: 152, y: 246, icon: '💬', label: 'Chats', sub: 'Slack / Lark', color: '#8B5CF6', tx: 330, ty: 258 },
@@ -1263,15 +1275,17 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               <text x={src.x + 46} y={src.y + 45} fill="#8F959E" fontSize="8" fontWeight="700">{src.sub}</text>
             </g>
           ))}
+          </g>
 
           {/* Context Center distributes normalized information packages upward */}
-          <g>
+          <g opacity="0.82">
             <rect x="104" y="42" width="612" height="86" rx="26" fill="#FFFFFF" opacity="0.78" stroke="#FDE7B6" strokeWidth="1.2" filter="url(#uc-shadow)" />
             <rect x="128" y="58" width="112" height="22" rx="11" fill="#FFF7E6" />
             <text x="184" y="73" textAnchor="middle" fill="#B45309" fontSize="8.5" fontWeight="900" letterSpacing="1.1">PACKAGE LAYER</text>
             <text x="410" y="71" textAnchor="middle" fill="#111827" fontSize="12" fontWeight="900">Context Center packages the right block on demand</text>
             <text x="662" y="73" textAnchor="middle" fill="#5B5FE3" fontSize="9" fontWeight="900">To agents</text>
           </g>
+          <g opacity="0.30">
           {[
             { x: 160, y: 88, color: '#5B5FE3', anchorX: 296 },
             { x: 288, y: 88, color: '#EF4444', anchorX: 372 },
@@ -1294,6 +1308,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               </circle>
             </g>
           ))}
+          </g>
 
           <g filter="url(#uc-glow)">
             <circle cx="410" cy="258" r="104" fill="#F59E0B" opacity="0.10">
@@ -1326,6 +1341,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             </g>
           ))}
 
+          <g opacity="0.38">
           {[
             { x: 160, y: 88, sub: 'for planning', icon: '01', color: '#5B5FE3' },
             { x: 288, y: 88, sub: 'for risk', icon: '02', color: '#EF4444' },
@@ -1344,6 +1360,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               </circle>
             </g>
           ))}
+          </g>
 
           <g>
             <rect x="238" y="410" width="344" height="34" rx="17" fill="white" stroke="#DDF6E8" filter="url(#uc-shadow)" />
@@ -1352,19 +1369,13 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <text x="282" y="431" fill="#16A34A" fontSize="11" fontWeight="850">All integrations, content streams, and signals unified in one context layer</text>
           </g>
         </svg>
-        <div className="pointer-events-none absolute left-[42%] top-[16%] z-30">
-          <div className="xiao-a-feather h-8 w-16 rounded-[999px_999px_999px_10px] bg-white/75 shadow-[0_12px_28px_rgba(245,158,11,0.18)]" />
-        </div>
-        <div className="pointer-events-none absolute left-[47%] top-[40%] z-40 -translate-x-1/2 -translate-y-1/2">
-          <div className="flex items-center gap-3 rounded-full border border-[#5B5FE3]/20 bg-white/90 px-3 py-2 shadow-[0_20px_50px_rgba(91,95,227,0.16)] backdrop-blur">
+        <div className="pointer-events-none absolute left-[30%] top-[38%] z-40 -translate-x-1/2 -translate-y-1/2">
+          <div className="flex items-center gap-2 rounded-full border border-[#5B5FE3]/18 bg-white/90 px-2.5 py-2 shadow-[0_18px_42px_rgba(91,95,227,0.14)] backdrop-blur">
             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#5B5FE3] text-[13px] font-black text-white">小A</span>
-            <div>
-              <div className="text-[10px] font-black uppercase tracking-[0.14em] text-[#5B5FE3]">same agent</div>
-              <div className="text-[11px] font-bold text-[#111827]">arrives with context</div>
-            </div>
+            <div className="text-[10px] font-black uppercase tracking-[0.13em] text-[#5B5FE3]">with context</div>
           </div>
         </div>
-        <div className="xiao-a-context-bag pointer-events-none absolute right-[14%] top-[28%] z-40 w-[190px] rounded-[26px] border border-[#FDE7B6] bg-white/92 p-4 shadow-[0_24px_60px_rgba(180,83,9,0.18)] backdrop-blur-xl">
+        <div className="xiao-a-context-bag pointer-events-none absolute right-[9%] top-[23%] z-40 w-[210px] rounded-[26px] border border-[#FDE7B6] bg-white/94 p-4 shadow-[0_24px_60px_rgba(180,83,9,0.18)] backdrop-blur-xl">
           <div className="mb-3 flex items-center justify-between">
             <div className="text-[11px] font-black uppercase tracking-[0.14em] text-[#B45309]">小A's package</div>
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#FFF7E6] text-[16px]">▣</div>
@@ -2070,11 +2081,11 @@ const MeegleHomepage = () => {
   const agentHop = segmentProgress(0.05, 0.36)
   const packageHop = segmentProgress(0.40, 0.70)
   const storyVisible = stackProgress >= 0.04 && stackProgress <= 0.78 && illustrationVariant === 'v5'
-  const agentX = 70 + (8 * agentHop)
-  const agentY = 44 + (18 * agentHop) - Math.sin(agentHop * Math.PI) * 14
+  const agentX = 76 + ((68 - 76) * agentHop)
+  const agentY = 46 + ((56 - 46) * agentHop) - Math.sin(agentHop * Math.PI) * 12
   const agentScale = 0.9 + Math.sin(agentHop * Math.PI) * 0.22
-  const packageX = 78
-  const packageY = 62 + ((34 - 62) * packageHop) - Math.sin(packageHop * Math.PI) * 10
+  const packageX = 68 + ((82 - 68) * packageHop)
+  const packageY = 56 + ((35 - 56) * packageHop) - Math.sin(packageHop * Math.PI) * 10
   const packageScale = 0.78 + (0.32 * packageHop)
   const showAgentHop = stackProgress >= 0.05 && stackProgress < 0.42
   const showPackageHop = stackProgress >= 0.34 && stackProgress <= 0.76
@@ -2335,29 +2346,6 @@ const MeegleHomepage = () => {
 
         {storyVisible && (
           <div className="pointer-events-none fixed inset-0 z-[85] hidden lg:block">
-            <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-              {showAgentHop && (
-                <path
-                  d="M70 44 C75 22, 82 42, 78 62"
-                  fill="none"
-                  stroke="#5B5FE3"
-                  strokeWidth="0.35"
-                  strokeDasharray="1.2 1.8"
-                  opacity={0.16 + Math.sin(agentHop * Math.PI) * 0.28}
-                />
-              )}
-              {showPackageHop && (
-                <path
-                  d="M78 62 C88 50, 86 40, 78 34"
-                  fill="none"
-                  stroke="#F59E0B"
-                  strokeWidth="0.35"
-                  strokeDasharray="1.2 1.8"
-                  opacity={0.16 + Math.sin(packageHop * Math.PI) * 0.30}
-                />
-              )}
-            </svg>
-
             {showAgentHop && (
               <div
                 className="absolute transition-opacity duration-150"
