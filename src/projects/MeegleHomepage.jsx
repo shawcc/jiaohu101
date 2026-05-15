@@ -70,6 +70,20 @@ const STACK_CARDS = [
 ]
 
 const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) => {
+  const [waterfallOffset, setWaterfallOffset] = useState(0)
+
+  useEffect(() => {
+    if (card.id !== 'workflows' || illustrationVariant !== 'v5') return undefined
+
+    const handleWheel = (event) => {
+      const delta = Math.max(-140, Math.min(140, event.deltaY))
+      setWaterfallOffset((value) => value + delta * 0.42)
+    }
+
+    window.addEventListener('wheel', handleWheel, { passive: true })
+    return () => window.removeEventListener('wheel', handleWheel)
+  }, [card.id, illustrationVariant])
+
   if (card.id === 'workflows') {
     return (
       <div className="relative w-full h-full flex items-center justify-center">
@@ -696,105 +710,140 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           </svg>
         )}
         {illustrationVariant === 'v5' && (
-          <div className="relative w-full max-w-[720px] h-[480px] overflow-hidden rounded-[32px] border border-white/70 bg-[#F7F8FF] shadow-[0_24px_70px_rgba(72,80,160,0.16)]">
+          <div className="relative w-full h-full min-h-[440px] overflow-hidden rounded-[32px] border border-white/70 bg-[#F7F8FF] shadow-[0_24px_70px_rgba(72,80,160,0.16)]">
             <style>{`
-              @keyframes workflowWaterfallUp {
-                0% { transform: translateY(0); }
-                100% { transform: translateY(-50%); }
-              }
-              @keyframes workflowWaterfallDown {
-                0% { transform: translateY(-50%); }
-                100% { transform: translateY(0); }
-              }
               .workflow-waterfall-card {
-                box-shadow: 0 18px 40px rgba(47, 55, 110, 0.10);
+                box-shadow: 0 18px 42px rgba(47, 55, 110, 0.12);
               }
-              .workflow-waterfall-column-up {
-                animation: workflowWaterfallUp 28s linear infinite;
+              .workflow-node-arrow::after {
+                content: '';
+                position: absolute;
+                right: -12px;
+                top: 50%;
+                width: 10px;
+                height: 1px;
+                background: currentColor;
+                opacity: 0.34;
               }
-              .workflow-waterfall-column-down {
-                animation: workflowWaterfallDown 32s linear infinite;
-              }
-              .workflow-waterfall:hover .workflow-waterfall-column-up,
-              .workflow-waterfall:hover .workflow-waterfall-column-down {
-                animation-play-state: paused;
+              .workflow-node-arrow::before {
+                content: '';
+                position: absolute;
+                right: -13px;
+                top: calc(50% - 3px);
+                width: 6px;
+                height: 6px;
+                border-right: 1px solid currentColor;
+                border-top: 1px solid currentColor;
+                transform: rotate(45deg);
+                opacity: 0.34;
               }
             `}</style>
 
             <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(91,95,227,0.12) 1px, transparent 0)', backgroundSize: '18px 18px' }} />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_15%,rgba(91,95,227,0.18),transparent_34%),radial-gradient(circle_at_80%_35%,rgba(52,211,153,0.12),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.48),rgba(255,255,255,0.1))]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_12%,rgba(91,95,227,0.18),transparent_34%),radial-gradient(circle_at_84%_42%,rgba(52,211,153,0.13),transparent_30%),linear-gradient(180deg,rgba(255,255,255,0.55),rgba(255,255,255,0.08))]" />
 
-            <div className="absolute top-5 left-6 z-20 rounded-full bg-white/86 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
-            <div className="absolute top-5 right-6 z-20 rounded-full bg-white/80 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">many workflows, organized</div>
+            <div className="absolute top-5 left-6 z-20 rounded-full bg-white/88 px-4 py-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3] shadow-sm border border-white/70">SOP waterfall</div>
+            <div className="absolute top-5 right-6 z-20 rounded-full bg-white/82 px-3.5 py-2 text-[10px] font-bold text-[#8F959E] shadow-sm border border-white/70">scroll to move</div>
 
-            <div className="workflow-waterfall relative z-10 flex gap-4 px-6 pt-16 pb-6 h-full -rotate-[1.2deg]">
+            <div className="relative z-10 flex h-full gap-4 px-6 pt-16 pb-6 -rotate-[1.2deg]">
               {[
                 {
-                  dir: 'up', delay: '0s', cards: [
-                    { title: 'Product Launch SOP', tag: 'R&D', color: '#5B5FE3', h: 150, metric: '12 steps', rows: ['PRD intake', 'Design review', 'QA gate'] },
-                    { title: 'Bug Triage', tag: 'Engineering', color: '#7B6FF0', h: 118, metric: 'P0-P2', rows: ['Classify', 'Assign owner', 'Patch release'] },
-                    { title: 'Docs Release', tag: 'Content', color: '#34D399', h: 136, metric: '4 teams', rows: ['Draft', 'Legal review', 'Publish'] },
-                    { title: 'Incident Review', tag: 'Ops', color: '#F59E0B', h: 126, metric: 'SLA', rows: ['Alert', 'War room', 'Postmortem'] },
+                  dir: 'up', shift: 0, cards: [
+                    { title: 'Product Launch SOP', tag: 'R&D', color: '#5B5FE3', h: 178, agent: 'PM Agent', branches: [['需求', '方案', '开发'], ['设计', 'QA', '发布']] },
+                    { title: 'Bug Triage SOP', tag: 'Engineering', color: '#7B6FF0', h: 150, agent: 'QA Agent', branches: [['告警', '定位', '修复'], ['复现', '验证']] },
+                    { title: 'Docs Release SOP', tag: 'Content', color: '#34D399', h: 158, agent: 'Doc Agent', branches: [['草稿', '评审', '发布'], ['翻译', '同步']] },
+                    { title: 'Incident SOP', tag: 'Ops', color: '#F59E0B', h: 164, agent: 'Ops Agent', branches: [['告警', '分级', '处理'], ['通知', '复盘']] },
                   ]
                 },
                 {
-                  dir: 'down', delay: '-8s', cards: [
-                    { title: 'Global Campaign', tag: 'GTM', color: '#787BEE', h: 176, metric: '8 markets', rows: ['Audience', 'Creative', 'Launch', 'Attribution'] },
-                    { title: 'IT Tickets', tag: 'Internal Ops', color: '#5B5FE3', h: 132, metric: '3h avg', rows: ['Request', 'Approve', 'Resolve'] },
-                    { title: 'Customer Onboarding', tag: 'CSM', color: '#34D399', h: 160, metric: '21 days', rows: ['Kickoff', 'Migration', 'Training'] },
-                    { title: 'Partner Review', tag: 'BD', color: '#A78BFA', h: 122, metric: 'weekly', rows: ['Pipeline', 'Risk check', 'Next step'] },
+                  dir: 'down', shift: 70, cards: [
+                    { title: 'Global Campaign SOP', tag: 'GTM', color: '#787BEE', h: 190, agent: 'GTM Agent', branches: [['策略', '内容', '投放'], ['渠道', '素材', '复盘']] },
+                    { title: 'IT Ticket SOP', tag: 'Internal Ops', color: '#5B5FE3', h: 154, agent: 'IT Agent', branches: [['请求', '审批', '处理'], ['权限', '通知']] },
+                    { title: 'Customer Onboarding SOP', tag: 'CSM', color: '#34D399', h: 178, agent: 'CS Agent', branches: [['启动', '迁移', '培训'], ['配置', '验收']] },
+                    { title: 'Partner Review SOP', tag: 'BD', color: '#A78BFA', h: 148, agent: 'BD Agent', branches: [['线索', '评估', '跟进'], ['风险', '条款']] },
                   ]
                 },
                 {
-                  dir: 'up', delay: '-14s', cards: [
-                    { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', h: 142, metric: 'audit', rows: ['Submit', 'Review', 'Archive'] },
-                    { title: 'Revenue Forecast', tag: 'Finance', color: '#34D399', h: 168, metric: '$2.8k', rows: ['Collect', 'Model', 'Report', 'Notify'] },
-                    { title: 'Hiring Pipeline', tag: 'HR', color: '#787BEE', h: 128, metric: '5 stages', rows: ['Screen', 'Interview', 'Offer'] },
-                    { title: 'QBR Planning', tag: 'Leadership', color: '#5B5FE3', h: 152, metric: 'exec', rows: ['Data pull', 'Narrative', 'Actions'] },
+                  dir: 'up', shift: 140, cards: [
+                    { title: 'Compliance Approval SOP', tag: 'Risk', color: '#F59E0B', h: 166, agent: 'Risk Agent', branches: [['申请', '审查', '审批'], ['例外', '归档']] },
+                    { title: 'Revenue Forecast SOP', tag: 'Finance', color: '#34D399', h: 184, agent: 'Data Agent', branches: [['收集', '建模', '预测'], ['校验', '汇报']] },
+                    { title: 'Hiring Pipeline SOP', tag: 'HR', color: '#787BEE', h: 150, agent: 'HR Agent', branches: [['筛选', '面试', 'Offer'], ['背调', '入职']] },
+                    { title: 'QBR Planning SOP', tag: 'Leadership', color: '#5B5FE3', h: 170, agent: 'BI Agent', branches: [['数据', '叙事', '行动'], ['风险', '决策']] },
                   ]
                 },
                 {
-                  dir: 'down', delay: '-20s', cards: [
-                    { title: 'Deal Desk SOP', tag: 'Sales', color: '#34D399', h: 158, metric: 'pipeline', rows: ['Quote', 'Approval', 'Contract'] },
-                    { title: 'Security Review', tag: 'SecOps', color: '#F59E0B', h: 128, metric: 'policy', rows: ['Scan', 'Exception', 'Signoff'] },
-                    { title: 'Data Request', tag: 'Analytics', color: '#5B5FE3', h: 148, metric: 'dashboards', rows: ['Define', 'Query', 'Share'] },
-                    { title: 'Localization', tag: 'Global', color: '#A78BFA', h: 136, metric: '12 locales', rows: ['Extract', 'Translate', 'Verify'] },
+                  dir: 'down', shift: 210, cards: [
+                    { title: 'Deal Desk SOP', tag: 'Sales', color: '#34D399', h: 176, agent: 'Sales Agent', branches: [['报价', '折扣', '合同'], ['法务', '签署']] },
+                    { title: 'Security Review SOP', tag: 'SecOps', color: '#F59E0B', h: 154, agent: 'Sec Agent', branches: [['扫描', '例外', '签核'], ['策略', '审计']] },
+                    { title: 'Data Request SOP', tag: 'Analytics', color: '#5B5FE3', h: 166, agent: 'Data Agent', branches: [['定义', '查询', '共享'], ['权限', '监控']] },
+                    { title: 'Localization SOP', tag: 'Global', color: '#A78BFA', h: 158, agent: 'L10n Agent', branches: [['提取', '翻译', '校验'], ['发布', '回收']] },
                   ]
                 },
-              ].map((column, columnIdx) => (
-                <div key={`wf-column-${columnIdx}`} className="w-[160px] shrink-0 overflow-hidden">
-                  <div className={column.dir === 'up' ? 'workflow-waterfall-column-up' : 'workflow-waterfall-column-down'} style={{ animationDelay: column.delay }}>
-                    {[...column.cards, ...column.cards].map((item, idx) => (
-                      <div key={`${item.title}-${idx}`} className="workflow-waterfall-card mb-4 rounded-[22px] border border-white/80 bg-white/88 backdrop-blur-sm p-3" style={{ height: item.h }}>
-                        <div className="mb-2 flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
-                            <span className="truncate text-[10px] font-black text-[#111827]">{item.title}</span>
-                          </div>
-                          <span className="rounded-full px-1.5 py-0.5 text-[7px] font-black uppercase" style={{ color: item.color, backgroundColor: `${item.color}14` }}>{item.tag}</span>
-                        </div>
-                        <div className="mb-3 rounded-2xl p-2" style={{ backgroundColor: `${item.color}0F` }}>
-                          <div className="mb-1 flex items-end gap-1.5">
-                            {[0.35, 0.7, 0.48, 0.88, 0.58].map((v, barIdx) => (
-                              <span key={barIdx} className="w-4 rounded-t-md" style={{ height: 28 * v, backgroundColor: item.color, opacity: 0.32 + barIdx * 0.08 }} />
-                            ))}
-                          </div>
-                          <div className="text-[16px] font-black leading-none" style={{ color: item.color }}>{item.metric}</div>
-                        </div>
-                        <div className="space-y-1.5">
-                          {item.rows.map((row, rowIdx) => (
-                            <div key={row} className="flex items-center gap-1.5">
-                              <span className="h-4 w-4 shrink-0 rounded-full text-center text-[8px] font-black leading-4 text-white" style={{ backgroundColor: item.color, opacity: 0.85 - rowIdx * 0.12 }}>{rowIdx + 1}</span>
-                              <span className="h-2.5 flex-1 rounded-full bg-[#E8EBF7]" />
-                              {rowIdx === 1 && <span className="h-2.5 w-5 rounded-full" style={{ backgroundColor: item.color, opacity: 0.22 }} />}
+              ].map((column, columnIdx) => {
+                const travel = 720
+                const direction = column.dir === 'up' ? -1 : 1
+                const raw = (waterfallOffset * direction + column.shift) % travel
+                const offset = raw > 0 ? raw - travel : raw
+                return (
+                  <div key={`wf-column-${columnIdx}`} className="h-full w-[160px] shrink-0 overflow-hidden">
+                    <div
+                      className="transition-transform duration-500 ease-out will-change-transform"
+                      style={{ transform: `translateY(${offset}px)` }}
+                    >
+                      {[...column.cards, ...column.cards].map((item, idx) => (
+                        <div key={`${item.title}-${idx}`} className="workflow-waterfall-card mb-4 rounded-[22px] border border-white/80 bg-white/90 backdrop-blur-sm p-3" style={{ height: item.h }}>
+                          <div className="mb-3 flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="mb-1 flex items-center gap-2">
+                                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
+                                <span className="truncate text-[10px] font-black text-[#111827]">{item.title}</span>
+                              </div>
+                              <span className="rounded-full px-1.5 py-0.5 text-[7px] font-black uppercase" style={{ color: item.color, backgroundColor: `${item.color}14` }}>{item.tag}</span>
                             </div>
-                          ))}
+                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[12px] shadow-sm" style={{ backgroundColor: `${item.color}18`, color: item.color }}>
+                              🤖
+                            </div>
+                          </div>
+
+                          <div className="mb-2 rounded-2xl p-2.5" style={{ backgroundColor: `${item.color}0D` }}>
+                            <div className="mb-2 flex items-center justify-between">
+                              <span className="text-[8px] font-black uppercase tracking-[0.12em] text-[#8F959E]">Workflow</span>
+                              <span className="text-[8px] font-bold" style={{ color: item.color }}>{item.agent}</span>
+                            </div>
+                            <div className="space-y-2.5">
+                              {item.branches.map((branch, branchIdx) => (
+                                <div key={`${item.title}-branch-${branchIdx}`} className="flex items-center gap-3">
+                                  {branch.map((node, nodeIdx) => (
+                                    <span
+                                      key={node}
+                                      className={`relative rounded-full px-2 py-1 text-[8px] font-black ${nodeIdx < branch.length - 1 ? 'workflow-node-arrow' : ''}`}
+                                      style={{
+                                        color: nodeIdx === 0 && branchIdx === 0 ? '#FFFFFF' : item.color,
+                                        backgroundColor: nodeIdx === 0 && branchIdx === 0 ? item.color : '#FFFFFF',
+                                        border: `1px solid ${item.color}26`,
+                                      }}
+                                    >
+                                      {node}
+                                    </span>
+                                  ))}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 rounded-2xl border border-[#EEF0F4] bg-white/70 p-2">
+                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px]" style={{ backgroundColor: `${item.color}18` }}>🤖</span>
+                            <div className="min-w-0 flex-1">
+                              <div className="h-1.5 w-full rounded-full bg-[#E8EBF7]" />
+                              <div className="mt-1 h-1.5 w-2/3 rounded-full" style={{ backgroundColor: item.color, opacity: 0.26 }} />
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
 
             <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-24 bg-gradient-to-b from-[#F7F8FF] via-[#F7F8FF]/82 to-transparent" />
