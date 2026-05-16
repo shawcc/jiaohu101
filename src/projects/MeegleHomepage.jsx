@@ -760,18 +760,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
             <div className="absolute top-5 left-0 z-20 px-2 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">SOP waterfall</div>
             <div className="absolute top-5 right-0 z-20 px-2 py-1 text-[10px] font-bold text-[#8F959E]">scroll to move</div>
-            <div className="xiao-a-workflow pointer-events-none absolute left-[56%] top-[46%] z-40 -translate-x-1/2 -translate-y-1/2">
-              <div className="rounded-full border border-[#5B5FE3]/18 bg-white/95 px-3 py-2 shadow-[0_18px_46px_rgba(91,95,227,0.18)] backdrop-blur">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#5B5FE3] text-[12px] font-black text-white ring-4 ring-[#5B5FE3]/10">小A</span>
-                  <div>
-                    <div className="text-[9px] font-black uppercase tracking-[0.14em] text-[#5B5FE3]">in workflow</div>
-                    <div className="text-[9px] font-bold text-[#8F959E]">joins a SOP node</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div className="relative z-10 flex h-full gap-4 px-0 pt-16 pb-6">
               {[
                 {
@@ -863,10 +851,10 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                             </svg>
                           </div>
                           {item.title === 'Product Development' && (
-                            <div className="xiao-a-workflow absolute left-1/2 top-[132px] z-30 -translate-x-1/2 rounded-full border border-[#5B5FE3]/20 bg-white px-2.5 py-1.5 shadow-[0_14px_32px_rgba(91,95,227,0.16)]">
+                            <div className="xiao-a-workflow absolute left-1/2 top-[132px] z-30 -translate-x-1/2 rounded-full border border-[#5B5FE3]/20 bg-white px-2 py-1 shadow-[0_14px_32px_rgba(91,95,227,0.16)]">
                               <div className="flex items-center gap-2">
-                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#5B5FE3] text-[12px] font-black text-white">小A</span>
-                                <span className="text-[9px] font-black uppercase tracking-[0.12em] text-[#5B5FE3]">in SOP</span>
+                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#5B5FE3] text-[10px] font-black text-white">小A</span>
+                                <span className="text-[8px] font-black uppercase tracking-[0.12em] text-[#5B5FE3]">SOP node</span>
                               </div>
                             </div>
                           )}
@@ -1372,21 +1360,19 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <text x="282" y="431" fill="#16A34A" fontSize="11" fontWeight="850">All integrations, content streams, and signals unified in one context layer</text>
           </g>
         </svg>
-        <div className="xiao-a-context-bag pointer-events-none absolute right-[9%] top-[23%] z-40 w-[210px] rounded-[26px] border border-[#FDE7B6] bg-white/94 p-4 shadow-[0_24px_60px_rgba(180,83,9,0.18)] backdrop-blur-xl">
-          <div className="mb-3 flex items-center justify-between">
-            <div className="text-[11px] font-black uppercase tracking-[0.14em] text-[#B45309]">小A's package</div>
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#FFF7E6] text-[16px]">▣</div>
-          </div>
-          <div className="mb-3 rounded-2xl bg-[#FFF8EA] p-3">
-            <div className="mb-2 h-2 w-20 rounded-full bg-[#F59E0B]/35" />
-            <div className="h-2 w-28 rounded-full bg-[#F59E0B]/18" />
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            {['Docs', 'Chats', 'Tasks', 'Metrics'].map((item) => (
-              <div key={item} className="rounded-xl border border-[#F1F3F7] bg-white px-2 py-1.5 text-center text-[9px] font-black text-[#646A73]">
-                {item}
+        <div className="xiao-a-context-bag pointer-events-none absolute right-[15%] top-[28%] z-40 rounded-[18px] border border-[#FDE7B6] bg-white/94 px-3 py-2.5 shadow-[0_18px_42px_rgba(180,83,9,0.16)] backdrop-blur-xl">
+          <div className="flex items-center gap-2">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFF7E6] text-[16px]">▣</div>
+            <div>
+              <div className="text-[9px] font-black uppercase tracking-[0.13em] text-[#B45309]">小A's package</div>
+              <div className="mt-1 flex gap-1">
+                {['Docs', 'Chats', 'Tasks'].map((item) => (
+                  <span key={item} className="rounded-full bg-[#FFF8EA] px-1.5 py-0.5 text-[7px] font-black text-[#B45309]/70">
+                    {item}
+                  </span>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>
@@ -2075,17 +2061,23 @@ const MeegleHomepage = () => {
 
   const clamp01 = (value) => Math.max(0, Math.min(1, value))
   const segmentProgress = (start, end) => clamp01((stackProgress - start) / (end - start))
-  const agentHop = segmentProgress(0.05, 0.36)
-  const packageHop = segmentProgress(0.40, 0.70)
-  const storyVisible = stackProgress >= 0.04 && stackProgress <= 0.78 && illustrationVariant === 'v5'
+  const agentStart = 0.23
+  const agentEnd = 0.36
+  const packageStart = 0.56
+  const packageEnd = 0.69
+  const agentHop = segmentProgress(agentStart, agentEnd)
+  const packageHop = segmentProgress(packageStart, packageEnd)
+  const storyVisible = stackProgress >= agentStart && stackProgress <= packageEnd && illustrationVariant === 'v5'
+  const agentHopPeak = Math.sin(agentHop * Math.PI)
+  const packageHopPeak = Math.sin(packageHop * Math.PI)
   const agentX = 76 + ((68 - 76) * agentHop)
   const agentY = 46 + ((56 - 46) * agentHop) - Math.sin(agentHop * Math.PI) * 12
-  const agentScale = 0.9 + Math.sin(agentHop * Math.PI) * 0.22
+  const agentScale = 0.48 + (0.62 * agentHopPeak)
   const packageX = 70 + ((82 - 70) * packageHop)
   const packageY = 54 + ((35 - 54) * packageHop) - Math.sin(packageHop * Math.PI) * 10
-  const packageScale = 0.78 + (0.32 * packageHop)
-  const showAgentHop = stackProgress >= 0.05 && stackProgress < 0.42
-  const showPackageHop = stackProgress >= 0.34 && stackProgress <= 0.76
+  const packageScale = 0.42 + (0.68 * packageHopPeak)
+  const showAgentHop = stackProgress > agentStart && stackProgress < agentEnd
+  const showPackageHop = stackProgress > packageStart && stackProgress < packageEnd
 
   return (
     <div className="bg-white text-[#1F2329] font-sans" style={{ overflowX: 'clip', overflowY: 'visible' }}>
@@ -2349,7 +2341,7 @@ const MeegleHomepage = () => {
                 style={{
                   left: `${agentX}vw`,
                   top: `${agentY}vh`,
-                  opacity: 0.34 + Math.sin(agentHop * Math.PI) * 0.66,
+                  opacity: agentHopPeak,
                   transform: `translate(-50%, -50%) scale(${agentScale})`,
                 }}
               >
@@ -2368,7 +2360,7 @@ const MeegleHomepage = () => {
                 style={{
                   left: `${packageX}vw`,
                   top: `${packageY}vh`,
-                  opacity: 0.28 + Math.sin(packageHop * Math.PI) * 0.72,
+                  opacity: packageHopPeak,
                   transform: `translate(-50%, -50%) scale(${packageScale})`,
                 }}
               >
