@@ -89,7 +89,7 @@ const STACK_CARDS = [
   }
 ]
 
-const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) => {
+const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2', storyState = {} }) => {
   const [waterfallOffset, setWaterfallOffset] = useState(0)
   const [activeAgentLane, setActiveAgentLane] = useState(null)
   const xiaoAAgent = {
@@ -748,13 +748,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
               .workflow-waterfall-card {
                 box-shadow: 0 18px 42px rgba(47, 55, 110, 0.10);
               }
-              @keyframes xiaoAWorkflowJump {
-                0%, 100% { transform: translateY(0) scale(1); }
-                45% { transform: translateY(-7px) scale(1.04); }
-              }
-              .xiao-a-workflow {
-                animation: xiaoAWorkflowJump 2.4s ease-in-out infinite;
-              }
             `}</style>
 
 
@@ -829,7 +822,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                                       <g>
                                         <circle cx={x + 21} cy="9" r="7" fill={item.color} opacity="0.14" />
                                         {item.title === 'Product Development' ? (
-                                          <g>
+                                          <g opacity={storyState.agentTransitioning ? 0 : 1}>
                                             <circle cx={x + 21} cy="9" r="9" fill="#5B5FE3" opacity="0.16" />
                                             <circle cx={x + 21} cy="8.5" r="6" fill="#5B5FE3" />
                                             <text x={x + 21} y="11.2" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">A</text>
@@ -850,14 +843,6 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                               ))}
                             </svg>
                           </div>
-                          {item.title === 'Product Development' && (
-                            <div className="xiao-a-workflow absolute left-1/2 top-[132px] z-30 -translate-x-1/2 rounded-full border border-[#5B5FE3]/20 bg-white px-2 py-1 shadow-[0_14px_32px_rgba(91,95,227,0.16)]">
-                              <div className="flex items-center gap-2">
-                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#5B5FE3] text-[10px] font-black text-white">小A</span>
-                                <span className="text-[8px] font-black uppercase tracking-[0.12em] text-[#5B5FE3]">SOP node</span>
-                              </div>
-                            </div>
-                          )}
                         </div>
                       ))}
                     </div>
@@ -1044,15 +1029,21 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                       style={{ zIndex: active ? 70 : 10 + row }}
                     >
                       {person && (
-                        <div className={isStorySeat ? 'xiao-a-seat' : ''}>
+                        <div
+                          className={isStorySeat ? 'xiao-a-seat transition-opacity duration-200' : ''}
+                          style={isStorySeat && storyState.agentTransitioning ? { opacity: 0 } : undefined}
+                        >
                           {renderAgent(person, active || isStorySeat, scale)}
                           {isStorySeat && (
                             <>
-                              <div className="pointer-events-none absolute left-1/2 top-[-56px] z-50 -translate-x-1/2 rounded-full border border-white/80 bg-white px-3 py-1.5 text-[9px] font-black text-[#5B5FE3] shadow-[0_14px_34px_rgba(91,95,227,0.22)]">
+                              <div className="pointer-events-none absolute left-1/2 top-[-50px] z-50 -translate-x-1/2 rounded-full border border-white/80 bg-white px-2.5 py-1 text-[8px] font-black text-[#5B5FE3] shadow-[0_14px_34px_rgba(91,95,227,0.18)]">
                                 小A · selected
                               </div>
                               <div className="pointer-events-none absolute left-1/2 top-[-24px] z-40 h-16 w-16 -translate-x-1/2 rounded-full border-2 border-[#5B5FE3]/30 bg-[#5B5FE3]/10 shadow-[0_18px_46px_rgba(91,95,227,0.22)]" />
-                              <div className="pointer-events-none absolute left-[calc(50%+26px)] top-[-36px] z-50 flex h-8 w-8 items-center justify-center rounded-xl border border-[#FDE7B6] bg-[#FFF7E6] text-[14px] shadow-[0_12px_30px_rgba(180,83,9,0.20)]">
+                              <div
+                                className="pointer-events-none absolute left-[calc(50%+26px)] top-[-34px] z-50 flex h-7 w-7 items-center justify-center rounded-xl border border-[#FDE7B6] bg-[#FFF7E6] text-[13px] shadow-[0_12px_30px_rgba(180,83,9,0.18)] transition-opacity duration-200"
+                                style={storyState.packageTransitioning ? { opacity: 0 } : undefined}
+                              >
                                 ▣
                               </div>
                             </>
@@ -1360,7 +1351,10 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <text x="282" y="431" fill="#16A34A" fontSize="11" fontWeight="850">All integrations, content streams, and signals unified in one context layer</text>
           </g>
         </svg>
-        <div className="xiao-a-context-bag pointer-events-none absolute right-[15%] top-[28%] z-40 rounded-[18px] border border-[#FDE7B6] bg-white/94 px-3 py-2.5 shadow-[0_18px_42px_rgba(180,83,9,0.16)] backdrop-blur-xl">
+        <div
+          className="xiao-a-context-bag pointer-events-none absolute right-[15%] top-[28%] z-40 rounded-[18px] border border-[#FDE7B6] bg-white/94 px-3 py-2.5 shadow-[0_18px_42px_rgba(180,83,9,0.16)] backdrop-blur-xl transition-opacity duration-200"
+          style={storyState.packageTransitioning ? { opacity: 0 } : undefined}
+        >
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFF7E6] text-[16px]">▣</div>
             <div>
@@ -2061,23 +2055,26 @@ const MeegleHomepage = () => {
 
   const clamp01 = (value) => Math.max(0, Math.min(1, value))
   const segmentProgress = (start, end) => clamp01((stackProgress - start) / (end - start))
-  const agentStart = 0.23
-  const agentEnd = 0.36
-  const packageStart = 0.56
-  const packageEnd = 0.69
+  const agentStart = 0.24
+  const agentEnd = 0.42
+  const packageStart = 0.54
+  const packageEnd = 0.72
   const agentHop = segmentProgress(agentStart, agentEnd)
   const packageHop = segmentProgress(packageStart, packageEnd)
-  const storyVisible = stackProgress >= agentStart && stackProgress <= packageEnd && illustrationVariant === 'v5'
+  const agentTransitioning = stackProgress > agentStart && stackProgress < agentEnd
+  const packageTransitioning = stackProgress > packageStart && stackProgress < packageEnd
+  const storyVisible = illustrationVariant === 'v5' && (agentTransitioning || packageTransitioning)
   const agentHopPeak = Math.sin(agentHop * Math.PI)
   const packageHopPeak = Math.sin(packageHop * Math.PI)
-  const agentX = 76 + ((68 - 76) * agentHop)
-  const agentY = 46 + ((56 - 46) * agentHop) - Math.sin(agentHop * Math.PI) * 12
-  const agentScale = 0.48 + (0.62 * agentHopPeak)
+  const agentX = 76 + ((69 - 76) * agentHop)
+  const agentY = 38 + ((58 - 38) * agentHop) - (agentHopPeak * 11)
+  const agentScale = 0.36 + (0.86 * agentHopPeak)
   const packageX = 70 + ((82 - 70) * packageHop)
-  const packageY = 54 + ((35 - 54) * packageHop) - Math.sin(packageHop * Math.PI) * 10
-  const packageScale = 0.42 + (0.68 * packageHopPeak)
-  const showAgentHop = stackProgress > agentStart && stackProgress < agentEnd
-  const showPackageHop = stackProgress > packageStart && stackProgress < packageEnd
+  const packageY = 56 + ((34 - 56) * packageHop) - (packageHopPeak * 10)
+  const packageScale = 0.34 + (0.82 * packageHopPeak)
+  const storyState = { agentTransitioning, packageTransitioning }
+  const showAgentHop = agentTransitioning
+  const showPackageHop = packageTransitioning
 
   return (
     <div className="bg-white text-[#1F2329] font-sans" style={{ overflowX: 'clip', overflowY: 'visible' }}>
@@ -2345,11 +2342,8 @@ const MeegleHomepage = () => {
                   transform: `translate(-50%, -50%) scale(${agentScale})`,
                 }}
               >
-                <div className="story-pulse flex items-center gap-2 rounded-full border border-white/75 bg-white/94 px-3 py-2 shadow-[0_20px_55px_rgba(91,95,227,0.24)] backdrop-blur-xl">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#5B5FE3] text-[14px] font-black text-white">小A</span>
-                  <span className="pr-1 text-[11px] font-black uppercase tracking-[0.14em] text-[#5B5FE3]">
-                    workflow → seat
-                  </span>
+                <div className="story-pulse flex h-12 w-12 items-center justify-center rounded-full border border-white/75 bg-[#5B5FE3] text-[14px] font-black text-white shadow-[0_20px_55px_rgba(91,95,227,0.28)] ring-4 ring-white/80">
+                  小A
                 </div>
               </div>
             )}
@@ -2364,21 +2358,8 @@ const MeegleHomepage = () => {
                   transform: `translate(-50%, -50%) scale(${packageScale})`,
                 }}
               >
-                <div className="story-bag-glow rounded-[22px] border border-[#FDE7B6] bg-white/95 p-3 shadow-[0_22px_60px_rgba(180,83,9,0.22)] backdrop-blur-xl">
-                  <div className="mb-2 flex items-center gap-2">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FFF7E6] text-[16px]">▣</span>
-                    <div>
-                      <div className="text-[10px] font-black uppercase tracking-[0.14em] text-[#B45309]">小A's package</div>
-                      <div className="text-[10px] font-bold text-[#646A73]">seat → context</div>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-1.5">
-                    {['Docs', 'Chats', 'Tasks', 'Metrics'].map((item) => (
-                      <span key={item} className="rounded-lg bg-[#FFF8EA] px-2 py-1 text-center text-[8px] font-black text-[#B45309]">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
+                <div className="story-bag-glow flex h-12 w-12 items-center justify-center rounded-2xl border border-[#FDE7B6] bg-[#FFF7E6] text-[18px] shadow-[0_22px_60px_rgba(180,83,9,0.24)] ring-4 ring-white/80">
+                  ▣
                 </div>
               </div>
             )}
@@ -2419,7 +2400,7 @@ const MeegleHomepage = () => {
                       ? 'h-full overflow-visible'
                       : 'rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]'
                     }>
-                      <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} />
+                      <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} storyState={storyState} />
                     </div>
                   </div>
                 </div>
@@ -2444,7 +2425,7 @@ const MeegleHomepage = () => {
                       ? 'h-full overflow-visible'
                       : 'rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]'
                     }>
-                      <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} />
+                      <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} storyState={storyState} />
                     </div>
                   </div>
                 </>
