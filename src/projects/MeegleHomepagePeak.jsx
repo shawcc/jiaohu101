@@ -17,12 +17,95 @@ import {
   X
 } from 'lucide-react'
 
-const NAV_LINKS = ['Product', 'Solutions', 'Pricing', 'Resources', 'Enterprise']
-
 const LOGOS = [
   'ByteDance', 'Lark', 'Pico', 'CapCut', 'Lemon8',
   'TikTok', 'Volcengine', 'Douyin', 'OceanEngine', 'Feishu'
 ]
+
+const I18N = {
+  en: {
+    navLinks: ['Product', 'Solutions', 'Pricing', 'Resources', 'Enterprise'],
+    signIn: 'Sign In',
+    cta: 'Get Started Free',
+    trustedBy: 'Trusted by leading teams worldwide',
+    heroTitleTop: 'Architect. Ship.',
+    heroTitleAccent: 'Scale Wisdom with Agents.',
+    heroDesc: 'Architect business processes into living workflows. Ship results with unprecedented velocity. Scale wisdom by institutionalizing AI best practices across your enterprise.',
+    stackCards: {
+      workflows: {
+        title: 'Architect Workflows',
+        subtitle: 'Standardize intelligence through SOPs',
+        desc: 'Start with the workflow. Xiao A brings a context pack into a concrete production step, so the SOP becomes executable instead of just documented.',
+        tag: 'SOP · Automation · Process-driven',
+      },
+      orchestrate: {
+        title: 'Orchestrate Agents',
+        subtitle: 'Multi-agent, one unified fleet',
+        desc: 'View the same Xiao A as part of a governed agent fleet: assigned to Product Development, permissioned, observable, and ready to use context safely.',
+        tag: 'MCP · CLI · Multi-agent',
+      },
+      context: {
+        title: 'Unify Context',
+        subtitle: 'One data layer, infinite clarity',
+        desc: 'View the context pack behind Xiao A. Docs, chats, tasks, and decisions are normalized into a shared source of truth that agents can reference.',
+        tag: 'Unified data · End-to-end visibility',
+      },
+    },
+    governance: {
+      badge: 'Governance Built In',
+      titleTop: 'AI You Can',
+      titleBottom: 'Control.',
+      desc: 'Meegle builds governance into every agent, every workflow, and every data boundary from day one.',
+    },
+    finalCta: {
+      titleTop: 'Define the next era of',
+      titleAccent: 'Organizational Intelligence.',
+      desc: 'Start building with Agents today. No credit card required.',
+      sales: 'Talk to Sales',
+    },
+  },
+  zh: {
+    navLinks: ['产品', '解决方案', '价格', '资源', '企业版'],
+    signIn: '登录',
+    cta: '免费开始',
+    trustedBy: '深受全球领先团队信赖',
+    heroTitleTop: '设计流程，交付成果，',
+    heroTitleAccent: '用 Agent 规模化组织智慧。',
+    heroDesc: '把业务流程沉淀为可执行的智能工作流，让 AI Agent 带着上下文参与协作、交付结果，并把最佳实践持续复用到整个组织。',
+    stackCards: {
+      workflows: {
+        title: '设计工作流',
+        subtitle: '用 SOP 标准化智能协作',
+        desc: '从流程视角看，小A带着上下文包参与具体生产节点，让 SOP 不只是文档，而是可以被执行、追踪和复用的工作路径。',
+        tag: 'SOP · 自动化 · 流程驱动',
+      },
+      orchestrate: {
+        title: '调度 Agent',
+        subtitle: '多 Agent，统一治理',
+        desc: '从 Agent 视角看，小A是被统一管理的团队成员：分配到产品研发流程，具备明确权限、状态可观测，并能安全使用上下文。',
+        tag: 'MCP · CLI · 多 Agent 协作',
+      },
+      context: {
+        title: '统一上下文',
+        subtitle: '一层数据，持续清晰',
+        desc: '从上下文视角看，小A背后的 Context Pack 汇聚文档、沟通、任务和决策，形成 Agent 可以引用的统一事实源。',
+        tag: '统一数据 · 端到端可见',
+      },
+    },
+    governance: {
+      badge: '内建治理能力',
+      titleTop: '可掌控的',
+      titleBottom: 'AI 协作。',
+      desc: 'Meegle 从第一天起就把权限、审计和数据边界内建到每个 Agent、每条工作流和每个上下文连接里。',
+    },
+    finalCta: {
+      titleTop: '开启下一代',
+      titleAccent: '组织智能。',
+      desc: '从今天开始构建 Agent 驱动的协作方式，无需信用卡。',
+      sales: '联系销售',
+    },
+  },
+}
 
 const CONTROL_PILLARS = [
   {
@@ -2058,8 +2141,13 @@ const AIAssistantSection = () => {
 
 const MeegleHomepagePeak = () => {
   const [mobileMenu, setMobileMenu] = useState(false)
-  const [cascadeVariant, setCascadeVariant] = useState('fullbleed')
-  const [illustrationVariant, setIllustrationVariant] = useState('v5')
+  const [language, setLanguage] = useState('zh')
+  const illustrationVariant = 'v5'
+  const t = I18N[language]
+  const stackCards = STACK_CARDS.map((card) => ({
+    ...card,
+    ...t.stackCards[card.id],
+  }))
   const heroRef = useRef(null)
   const stackRef = useRef(null)
 
@@ -2172,15 +2260,32 @@ const MeegleHomepagePeak = () => {
               Meegle
             </div>
             <div className="hidden lg:flex items-center gap-8 text-[14px] font-medium text-[#5B6272]">
-              {NAV_LINKS.map((l) => (
+              {t.navLinks.map((l) => (
                 <a key={l} href="#" className="hover:text-[#111827] transition-colors relative after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-0 after:bg-[#5B5FE3] after:transition-all hover:after:w-full">{l}</a>
               ))}
             </div>
           </div>
-          <div className="hidden lg:flex items-center gap-4">
-            <button className="text-[14px] font-semibold text-[#5B6272] hover:text-[#111827] transition-colors">Sign In</button>
+          <div className="hidden lg:flex items-center gap-3">
+            <div className="flex items-center gap-1 rounded-full border border-[#E2E4E9] bg-white/80 p-1 shadow-[0_4px_16px_rgba(15,23,42,0.04)]">
+              {['zh', 'en'].map((lang) => (
+                <button
+                  key={lang}
+                  type="button"
+                  onClick={() => setLanguage(lang)}
+                  className={`rounded-full px-3 py-1.5 text-[12px] font-bold transition-all ${
+                    language === lang
+                      ? 'bg-[#111827] text-white shadow-sm'
+                      : 'text-[#646A73] hover:bg-[#F4F6F9] hover:text-[#111827]'
+                  }`}
+                  aria-pressed={language === lang}
+                >
+                  {lang === 'zh' ? '中' : 'EN'}
+                </button>
+              ))}
+            </div>
+            <button className="text-[14px] font-semibold text-[#5B6272] hover:text-[#111827] transition-colors">{t.signIn}</button>
             <button className="rounded-xl bg-[#5B5FE3] px-5 py-2.5 text-[14px] font-bold text-white hover:bg-[#4A4ED4] transition-all shadow-[0_4px_16px_rgba(91,94,227,.28)] pulse-ring">
-              Get Started Free
+              {t.cta}
             </button>
           </div>
           <button className="lg:hidden p-2 text-[#111827]" onClick={() => setMobileMenu(true)}>
@@ -2194,11 +2299,27 @@ const MeegleHomepagePeak = () => {
               <button onClick={() => setMobileMenu(false)}><X size={24} /></button>
             </div>
             <div className="flex flex-col gap-6 text-[20px] font-semibold">
-              {NAV_LINKS.map(l => <a key={l} href="#" onClick={() => setMobileMenu(false)}>{l}</a>)}
+              {t.navLinks.map(l => <a key={l} href="#" onClick={() => setMobileMenu(false)}>{l}</a>)}
             </div>
             <div className="mt-auto flex flex-col gap-3">
-              <button className="rounded-xl bg-[#5B5FE3] py-3.5 text-[16px] font-bold text-white">Get Started Free</button>
-              <button className="text-center text-[14px] font-semibold text-[#646A73]">Sign In</button>
+              <div className="grid grid-cols-2 gap-2 rounded-2xl border border-[#E2E4E9] bg-[#F7F8FA] p-1">
+                {['zh', 'en'].map((lang) => (
+                  <button
+                    key={lang}
+                    type="button"
+                    onClick={() => setLanguage(lang)}
+                    className={`rounded-xl py-2 text-[14px] font-bold transition-all ${
+                      language === lang
+                        ? 'bg-white text-[#111827] shadow-sm'
+                        : 'text-[#646A73]'
+                    }`}
+                  >
+                    {lang === 'zh' ? '中文' : 'English'}
+                  </button>
+                ))}
+              </div>
+              <button className="rounded-xl bg-[#5B5FE3] py-3.5 text-[16px] font-bold text-white">{t.cta}</button>
+              <button className="text-center text-[14px] font-semibold text-[#646A73]">{t.signIn}</button>
             </div>
           </div>
         )}
@@ -2216,20 +2337,20 @@ const MeegleHomepagePeak = () => {
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-16 items-center">
             <div className="animate-fade-slide-up order-2 lg:order-1">
               <h1 className="text-[40px] md:text-[56px] leading-[1.0] font-black tracking-[-0.05em] text-[#0A0A14]">
-                Architect. Ship.
+                {t.heroTitleTop}
                 <br />
                 <span className="bg-gradient-to-r from-[#5B5FE3] via-[#787BEE] to-[#A78BFA] bg-clip-text text-transparent gradient-shift">
-                  Scale&nbsp;Wisdom with Agents.
+                  {t.heroTitleAccent}
                 </span>
               </h1>
 
               <p className="mt-6 max-w-[460px] text-[16px] leading-7 text-[#5B6272]">
-                Architect business processes into living workflows. Ship results with unprecedented velocity. Scale wisdom by institutionalizing AI best practices across your enterprise.
+                {t.heroDesc}
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <button className="group rounded-2xl bg-[#0A0A14] px-8 py-4 text-[15px] font-bold text-white hover:bg-[#1A1A2E] transition-all shadow-[0_8px_30px_rgba(10,10,20,.2)]">
-                  Get Started Free
+                  {t.cta}
                   <ArrowRight size={15} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
@@ -2241,7 +2362,7 @@ const MeegleHomepagePeak = () => {
           </div>
 
           <div className="mt-16 text-center animate-fade-slide-up" style={{ animationDelay: '0.5s' }}>
-            <div className="text-[11px] uppercase tracking-[0.24em] text-[#8F959E] mb-6">Trusted by leading teams worldwide</div>
+            <div className="text-[11px] uppercase tracking-[0.24em] text-[#8F959E] mb-6">{t.trustedBy}</div>
             <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 opacity-[0.22]">
               {LOGOS.map(logo => (
                 <span key={logo} className="text-[16px] font-bold tracking-tight text-[#111827]">{logo}</span>
@@ -2252,78 +2373,11 @@ const MeegleHomepagePeak = () => {
       </section>
 
       {/* MULTI-AGENT — Cascade Stacking */}
-      <div ref={stackRef} className="relative" style={{ height: `${(STACK_CARDS.length + 1) * 100}vh` }}>
-        <div className="fixed top-20 right-6 z-[100] flex items-center gap-1.5 rounded-xl bg-white/90 backdrop-blur border border-[#E2E4E9] p-1 shadow-[0_4px_20px_rgba(15,23,42,0.08)]">
-          <button
-            onClick={() => setCascadeVariant('centered')}
-            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
-              cascadeVariant === 'centered'
-                ? 'bg-[#5B5FE3] text-white shadow-sm'
-                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
-            }`}
-          >
-            居中版
-          </button>
-          <button
-            onClick={() => setCascadeVariant('fullbleed')}
-            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
-              cascadeVariant === 'fullbleed'
-                ? 'bg-[#5B5FE3] text-white shadow-sm'
-                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
-            }`}
-          >
-            顶天版
-          </button>
-          <div className="w-px h-5 bg-[#E2E4E9] mx-0.5" />
-          <button
-            onClick={() => setIllustrationVariant('v2')}
-            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
-              illustrationVariant === 'v2'
-                ? 'bg-[#5B5FE3] text-white shadow-sm'
-                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
-            }`}
-          >
-            v2 蓝图版
-          </button>
-          <button
-            onClick={() => setIllustrationVariant('v3')}
-            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
-              illustrationVariant === 'v3'
-                ? 'bg-[#5B5FE3] text-white shadow-sm'
-                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
-            }`}
-          >
-            v3 丰富版
-          </button>
-          <button
-            onClick={() => setIllustrationVariant('v4')}
-            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
-              illustrationVariant === 'v4'
-                ? 'bg-[#5B5FE3] text-white shadow-sm'
-                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
-            }`}
-          >
-            v4 SOP版
-          </button>
-          <button
-            onClick={() => setIllustrationVariant('v5')}
-            className={`px-3 py-1.5 rounded-lg text-[12px] font-semibold transition-all ${
-              illustrationVariant === 'v5'
-                ? 'bg-[#5B5FE3] text-white shadow-sm'
-                : 'text-[#646A73] hover:text-[#111827] hover:bg-[#F4F6F9]'
-            }`}
-          >
-            v5 瀑布流
-          </button>
-        </div>
-
-        {STACK_CARDS.map((card, idx) => (
+      <div ref={stackRef} className="relative" style={{ height: `${(stackCards.length + 1) * 100}vh` }}>
+        {stackCards.map((card, idx) => (
           <section
             key={card.id}
-            className={cascadeVariant === 'centered'
-              ? 'sticky top-0 h-screen flex items-center justify-center overflow-hidden'
-              : 'sticky top-0 h-screen overflow-hidden'
-            }
+            className="sticky top-0 h-screen overflow-hidden"
             style={{
               zIndex: idx + 1,
               backgroundColor: idx === 0 ? '#FBFBFE' : idx === 1 ? '#F5F7FB' : '#F0F4FA',
@@ -2331,56 +2385,27 @@ const MeegleHomepagePeak = () => {
           >
             <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] rounded-full blur-[120px]" style={{ backgroundColor: card.color + '06' }} />
 
-            <div className={`relative w-full max-w-[1340px] mx-auto px-6 ${cascadeVariant === 'centered' ? 'py-10' : 'h-full'} ${cascadeVariant === 'centered' ? '' : 'grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-16 items-center'}`}>
-              {cascadeVariant === 'centered' && (
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-16 items-center">
-                  <div className="animate-fade-slide-up">
-                    <div className={`bg-gradient-to-br ${card.gradient} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
-                      {card.icon}
-                    </div>
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.subtitle}</div>
-                    <h3 className="text-[32px] md:text-[44px] font-black text-[#0A0A14] mb-4 leading-[1.08] tracking-[-0.04em]">{card.title}</h3>
-                    <p className="text-[16px] leading-7 text-[#646A73] mb-5 max-w-[480px]">{card.desc}</p>
-                    <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold w-fit" style={{ backgroundColor: card.colorLight, color: card.color }}>
-                      {card.tag}
-                    </span>
-                  </div>
-
-                  <div className="relative aspect-[4/3] lg:aspect-auto lg:h-[440px]">
-                    <div className={card.id === 'workflows' && illustrationVariant === 'v5'
-                      ? 'h-full overflow-visible'
-                      : 'rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]'
-                    }>
-                      <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} />
-                    </div>
-                  </div>
+            <div className="relative w-full max-w-[1340px] mx-auto px-6 h-full grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 lg:gap-16 items-center">
+              <div className="animate-fade-slide-up">
+                <div className={`bg-gradient-to-br ${card.gradient} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
+                  {card.icon}
                 </div>
-              )}
+                <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.subtitle}</div>
+                <h3 className="text-[32px] md:text-[44px] font-black text-[#0A0A14] mb-4 leading-[1.08] tracking-[-0.04em]">{card.title}</h3>
+                <p className="text-[16px] leading-7 text-[#646A73] mb-5 max-w-[480px]">{card.desc}</p>
+                <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold w-fit" style={{ backgroundColor: card.colorLight, color: card.color }}>
+                  {card.tag}
+                </span>
+              </div>
 
-              {cascadeVariant === 'fullbleed' && (
-                <>
-                  <div className="animate-fade-slide-up">
-                    <div className={`bg-gradient-to-br ${card.gradient} w-14 h-14 rounded-2xl flex items-center justify-center mb-6 shadow-lg`}>
-                      {card.icon}
-                    </div>
-                    <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#8F959E] mb-2">{card.subtitle}</div>
-                    <h3 className="text-[32px] md:text-[44px] font-black text-[#0A0A14] mb-4 leading-[1.08] tracking-[-0.04em]">{card.title}</h3>
-                    <p className="text-[16px] leading-7 text-[#646A73] mb-5 max-w-[480px]">{card.desc}</p>
-                    <span className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-[11px] font-semibold w-fit" style={{ backgroundColor: card.colorLight, color: card.color }}>
-                      {card.tag}
-                    </span>
-                  </div>
-
-                  <div className="relative h-full py-4 lg:py-6">
-                    <div className={card.id === 'workflows' && illustrationVariant === 'v5'
-                      ? 'h-full overflow-visible'
-                      : 'rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]'
-                    }>
-                      <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} />
-                    </div>
-                  </div>
-                </>
-              )}
+              <div className="relative h-full py-4 lg:py-6">
+                <div className={card.id === 'workflows' && illustrationVariant === 'v5'
+                  ? 'h-full overflow-visible'
+                  : 'rounded-[32px] border border-black/[0.04] bg-white overflow-hidden h-full shadow-[0_16px_60px_rgba(15,23,42,0.04)]'
+                }>
+                  <AgentCardIllustration card={card} isVisible={true} illustrationVariant={illustrationVariant} />
+                </div>
+              </div>
             </div>
           </section>
         ))}
@@ -2399,15 +2424,15 @@ const MeegleHomepagePeak = () => {
             <div className="max-w-[420px]">
               <div className="inline-flex items-center gap-2 rounded-full bg-[#F4F6FF] px-4 py-1.5 text-[12px] font-semibold text-[#5B5FE3] mb-6">
                 <Shield size={14} />
-                Governance Built In
+                {t.governance.badge}
               </div>
               <h2 className="text-[48px] md:text-[72px] leading-[0.92] font-black tracking-[-0.07em] text-[#0A0A14]">
-                AI You Can
+                {t.governance.titleTop}
                 <br />
-                Control.
+                {t.governance.titleBottom}
               </h2>
               <p className="mt-8 text-[18px] leading-8 text-[#646A73] max-w-[380px]">
-                Meegle builds governance into every agent, every workflow, and every data boundary from day one.
+                {t.governance.desc}
               </p>
             </div>
 
@@ -2553,23 +2578,23 @@ const MeegleHomepagePeak = () => {
 
         <div className="relative max-w-[800px] mx-auto px-6">
           <h2 className="text-[48px] md:text-[64px] leading-[1.04] font-black tracking-[-0.05em] text-white">
-            Define the next era of
+            {t.finalCta.titleTop}
             <br />
             <span className="bg-gradient-to-r from-[#878AEE] via-[#A78BFA] to-[#C4B5FD] bg-clip-text text-transparent gradient-shift">
-              Organizational Intelligence.
+              {t.finalCta.titleAccent}
             </span>
           </h2>
           <p className="mt-6 text-[18px] leading-7 text-white/35 max-w-[480px] mx-auto">
-            Start building with Agents today. No credit card required.
+            {t.finalCta.desc}
           </p>
 
           <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
             <button className="group rounded-2xl bg-white px-10 py-4.5 text-[16px] font-bold text-[#0A0A14] hover:bg-[#F4F4F6] transition-all shadow-[0_16px_48px_rgba(91,94,227,.24)]">
-              Get Started Free
+              {t.cta}
               <ArrowRight size={16} className="inline ml-2 group-hover:translate-x-1 transition-transform" />
             </button>
             <button className="group rounded-2xl border border-white/[0.08] bg-white/[0.02] px-10 py-4.5 text-[16px] font-bold text-white hover:bg-white/[0.04] transition-all backdrop-blur">
-              Talk to Sales
+              {t.finalCta.sales}
               <ArrowUpRight size={16} className="inline ml-2" />
             </button>
           </div>
