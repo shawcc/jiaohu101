@@ -839,21 +839,9 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
             <div className="absolute -right-24 bottom-[-18%] h-80 w-80 rounded-full bg-[#10B981]/10 blur-[90px]" />
 
             <div className="relative z-10 flex h-full min-h-[508px] flex-col gap-2.5">
-              <div className="flex items-center justify-between px-1">
-                <div>
-                  <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">View 01 · Workflow Gallery</div>
-                  <div className="mt-1 text-[12px] font-black text-[#111827]">Pure workflow boards for different scenarios</div>
-                </div>
-                <div className="rounded-full border border-[#D8DFFF] bg-white/84 px-3 py-1.5 text-[8px] font-black uppercase tracking-[0.14em] text-[#5B5FE3] shadow-sm backdrop-blur-xl">Independent boards</div>
-              </div>
-
               <div className="workflow-card-drift relative overflow-hidden rounded-[30px] border border-[#D8DFFF] bg-white/94 p-4 shadow-[0_30px_90px_rgba(47,55,110,0.15)] backdrop-blur-xl">
                 <div className="mb-2 flex items-center justify-between gap-3">
-                  <div>
-                    <div className="text-[13px] font-black text-[#111827]">Product Development Workflow</div>
-                    <div className="mt-1 text-[8px] font-bold uppercase tracking-[0.14em] text-[#8F959E]">Complex scenario · Pure workflow</div>
-                  </div>
-                  <div className="rounded-full bg-[#F4F6FF] px-3 py-1.5 text-[8px] font-black text-[#5B5FE3]">Running</div>
+                  <div className="text-[13px] font-black text-[#111827]">Product Development Workflow</div>
                 </div>
 
                 <svg viewBox="0 0 650 155" className="h-[155px] w-full overflow-visible">
@@ -886,10 +874,9 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                     </g>
                   ))}
                   <g filter="url(#wf-wide-shadow)">
-                    <rect x="158" y="-2" width="128" height="30" rx="15" fill="#FFFFFF" stroke="#D8DFFF" />
+                    <rect x="158" y="-2" width="38" height="30" rx="15" fill="#FFFFFF" stroke="#D8DFFF" />
                     <circle cx="178" cy="13" r="9" fill="#5B5FE3" />
                     <text x="178" y="16.5" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontWeight="900">A</text>
-                    <text x="196" y="16.5" fill="#5B5FE3" fontSize="9" fontWeight="900">小A joins this node</text>
                   </g>
                 </svg>
               </div>
@@ -905,12 +892,11 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                 ].map((flow, index) => (
                   <div
                     key={flow.title}
-                    className="workflow-card-drift grid grid-cols-[188px_1fr_auto] items-center gap-3 rounded-[22px] border border-white/85 bg-white/82 px-4 py-2 shadow-[0_14px_38px_rgba(15,23,42,0.068)] backdrop-blur-xl"
+                    className="workflow-card-drift grid grid-cols-[188px_1fr] items-center gap-3 rounded-[22px] border border-white/85 bg-white/82 px-4 py-2 shadow-[0_14px_38px_rgba(15,23,42,0.068)] backdrop-blur-xl"
                     style={{ animationDelay: `${index * 0.16}s` }}
                   >
                     <div className="min-w-0">
                       <div className="truncate text-[9.5px] font-black text-[#111827]">{flow.title}</div>
-                      <div className="mt-1 text-[6.5px] font-black uppercase tracking-[0.13em]" style={{ color: flow.color }}>{flow.tag} · Pure workflow</div>
                     </div>
                     <svg viewBox="0 0 420 56" className="h-[56px] w-full overflow-visible">
                       <path d="M34 28 C76 28, 92 10, 132 10" fill="none" stroke={flow.color} strokeWidth="1.9" strokeOpacity="0.25" />
@@ -934,17 +920,12 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                         </g>
                       ))}
                     </svg>
-                    <div className="rounded-full px-2.5 py-1.5 text-[7px] font-black" style={{ color: flow.color, backgroundColor: `${flow.color}12` }}>Board</div>
                   </div>
                 ))}
               </div>
 
-              <a href="https://www.meegle.com/templates" target="_blank" rel="noreferrer" className="group mt-auto flex items-center justify-between rounded-[22px] border border-dashed border-[#C9D0FF] bg-white/62 px-4 py-3 text-[#5B5FE3] shadow-[0_14px_34px_rgba(91,95,227,0.08)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:bg-white/86">
-                <div>
-                  <div className="text-[10px] font-black text-[#111827]">More workflow templates</div>
-                  <div className="mt-0.5 text-[7px] font-bold uppercase tracking-[0.14em] text-[#8F959E]">Explore more scenario-specific boards</div>
-                </div>
-                <div className="rounded-full bg-[#F4F6FF] px-3 py-1.5 text-[8px] font-black transition-transform group-hover:translate-x-1">View templates →</div>
+              <a href="https://www.meegle.com/templates" target="_blank" rel="noreferrer" className="group mt-auto flex items-center justify-center rounded-[22px] border border-dashed border-[#C9D0FF] bg-white/62 px-4 py-3 text-[#5B5FE3] shadow-[0_14px_34px_rgba(91,95,227,0.08)] backdrop-blur-xl transition-all hover:-translate-y-0.5 hover:bg-white/86">
+                <div className="rounded-full bg-[#F4F6FF] px-4 py-2 text-[8px] font-black transition-transform group-hover:translate-x-1">View templates →</div>
               </a>
             </div>
           </div>
