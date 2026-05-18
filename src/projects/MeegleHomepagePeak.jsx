@@ -17,6 +17,8 @@ import {
   X
 } from 'lucide-react'
 
+const productDevelopmentWorkflowImage = new URL('../../website/产品开发流程.png', import.meta.url).href
+
 const LOGOS = [
   'ByteDance', 'Lark', 'Pico', 'CapCut', 'Lemon8',
   'TikTok', 'Volcengine', 'Douyin', 'OceanEngine', 'Feishu'
@@ -820,173 +822,105 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           </svg>
         )}
         {illustrationVariant === 'v5' && (
-          <div className="relative mx-auto w-full max-w-[700px] h-full min-h-[440px] overflow-hidden">
+          <div className="relative mx-auto h-full min-h-[440px] w-full max-w-[760px] overflow-hidden rounded-[40px] bg-gradient-to-br from-[#F8FAFF] via-white to-[#F7FFF9]">
             <style>{`
-              .workflow-waterfall-card {
-                box-shadow: 0 18px 42px rgba(47, 55, 110, 0.10);
+              @keyframes workflowFloat {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-8px); }
               }
-              .story-node-pulse {
-                animation: storyPulse 2.2s ease-in-out infinite;
+              @keyframes workflowGlow {
+                0%, 100% { box-shadow: 0 0 0 0 rgba(91,95,227,0.18); }
+                50% { box-shadow: 0 0 0 18px rgba(91,95,227,0); }
               }
+              .workflow-real-scene { animation: workflowFloat 5.8s ease-in-out infinite; }
+              .workflow-focus-agent { animation: workflowGlow 2.6s ease-in-out infinite; }
             `}</style>
 
+            <div className="absolute inset-0 opacity-[0.45]" style={{ backgroundImage: 'linear-gradient(rgba(91,95,227,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(91,95,227,0.04) 1px, transparent 1px)', backgroundSize: '54px 54px' }} />
+            <div className="absolute -left-20 top-[-18%] h-80 w-80 rounded-full bg-[#5B5FE3]/10 blur-[90px]" />
+            <div className="absolute -right-20 bottom-[-18%] h-80 w-80 rounded-full bg-[#10B981]/10 blur-[90px]" />
 
-            <div className="absolute left-0 right-0 top-4 z-30 flex items-center justify-between gap-3 rounded-2xl border border-[#E8EAFF] bg-white/90 px-4 py-3 shadow-[0_16px_42px_rgba(91,95,227,0.10)] backdrop-blur-xl">
-              <div>
-                <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">View 01 · Workflow</div>
-                <div className="mt-1 text-[12px] font-black text-[#111827]">小A brings context into a Product Development SOP</div>
+            <div className="absolute left-5 top-5 z-40 rounded-2xl border border-[#E8EAFF] bg-white/88 px-4 py-3 shadow-[0_16px_42px_rgba(91,95,227,0.10)] backdrop-blur-xl">
+              <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">View 01 · Workflow</div>
+              <div className="mt-1 text-[12px] font-black text-[#111827]">Real workflows run as product workspaces</div>
+            </div>
+
+            <div className="absolute right-5 top-5 z-40 rounded-full border border-[#DDF6E8] bg-white/88 px-3 py-2 text-[9px] font-black uppercase tracking-[0.12em] text-[#16A34A] shadow-[0_14px_34px_rgba(22,163,74,0.10)] backdrop-blur-xl">
+              Multiple process types · One operating model
+            </div>
+
+            <div className="absolute left-[6%] right-[6%] top-[18%] z-20 rounded-[30px] border border-[#D8DFFF] bg-white p-2 shadow-[0_34px_95px_rgba(47,55,110,0.18)]">
+              <div className="flex items-center gap-2 border-b border-[#EEF0F4] px-3 py-2">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
+                <span className="ml-3 rounded-full bg-[#F4F6FF] px-2.5 py-1 text-[8px] font-black text-[#5B5FE3]">Product Development Workflow</span>
+                <span className="rounded-full bg-[#FFF7E6] px-2.5 py-1 text-[8px] font-black text-[#B45309]">Running</span>
               </div>
-              <div className="hidden items-center gap-2 rounded-full bg-[#F4F6FF] px-3 py-1.5 text-[9px] font-black text-[#5B5FE3] sm:flex">
-                <span className="h-2 w-2 rounded-full bg-[#5B5FE3]" />
-                Context-aware agent participates here
+              <div className="relative h-[290px] overflow-hidden rounded-[22px] bg-[#FAFBFF]">
+                <img
+                  src={productDevelopmentWorkflowImage}
+                  alt="Meegle product development workflow screenshot"
+                  className="absolute left-1/2 top-1/2 w-[112%] max-w-none -translate-x-1/2 -translate-y-[42%] opacity-[0.92]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/72" />
+                <div className="absolute left-[11%] top-[19%] h-7 w-[104px] rounded-full border-2 border-[#5B5FE3]/55 bg-[#5B5FE3]/10 shadow-[0_0_0_6px_rgba(91,95,227,0.08)]" />
+                <div className="absolute left-[18%] top-[35%] h-[76px] w-[63%] rounded-[18px] border-2 border-[#F59E0B]/45 bg-[#FFF7E6]/22 shadow-[0_18px_42px_rgba(245,158,11,0.12)]" />
+                <div className="workflow-focus-agent absolute left-[24%] top-[32%] z-30 flex items-center gap-2 rounded-2xl border border-[#D8DFFF] bg-white px-3 py-2 shadow-[0_18px_44px_rgba(91,95,227,0.16)]">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-[#5B5FE3] text-[11px] font-black text-white">A</div>
+                  <div>
+                    <div className="text-[9px] font-black text-[#111827]">小A joins this workflow node</div>
+                    <div className="mt-0.5 text-[7px] font-bold text-[#8F959E]">with context, tasks, owners, and status</div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="absolute bottom-4 right-2 z-20 px-2 py-1 text-[10px] font-bold text-[#8F959E]">scroll to move</div>
-            <div className="relative z-10 flex h-full gap-4 px-0 pt-24 pb-6">
+
+            <div className="absolute inset-x-5 bottom-5 z-30 grid grid-cols-2 gap-3 lg:grid-cols-4">
               {[
-                {
-                  dir: 'up', shift: 40, cards: [
-                    { title: 'CRM Lead-to-Deal', tag: 'CRM / Sales', color: '#34D399', h: 210, agent: 'Sales Agent', summary: '线索进入后，销售、法务、商务审批按同一 SOP 横向流转。', primary: ['Lead', 'Qualify', 'Demo', 'Proposal', 'Deal'], branch: ['Legal', 'Discount', 'CSM'] },
-                    { title: 'Customer Onboarding', tag: 'CSM', color: '#5B5FE3', h: 202, agent: 'CS Agent', summary: '客户签约后，配置、迁移、培训、验收形成标准交付路径。', primary: ['Kickoff', 'Setup', 'Migrate', 'Train', 'Go-live'], branch: ['Risk', 'Support', 'Review'] },
-                    { title: 'Renewal Management', tag: 'Revenue', color: '#A78BFA', h: 194, agent: 'RevOps Agent', summary: '续约窗口触发健康度评估、风险处理和商务跟进。', primary: ['Usage', 'Health', 'Risk', 'Exec', 'Renew'], branch: ['Churn', 'Expansion'] },
-                    { title: 'IT Service Request', tag: 'Internal Ops', color: '#5B5FE3', h: 190, agent: 'IT Agent', summary: '员工请求进入审批、权限开通、执行和通知闭环。', primary: ['Request', 'Approve', 'Provision', 'Notify', 'Done'], branch: ['Permission', 'SLA'] },
-                  ]
-                },
-                {
-                  dir: 'down', shift: -110, cards: [
-                    { title: 'Product Development', tag: 'R&D', color: '#5B5FE3', h: 218, agent: 'PM Agent', summary: '需求、设计、研发、测试、发布都在横向工作流里有序发生。', primary: ['PRD', 'Design', 'Dev', 'QA', 'Release'], branch: ['Tech', 'Docs', 'Monitor'] },
-                    { title: 'GTM Campaign Launch', tag: 'GTM', color: '#787BEE', h: 210, agent: 'GTM Agent', summary: '策略、内容、渠道、投放、复盘沉淀为可复用打法。', primary: ['Strategy', 'Content', 'Channel', 'Launch', 'Review'], branch: ['Creative', 'Budget', 'Report'] },
-                    { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', h: 198, agent: 'Risk Agent', summary: '合规事项按审批链路流转，例外、审计、归档都有明确节点。', primary: ['Submit', 'Review', 'Approve', 'Audit', 'Archive'], branch: ['Exception', 'Policy'] },
-                    { title: 'Content Production', tag: 'Marketing Ops', color: '#34D399', h: 194, agent: 'Content Agent', summary: '选题、创作、评审、发布形成标准内容生产 SOP。', primary: ['Brief', 'Draft', 'Review', 'Publish', 'Reuse'], branch: ['SEO', 'Design'] },
-                  ]
-                },
-              ].map((column, columnIdx) => {
-                const direction = column.dir === 'up' ? -1 : 1
-                const offset = Math.max(-260, Math.min(50, waterfallOffset * direction * 0.28 + column.shift))
-                return (
-                  <div key={`wf-column-${columnIdx}`} className="h-full flex-1 overflow-hidden">
-                    <div
-                      className="transition-transform duration-500 ease-out will-change-transform"
-                      style={{ transform: `translateY(${offset}px)` }}
-                    >
-                      {column.cards.map((item) => {
-                        const isStoryWorkflow = item.title === 'Product Development'
-                        if (!isStoryWorkflow) {
-                          return (
-                            <div
-                              key={item.title}
-                              className="workflow-waterfall-card relative mb-6 overflow-hidden rounded-[24px] border border-white/70 bg-white/72 p-4 opacity-42 blur-[0.2px] saturate-50"
-                              style={{ height: item.h }}
-                            >
-                              <div className="mb-3 flex items-center gap-2">
-                                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
-                                <span className="truncate text-[12px] font-black text-[#111827]/70">{item.title}</span>
-                              </div>
-                              <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.08em]" style={{ color: item.color, backgroundColor: `${item.color}12` }}>{item.tag}</span>
-                              <div className="mt-5 space-y-3">
-                                {[0, 1, 2].map((row) => (
-                                  <div key={`${item.title}-abstract-${row}`} className="flex items-center gap-2">
-                                    <span className="h-7 w-12 rounded-full" style={{ backgroundColor: `${item.color}${row === 0 ? '24' : '14'}` }} />
-                                    <span className="h-2 flex-1 rounded-full" style={{ backgroundColor: `${item.color}12` }} />
-                                    <span className="h-2 w-10 rounded-full" style={{ backgroundColor: `${item.color}10` }} />
-                                  </div>
-                                ))}
-                              </div>
-                              <div className="absolute bottom-4 right-4 h-14 w-14 rounded-2xl" style={{ backgroundColor: `${item.color}10` }} />
-                            </div>
-                          )
-                        }
+                { title: 'Customer Onboarding', tag: 'CSM', color: '#3EAB6E', steps: ['Kickoff', 'Setup', 'Train', 'Go-live'], rows: ['Migration task', 'Training owner'] },
+                { title: 'GTM Campaign Launch', tag: 'GTM', color: '#787BEE', steps: ['Brief', 'Content', 'Launch', 'Review'], rows: ['Creative assets', 'Channel checklist'] },
+                { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', steps: ['Submit', 'Review', 'Approve', 'Archive'], rows: ['Policy check', 'Audit trail'] },
+                { title: 'IT Service Request', tag: 'IT Ops', color: '#06B6D4', steps: ['Request', 'Approve', 'Provision', 'Done'], rows: ['Access scope', 'SLA tracking'] },
+              ].map((scene, index) => (
+                <div
+                  key={scene.title}
+                  className="workflow-real-scene rounded-[22px] border border-white/80 bg-white/88 p-3 shadow-[0_18px_48px_rgba(15,23,42,0.08)] backdrop-blur-xl"
+                  style={{ animationDelay: `${index * 0.42}s` }}
+                >
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="truncate text-[10px] font-black text-[#111827]">{scene.title}</div>
+                      <div className="mt-1 text-[7px] font-black uppercase tracking-[0.12em]" style={{ color: scene.color }}>{scene.tag}</div>
+                    </div>
+                    <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: scene.color }} />
+                  </div>
+                  <div className="rounded-2xl border border-[#EEF0F4] bg-[#FBFCFF] p-2">
+                    <svg viewBox="0 0 160 58" className="h-[58px] w-full overflow-visible">
+                      <path d="M16 20 C46 14, 58 26, 82 20 S122 14, 146 20" fill="none" stroke={scene.color} strokeWidth="2" strokeOpacity="0.34" />
+                      {scene.steps.map((step, stepIdx) => {
+                        const x = 4 + stepIdx * 39
                         return (
-                        <div
-                          key={item.title}
-                          className={`workflow-waterfall-card relative mb-6 overflow-hidden rounded-[24px] border bg-white/94 backdrop-blur-sm p-4 transition-opacity duration-300 ${isStoryWorkflow ? 'border-[#5B5FE3]/40 ring-4 ring-[#5B5FE3]/10' : 'border-white/80 opacity-55 saturate-75'}`}
-                          style={{ height: item.h }}
-                        >
-                          {isStoryWorkflow && (
-                            <div className="absolute right-3 top-3 z-20 rounded-full border border-[#D8DFFF] bg-white px-2.5 py-1 text-[8px] font-black text-[#5B5FE3] shadow-sm">
-                              Focus: 小A + context
-                            </div>
-                          )}
-                          <div className="mb-3 flex items-start justify-between gap-3">
-                            <div className="min-w-0">
-                              <div className="mb-1.5 flex items-center gap-2">
-                                <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
-                                <span className="truncate text-[12px] font-black text-[#111827]">{item.title}</span>
-                              </div>
-                              <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.08em]" style={{ color: item.color, backgroundColor: `${item.color}14` }}>{item.tag}</span>
-                            </div>
-                            <div className="flex shrink-0 items-center gap-1.5 rounded-full px-2 py-1 text-[8px] font-black" style={{ color: item.color, backgroundColor: `${item.color}14` }}>
-                              <span>{isStoryWorkflow ? 'A' : '🤖'}</span>
-                              <span>{isStoryWorkflow ? '小A Agent' : item.agent}</span>
-                            </div>
-                          </div>
-
-                          <p className="mb-3 h-[32px] overflow-hidden text-[10px] leading-4 text-[#646A73]">{item.summary}</p>
-                          {isStoryWorkflow && (
-                            <div className="mb-3 grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-2xl border border-[#E8EAFF] bg-[#F7F8FF] px-3 py-2">
-                              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#5B5FE3] text-[10px] font-black text-white">A</div>
-                              <div>
-                                <div className="text-[9px] font-black text-[#111827]">小A uses context in the Dev step</div>
-                                <div className="text-[8px] font-bold text-[#8F959E]">Docs, chats, tasks, and decisions travel with its work</div>
-                              </div>
-                              <ArrowRight size={13} className="text-[#5B5FE3]" />
-                            </div>
-                          )}
-
-                          <div className="overflow-hidden rounded-2xl border border-white/80 p-3" style={{ backgroundColor: `${item.color}0D` }}>
-                            <div className="mb-2 flex items-center justify-between">
-                              <span className="text-[8px] font-black uppercase tracking-[0.14em] text-[#8F959E]">Horizontal workflow</span>
-                              <span className="h-1.5 w-12 rounded-full" style={{ backgroundColor: item.color, opacity: 0.35 }} />
-                            </div>
-                            <svg viewBox="0 0 250 88" className="block h-[88px] w-full overflow-visible">
-                              <defs>
-                                <filter id={`wf-card-shadow-${item.title.replace(/\s/g, '-')}`}>
-                                  <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#27315F" floodOpacity="0.10" />
-                                </filter>
-                              </defs>
-                              <path d="M26 32 C58 28, 70 28, 84 32 S128 36, 142 32 S186 28, 224 32" fill="none" stroke={item.color} strokeWidth="2" strokeOpacity="0.26" />
-                              <path d="M84 42 C96 58, 114 62, 128 64" fill="none" stroke={item.color} strokeWidth="1.5" strokeOpacity="0.22" strokeDasharray="4,4" />
-                              <path d="M142 42 C154 58, 174 62, 188 64" fill="none" stroke={item.color} strokeWidth="1.5" strokeOpacity="0.22" strokeDasharray="4,4" />
-                              {item.primary.map((node, nodeIdx) => {
-                                const x = 4 + nodeIdx * 48
-                                return (
-                                  <g key={`${item.title}-${node}`} filter={`url(#wf-card-shadow-${item.title.replace(/\s/g, '-')})`}>
-                                    <rect x={x} y="20" width="42" height="24" rx="12" fill={nodeIdx === 0 ? item.color : '#FFFFFF'} stroke={item.color} strokeWidth={nodeIdx === 0 ? 0 : 1} strokeOpacity="0.24" />
-                                    <text x={x + 21} y="35" textAnchor="middle" fill={nodeIdx === 0 ? '#FFFFFF' : item.color} fontSize="6.5" fontWeight="800" fontFamily="system-ui,-apple-system,sans-serif">{node}</text>
-                                    {nodeIdx === 2 && (
-                                      <g>
-                                        <circle cx={x + 21} cy="9" r="7" fill={item.color} opacity="0.14" />
-                                        {item.title === 'Product Development' ? (
-                                          <g>
-                                            <circle className="story-node-pulse" cx={x + 21} cy="9" r="11" fill="#5B5FE3" opacity="0.16" />
-                                            <circle cx={x + 21} cy="8.5" r="6" fill="#5B5FE3" />
-                                            <text x={x + 21} y="11.2" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">A</text>
-                                            <rect x={x - 6} y="-16" width="54" height="14" rx="7" fill="#FFFFFF" stroke="#D8DFFF" strokeWidth="0.8" />
-                                            <text x={x + 21} y="-6" textAnchor="middle" fill="#5B5FE3" fontSize="6.5" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">小A in workflow</text>
-                                          </g>
-                                        ) : (
-                                          <text x={x + 21} y="12" textAnchor="middle" fontSize="8">🤖</text>
-                                        )}
-                                      </g>
-                                    )}
-                                  </g>
-                                )
-                              })}
-                              {item.branch.map((node, nodeIdx) => (
-                                <g key={`${item.title}-branch-${node}`}>
-                                  <rect x={70 + nodeIdx * 48} y="58" width="42" height="20" rx="10" fill="#FFFFFF" stroke={item.color} strokeWidth="1" strokeOpacity="0.18" />
-                                  <text x={91 + nodeIdx * 48} y="71" textAnchor="middle" fill={item.color} fontSize="6" fontWeight="800" fontFamily="system-ui,-apple-system,sans-serif">{node}</text>
-                                </g>
-                              ))}
-                            </svg>
-                          </div>
-                        </div>
+                          <g key={step}>
+                            <rect x={x} y="10" width="34" height="20" rx="10" fill={stepIdx === 1 ? scene.color : '#FFFFFF'} stroke={scene.color} strokeWidth={stepIdx === 1 ? 0 : 1} strokeOpacity="0.24" />
+                            <text x={x + 17} y="23" textAnchor="middle" fill={stepIdx === 1 ? '#FFFFFF' : scene.color} fontSize="5.6" fontWeight="850" fontFamily="system-ui,-apple-system,sans-serif">{step}</text>
+                          </g>
                         )
                       })}
-                    </div>
+                      <rect x="14" y="42" width="86" height="6" rx="3" fill={scene.color} opacity="0.13" />
+                      <rect x="14" y="52" width="118" height="5" rx="2.5" fill="#DDE2E9" opacity="0.6" />
+                    </svg>
                   </div>
-                )
-              })}
+                  <div className="mt-2 space-y-1.5">
+                    {scene.rows.map((row) => (
+                      <div key={row} className="flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: scene.color }} />
+                        <span className="truncate text-[7px] font-bold text-[#646A73]">{row}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
