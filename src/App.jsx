@@ -5,6 +5,7 @@ import LeadFormExperiment from './projects/LeadFormExperiment'
 import WorkflowCollaborationShowcase from './projects/WorkflowCollaborationShowcase'
 import MeegleHomepage from './projects/MeegleHomepage'
 import MeegleHomepagePeak from './projects/MeegleHomepagePeak'
+import ProductDetailOptimization from './projects/ProductDetailOptimization'
 
 const projects = [
   {
@@ -42,6 +43,12 @@ const projects = [
     name: 'Meegle 官网首页：勇攀高峰版',
     desc: '从求真务实版复制而来，用于继续打磨更优美的视觉表现',
     component: MeegleHomepagePeak
+  },
+  {
+    id: 'product-detail-optimization',
+    name: '商品详情页优化',
+    desc: '把 ISV 自由堆料式详情页改造成标准化应用市场商品页',
+    component: ProductDetailOptimization
   }
 ]
 
