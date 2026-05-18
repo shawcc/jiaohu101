@@ -820,167 +820,129 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
           </svg>
         )}
         {illustrationVariant === 'v5' && (
-          <div className="relative mx-auto h-full min-h-[440px] w-full max-w-[760px] overflow-hidden rounded-[40px] bg-gradient-to-br from-[#F7F8FF] via-white to-[#F7FFFB]">
+          <div className="relative mx-auto h-full min-h-[440px] w-full max-w-[760px] overflow-hidden rounded-[40px] bg-gradient-to-br from-[#F7F8FF] via-white to-[#F7FFFB] p-5">
             <style>{`
-              @keyframes workflowFloat {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-7px); }
+              @keyframes workflowBoardFloat {
+                0%, 100% { transform: translateY(0) rotate(var(--board-rotate)); }
+                50% { transform: translateY(-7px) rotate(var(--board-rotate)); }
               }
-              @keyframes workflowNodePulse {
-                0%, 100% { opacity: 0.18; transform: scale(0.92); }
-                50% { opacity: 0.38; transform: scale(1.08); }
+              @keyframes workflowPulse {
+                0%, 100% { opacity: 0.16; transform: scale(0.92); }
+                50% { opacity: 0.36; transform: scale(1.08); }
               }
-              .workflow-scene-card { animation: workflowFloat 6s ease-in-out infinite; }
-              .workflow-node-pulse { animation: workflowNodePulse 2.8s ease-in-out infinite; transform-origin: center; }
+              .workflow-board-float { animation: workflowBoardFloat 6.5s ease-in-out infinite; }
+              .workflow-pulse { animation: workflowPulse 2.8s ease-in-out infinite; transform-origin: center; }
             `}</style>
 
-            <div className="absolute inset-0 opacity-[0.5]" style={{ backgroundImage: 'linear-gradient(rgba(91,95,227,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(91,95,227,0.04) 1px, transparent 1px)', backgroundSize: '56px 56px' }} />
-            <div className="absolute -left-20 top-[-18%] h-80 w-80 rounded-full bg-[#5B5FE3]/10 blur-[90px]" />
-            <div className="absolute -right-20 bottom-[-18%] h-80 w-80 rounded-full bg-[#10B981]/10 blur-[90px]" />
+            <div className="absolute inset-0 opacity-[0.55]" style={{ backgroundImage: 'linear-gradient(rgba(91,95,227,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(91,95,227,0.045) 1px, transparent 1px)', backgroundSize: '48px 48px' }} />
+            <div className="absolute -left-24 top-[-18%] h-80 w-80 rounded-full bg-[#5B5FE3]/10 blur-[90px]" />
+            <div className="absolute -right-24 bottom-[-18%] h-80 w-80 rounded-full bg-[#10B981]/10 blur-[90px]" />
 
-            <div className="absolute left-5 top-5 z-40 rounded-2xl border border-[#E8EAFF] bg-white/88 px-4 py-3 shadow-[0_16px_42px_rgba(91,95,227,0.10)] backdrop-blur-xl">
-              <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">View 01 · Workflow</div>
-              <div className="mt-1 text-[12px] font-black text-[#111827]">Many real processes, one workflow workspace</div>
-            </div>
-
-            <div className="absolute left-[5%] right-[5%] top-[15%] z-20 rounded-[32px] border border-[#D8DFFF] bg-white/94 p-3 shadow-[0_34px_95px_rgba(47,55,110,0.16)] backdrop-blur-xl">
-              <div className="mb-3 flex items-center justify-between gap-3 border-b border-[#EEF0F4] px-2 pb-3">
-                <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
+            <div className="relative z-10 flex h-full min-h-[400px] flex-col gap-3">
+              <div className="flex items-center justify-between px-1">
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">View 01 · Workflow Gallery</div>
+                  <div className="mt-1 text-[12px] font-black text-[#111827]">One pure workflow for each business scenario</div>
                 </div>
-                <div className="flex flex-1 items-center justify-center gap-2">
-                  {[
-                    { label: 'Product Dev', color: '#5B5FE3', active: true },
-                    { label: 'Onboarding', color: '#3EAB6E' },
-                    { label: 'Approval', color: '#F59E0B' },
-                    { label: 'GTM', color: '#787BEE' },
-                  ].map((tab) => (
-                    <div key={tab.label} className={`rounded-full px-3 py-1.5 text-[8px] font-black ${tab.active ? 'bg-[#F4F6FF] text-[#5B5FE3] ring-1 ring-[#D8DFFF]' : 'bg-[#F7F8FA] text-[#8F959E]'}`}>
-                      {tab.label}
-                    </div>
-                  ))}
-                </div>
-                <div className="rounded-full bg-[#FFF7E6] px-2.5 py-1 text-[8px] font-black text-[#B45309]">Running</div>
+                <div className="rounded-full border border-[#D8DFFF] bg-white/84 px-3 py-1.5 text-[8px] font-black uppercase tracking-[0.14em] text-[#5B5FE3] shadow-sm backdrop-blur-xl">Independent boards</div>
               </div>
 
-              <div className="grid h-[315px] grid-rows-[116px_1fr] gap-3">
-                <div className="relative overflow-hidden rounded-[24px] border border-[#EEF0F4] bg-gradient-to-br from-[#FBFCFF] to-[#F7F8FF] p-4">
-                  <div className="absolute right-4 top-4 rounded-full bg-white px-3 py-1.5 text-[8px] font-black uppercase tracking-[0.12em] text-[#8F959E] shadow-sm">Horizontal workflow</div>
-                  <svg viewBox="0 0 620 120" className="h-full w-full overflow-visible">
+              <div className="grid flex-1 grid-cols-[1.45fr_1fr] gap-4">
+                <div className="relative overflow-hidden rounded-[32px] border border-[#D8DFFF] bg-white/94 p-4 shadow-[0_34px_95px_rgba(47,55,110,0.16)] backdrop-blur-xl">
+                  <div className="mb-3 flex items-center justify-between">
+                    <div>
+                      <div className="text-[13px] font-black text-[#111827]">Product Development Workflow</div>
+                      <div className="mt-1 text-[8px] font-bold uppercase tracking-[0.14em] text-[#8F959E]">Complex scenario · Pure workflow</div>
+                    </div>
+                    <div className="rounded-full bg-[#F4F6FF] px-3 py-1.5 text-[8px] font-black text-[#5B5FE3]">Running</div>
+                  </div>
+
+                  <svg viewBox="0 0 440 285" className="h-[calc(100%-48px)] w-full overflow-visible">
                     <defs>
-                      <filter id="wf-main-shadow"><feDropShadow dx="0" dy="8" stdDeviation="8" floodColor="#27315F" floodOpacity="0.10" /></filter>
+                      <filter id="wf-gallery-shadow"><feDropShadow dx="0" dy="9" stdDeviation="8" floodColor="#27315F" floodOpacity="0.11" /></filter>
                     </defs>
-                    <path d="M48 56 C112 32, 152 78, 214 56 S322 33, 380 56 S492 82, 566 56" fill="none" stroke="#5B5FE3" strokeWidth="3" strokeOpacity="0.22" />
-                    <path d="M300 72 C330 98, 370 100, 410 92" fill="none" stroke="#F59E0B" strokeWidth="2" strokeDasharray="5,6" strokeOpacity="0.36" />
+                    <rect x="8" y="10" width="424" height="260" rx="26" fill="#FBFCFF" stroke="#EEF0F8" />
+                    <path d="M54 138 C92 138, 105 86, 142 86" fill="none" stroke="#5B5FE3" strokeWidth="2.6" strokeOpacity="0.28" />
+                    <path d="M54 138 C92 138, 105 138, 142 138" fill="none" stroke="#5B5FE3" strokeWidth="2.6" strokeOpacity="0.38" />
+                    <path d="M54 138 C92 138, 105 190, 142 190" fill="none" stroke="#5B5FE3" strokeWidth="2.6" strokeOpacity="0.25" />
+                    <path d="M206 86 C240 86, 248 116, 282 116" fill="none" stroke="#787BEE" strokeWidth="2.4" strokeOpacity="0.28" />
+                    <path d="M206 138 C238 138, 250 138, 282 138" fill="none" stroke="#5B5FE3" strokeWidth="2.6" strokeOpacity="0.42" />
+                    <path d="M206 190 C240 190, 248 162, 282 162" fill="none" stroke="#06B6D4" strokeWidth="2.4" strokeOpacity="0.28" />
+                    <path d="M342 138 C366 138, 382 138, 402 138" fill="none" stroke="#10B981" strokeWidth="2.7" strokeOpacity="0.36" />
+                    <path d="M166 86 C178 108, 178 116, 166 138" fill="none" stroke="#E5E7EB" strokeWidth="1.8" strokeDasharray="5,5" />
+                    <path d="M166 190 C180 170, 180 158, 166 138" fill="none" stroke="#E5E7EB" strokeWidth="1.8" strokeDasharray="5,5" />
+
                     {[
-                      { label: 'PRD', x: 24, color: '#5B5FE3' },
-                      { label: 'Design', x: 138, color: '#787BEE' },
-                      { label: 'Dev', x: 254, color: '#5B5FE3', active: true },
-                      { label: 'QA', x: 370, color: '#06B6D4' },
-                      { label: 'Release', x: 486, color: '#10B981' },
+                      { label: 'Brief', x: 24, y: 118, w: 64, color: '#5B5FE3' },
+                      { label: 'Design', x: 132, y: 66, w: 74, color: '#787BEE' },
+                      { label: 'Dev', x: 132, y: 118, w: 74, color: '#5B5FE3', active: true },
+                      { label: 'Data', x: 132, y: 170, w: 74, color: '#06B6D4' },
+                      { label: 'Review', x: 282, y: 96, w: 72, color: '#A78BFA' },
+                      { label: 'QA', x: 282, y: 146, w: 72, color: '#06B6D4' },
+                      { label: 'Release', x: 372, y: 118, w: 62, color: '#10B981' },
                     ].map((node) => (
-                      <g key={node.label} filter="url(#wf-main-shadow)">
-                        {node.active && <circle className="workflow-node-pulse" cx={node.x + 40} cy="56" r="42" fill="#5B5FE3" />}
-                        <rect x={node.x} y="34" width="80" height="44" rx="22" fill={node.active ? node.color : '#FFFFFF'} stroke={node.color} strokeWidth={node.active ? 0 : 1.4} strokeOpacity="0.24" />
-                        <text x={node.x + 40} y="61" textAnchor="middle" fill={node.active ? '#FFFFFF' : node.color} fontSize="11" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
+                      <g key={node.label} filter="url(#wf-gallery-shadow)">
+                        {node.active && <circle className="workflow-pulse" cx={node.x + node.w / 2} cy={node.y + 18} r="39" fill="#5B5FE3" />}
+                        <rect x={node.x} y={node.y} width={node.w} height="36" rx="18" fill={node.active ? node.color : '#FFFFFF'} stroke={node.color} strokeWidth={node.active ? 0 : 1.25} strokeOpacity="0.24" />
+                        <text x={node.x + node.w / 2} y={node.y + 23} textAnchor="middle" fill={node.active ? '#FFFFFF' : node.color} fontSize="10" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
                       </g>
                     ))}
-                    <g filter="url(#wf-main-shadow)">
-                      <rect x="236" y="2" width="116" height="28" rx="14" fill="#FFFFFF" stroke="#D8DFFF" />
-                      <circle cx="254" cy="16" r="9" fill="#5B5FE3" />
-                      <text x="254" y="20" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontWeight="900">A</text>
-                      <text x="272" y="20" fill="#5B5FE3" fontSize="9" fontWeight="900">小A in workflow</text>
+
+                    <g filter="url(#wf-gallery-shadow)">
+                      <rect x="114" y="18" width="128" height="31" rx="15.5" fill="#FFFFFF" stroke="#D8DFFF" />
+                      <circle cx="134" cy="33.5" r="9.5" fill="#5B5FE3" />
+                      <text x="134" y="37" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontWeight="900">A</text>
+                      <text x="152" y="37" fill="#5B5FE3" fontSize="9" fontWeight="900">小A joins this node</text>
+                    </g>
+
+                    <g opacity="0.72">
+                      {[
+                        [42, 226, 128, '#5B5FE3'], [42, 242, 92, '#DDE2E9'], [202, 226, 112, '#10B981'], [202, 242, 82, '#DDE2E9'], [326, 226, 56, '#F59E0B'], [326, 242, 76, '#DDE2E9']
+                      ].map(([x, y, w, color], i) => <rect key={`main-skel-${i}`} x={x} y={y} width={w} height="7" rx="3.5" fill={color} opacity={color === '#DDE2E9' ? 0.7 : 0.18} />)}
                     </g>
                   </svg>
                 </div>
 
-                <div className="grid grid-cols-[1.05fr_0.95fr] gap-3">
-                  <div className="rounded-[24px] border border-[#EEF0F4] bg-white p-4 shadow-[0_14px_34px_rgba(15,23,42,0.04)]">
-                    <div className="mb-3 flex items-center justify-between">
-                      <div>
-                        <div className="text-[10px] font-black text-[#111827]">Initiate Review</div>
-                        <div className="mt-1 text-[7px] font-bold uppercase tracking-[0.14em] text-[#8F959E]">Node tasks · Ongoing</div>
+                <div className="grid grid-rows-4 gap-3">
+                  {[
+                    { title: 'Customer Onboarding', tag: 'CSM', color: '#3EAB6E', nodes: ['Contract', 'Setup', 'Train', 'Go-live'], branch: true, rotate: '-1deg' },
+                    { title: 'GTM Campaign Launch', tag: 'GTM', color: '#787BEE', nodes: ['Brief', 'Assets', 'Channels', 'Launch'], branch: false, rotate: '1deg' },
+                    { title: 'Compliance Approval', tag: 'Risk', color: '#F59E0B', nodes: ['Submit', 'Review', 'Approve', 'Audit'], branch: true, rotate: '-0.5deg' },
+                    { title: 'IT Service Request', tag: 'Internal Ops', color: '#06B6D4', nodes: ['Request', 'Assess', 'Approve', 'Done'], branch: false, rotate: '0.8deg' },
+                  ].map((flow, index) => (
+                    <div
+                      key={flow.title}
+                      className="workflow-board-float relative overflow-hidden rounded-[22px] border border-white/85 bg-white/82 p-3 shadow-[0_16px_44px_rgba(15,23,42,0.075)] backdrop-blur-xl"
+                      style={{ '--board-rotate': flow.rotate, animationDelay: `${index * 0.25}s` }}
+                    >
+                      <div className="mb-2 flex items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="truncate text-[9px] font-black text-[#111827]">{flow.title}</div>
+                          <div className="mt-0.5 text-[6.5px] font-black uppercase tracking-[0.12em]" style={{ color: flow.color }}>{flow.tag}</div>
+                        </div>
+                        <div className="rounded-full px-2 py-1 text-[6.5px] font-black" style={{ color: flow.color, backgroundColor: `${flow.color}12` }}>Workflow</div>
                       </div>
-                      <span className="rounded-full bg-[#FFF7E6] px-2 py-1 text-[7px] font-black text-[#B45309]">2 blockers</span>
+                      <svg viewBox="0 0 260 58" className="h-[58px] w-full overflow-visible">
+                        <path d="M24 29 C58 29, 66 17, 96 17" fill="none" stroke={flow.color} strokeWidth="2" strokeOpacity="0.28" />
+                        <path d="M24 29 C58 29, 66 29, 96 29" fill="none" stroke={flow.color} strokeWidth="2.2" strokeOpacity="0.38" />
+                        {flow.branch && <path d="M24 29 C58 29, 66 42, 96 42" fill="none" stroke={flow.color} strokeWidth="1.7" strokeDasharray="4,4" strokeOpacity="0.22" />}
+                        <path d="M136 29 C166 29, 176 29, 204 29" fill="none" stroke={flow.color} strokeWidth="2.2" strokeOpacity="0.36" />
+                        {[
+                          { label: flow.nodes[0], x: 0, y: 20, w: 54 },
+                          { label: flow.nodes[1], x: 82, y: flow.branch ? 8 : 20, w: 56, active: index === 0 },
+                          { label: flow.nodes[2], x: 82, y: flow.branch ? 32 : 20, w: 56, ghost: !flow.branch },
+                          { label: flow.nodes[3], x: 188, y: 20, w: 60 },
+                        ].filter(node => !node.ghost).map((node) => (
+                          <g key={`${flow.title}-${node.label}`}>
+                            <rect x={node.x} y={node.y} width={node.w} height="20" rx="10" fill={node.active ? flow.color : '#FFFFFF'} stroke={flow.color} strokeWidth={node.active ? 0 : 1} strokeOpacity="0.22" />
+                            <text x={node.x + node.w / 2} y={node.y + 13.2} textAnchor="middle" fill={node.active ? '#FFFFFF' : '#565B6B'} fontSize="7" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
+                          </g>
+                        ))}
+                      </svg>
                     </div>
-                    <div className="space-y-2">
-                      {[
-                        { name: 'Review PRD changes', owner: 'PM', color: '#5B5FE3' },
-                        { name: 'Confirm scope with QA', owner: 'QA', color: '#06B6D4' },
-                        { name: 'Update release notes', owner: 'DA', color: '#F59E0B' },
-                      ].map((task) => (
-                        <div key={task.name} className="grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-2xl border border-[#F0F2F6] bg-[#FBFCFF] px-3 py-2">
-                          <span className="h-2 w-2 rounded-full" style={{ backgroundColor: task.color }} />
-                          <span className="truncate text-[8px] font-bold text-[#4B5563]">{task.name}</span>
-                          <span className="rounded-full bg-white px-2 py-1 text-[7px] font-black text-[#8F959E] shadow-sm">{task.owner}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="rounded-[24px] border border-[#EEF0F4] bg-white p-4 shadow-[0_14px_34px_rgba(15,23,42,0.04)]">
-                    <div className="mb-3 text-[10px] font-black text-[#111827]">Workflow details</div>
-                    <div className="space-y-2.5">
-                      {[
-                        ['Priority', 'P0', '#EF4444'],
-                        ['Submission Time', '2025-09-25', '#5B5FE3'],
-                        ['Release Owner', 'Songchao Hong', '#10B981'],
-                        ['Feature Type', 'AI Assistant', '#F59E0B'],
-                      ].map(([label, value, color]) => (
-                        <div key={label} className="grid grid-cols-[82px_1fr] items-center gap-2">
-                          <span className="text-[7px] font-bold text-[#8F959E]">{label}</span>
-                          <span className="rounded-lg bg-[#F7F8FA] px-2 py-1 text-[7px] font-black text-[#4B5563]">
-                            <span className="mr-1 inline-block h-1.5 w-1.5 rounded-full" style={{ backgroundColor: color }} />
-                            {value}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-4 rounded-2xl border border-[#FDE7B6] bg-[#FFF9EA] p-3">
-                      <div className="flex items-center gap-2">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[11px] font-black text-[#5B5FE3] shadow-sm">A</div>
-                        <div>
-                          <div className="text-[8px] font-black text-[#111827]">Context-aware action</div>
-                          <div className="mt-0.5 text-[7px] font-bold text-[#B45309]">Docs · Tasks · Decisions</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
-            </div>
-
-            <div className="absolute inset-x-5 bottom-5 z-30 grid grid-cols-2 gap-3 lg:grid-cols-4">
-              {[
-                { title: 'Customer Onboarding', color: '#3EAB6E', steps: ['Kickoff', 'Setup', 'Train'] },
-                { title: 'GTM Campaign', color: '#787BEE', steps: ['Brief', 'Content', 'Launch'] },
-                { title: 'Compliance Approval', color: '#F59E0B', steps: ['Submit', 'Review', 'Audit'] },
-                { title: 'IT Service Request', color: '#06B6D4', steps: ['Request', 'Approve', 'Done'] },
-              ].map((scene, index) => (
-                <div
-                  key={scene.title}
-                  className="workflow-scene-card rounded-[22px] border border-white/80 bg-white/76 p-3 shadow-[0_16px_44px_rgba(15,23,42,0.07)] backdrop-blur-xl"
-                  style={{ animationDelay: `${index * 0.36}s` }}
-                >
-                  <div className="mb-2 flex items-center gap-2">
-                    <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: scene.color }} />
-                    <span className="truncate text-[9px] font-black text-[#111827]">{scene.title}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    {scene.steps.map((step, stepIdx) => (
-                      <div key={step} className="min-w-0 flex-1 rounded-full px-1.5 py-1 text-center text-[6.5px] font-black" style={{ color: stepIdx === 1 ? '#FFFFFF' : scene.color, backgroundColor: stepIdx === 1 ? scene.color : `${scene.color}12` }}>
-                        {step}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-3 space-y-1.5">
-                    <div className="h-1.5 w-4/5 rounded-full" style={{ backgroundColor: `${scene.color}18` }} />
-                    <div className="h-1.5 w-2/3 rounded-full bg-[#DDE2E9]/70" />
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         )}
