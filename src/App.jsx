@@ -4,6 +4,7 @@ import AiUsageDashboard from './projects/AiUsageDashboard'
 import LeadFormExperiment from './projects/LeadFormExperiment'
 import WorkflowCollaborationShowcase from './projects/WorkflowCollaborationShowcase'
 import MeegleHomepage from './projects/MeegleHomepage'
+import MeegleHomepagePeak from './projects/MeegleHomepagePeak'
 
 const projects = [
   {
@@ -32,9 +33,15 @@ const projects = [
   },
   {
     id: 'meegle-homepage',
-    name: 'Meegle 官网首页',
-    desc: 'AI-native 项目管理官网，参考 monday.com 风格',
+    name: 'Meegle 官网首页：求真务实版',
+    desc: '当前稳定版本，保留已确认的信息结构与交互方向',
     component: MeegleHomepage
+  },
+  {
+    id: 'meegle-homepage-peak',
+    name: 'Meegle 官网首页：勇攀高峰版',
+    desc: '从求真务实版复制而来，用于继续打磨更优美的视觉表现',
+    component: MeegleHomepagePeak
   }
 ]
 

@@ -1970,7 +1970,7 @@ const AIAssistantSection = () => {
   )
 }
 
-const MeegleHomepage = () => {
+const MeegleHomepagePeak = () => {
   const [mobileMenu, setMobileMenu] = useState(false)
   const [cascadeVariant, setCascadeVariant] = useState('fullbleed')
   const [illustrationVariant, setIllustrationVariant] = useState('v5')
@@ -2885,4 +2885,4 @@ const GameWorkflowBoard = () => {
   )
 }
 
-export default MeegleHomepage
+export default MeegleHomepagePeak
