@@ -5,7 +5,6 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  CircleHelp,
   ExternalLink,
   FileText,
   Image,
@@ -30,21 +29,6 @@ const product = {
   updateAt: '2026-03-05',
   category: '组织架构管理'
 };
-
-const beforeIssues = [
-  '线上结构本身不是问题，问题在内容进入结构后没有被重新组织',
-  '正文把产品介绍、角色痛点、操作截图、二维码和联系方式混在一起',
-  '截图直接作为说明材料堆叠，红框标注和后台界面削弱商品感',
-  '右侧信息栏是清楚的，但正文没有承担“说服购买”的职责'
-];
-
-const constraints = [
-  '不重做平台框架',
-  '不增加复杂 AI 能力',
-  '保留顶部商品信息 + 右侧预览图',
-  '保留 Tab + 右侧基础信息栏',
-  '只改正文的信息层级、图片容器和文字密度'
-];
 
 const tabs = ['概述', '权限', '价格方案'];
 
@@ -491,9 +475,6 @@ const ProductDetailOptimization = () => {
               第 6 个交互项目
             </div>
             <h1 className="text-3xl font-black text-[#1F2329] tracking-tight">商品详情页优化</h1>
-            <p className="mt-2 text-sm text-[#646A73] max-w-3xl">
-              这版不重新发明详情页，而是在你们线上商品页框架上迭代：保留顶部商品信息、右侧预览图、Tab 与基础信息栏，只优化正文表达和素材呈现。
-            </p>
           </div>
 
           <div className="bg-white border border-[#DEE0E3] rounded-xl p-1 flex">
@@ -515,38 +496,7 @@ const ProductDetailOptimization = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-[300px_1fr] gap-6">
-          <aside className="space-y-4">
-            <div className="bg-white border border-[#DEE0E3] rounded-2xl p-5">
-              <div className="font-black text-[#1F2329]">修正后的判断</div>
-              <p className="mt-2 text-sm leading-6 text-[#646A73]">
-                你们线上框架其实已经接近应用市场常见结构，问题不是“页面框架不对”，而是 ISV 填进去的内容没有被约束和商品化。
-              </p>
-            </div>
-
-            <div className="bg-white border border-[#DEE0E3] rounded-2xl p-5">
-              <div className="font-black text-[#1F2329] mb-4">基于线上页的问题</div>
-              <div className="space-y-3">
-                {beforeIssues.map((item) => (
-                  <div key={item} className="flex gap-3 text-sm leading-5 text-[#646A73]">
-                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#F54A45] shrink-0" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-[#1F2329] rounded-2xl p-5 text-white">
-              <div className="flex items-center gap-2 text-sm font-bold">
-                <CircleHelp size={16} className="text-[#8AB7FF]" />
-                这版改造边界
-              </div>
-              <div className="mt-4 space-y-3 text-sm text-white/72 leading-5">
-                {constraints.map((item) => <div key={item}>{item}</div>)}
-              </div>
-            </div>
-          </aside>
-
+        <div>
           <MarketplacePage variant={mode} />
         </div>
       </div>
