@@ -35,19 +35,19 @@ const I18N = {
       workflows: {
         title: 'Architect Workflows',
         subtitle: 'Standardize intelligence through SOPs',
-        desc: 'Start with the workflow. {copy.xiaoA} brings a context pack into a concrete production step, so the SOP becomes executable instead of just documented.',
+        desc: 'Start with the workflow. Xiao A brings a context pack into a concrete production step, so the SOP becomes executable instead of just documented.',
         tag: 'SOP · Automation · Process-driven',
       },
       orchestrate: {
         title: 'Orchestrate Agents',
         subtitle: 'Multi-agent, one unified fleet',
-        desc: 'View the same {copy.xiaoA} as part of a governed agent fleet: assigned to Product Development, permissioned, observable, and ready to use context safely.',
+        desc: 'View the same Xiao A as part of a governed agent fleet: assigned to Product Development, permissioned, observable, and ready to use context safely.',
         tag: 'MCP · CLI · Multi-agent',
       },
       context: {
         title: 'Unify Context',
         subtitle: 'One data layer, infinite clarity',
-        desc: 'View the context pack behind {copy.xiaoA}. Docs, chats, tasks, and decisions are normalized into a shared source of truth that agents can reference.',
+        desc: 'View the context pack behind Xiao A. Docs, chats, tasks, and decisions are normalized into a shared source of truth that agents can reference.',
         tag: 'Unified data · End-to-end visibility',
       },
     },
@@ -57,50 +57,11 @@ const I18N = {
       titleBottom: 'Control.',
       desc: 'Meegle builds governance into every agent, every workflow, and every data boundary from day one.',
     },
-    controlPillars: [
-      {
-        title: 'Full Visibility',
-        desc: 'Track every agent action, decision, and output in real time. Nothing your AI does ever happens in the dark.',
-      },
-      {
-        title: 'Granular Permissions',
-        desc: 'Define exactly what each agent can see, touch, and execute. Read, write, or create — nothing beyond what you explicitly allow.',
-      },
-      {
-        title: 'Human in the Loop',
-        desc: 'Simulate before you activate. Validate every agent action before it goes live and keep humans in command at every critical step.',
-      },
-      {
-        title: 'Data Sovereignty',
-        desc: 'Your data never trains AI models. Your content stays yours. What happens in your workspace stays in your workspace.',
-      },
-    ],
-    security: {
-      badge: 'Enterprise-Ready',
-      title: <>Compliance-ready.<br />Audit-ready.<br />Enterprise-ready.</>,
-      desc: 'Your workflows are your competitive advantage. Meegle secures organizational intelligence with strict data governance and global compliance frameworks.',
-    },
-    trust: {
-      title: <>Trusted by<br />forward-thinking teams</>,
-      desc: 'Global leadership teams operationalize their AI strategy with Meegle.',
-      quote: '"Meegle transformed how we think about project management. Multi-agent orchestration isn’t just a feature — it’s a fundamentally new way to run an engineering organization."',
-      role: 'VP of Engineering',
-      company: 'Fortune 500 Technology Company',
-    },
     finalCta: {
       titleTop: 'Define the next era of',
       titleAccent: 'Organizational Intelligence.',
       desc: 'Start building with Agents today. No credit card required.',
       sales: 'Talk to Sales',
-    },
-    footer: {
-      desc: 'AI-native project management for the next generation.',
-      groups: [
-        { title: 'Product', links: ['Features', 'Integrations', 'AI Agents', 'Security', 'Changelog'] },
-        { title: 'Solutions', links: ['Engineering', 'Product Ops', 'Enterprise', 'Startups', 'Remote'] },
-        { title: 'Resources', links: ['Docs', 'API', 'Blog', 'Community', 'Status'] },
-        { title: 'Company', links: ['About', 'Careers', 'Contact', 'Privacy', 'Terms'] },
-      ],
     },
   },
   zh: {
@@ -127,7 +88,7 @@ const I18N = {
       context: {
         title: '统一上下文',
         subtitle: '一层数据，持续清晰',
-        desc: '从上下文视角看，小A背后的 {copy.contextPack} 汇聚文档、沟通、任务和决策，形成 Agent 可以引用的统一事实源。',
+        desc: '从上下文视角看，小A背后的 Context Pack 汇聚文档、沟通、任务和决策，形成 Agent 可以引用的统一事实源。',
         tag: '统一数据 · 端到端可见',
       },
     },
@@ -137,50 +98,11 @@ const I18N = {
       titleBottom: 'AI 协作。',
       desc: 'Meegle 从第一天起就把权限、审计和数据边界内建到每个 Agent、每条工作流和每个上下文连接里。',
     },
-    controlPillars: [
-      {
-        title: '全链路可见',
-        desc: '实时追踪每个 Agent 的动作、决策和输出，让 AI 的每一步都可观察、可解释、可回溯。',
-      },
-      {
-        title: '精细化权限',
-        desc: '明确控制每个 Agent 可以查看、修改和执行的范围，避免越权访问和非预期操作。',
-      },
-      {
-        title: '人始终在环',
-        desc: '上线前可模拟，关键动作可审批，确保人在重要节点上保持判断权和控制权。',
-      },
-      {
-        title: '数据主权',
-        desc: '你的数据不会用于训练模型。组织内容归你所有，工作空间里的数据始终留在工作空间里。',
-      },
-    ],
-    security: {
-      badge: '企业级就绪',
-      title: <>合规就绪。<br />审计就绪。<br />企业级就绪。</>,
-      desc: '工作流是企业的核心竞争力。Meegle 通过严格的数据治理和全球合规框架，保护组织智能资产。',
-    },
-    trust: {
-      title: <>被前沿团队<br />持续信赖</>,
-      desc: '全球领先团队正在用 Meegle 落地自己的 AI 协作战略。',
-      quote: '"Meegle 改变了我们理解项目管理的方式。多 Agent 编排不只是一个功能，而是一种运行工程组织的全新方式。"',
-      role: '工程副总裁',
-      company: '财富 500 强科技公司',
-    },
     finalCta: {
       titleTop: '开启下一代',
       titleAccent: '组织智能。',
       desc: '从今天开始构建 Agent 驱动的协作方式，无需信用卡。',
       sales: '联系销售',
-    },
-    footer: {
-      desc: '面向下一代团队的 AI 原生项目管理平台。',
-      groups: [
-        { title: '产品', links: ['功能', '集成', 'AI Agent', '安全', '更新日志'] },
-        { title: '解决方案', links: ['研发团队', '产品运营', '企业版', '创业团队', '远程协作'] },
-        { title: '资源', links: ['文档', 'API', '博客', '社区', '状态'] },
-        { title: '公司', links: ['关于我们', '加入我们', '联系我们', '隐私', '条款'] },
-      ],
     },
   },
 }
@@ -246,25 +168,7 @@ const STACK_CARDS = [
 
 const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) => {
   const [waterfallOffset, setWaterfallOffset] = useState(0)
-  const [activeAgentLane, setActiveAgentLane] = useState(0)
-  const isZh = /[\u4e00-\u9fff]/.test(card.title)
-  const copy = {
-    viewWorkflow: isZh ? '视角 01 · 工作流' : '{copy.viewWorkflow}',
-    viewAgent: isZh ? '视角 02 · Agent 队列' : '{copy.viewAgent}',
-    viewContext: isZh ? '视角 03 · 上下文' : '{copy.viewContext}',
-    xiaoA: isZh ? '小A' : '{copy.xiaoA}',
-    productDev: isZh ? '产品研发' : 'Product Development',
-    focusContext: isZh ? '小A + 上下文' : '{copy.xiaoA} + context',
-    workflowHeadline: isZh ? '小A带着上下文参与产品研发 SOP' : '{copy.xiaoA} brings context into a Product Development SOP',
-    contextAware: isZh ? '带上下文的 Agent 参与此节点' : '{copy.contextAware}',
-    xiaoAInWorkflow: isZh ? '小A 在流程中' : '{copy.xiaoA} in workflow',
-    contextPack: isZh ? '上下文包' : '{copy.contextPack}',
-    contextReady: isZh ? '上下文就绪' : '{copy.contextReady}',
-    governanceHeadline: isZh ? '受治理的 Agent' : '{copy.governanceHeadline}',
-    contextIntro: isZh ? '小A工作时读取的上下文层，信息更开阔、更清晰。' : 'A spacious context layer Xiao A can read while working.',
-    readsContext: isZh ? '读取上下文' : '{copy.readsContext}',
-    bottomContext: isZh ? '同一层上下文支撑工作流执行、Agent 治理和数据可见性。' : '{copy.bottomContext}',
-  }
+  const [activeAgentLane, setActiveAgentLane] = useState(510)
   const xiaoAAgent = {
     name: '小A',
     role: 'Product Development workflow agent',
@@ -929,12 +833,12 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
 
             <div className="absolute left-0 right-0 top-4 z-30 flex items-center justify-between gap-3 rounded-2xl border border-[#E8EAFF] bg-white/90 px-4 py-3 shadow-[0_16px_42px_rgba(91,95,227,0.10)] backdrop-blur-xl">
               <div>
-                <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">{copy.viewWorkflow}</div>
-                <div className="mt-1 text-[12px] font-black text-[#111827]">{copy.workflowHeadline}</div>
+                <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B5FE3]">View 01 · Workflow</div>
+                <div className="mt-1 text-[12px] font-black text-[#111827]">小A brings context into a Product Development SOP</div>
               </div>
               <div className="hidden items-center gap-2 rounded-full bg-[#F4F6FF] px-3 py-1.5 text-[9px] font-black text-[#5B5FE3] sm:flex">
                 <span className="h-2 w-2 rounded-full bg-[#5B5FE3]" />
-                {copy.contextAware}
+                Context-aware agent participates here
               </div>
             </div>
             <div className="absolute bottom-4 right-2 z-20 px-2 py-1 text-[10px] font-bold text-[#8F959E]">scroll to move</div>
@@ -1000,7 +904,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                         >
                           {isStoryWorkflow && (
                             <div className="absolute right-3 top-3 z-20 rounded-full border border-[#D8DFFF] bg-white px-2.5 py-1 text-[8px] font-black text-[#5B5FE3] shadow-sm">
-                              Focus: {copy.focusContext}
+                              Focus: 小A + context
                             </div>
                           )}
                           <div className="mb-3 flex items-start justify-between gap-3">
@@ -1058,7 +962,7 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
                                             <circle cx={x + 21} cy="8.5" r="6" fill="#5B5FE3" />
                                             <text x={x + 21} y="11.2" textAnchor="middle" fill="#FFFFFF" fontSize="7" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">A</text>
                                             <rect x={x - 6} y="-16" width="54" height="14" rx="7" fill="#FFFFFF" stroke="#D8DFFF" strokeWidth="0.8" />
-                                            <text x={x + 21} y="-6" textAnchor="middle" fill="#5B5FE3" fontSize="6.5" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">{copy.xiaoAInWorkflow}</text>
+                                            <text x={x + 21} y="-6" textAnchor="middle" fill="#5B5FE3" fontSize="6.5" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">小A in workflow</text>
                                           </g>
                                         ) : (
                                           <text x={x + 21} y="12" textAnchor="middle" fontSize="8">🤖</text>
@@ -1091,188 +995,566 @@ const AgentCardIllustration = ({ card, isVisible, illustrationVariant = 'v2' }) 
   }
 
   if (card.id === 'orchestrate') {
-    const agents = [
-      { name: copy.xiaoA, role: 'Product Development', color: '#5B5FE3', active: true, meta: copy.contextReady },
-      { name: 'PM Agent', role: 'Planning', color: '#787BEE', meta: 'Roadmap' },
-      { name: 'Code Agent', role: 'Build', color: '#3EAB6E', meta: 'Repo' },
-      { name: 'QA Agent', role: 'Quality', color: '#06B6D4', meta: 'Tests' },
-      { name: 'Data Agent', role: 'Signals', color: '#F59E0B', meta: 'Metrics' },
-      { name: 'Risk Agent', role: 'Review', color: '#EF4444', meta: 'Policy' },
+    const agentPeople = [
+      { name: 'Code Agent', role: 'Engineering', origin: 'Create', action: 'Create custom agent', desc: 'Built by your team for code review, implementation tasks, and release checks.', color: '#5B5FE3', initials: 'CA' },
+      { name: 'Research Agent', role: 'GTM research', origin: 'Bring', action: 'Bring external agent', desc: 'Connect an agent your team already uses for market scans and account research.', color: '#3EAB6E', initials: 'RA' },
+      { name: 'CRM Agent', role: 'Sales ops', origin: 'Hire', action: 'Hire ready-made agent', desc: 'A ready-to-use assistant for lead enrichment, qualification, and CRM hygiene.', color: '#34D399', initials: 'CRM' },
+      { name: 'Design Agent', role: 'Creative ops', origin: 'Bring', action: 'Bring external agent', desc: 'Plug in a specialist agent for creative ideation, asset review, and brand checks.', color: '#A78BFA', initials: 'DA' },
+      { name: 'Data Agent', role: 'Analytics', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Analyze dashboards, explain metric changes, and turn insights into next actions.', color: '#0EA5E9', initials: 'BI' },
+      { name: 'Ops Agent', role: 'Internal tools', origin: 'Create', action: 'Create custom agent', desc: 'Create a private agent for IT requests, approvals, permissions, and internal tasks.', color: '#F59E0B', initials: 'OA' },
+      { name: 'Legal Agent', role: 'Risk review', origin: 'Bring', action: 'Bring external agent', desc: 'Bring an existing review agent into approval flows and compliance checkpoints.', color: '#EF4444', initials: 'LA' },
+      { name: 'PM Agent', role: 'Product', origin: 'Create', action: 'Create custom agent', desc: 'Build a product agent that understands specs, roadmap context, and release rituals.', color: '#787BEE', initials: 'PM' },
+      { name: 'QA Agent', role: 'Quality', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Run test plans, summarize defects, and keep release quality visible.', color: '#06B6D4', initials: 'QA' },
+      { name: 'Support Agent', role: 'Customer support', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Triage tickets, draft replies, and escalate issues with context.', color: '#10B981', initials: 'SA' },
+      { name: 'Security Agent', role: 'Security', origin: 'Bring', action: 'Bring external agent', desc: 'Bring a specialized security agent into review and approval workflows.', color: '#111827', initials: 'SEC' },
+      { name: 'Finance Agent', role: 'Finance ops', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent for spend checks, invoice reviews, and approval routing.', color: '#D97706', initials: 'FA' },
+      { name: 'HR Agent', role: 'People ops', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Help employees with onboarding, policy lookup, and internal requests.', color: '#EC4899', initials: 'HR' },
+      { name: 'Content Agent', role: 'Marketing', origin: 'Create', action: 'Create custom agent', desc: 'Build a content agent that understands brand voice and campaign playbooks.', color: '#8B5CF6', initials: 'CO' },
+      { name: 'Sales Agent', role: 'Revenue', origin: 'Bring', action: 'Bring external agent', desc: 'Connect your existing sales assistant to pipeline and account workflows.', color: '#2563EB', initials: 'SL' },
+      { name: 'Meeting Agent', role: 'Productivity', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Capture meeting notes, assign follow-ups, and sync decisions.', color: '#14B8A6', initials: 'MT' },
+      { name: 'SRE Agent', role: 'Operations', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent for incidents, runbooks, and system reliability checks.', color: '#F97316', initials: 'SR' },
+      { name: 'Docs Agent', role: 'Knowledge', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Keep specs, decisions, and team knowledge searchable and current.', color: '#64748B', initials: 'DOC' },
+      { name: 'Partner Agent', role: 'Ecosystem', origin: 'Bring', action: 'Bring external agent', desc: 'Bring partner-built agents into your controlled workflow environment.', color: '#7C3AED', initials: 'PA' },
+      { name: 'Procurement Agent', role: 'Procurement', origin: 'Create', action: 'Create custom agent', desc: 'Create a private agent for sourcing, vendor checks, and purchase approvals.', color: '#B45309', initials: 'PR' },
+      { name: 'Localization Agent', role: 'Global ops', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Translate, localize, and review assets across markets.', color: '#0891B2', initials: 'LO' },
+      { name: 'Customer Agent', role: 'Customer success', origin: 'Bring', action: 'Bring external agent', desc: 'Connect a customer-facing agent into renewal and onboarding workflows.', color: '#059669', initials: 'CS' },
+      { name: 'Release Agent', role: 'Release ops', origin: 'Hire', action: 'Hire ready-made agent', desc: 'Coordinate release checklists, blockers, and launch approvals.', color: '#4F46E5', initials: 'RL' },
+      { name: 'Insights Agent', role: 'Strategy', origin: 'Create', action: 'Create custom agent', desc: 'Create an agent that turns market, product, and customer signals into decisions.', color: '#9333EA', initials: 'IN' },
     ]
-    const activeIndex = Math.max(0, Math.min(agents.length - 1, activeAgentLane || 0))
-    const activeAgent = agents[activeIndex]
+    const hasActiveAgent = activeAgentLane !== null
+    const isEmptySeatActive = typeof activeAgentLane === 'number' && activeAgentLane < 0
+    const storySeatKey = 510
+    const isStorySeatActive = activeAgentLane === storySeatKey
+    const emptySeatInfo = {
+      name: 'Open seat',
+      role: 'Your next agent',
+      action: 'Bring, create, or hire an agent',
+      desc: 'This empty seat can be filled by bringing your own agent, creating a private one, or hiring a ready-made agent.',
+      color: '#F59E0B',
+    }
+    const activeSeatAgentIndex = hasActiveAgent && !isEmptySeatActive
+      ? (Math.floor(activeAgentLane / 100) * 18 + activeAgentLane % 100) % agentPeople.length
+      : 0
+    const activePerson = isEmptySeatActive ? emptySeatInfo : (isStorySeatActive ? xiaoAAgent : (hasActiveAgent ? agentPeople[activeSeatAgentIndex] : agentPeople[0]))
+    const originStyles = {
+      Hire: { color: '#3EAB6E', label: 'Hire an agent' },
+      Bring: { color: '#5B5FE3', label: 'Bring your agent' },
+      Create: { color: '#F59E0B', label: 'Create your agent' },
+    }
+    const activeOrigin = isEmptySeatActive ? { color: '#F59E0B', label: 'Bring · Create · Hire' } : originStyles[activePerson.origin]
+    const rows = Array.from({ length: 12 }, (_, row) => ({ row, cols: row < 3 ? 15 : row < 7 ? 16 : 17 }))
+    const emptySeatKeys = new Set([
+      '1-3', '1-9', '1-13', '2-4', '2-7', '2-10', '2-14',
+      '3-2', '3-6', '3-11', '3-15', '4-1', '4-5', '4-9', '4-12',
+      '5-3', '5-5', '5-8', '5-13', '5-15', '6-2', '6-6', '6-9', '6-14',
+      '7-3', '7-7', '7-11', '7-15', '8-1', '8-4', '8-6', '8-10', '8-14',
+      '9-2', '9-6', '9-10', '9-13', '9-16', '10-4', '10-8', '10-12', '10-15',
+      '11-1', '11-5', '11-8', '11-11', '11-15',
+    ])
+
+    const renderAgent = (person, active, scale) => (
+      <div className="absolute left-1/2 top-[-18px] z-20 -translate-x-1/2" style={{ transform: `translateX(-50%) ${active ? 'translateY(-8px) scale(1.1)' : ''}` }}>
+        {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full" style={{ backgroundColor: person.color }} />}
+        <div className="relative" style={{ width: 38 * scale, height: 48 * scale }}>
+          <div className={`absolute left-1/2 top-0 rounded-full bg-[#20242A] shadow-[0_10px_22px_rgba(15,23,42,0.30)] transition-all duration-300 ${active ? 'ring-2 ring-white' : 'ring-1 ring-white/45'}`} style={{ width: 28 * scale, height: 31 * scale, transform: 'translateX(-50%)' }}>
+            <div className="absolute inset-0 rounded-full" style={{ background: `radial-gradient(circle at 38% 22%, ${person.color}70, transparent 48%)` }} />
+            <div className="absolute left-[22%] top-[24%] h-[35%] w-[56%] rounded-full bg-[#F2C6A5]" />
+            <div className="absolute left-[34%] top-[36%] flex w-[32%] justify-between">
+              <span className="h-1 w-1 rounded-full bg-[#111827]/75" />
+              <span className="h-1 w-1 rounded-full bg-[#111827]/75" />
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-1/2 rounded-t-full shadow-[0_8px_18px_rgba(15,23,42,0.20)]" style={{ width: 35 * scale, height: 28 * scale, transform: 'translateX(-50%)', backgroundColor: person.color }}>
+            <div className="absolute inset-x-[25%] top-[18%] h-[17%] rounded-full bg-white/22" />
+          </div>
+        </div>
+      </div>
+    )
 
     return (
-      <div className="relative h-full min-h-[440px] w-full overflow-hidden rounded-[40px] bg-[#F7FAF8]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_48%_42%,rgba(62,171,110,0.14),transparent_34%),radial-gradient(circle_at_78%_18%,rgba(91,95,227,0.10),transparent_30%)]" />
-        <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'linear-gradient(#3EAB6E 1px, transparent 1px), linear-gradient(90deg, #3EAB6E 1px, transparent 1px)', backgroundSize: '42px 42px' }} />
+      <div className="relative h-full min-h-[440px] w-full overflow-hidden" onMouseLeave={() => setActiveAgentLane(null)}>
+        <style>{`
+          @keyframes agentSeatSpotlight {
+            0%, 100% { opacity: 0.16; transform: scale(0.88); }
+            50% { opacity: 0.42; transform: scale(1.16); }
+          }
+          @keyframes xiaoASeatBreathe {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.05); }
+          }
+          @keyframes workflowDash {
+            from { stroke-dashoffset: 42; }
+            to { stroke-dashoffset: 0; }
+          }
+          .agent-seat-spotlight { animation: agentSeatSpotlight 2.8s ease-in-out infinite; filter: blur(1px); }
+          .xiao-a-seat { animation: xiaoASeatBreathe 2.6s ease-in-out infinite; }
+          .workflow-stage-line { animation: workflowDash 2.4s linear infinite; }
+        `}</style>
 
-        <div className="absolute left-6 top-6 z-30 rounded-full border border-[#DDF6E8] bg-white/90 px-4 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#3EAB6E] shadow-[0_14px_34px_rgba(62,171,110,0.10)] backdrop-blur">
-          {copy.viewAgent}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#220708] via-[#5F1414] to-[#1D0506]" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/42 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/42 to-transparent" />
+
+        <svg viewBox="0 0 700 430" className="pointer-events-none absolute inset-0 z-20 h-full w-full">
+          <defs>
+            <linearGradient id="frontStageFlow" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="#5B5FE3" stopOpacity="0.18" />
+              <stop offset="50%" stopColor="#F59E0B" stopOpacity="0.80" />
+              <stop offset="100%" stopColor="#10B981" stopOpacity="0.18" />
+            </linearGradient>
+            <radialGradient id="stageGlow" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stopColor="#F59E0B" stopOpacity="0.38" />
+              <stop offset="100%" stopColor="#F59E0B" stopOpacity="0" />
+            </radialGradient>
+          </defs>
+          <ellipse cx="350" cy="78" rx="220" ry="58" fill="url(#stageGlow)" />
+          <rect x="154" y="46" width="392" height="76" rx="26" fill="#120F1C" opacity="0.86" />
+          <path className="workflow-stage-line" d="M205 84 C250 68, 292 100, 337 84 S425 68, 472 84" fill="none" stroke="url(#frontStageFlow)" strokeWidth="2.2" strokeDasharray="8 10" />
+          {[
+            { label: 'Brief', x: 205, color: '#5B5FE3' },
+            { label: 'Plan', x: 272, color: '#3EAB6E' },
+            { label: 'Build', x: 340, color: '#F59E0B' },
+            { label: 'Review', x: 408, color: '#A78BFA' },
+            { label: 'Ship', x: 475, color: '#10B981' },
+          ].map((node, idx) => (
+            <g key={node.label}>
+              <rect x={node.x - 27} y="68" width="54" height="32" rx="16" fill={idx === 2 ? node.color : '#FFFFFF'} opacity="0.96" />
+              <text x={node.x} y="88" textAnchor="middle" fill={idx === 2 ? '#FFFFFF' : node.color} fontSize="8" fontWeight="900" fontFamily="system-ui,-apple-system,sans-serif">{node.label}</text>
+            </g>
+          ))}
+          <text x="350" y="34" textAnchor="middle" fill="#FFFFFF" opacity="0.80" fontSize="10" fontWeight="850" fontFamily="system-ui,-apple-system,sans-serif" letterSpacing="1.4">LIVE WORKFLOW STAGE</text>
+        </svg>
+
+        <div className="absolute left-5 top-5 z-40 rounded-full border border-white/15 bg-white/[0.10] px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.16em] text-white/80 shadow-[0_12px_28px_rgba(0,0,0,0.18)] backdrop-blur">
+          View 02 · Agent Fleet
         </div>
 
-        <div className="absolute right-6 top-6 z-30 w-[260px] rounded-[28px] border border-[#DDF6E8] bg-white/92 p-4 shadow-[0_24px_70px_rgba(15,23,42,0.10)] backdrop-blur-xl">
-          <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#3EAB6E]">{copy.governanceHeadline}</div>
-          <div className="mt-2 text-[18px] font-black tracking-[-0.04em] text-[#111827]">{activeAgent.name}</div>
-          <div className="mt-1 text-[12px] font-bold text-[#646A73]">{activeAgent.role}</div>
-          <div className="mt-4 grid grid-cols-3 gap-2">
-            {['Role', 'Tools', 'Context'].map((item) => (
-              <div key={item} className="rounded-2xl bg-[#F3FCF7] px-2 py-2 text-center text-[9px] font-black text-[#3EAB6E]">
-                {item}
-              </div>
-            ))}
+        <div className="absolute right-5 top-5 z-40 w-[250px] rounded-3xl border border-white/15 bg-white/[0.10] p-4 text-white shadow-[0_18px_50px_rgba(0,0,0,0.20)] backdrop-blur-xl">
+          <div className="text-[10px] font-black uppercase tracking-[0.16em] text-white/55">Agent governance view</div>
+          <div className="mt-2 text-[14px] font-black leading-5">小A is one managed agent assigned to Product Development.</div>
+          <div className="mt-3 flex items-center gap-2 text-[9px] font-black text-white/70">
+            <span className="rounded-full bg-white/12 px-2 py-1">Role</span>
+            <span className="rounded-full bg-white/12 px-2 py-1">Permission</span>
+            <span className="rounded-full bg-[#FFF7E6] px-2 py-1 text-[#B45309]">Context</span>
           </div>
         </div>
 
-        <svg viewBox="0 0 820 500" className="absolute inset-0 h-full w-full">
-          <defs>
-            <filter id="agent-soft-shadow"><feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#0F172A" floodOpacity="0.12" /></filter>
-            <linearGradient id="agent-center" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#5B5FE3" />
-              <stop offset="100%" stopColor="#3EAB6E" />
-            </linearGradient>
-          </defs>
-          <circle cx="410" cy="258" r="150" fill="#FFFFFF" opacity="0.76" filter="url(#agent-soft-shadow)" />
-          <circle cx="410" cy="258" r="118" fill="none" stroke="#3EAB6E" strokeWidth="1.4" strokeDasharray="8 10" opacity="0.34" />
-          <circle cx="410" cy="258" r="76" fill="url(#agent-center)" opacity="0.10" />
-          <path d="M410 258 C320 180, 278 150, 218 134" fill="none" stroke="#5B5FE3" strokeWidth="2" strokeDasharray="7 8" opacity="0.40" />
-          <path d="M410 258 C510 176, 560 154, 620 134" fill="none" stroke="#3EAB6E" strokeWidth="2" strokeDasharray="7 8" opacity="0.40" />
-          <path d="M410 258 C325 338, 278 366, 220 386" fill="none" stroke="#F59E0B" strokeWidth="2" strokeDasharray="7 8" opacity="0.36" />
-          <path d="M410 258 C510 338, 562 366, 626 386" fill="none" stroke="#06B6D4" strokeWidth="2" strokeDasharray="7 8" opacity="0.36" />
-        </svg>
-
-        <div className="absolute left-1/2 top-1/2 z-20 flex h-[156px] w-[156px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[44px] border border-white bg-white shadow-[0_34px_90px_rgba(91,95,227,0.18)]">
-          <div className="flex h-16 w-16 items-center justify-center rounded-3xl bg-[#5B5FE3] text-[22px] font-black text-white shadow-[0_18px_44px_rgba(91,95,227,0.28)]">A</div>
-          <div className="mt-3 text-[15px] font-black text-[#111827]">{copy.xiaoA}</div>
-          <div className="mt-1 rounded-full bg-[#FFF7E6] px-2.5 py-1 text-[9px] font-black text-[#B45309]">{copy.contextPack}</div>
-        </div>
-
-        <div className="absolute inset-x-10 top-[126px] bottom-[74px] z-10">
-          {agents.map((agent, index) => {
-            const positions = [
-              'left-[6%] top-[6%]',
-              'right-[10%] top-[6%]',
-              'left-[4%] bottom-[6%]',
-              'right-[6%] bottom-[7%]',
-              'left-[38%] top-[-6%]',
-              'left-[39%] bottom-[-8%]',
-            ]
+        <div className="absolute bottom-[-18px] left-1/2 top-[122px] z-30 w-[112%] -translate-x-1/2">
+          {rows.map(({ row, cols }) => {
+            const scale = 0.84 + row * 0.04
             return (
-              <button
-                key={agent.name}
-                type="button"
-                onMouseEnter={() => setActiveAgentLane(index)}
-                onFocus={() => setActiveAgentLane(index)}
-                className={`absolute ${positions[index]} w-[168px] rounded-[28px] border bg-white/92 p-4 text-left shadow-[0_20px_60px_rgba(15,23,42,0.08)] transition-all duration-300 hover:-translate-y-1 ${index === activeIndex ? 'border-[#5B5FE3]/40 ring-4 ring-[#5B5FE3]/10' : 'border-white/80'}`}
+              <div
+                key={`front-row-${row}`}
+                className="grid gap-x-2 gap-y-2"
+                style={{
+                  gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+                  marginBottom: row < 8 ? 5 : 7,
+                  transform: `translateX(${row % 2 === 0 ? '-1.8%' : '1.8%'})`,
+                }}
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl text-[12px] font-black text-white" style={{ backgroundColor: agent.color }}>
-                    {agent.active ? 'A' : agent.name.split(' ')[0][0]}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="truncate text-[12px] font-black text-[#111827]">{agent.name}</div>
-                    <div className="mt-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-[#8F959E]">{agent.meta}</div>
-                  </div>
-                </div>
-                <div className="mt-4 h-1.5 rounded-full bg-[#EEF0F4]">
-                  <div className="h-full rounded-full" style={{ width: agent.active ? '92%' : `${56 + index * 6}%`, backgroundColor: agent.color }} />
-                </div>
-              </button>
+                {Array.from({ length: cols }).map((_, col) => {
+                  const key = `${row}-${col}`
+                  const empty = emptySeatKeys.has(key)
+                  const emptyActiveKey = -((row + 1) * 100 + col)
+                  const seatAgentKey = row * 100 + col
+                  const agentIdx = (row * 18 + col) % agentPeople.length
+                  const isStorySeat = seatAgentKey === storySeatKey
+                  const person = empty ? null : (isStorySeat ? xiaoAAgent : agentPeople[agentIdx])
+                  const active = empty ? activeAgentLane === emptyActiveKey : activeAgentLane === seatAgentKey
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      onMouseEnter={() => {
+                        if (empty) setActiveAgentLane(emptyActiveKey)
+                        if (person) setActiveAgentLane(seatAgentKey)
+                      }}
+                      onFocus={() => {
+                        if (empty) setActiveAgentLane(emptyActiveKey)
+                        if (person) setActiveAgentLane(seatAgentKey)
+                      }}
+                      className="relative min-h-[38px] rounded-t-[10px] transition-all duration-300"
+                      style={{ zIndex: active ? 70 : 10 + row }}
+                    >
+                      {person && (
+                        <div
+                          className={isStorySeat ? 'xiao-a-seat transition-opacity duration-200' : 'opacity-70 saturate-75 transition-opacity duration-200'}
+                        >
+                          {renderAgent(person, active || isStorySeat, scale)}
+                          {isStorySeat && (
+                            <>
+                              <div className="pointer-events-none absolute left-1/2 top-[-58px] z-50 w-[118px] -translate-x-1/2 rounded-2xl border border-white/80 bg-white px-2.5 py-1.5 text-center text-[8px] font-black leading-3 text-[#5B5FE3] shadow-[0_14px_34px_rgba(91,95,227,0.18)]">
+                                小A · context-ready
+                                <div className="mt-0.5 text-[7px] text-[#8F959E]">assigned to Product Dev</div>
+                              </div>
+                              <div className="pointer-events-none absolute left-1/2 top-[-24px] z-40 h-16 w-16 -translate-x-1/2 rounded-full border-2 border-[#5B5FE3]/30 bg-[#5B5FE3]/10 shadow-[0_18px_46px_rgba(91,95,227,0.22)]" />
+                              <div
+                                className="pointer-events-none absolute left-[calc(50%+26px)] top-[-34px] z-50 flex h-7 w-7 items-center justify-center rounded-xl border border-[#FDE7B6] bg-[#FFF7E6] text-[13px] shadow-[0_12px_30px_rgba(180,83,9,0.18)] transition-opacity duration-200"
+                              >
+                                ▣
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
+                      {empty && (
+                        <div className="absolute left-1/2 top-[-14px] z-20 -translate-x-1/2">
+                          {active && <div className="agent-seat-spotlight absolute inset-[-18px] rounded-full bg-[#F59E0B]" />}
+                          <div className={`absolute left-1/2 top-[-25px] w-[82px] -translate-x-1/2 rounded-full border px-2 py-1 text-center text-[7px] font-black uppercase tracking-[0.06em] shadow-[0_12px_24px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'scale-100 border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] opacity-100' : 'pointer-events-none scale-95 border-white/0 bg-transparent text-white/0 opacity-0'}`}>
+                            Hire · Bring · Create
+                          </div>
+                          <div className={`flex h-9 w-9 items-center justify-center rounded-full border border-dashed transition-all duration-300 ${active ? 'scale-100 border-[#F59E0B] bg-[#FFF8EA] text-[#F59E0B] opacity-100 shadow-[0_18px_38px_rgba(245,158,11,0.22)]' : 'pointer-events-none scale-90 border-white/0 bg-transparent text-white/0 opacity-0'}`}>
+                            <span className="text-[16px] font-black leading-none">+</span>
+                          </div>
+                        </div>
+                      )}
+                      <div className={`relative h-full min-h-[38px] rounded-t-[10px] border border-[#5C0C0D]/60 bg-gradient-to-b from-[#B93425] via-[#8E1D18] to-[#5C0C0D] shadow-[inset_0_3px_0_rgba(255,255,255,0.16),0_7px_12px_rgba(0,0,0,0.22)] transition-all duration-300 ${active ? 'brightness-125 ring-2 ring-white/70' : ''}`}>
+                        <div className="absolute inset-x-1 top-1 h-2 rounded-full bg-white/18" />
+                        <div className="absolute bottom-0 left-1/2 h-[32%] w-[84%] -translate-x-1/2 rounded-t-[8px] bg-black/12" />
+                        {empty && <div className={`absolute inset-1 rounded-t-[7px] border border-dashed transition-all duration-300 ${active ? 'border-white/55 bg-white/10' : 'border-white/0 bg-transparent'}`} />}
+                      </div>
+                    </button>
+                  )
+                })}
+              </div>
             )
           })}
         </div>
 
-        <div className="absolute bottom-6 left-6 right-6 z-30 grid grid-cols-3 gap-3">
-          {[
-            { label: 'Assign to workflow', color: '#5B5FE3' },
-            { label: 'Observe behavior', color: '#3EAB6E' },
-            { label: 'Control permissions', color: '#F59E0B' },
-          ].map((item) => (
-            <div key={item.label} className="rounded-2xl border border-white/80 bg-white/82 px-4 py-3 shadow-[0_14px_34px_rgba(15,23,42,0.06)]">
-              <div className="mb-2 h-2 w-8 rounded-full" style={{ backgroundColor: item.color }} />
-              <div className="text-[11px] font-black text-[#111827]">{item.label}</div>
-            </div>
-          ))}
+        {hasActiveAgent && (
+        <div className="absolute right-4 top-1/2 z-[90] w-[218px] -translate-y-1/2 rounded-[28px] border border-white/80 bg-white/[0.93] p-4 shadow-[0_24px_70px_rgba(0,0,0,0.22)] backdrop-blur-xl">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="rounded-full px-2 py-1 text-[8px] font-black uppercase tracking-[0.12em]" style={{ color: activeOrigin.color, backgroundColor: `${activeOrigin.color}14` }}>
+              {activeOrigin.label}
+            </span>
+            <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: activePerson.color }} />
+          </div>
+          <div className="mb-1 text-[16px] font-black tracking-[-0.03em] text-[#111827]">{activePerson.name}</div>
+          <div className="mb-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#8F959E]">{activePerson.role}</div>
+          <p className="mb-4 text-[11px] leading-5 text-[#646A73]">{activePerson.desc}</p>
+          <div className="rounded-2xl border border-[#EEF0F4] bg-[#FBFCFF] p-3">
+            <div className="mb-2 text-[9px] font-black uppercase tracking-[0.14em] text-[#8F959E]">Action</div>
+            <div className="text-[12px] font-black text-[#111827]">{activePerson.action}</div>
+          </div>
+          <div className="mt-3 overflow-hidden rounded-2xl border border-[#EEF0F4] bg-white p-3">
+            {isStorySeatActive ? (
+              <div>
+                <div className="mb-3 grid grid-cols-[auto_1fr_auto] items-center gap-2">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#5B5FE3] text-[12px] font-black text-white shadow-[0_12px_26px_rgba(91,95,227,0.22)]">A</div>
+                  <div className="min-w-0">
+                    <div className="text-[9px] font-black uppercase tracking-[0.12em] text-[#8F959E]">Assigned workflow</div>
+                    <div className="truncate text-[11px] font-black text-[#111827]">Product Development workflow</div>
+                  </div>
+                  <span className="rounded-full bg-[#F4F6FF] px-2 py-1 text-[8px] font-black text-[#5B5FE3]">Active</span>
+                </div>
+                <div className="rounded-2xl border border-[#FDE7B6] bg-[#FFF9EA] p-3">
+                  <div className="mb-2 flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-white text-[15px] shadow-sm">▣</div>
+                    <div>
+                      <div className="text-[10px] font-black text-[#B45309]">Context package</div>
+                      <div className="text-[8px] font-bold text-[#B45309]/60">Available while 小A works</div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {['Docs', 'Chats', 'Tasks'].map((item) => (
+                      <span key={item} className="rounded-lg bg-white px-1.5 py-1 text-center text-[7px] font-black text-[#B45309]/75 shadow-sm">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : isEmptySeatActive ? (
+              <div>
+                <div className="mb-3 grid grid-cols-3 items-center gap-2">
+                  <div className="rounded-xl border border-[#E8EAFF] bg-[#F6F7FF] p-2 text-center">
+                    <div className="text-[8px] font-black text-[#5B5FE3]">Bring</div>
+                    <div className="mt-1 h-6 rounded-md bg-[#5B5FE3]/12" />
+                  </div>
+                  <div className="rounded-xl border border-[#DDF6E8] bg-[#F3FCF7] p-2 text-center">
+                    <div className="text-[8px] font-black text-[#3EAB6E]">Hire</div>
+                    <div className="mt-1 h-6 rounded-md bg-[#3EAB6E]/15" />
+                  </div>
+                  <div className="rounded-xl border border-[#FFE8BF] bg-[#FFF8EA] p-2 text-center">
+                    <div className="text-[8px] font-black text-[#F59E0B]">Create</div>
+                    <div className="mt-1 flex h-6 items-center justify-center rounded-md bg-[#F59E0B] text-white">+</div>
+                  </div>
+                </div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Use the open seat to bring an external agent, create a private one, or hire a ready-made agent.</div>
+              </div>
+            ) : activePerson.origin === 'Bring' ? (
+              <div>
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="rounded-xl border border-[#E8EAFF] bg-[#F6F7FF] px-2.5 py-2">
+                    <div className="text-[8px] font-black uppercase tracking-[0.12em] text-[#5B5FE3]">External</div>
+                    <div className="text-[10px] font-black text-[#111827]">Your agent</div>
+                  </div>
+                  <div className="flex flex-1 items-center px-2">
+                    <span className="h-px flex-1 border-t border-dashed border-[#5B5FE3]/40" />
+                    <span className="mx-1 h-1.5 w-1.5 rounded-full bg-[#5B5FE3]" />
+                    <span className="h-px flex-1 border-t border-dashed border-[#5B5FE3]/40" />
+                  </div>
+                  <div className="rounded-xl bg-[#111827] px-2.5 py-2 text-white">
+                    <div className="text-[8px] font-black uppercase tracking-[0.12em] text-white/45">Meegle</div>
+                    <div className="text-[10px] font-black">Connect</div>
+                  </div>
+                </div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Bring an existing agent through MCP, CLI, API, or partner integrations.</div>
+              </div>
+            ) : activePerson.origin === 'Create' ? (
+              <div>
+                <div className="mb-3 grid grid-cols-[1fr_auto] gap-2">
+                  <div className="rounded-xl border border-[#FFE8BF] bg-[#FFF8EA] p-2">
+                    <div className="mb-1 h-1.5 w-12 rounded-full bg-[#F59E0B]/35" />
+                    <div className="mb-1 h-1.5 w-8 rounded-full bg-[#F59E0B]/20" />
+                    <div className="grid grid-cols-3 gap-1 pt-1">
+                      <span className="h-5 rounded-md bg-white shadow-sm" />
+                      <span className="h-5 rounded-md bg-white shadow-sm" />
+                      <span className="h-5 rounded-md bg-white shadow-sm" />
+                    </div>
+                  </div>
+                  <div className="flex h-full w-10 items-center justify-center rounded-xl bg-[#F59E0B] text-[18px] font-black text-white">+</div>
+                </div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Create a private agent from templates, skills, tools, and business context.</div>
+              </div>
+            ) : (
+              <div>
+                <div className="mb-3 grid grid-cols-3 gap-1.5">
+                  {[0, 1, 2].map((item) => (
+                    <div key={item} className="rounded-lg border border-[#DDF6E8] bg-[#F3FCF7] p-1.5">
+                      <div className="mb-1 h-5 rounded-md bg-[#3EAB6E]/15" />
+                      <div className="mx-auto h-1 w-8 rounded-full bg-[#3EAB6E]/30" />
+                    </div>
+                  ))}
+                </div>
+                <div className="text-[9px] leading-4 text-[#8F959E]">Hire a ready-made agent and place it directly into a workflow.</div>
+              </div>
+            )}
+          </div>
         </div>
+        )}
       </div>
     )
   }
 
   if (card.id === 'context') {
-    const sources = [
-      { label: 'Docs', sub: 'Specs · Wiki', color: '#5B5FE3', x: 70, y: 104 },
-      { label: 'Chats', sub: 'Slack · Lark', color: '#8B5CF6', x: 70, y: 268 },
-      { label: 'Tasks', sub: 'Jira · Linear', color: '#F59E0B', x: 560, y: 104 },
-      { label: 'Decisions', sub: 'Meetings · PRDs', color: '#10B981', x: 560, y: 268 },
-    ]
-
     return (
-      <div className="relative h-full w-full overflow-hidden rounded-[40px] bg-[#FFF7E6]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(245,158,11,0.16),transparent_36%),radial-gradient(circle_at_80%_16%,rgba(91,95,227,0.09),transparent_30%)]" />
-        <div className="absolute left-6 top-6 z-30 max-w-[330px] rounded-[28px] border border-[#FDE7B6] bg-white/92 p-4 shadow-[0_18px_50px_rgba(180,83,9,0.12)] backdrop-blur-xl">
-          <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#B45309]">{copy.viewContext}</div>
-          <div className="mt-2 text-[15px] font-black leading-5 text-[#111827]">{copy.contextIntro}</div>
+      <div className="relative h-full w-full overflow-hidden">
+        <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-[#FFF9EA] via-[#FFF2D2] to-[#FFE8AF]" style={{ opacity: isVisible ? 1 : 0.4, transition: 'opacity 0.6s ease' }} />
+        <div className="absolute inset-[4%] rounded-[34px] bg-white/12 blur-3xl" />
+        <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: 'radial-gradient(#D97706 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
+        <style>{`
+          @keyframes xiaoABagOpen {
+            0%, 100% { transform: translateY(0) scale(1); }
+            45% { transform: translateY(-8px) scale(1.03); }
+          }
+          .xiao-a-context-bag { animation: xiaoABagOpen 2.8s ease-in-out infinite; }
+        `}</style>
+        <div className="absolute left-5 top-5 z-40 w-[300px] rounded-3xl border border-[#FDE7B6] bg-white/90 p-4 shadow-[0_18px_50px_rgba(180,83,9,0.13)] backdrop-blur-xl">
+          <div className="text-[10px] font-black uppercase tracking-[0.16em] text-[#B45309]">View 03 · Context</div>
+          <div className="mt-2 text-[14px] font-black leading-5 text-[#111827]">This is the context pack 小A reads while participating in the workflow.</div>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {['Docs', 'Chats', 'Tasks', 'Decisions'].map((item) => (
+              <span key={item} className="rounded-full bg-[#FFF7E6] px-2 py-1 text-[8px] font-black text-[#B45309]">
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
-
-        <svg viewBox="0 0 820 500" className="absolute inset-0 h-full w-full">
+        <svg viewBox="0 0 820 500" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 h-full w-full" style={{ filter: 'drop-shadow(0 24px 52px rgba(245,158,11,0.14))' }}>
           <defs>
-            <filter id="ctx-shadow"><feDropShadow dx="0" dy="18" stdDeviation="18" floodColor="#7C4D00" floodOpacity="0.12" /></filter>
-            <linearGradient id="ctx-core" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#5B5FE3" />
-              <stop offset="100%" stopColor="#F59E0B" />
+            <linearGradient id="uc-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#F59E0B" />
+              <stop offset="100%" stopColor="#FBBF24" />
             </linearGradient>
+            <linearGradient id="uc-core" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#5B5FE3" />
+              <stop offset="100%" stopColor="#A78BFA" />
+            </linearGradient>
+            <linearGradient id="uc-card" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#FFFFFF" />
+              <stop offset="100%" stopColor="#FFFDF7" />
+            </linearGradient>
+            <filter id="uc-shadow"><feDropShadow dx="0" dy="12" stdDeviation="14" floodColor="#7C4D00" floodOpacity="0.12" /></filter>
+            <filter id="uc-glow"><feGaussianBlur stdDeviation="10" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
           </defs>
-          <rect x="44" y="68" width="732" height="378" rx="48" fill="#FFFFFF" opacity="0.38" />
-          <circle cx="410" cy="256" r="122" fill="#FFFFFF" opacity="0.88" filter="url(#ctx-shadow)" />
-          <circle cx="410" cy="256" r="86" fill="#FFF7E6" stroke="#FDE7B6" strokeWidth="1.5" />
-          <circle cx="410" cy="256" r="52" fill="url(#ctx-core)" opacity="0.94" />
-          <text x="410" y="248" textAnchor="middle" fill="white" fontSize="13" fontWeight="900">Context</text>
-          <text x="410" y="266" textAnchor="middle" fill="white" opacity="0.82" fontSize="10" fontWeight="800">Pack</text>
 
-          {sources.map((source) => (
-            <g key={source.label}>
+          <rect x="40" y="34" width="740" height="432" rx="42" fill="#FFFFFF" opacity="0.24" />
+          <rect x="70" y="64" width="680" height="372" rx="34" fill="#FFFFFF" opacity="0.16" />
+          <rect x="104" y="126" width="612" height="258" rx="32" fill="#FFFFFF" opacity="0.24" />
+          <rect x="128" y="154" width="564" height="198" rx="26" fill="#FFFDF8" opacity="0.58" />
+
+          {/* Popular integrations */}
+          <g opacity="0.30">
+          {[
+            { x: 58, y: 160, label: 'Slack', icon: 'S', color: '#7C3AED' },
+            { x: 58, y: 220, label: 'Jira', icon: 'J', color: '#2563EB' },
+            { x: 58, y: 280, label: 'GitHub', icon: 'G', color: '#111827' },
+            { x: 676, y: 160, label: 'Figma', icon: 'F', color: '#EC4899' },
+            { x: 676, y: 220, label: 'Drive', icon: 'D', color: '#10B981' },
+            { x: 676, y: 280, label: 'Notion', icon: 'N', color: '#111827' },
+            { x: 366, y: 390, label: 'Confluence', icon: 'C', color: '#F59E0B' },
+          ].map((app, i) => (
+            <g key={app.label}>
+              <rect x={app.x} y={app.y} width="86" height="34" rx="17" fill="white" stroke={app.color} strokeWidth="1" strokeOpacity="0.14" filter="url(#uc-shadow)" />
+              <circle cx={app.x + 18} cy={app.y + 17} r="10" fill={app.color} opacity="0.12" />
+              <text x={app.x + 14} y={app.y + 21} fill={app.color} fontSize="10" fontWeight="900">{app.icon}</text>
+              <text x={app.x + 34} y={app.y + 21} fill="#111827" fontSize="10" fontWeight="800">{app.label}</text>
               <path
-                d={`M${source.x + 95} ${source.y + 42} C${source.x < 410 ? 260 : 560} ${source.y + 42}, ${source.x < 410 ? 320 : 500} 256, 410 256`}
+                d={`M${app.x + 43} ${app.y + 17} C${app.x < 410 ? app.x + 130 : app.x - 70} ${app.y + 17}, ${app.x < 410 ? 270 : 550} ${i < 3 ? 210 : 300}, 410 258`}
                 fill="none"
-                stroke={source.color}
-                strokeWidth="2.2"
-                strokeDasharray="8 10"
-                opacity="0.32"
+                stroke={app.color}
+                strokeWidth="1"
+                strokeDasharray="3,8"
+                opacity="0.16"
               />
-              <rect x={source.x} y={source.y} width="190" height="84" rx="26" fill="white" stroke={source.color} strokeWidth="1.2" strokeOpacity="0.20" filter="url(#ctx-shadow)" />
-              <circle cx={source.x + 35} cy={source.y + 42} r="18" fill={source.color} opacity="0.12" />
-              <rect x={source.x + 64} y={source.y + 28} width="82" height="9" rx="4.5" fill={source.color} opacity="0.18" />
-              <rect x={source.x + 64} y={source.y + 48} width="56" height="7" rx="3.5" fill={source.color} opacity="0.10" />
-              <text x={source.x + 64} y={source.y + 31} fill="#111827" fontSize="14" fontWeight="900">{source.label}</text>
-              <text x={source.x + 64} y={source.y + 55} fill="#8F959E" fontSize="9" fontWeight="800">{source.sub}</text>
+            </g>
+          ))}
+          </g>
+
+          <g opacity="0.42">
+          {[
+            { x: 152, y: 166, icon: '📄', label: 'Docs', sub: 'Specs / wiki', color: '#3B82F6', tx: 330, ty: 214 },
+            { x: 152, y: 246, icon: '💬', label: 'Chats', sub: 'Slack / Lark', color: '#8B5CF6', tx: 330, ty: 258 },
+            { x: 152, y: 326, icon: '🎫', label: 'Tickets', sub: 'Jira / Linear', color: '#EF4444', tx: 330, ty: 304 },
+            { x: 542, y: 166, icon: '📅', label: 'Meetings', sub: 'Notes / calls', color: '#10B981', tx: 490, ty: 214 },
+            { x: 542, y: 246, icon: '📊', label: 'Metrics', sub: 'BI / reports', color: '#F59E0B', tx: 490, ty: 258 },
+            { x: 542, y: 326, icon: '🧩', label: 'PRDs', sub: 'Requirements', color: '#06B6D4', tx: 490, ty: 304 },
+          ].map((src, i) => (
+            <g key={src.label}>
+              <path
+                d={`M${src.x + (src.x < 410 ? 118 : 0)} ${src.y + 27} C${src.x < 410 ? src.x + 184 : src.x - 76} ${src.y + 27}, ${src.tx} ${src.ty}, ${src.tx} ${src.ty}`}
+                fill="none"
+                stroke={src.color}
+                strokeWidth="1.6"
+                strokeDasharray="4,5"
+                opacity="0.38"
+              >
+                <animate attributeName="stroke-dashoffset" from="18" to="0" dur={`${1.6 + i * 0.2}s`} repeatCount="indefinite" />
+              </path>
+              <circle cx={src.tx} cy={src.ty} r="3" fill={src.color} opacity="0.55">
+                <animate attributeName="opacity" values="0.25;0.85;0.25" dur={`${1.8 + i * 0.16}s`} repeatCount="indefinite" />
+              </circle>
+              <rect x={src.x} y={src.y} width="126" height="56" rx="16" fill="url(#uc-card)" stroke={src.color} strokeWidth="1.2" strokeOpacity="0.18" filter="url(#uc-shadow)" />
+              <circle cx={src.x + 23} cy={src.y + 28} r="14" fill={src.color} opacity="0.10" />
+              <text x={src.x + 15} y={src.y + 34} fontSize="15">{src.icon}</text>
+              <text x={src.x + 46} y={src.y + 31} fill="#111827" fontSize="11" fontWeight="750">{src.label}</text>
+              <text x={src.x + 46} y={src.y + 45} fill="#8F959E" fontSize="8" fontWeight="700">{src.sub}</text>
+            </g>
+          ))}
+          </g>
+
+          {/* Context Center distributes normalized information packages upward */}
+          <g opacity="0.82">
+            <rect x="104" y="42" width="612" height="86" rx="26" fill="#FFFFFF" opacity="0.78" stroke="#FDE7B6" strokeWidth="1.2" filter="url(#uc-shadow)" />
+            <rect x="128" y="58" width="112" height="22" rx="11" fill="#FFF7E6" />
+            <text x="184" y="73" textAnchor="middle" fill="#B45309" fontSize="8.5" fontWeight="900" letterSpacing="1.1">PACKAGE LAYER</text>
+            <text x="410" y="71" textAnchor="middle" fill="#111827" fontSize="12" fontWeight="900">Context Pack gives 小A task memory and business signals</text>
+            <text x="662" y="73" textAnchor="middle" fill="#5B5FE3" fontSize="9" fontWeight="900">Used by agents</text>
+          </g>
+          <g opacity="0.30">
+          {[
+            { x: 160, y: 88, color: '#5B5FE3', anchorX: 296 },
+            { x: 288, y: 88, color: '#EF4444', anchorX: 372 },
+            { x: 416, y: 88, color: '#F59E0B', anchorX: 448 },
+            { x: 544, y: 88, color: '#10B981', anchorX: 524 },
+          ].map((packet, i) => (
+            <g key={`packet-line-${i}`}>
+              <path
+                d={`M410 176 C410 150, ${packet.anchorX} 126, ${packet.x + 52} 126`}
+                fill="none"
+                stroke={packet.color}
+                strokeWidth="1.8"
+                strokeDasharray="5,7"
+                opacity="0.55"
+              >
+                <animate attributeName="stroke-dashoffset" from="24" to="0" dur={`${1.8 + i * 0.18}s`} repeatCount="indefinite" />
+              </path>
+              <circle cx={packet.x + 52} cy="126" r="4.5" fill={packet.color} opacity="0.72">
+                <animate attributeName="opacity" values="0.2;0.9;0.2" dur={`${1.6 + i * 0.18}s`} repeatCount="indefinite" />
+              </circle>
+            </g>
+          ))}
+          </g>
+
+          <g filter="url(#uc-glow)">
+            <circle cx="410" cy="258" r="104" fill="#F59E0B" opacity="0.10">
+              <animate attributeName="r" values="112;128;112" dur="4.4s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.06;0.13;0.06" dur="4.4s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="410" cy="258" r="82" fill="#5B5FE3" opacity="0.08">
+              <animate attributeName="r" values="88;100;88" dur="3.8s" repeatCount="indefinite" />
+            </circle>
+            <circle cx="410" cy="258" r="50" fill="#A78BFA" opacity="0.12">
+              <animate attributeName="opacity" values="0.08;0.16;0.08" dur="3.2s" repeatCount="indefinite" />
+            </circle>
+          </g>
+
+          <rect x="326" y="176" width="168" height="164" rx="30" fill="white" stroke="#E9ECF3" strokeWidth="1.2" filter="url(#uc-shadow)" />
+          <rect x="326" y="176" width="168" height="48" rx="30" fill="url(#uc-core)" />
+          <text x="410" y="205" textAnchor="middle" fill="white" fontSize="13" fontWeight="850">Context Center</text>
+          <text x="410" y="238" textAnchor="middle" fill="#8F959E" fontSize="8" fontWeight="800" letterSpacing="1.2">SOURCE OF TRUTH</text>
+          <path d="M608 178 C548 190, 504 212, 462 238" fill="none" stroke="#F59E0B" strokeWidth="2.2" strokeDasharray="7,7" opacity="0.40" />
+          <circle cx="462" cy="238" r="5" fill="#F59E0B" opacity="0.72">
+            <animate attributeName="r" values="4;7;4" dur="1.8s" repeatCount="indefinite" />
+          </circle>
+
+          {[
+            { y: 260, label: 'Entities', pct: 92, color: '#5B5FE3' },
+            { y: 288, label: 'Signals', pct: 86, color: '#F59E0B' },
+            { y: 316, label: 'Decisions', pct: 96, color: '#10B981' },
+          ].map((item) => (
+            <g key={item.label}>
+              <text x="352" y={item.y - 5} fill="#646A73" fontSize="9" fontWeight="700">{item.label}</text>
+              <text x="470" y={item.y - 5} textAnchor="end" fill={item.color} fontSize="8" fontWeight="850">{item.pct}%</text>
+              <rect x="352" y={item.y + 2} width="118" height="6" rx="3" fill="#F0F2F6" />
+              <rect x="352" y={item.y + 2} width={item.pct * 1.18} height="6" rx="3" fill={item.color} opacity="0.82" />
             </g>
           ))}
 
-          <path d="M462 256 C522 244, 562 236, 620 220" fill="none" stroke="#5B5FE3" strokeWidth="2.4" strokeDasharray="7 8" opacity="0.45" />
+          <g opacity="0.38">
+          {[
+            { x: 160, y: 88, sub: 'for planning', icon: '01', color: '#5B5FE3' },
+            { x: 288, y: 88, sub: 'for risk', icon: '02', color: '#EF4444' },
+            { x: 416, y: 88, sub: 'for status', icon: '03', color: '#F59E0B' },
+            { x: 544, y: 88, sub: 'for actions', icon: '04', color: '#10B981' },
+          ].map((packet, i) => (
+            <g key={`packet-card-${i}`}>
+              <rect x={packet.x} y={packet.y} width="104" height="42" rx="14" fill="white" stroke={packet.color} strokeWidth="1.8" strokeOpacity="0.34" filter="url(#uc-shadow)" />
+              <rect x={packet.x + 10} y={packet.y + 28} width="56" height="4" rx="2" fill={packet.color} opacity="0.12" />
+              <circle cx={packet.x + 19} cy={packet.y + 18} r="10" fill={packet.color} opacity="0.14" />
+              <text x={packet.x + 19} y={packet.y + 21} textAnchor="middle" fill={packet.color} fontSize="7.2" fontWeight="950">{packet.icon}</text>
+              <text x={packet.x + 36} y={packet.y + 17} fill="#111827" fontSize="11" fontWeight="900">Package</text>
+              <text x={packet.x + 36} y={packet.y + 29} fill="#8F959E" fontSize="7.2" fontWeight="750">{packet.sub}</text>
+              <circle cx={packet.x + 91} cy={packet.y + 13} r="3.5" fill={packet.color} opacity="0.65">
+                <animate attributeName="r" values="2.4;4;2.4" dur={`${2 + i * 0.2}s`} repeatCount="indefinite" />
+              </circle>
+            </g>
+          ))}
+          </g>
+
+          <g>
+            <rect x="238" y="410" width="344" height="34" rx="17" fill="white" stroke="#DDF6E8" filter="url(#uc-shadow)" />
+            <circle cx="260" cy="427" r="11" fill="#ECFDF5" stroke="#16A34A" strokeWidth="2" />
+            <path d="M255 427 l3 3 l7 -8" stroke="#16A34A" strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <text x="282" y="431" fill="#16A34A" fontSize="11" fontWeight="850">One context pack supports workflow execution, agent governance, and data visibility</text>
+          </g>
         </svg>
-
-        <div className="absolute right-10 top-1/2 z-40 w-[210px] -translate-y-1/2 rounded-[30px] border border-[#E8EAFF] bg-white/94 p-5 shadow-[0_28px_80px_rgba(91,95,227,0.14)] backdrop-blur-xl">
-          <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#5B5FE3] text-[17px] font-black text-white">A</div>
+        <div
+          className="xiao-a-context-bag pointer-events-none absolute right-[11%] top-[26%] z-40 rounded-[20px] border border-[#FDE7B6] bg-white/95 px-4 py-3 shadow-[0_18px_42px_rgba(180,83,9,0.16)] backdrop-blur-xl transition-opacity duration-200"
+        >
+          <div className="flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#FFF7E6] text-[17px]">▣</div>
             <div>
-              <div className="text-[15px] font-black text-[#111827]">{copy.xiaoA}</div>
-              <div className="text-[9px] font-black uppercase tracking-[0.12em] text-[#8F959E]">{copy.readsContext}</div>
+              <div className="text-[9px] font-black uppercase tracking-[0.13em] text-[#B45309]">小A's package</div>
+              <div className="mt-1 flex gap-1">
+                {['Docs', 'Chats', 'Tasks', 'Decisions'].map((item) => (
+                  <span key={item} className="rounded-full bg-[#FFF8EA] px-1.5 py-0.5 text-[7px] font-black text-[#B45309]/70">
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="mt-4 rounded-2xl bg-[#FFF7E6] p-3">
-            <div className="text-[10px] font-black text-[#B45309]">{copy.contextPack}</div>
-            <div className="mt-2 grid grid-cols-2 gap-1.5">
-              {['Docs', 'Chats', 'Tasks', 'Decisions'].map((item) => (
-                <span key={item} className="rounded-lg bg-white px-2 py-1 text-center text-[7px] font-black text-[#B45309] shadow-sm">{item}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="absolute bottom-6 left-6 right-6 z-30 rounded-[26px] border border-[#DDF6E8] bg-white/82 px-5 py-4 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ECFDF5] text-[#16A34A]"><CheckCircle2 size={16} /></div>
-            <div className="text-[13px] font-black text-[#111827]">{copy.bottomContext}</div>
           </div>
         </div>
       </div>
@@ -1891,10 +2173,6 @@ const MeegleHomepagePeak = () => {
     ...card,
     ...t.stackCards[card.id],
   }))
-  const controlPillars = CONTROL_PILLARS.map((item, index) => ({
-    ...item,
-    ...t.controlPillars[index],
-  }))
   const heroRef = useRef(null)
   const stackRef = useRef(null)
 
@@ -2184,7 +2462,7 @@ const MeegleHomepagePeak = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-14 gap-y-14 pt-2">
-              {controlPillars.map((item) => (
+              {CONTROL_PILLARS.map((item) => (
                 <div key={item.title} className="max-w-[320px]">
                   <div className="mb-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#F4EFFF] text-[#A26BEE]">
                     {item.icon}
@@ -2211,13 +2489,13 @@ const MeegleHomepagePeak = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_0.7fr] gap-16 lg:gap-24 items-center">
             <div className="relative z-10">
               <div className="inline-flex items-center gap-2 rounded-full bg-[#FFF7ED] px-4 py-1.5 text-[12px] font-semibold text-[#D46B08] mb-5">
-                <Shield size={14} /> {t.security.badge}
+                <Shield size={14} /> Enterprise-Ready
               </div>
               <h2 className="text-[48px] md:text-[56px] leading-[1.06] font-black tracking-[-0.05em] text-[#0A0A14]">
-                {t.security.title}
+                Compliance-ready.<br />Audit-ready.<br />Enterprise-ready.
               </h2>
               <p className="mt-5 text-[17px] leading-7 text-[#646A73] max-w-[500px]">
-                {t.security.desc}
+                Your workflows are your competitive advantage. Meegle secures organizational intelligence with strict data governance and global compliance frameworks.
               </p>
 
               <div className="mt-10 grid grid-cols-2 gap-3">
@@ -2289,10 +2567,10 @@ const MeegleHomepagePeak = () => {
       <section className="py-32 md:py-44 bg-white">
         <div className="max-w-[1340px] mx-auto px-6 text-center">
           <h2 className="text-[48px] md:text-[56px] leading-[1.06] font-black tracking-[-0.05em] text-[#0A0A14]">
-            {t.trust.title}
+            Trusted by<br />forward-thinking teams
           </h2>
           <p className="mt-4 text-[17px] leading-7 text-[#646A73] max-w-[520px] mx-auto">
-            {t.trust.desc}
+            Global leadership teams operationalize their AI strategy with Meegle.
           </p>
 
           <div className="mt-16 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 opacity-[0.18]">
@@ -2305,13 +2583,13 @@ const MeegleHomepagePeak = () => {
 
           <div className="mt-20 max-w-[700px] mx-auto rounded-[28px] border border-black/[0.03] bg-[#FBFCFD] p-10">
             <div className="text-[16px] leading-8 text-[#5B6272] italic">
-              {t.trust.quote}
+              "Meegle transformed how we think about project management. Multi-agent orchestration isn't just a feature — it's a fundamentally new way to run an engineering organization."
             </div>
             <div className="mt-6 flex items-center justify-center gap-3">
               <img className="h-10 w-10 rounded-full ring-2 ring-white shadow-sm" src="https://api.dicebear.com/9.x/avataaars/svg?seed=EngVP" alt="" />
               <div className="text-left">
-                <div className="text-[15px] font-bold text-[#111827]">{t.trust.role}</div>
-                <div className="text-[12px] text-[#8F959E]">{t.trust.company}</div>
+                <div className="text-[15px] font-bold text-[#111827]">VP of Engineering</div>
+                <div className="text-[12px] text-[#8F959E]">Fortune 500 Technology Company</div>
               </div>
             </div>
           </div>
@@ -2365,9 +2643,14 @@ const MeegleHomepagePeak = () => {
                 </svg>
                 Meegle
               </div>
-              <p className="text-[13px] leading-6 text-white/25">{t.footer.desc}</p>
+              <p className="text-[13px] leading-6 text-white/25">AI-native project management for the next generation.</p>
             </div>
-            {t.footer.groups.map(col => (
+            {[
+              { title: 'Product', links: ['Features', 'Integrations', 'AI Agents', 'Security', 'Changelog'] },
+              { title: 'Solutions', links: ['Engineering', 'Product Ops', 'Enterprise', 'Startups', 'Remote'] },
+              { title: 'Resources', links: ['Docs', 'API', 'Blog', 'Community', 'Status'] },
+              { title: 'Company', links: ['About', 'Careers', 'Contact', 'Press', 'Legal'] }
+            ].map(col => (
               <div key={col.title}>
                 <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/20 mb-5">{col.title}</div>
                 <div className="space-y-3.5">
